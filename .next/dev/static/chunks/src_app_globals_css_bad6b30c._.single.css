@@ -504,6 +504,10 @@
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 
+  .\[sms\:mock\] {
+    sms: mock;
+  }
+
   @media (hover: hover) {
     .hover\:border-transparent:hover {
       border-color: #0000;

@@ -33,34 +33,24 @@ function AdminFramePage() {
                     fontSize: "20px",
                     marginBottom: "12px"
                 },
-                children: "Admin Frame Wrapper"
+                children: "Admin frame wrapper"
             }, void 0, false, {
                 fileName: "[project]/src/app/admin-frame/page.tsx",
                 lineNumber: 4,
                 columnNumber: 7
             }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                style: {
-                    marginBottom: "12px"
-                },
-                children: "The admin console is rendered inside the iframe below. This route exists to support testing and embedding."
-            }, void 0, false, {
-                fileName: "[project]/src/app/admin-frame/page.tsx",
-                lineNumber: 7,
-                columnNumber: 7
-            }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("iframe", {
                 id: "admin-frame",
+                "data-test-id": "admin-frame",
                 src: "/admin",
                 style: {
                     width: "100%",
-                    height: "80vh",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px"
+                    height: "800px",
+                    border: "1px solid #ccc"
                 }
             }, void 0, false, {
                 fileName: "[project]/src/app/admin-frame/page.tsx",
-                lineNumber: 11,
+                lineNumber: 7,
                 columnNumber: 7
             }, this)
         ]

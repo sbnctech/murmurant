@@ -1,3 +1,6 @@
+import { getBaseUrl } from "@/lib/getBaseUrl";
+import { listMockEmails, MockEmailEntry } from "@/lib/email";
+
 type Member = {
   id: string;
   firstName: string;
@@ -12,17 +15,23 @@ type EventItem = {
   startTime: string;
 };
 
-type RegistrationItem = {
+type Registration = {
   id: string;
   memberId: string;
   eventId: string;
   status: string;
 };
 
+type JoinedRegistration = {
+  id: string;
+  memberName: string;
+  eventTitle: string;
+  status: string;
+};
+
 async function getMembers(): Promise<Member[]> {
-  const res = await fetch("/api/members", {
-    cache: "no-store",
-  });
+  const base = getBaseUrl();
+  const res = await fetch(`${base}/api/members`, { cache: "no-store" });
 
   if (!res.ok) {
     console.error("Failed to fetch members:", res.status, res.statusText);
@@ -34,9 +43,8 @@ async function getMembers(): Promise<Member[]> {
 }
 
 async function getEvents(): Promise<EventItem[]> {
-  const res = await fetch("/api/events", {
-    cache: "no-store",
-  });
+  const base = getBaseUrl();
+  const res = await fetch(`${base}/api/events`, { cache: "no-store" });
 
   if (!res.ok) {
     console.error("Failed to fetch events:", res.status, res.statusText);
@@ -47,39 +55,55 @@ async function getEvents(): Promise<EventItem[]> {
   return data.events ?? [];
 }
 
-function resolveMemberName(memberId: string, members: Member[]): string {
-  const member = members.find((m) => m.id === memberId);
-  if (!member) return memberId;
-  return `${member.firstName} ${member.lastName}`;
+async function getRegistrations(): Promise<Registration[]> {
+  const base = getBaseUrl();
+  const res = await fetch(`${base}/api/registrations`, { cache: "no-store" });
+
+  if (!res.ok) {
+    console.error("Failed to fetch registrations:", res.status, res.statusText);
+    return [];
+  }
+
+  const data = await res.json();
+  return data.registrations ?? [];
 }
 
-function resolveEventTitle(eventId: string, events: EventItem[]): string {
-  const event = events.find((e) => e.id === eventId);
-  if (!event) return eventId;
-  return event.title;
+function joinRegistrations(
+  registrations: Registration[],
+  members: Member[],
+  events: EventItem[]
+): JoinedRegistration[] {
+  const memberById = new Map(members.map((m) => [m.id, m]));
+  const eventById = new Map(events.map((e) => [e.id, e]));
+
+  return registrations.map((r) => {
+    const member = memberById.get(r.memberId);
+    const event = eventById.get(r.eventId);
+
+    const memberName = member
+      ? `${member.firstName} ${member.lastName}`
+      : r.memberId;
+
+    const eventTitle = event ? event.title : r.eventId;
+
+    return {
+      id: r.id,
+      memberName,
+      eventTitle,
+      status: r.status,
+    };
+  });
 }
 
 export default async function AdminPage() {
-  const [members, events] = await Promise.all([
+  const [members, events, registrations, emails] = await Promise.all([
     getMembers(),
     getEvents(),
+    getRegistrations(),
+    listMockEmails(20),
   ]);
 
-  // Temporary hard-coded registrations, joined in memory with members and events
-  const registrations: RegistrationItem[] = [
-    {
-      id: "r1",
-      memberId: "m1",
-      eventId: "e1",
-      status: "REGISTERED",
-    },
-    {
-      id: "r2",
-      memberId: "m2",
-      eventId: "e2",
-      status: "WAITLISTED",
-    },
-  ];
+  const joinedRegistrations = joinRegistrations(registrations, members, events);
 
   return (
     <div data-test-id="admin-root" style={{ padding: "20px" }}>
@@ -90,7 +114,6 @@ export default async function AdminPage() {
         Admin
       </header>
 
-      {/* Members section */}
       <section style={{ marginBottom: "24px" }}>
         <h2 style={{ fontSize: "18px", marginBottom: "8px" }}>
           Members overview
@@ -112,24 +135,43 @@ export default async function AdminPage() {
         >
           <thead>
             <tr>
-              <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
+              <th
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
+              >
                 Name
               </th>
-              <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
+              <th
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
+              >
                 Email
               </th>
             </tr>
           </thead>
           <tbody>
             {members.map((member) => (
-              <tr
-                key={member.id}
-                data-test-id="admin-members-row"
-              >
-                <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
+              <tr key={member.id} data-test-id="admin-members-row">
+                <td
+                  style={{
+                    borderBottom: "1px solid #eee",
+                    padding: "8px",
+                  }}
+                >
                   {member.firstName} {member.lastName}
                 </td>
-                <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
+                <td
+                  style={{
+                    borderBottom: "1px solid #eee",
+                    padding: "8px",
+                  }}
+                >
                   {member.email}
                 </td>
               </tr>
@@ -138,7 +180,11 @@ export default async function AdminPage() {
               <tr data-test-id="admin-members-empty-state">
                 <td
                   colSpan={2}
-                  style={{ padding: "8px", fontStyle: "italic", color: "#666" }}
+                  style={{
+                    padding: "8px",
+                    fontStyle: "italic",
+                    color: "#666",
+                  }}
                 >
                   No members found.
                 </td>
@@ -148,7 +194,6 @@ export default async function AdminPage() {
         </table>
       </section>
 
-      {/* Events section */}
       <section style={{ marginBottom: "24px" }}>
         <h2 style={{ fontSize: "18px", marginBottom: "8px" }}>
           Events overview
@@ -170,30 +215,60 @@ export default async function AdminPage() {
         >
           <thead>
             <tr>
-              <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
+              <th
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
+              >
                 Title
               </th>
-              <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
+              <th
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
+              >
                 Category
               </th>
-              <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
+              <th
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
+              >
                 Start time
               </th>
             </tr>
           </thead>
           <tbody>
             {events.map((event) => (
-              <tr
-                key={event.id}
-                data-test-id="admin-events-row"
-              >
-                <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
+              <tr key={event.id} data-test-id="admin-events-row">
+                <td
+                  style={{
+                    borderBottom: "1px solid #eee",
+                    padding: "8px",
+                  }}
+                >
                   {event.title}
                 </td>
-                <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
+                <td
+                  style={{
+                    borderBottom: "1px solid #eee",
+                    padding: "8px",
+                  }}
+                >
                   {event.category}
                 </td>
-                <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
+                <td
+                  style={{
+                    borderBottom: "1px solid #eee",
+                    padding: "8px",
+                  }}
+                >
                   {event.startTime}
                 </td>
               </tr>
@@ -202,7 +277,11 @@ export default async function AdminPage() {
               <tr data-test-id="admin-events-empty-state">
                 <td
                   colSpan={3}
-                  style={{ padding: "8px", fontStyle: "italic", color: "#666" }}
+                  style={{
+                    padding: "8px",
+                    fontStyle: "italic",
+                    color: "#666",
+                  }}
                 >
                   No events found.
                 </td>
@@ -212,19 +291,17 @@ export default async function AdminPage() {
         </table>
       </section>
 
-      {/* Registrations section */}
       <section style={{ marginBottom: "24px" }}>
         <h2 style={{ fontSize: "18px", marginBottom: "8px" }}>
           Registrations overview
         </h2>
         <p style={{ marginBottom: "12px" }}>
-          This table is currently backed by in-memory mock registrations joined
-          with members and events. In the next phase, this will be replaced with
-          a database-backed query.
+          This table joins /api/registrations with members and events to show
+          who is registered for what.
         </p>
       </section>
 
-      <section>
+      <section style={{ marginBottom: "32px" }}>
         <table
           data-test-id="admin-registrations-table"
           style={{
@@ -235,41 +312,179 @@ export default async function AdminPage() {
         >
           <thead>
             <tr>
-              <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
+              <th
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
+              >
                 Member
               </th>
-              <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
+              <th
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
+              >
                 Event
               </th>
-              <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
+              <th
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
+              >
                 Status
               </th>
             </tr>
           </thead>
           <tbody>
-            {registrations.map((registration) => (
+            {joinedRegistrations.map((r) => (
               <tr
-                key={registration.id}
+                key={r.id}
                 data-test-id="admin-registrations-row"
               >
-                <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
-                  {resolveMemberName(registration.memberId, members)}
+                <td
+                  style={{
+                    borderBottom: "1px solid #eee",
+                    padding: "8px",
+                  }}
+                >
+                  {r.memberName}
                 </td>
-                <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
-                  {resolveEventTitle(registration.eventId, events)}
+                <td
+                  style={{
+                    borderBottom: "1px solid #eee",
+                    padding: "8px",
+                  }}
+                >
+                  {r.eventTitle}
                 </td>
-                <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
-                  {registration.status}
+                <td
+                  style={{
+                    borderBottom: "1px solid #eee",
+                    padding: "8px",
+                  }}
+                >
+                  {r.status}
                 </td>
               </tr>
             ))}
-            {registrations.length === 0 && (
+            {joinedRegistrations.length === 0 && (
               <tr data-test-id="admin-registrations-empty-state">
                 <td
                   colSpan={3}
-                  style={{ padding: "8px", fontStyle: "italic", color: "#666" }}
+                  style={{
+                    padding: "8px",
+                    fontStyle: "italic",
+                    color: "#666",
+                  }}
                 >
                   No registrations found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </section>
+
+      <section style={{ marginBottom: "24px" }}>
+        <h2 style={{ fontSize: "18px", marginBottom: "8px" }}>Email activity</h2>
+        <p style={{ marginBottom: "12px" }}>
+          This panel reads from the mock email log. In development, calls to
+          /api/email/test append entries here instead of sending real email.
+        </p>
+      </section>
+
+      <section>
+        <table
+          data-test-id="admin-email-table"
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            maxWidth: "800px",
+          }}
+        >
+          <thead>
+            <tr>
+              <th
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
+              >
+                To
+              </th>
+              <th
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
+              >
+                Subject
+              </th>
+              <th
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  textAlign: "left",
+                  padding: "8px",
+                }}
+              >
+                Sent at
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {emails.map((email: MockEmailEntry) => (
+              <tr
+                key={email.id}
+                data-test-id="admin-email-row"
+              >
+                <td
+                  style={{
+                    borderBottom: "1px solid #eee",
+                    padding: "8px",
+                  }}
+                >
+                  {email.to}
+                </td>
+                <td
+                  style={{
+                    borderBottom: "1px solid #eee",
+                    padding: "8px",
+                  }}
+                >
+                  {email.subject}
+                </td>
+                <td
+                  style={{
+                    borderBottom: "1px solid #eee",
+                    padding: "8px",
+                    fontSize: "12px",
+                    color: "#555",
+                  }}
+                >
+                  {email.createdAt}
+                </td>
+              </tr>
+            ))}
+            {emails.length === 0 && (
+              <tr data-test-id="admin-email-empty-state">
+                <td
+                  colSpan={3}
+                  style={{
+                    padding: "8px",
+                    fontStyle: "italic",
+                    color: "#666",
+                  }}
+                >
+                  No emails logged yet. Hit /api/email/test to generate a mock
+                  entry.
                 </td>
               </tr>
             )}

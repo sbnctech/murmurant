@@ -1,3 +1,6 @@
-[00:00:00.623] Server  LOG      ✓ Ready in 492ms
-[00:00:57.907] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:58.449] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:00.561] Server  LOG      ✓ Ready in 424ms
+[00:01:05.798] Server  LOG     [mock-email] sent {}
+[00:01:07.151] Server  ERROR   Failed to fetch events: 404 "Not Found"
+[00:01:07.153] Server  ERROR   Failed to fetch registrations: 404 "Not Found"
+[00:01:07.154] Server  ERROR   Failed to fetch members: 404 "Not Found"
+[00:01:07.348] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
