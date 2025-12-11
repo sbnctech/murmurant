@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 46, "column": 0}, "map": {"version":3,"sources":["file:///Users/edf/clubos/src/app/api/events/route.ts"],"sourcesContent":["import { NextResponse } from \"next/server\";\n\nexport async function GET() {\n  const events = [\n    {\n      id: \"e1\",\n      title: \"Welcome Hike\",\n      category: \"Outdoors\",\n      startTime: \"2025-06-01T09:00:00Z\",\n    },\n    {\n      id: \"e2\",\n      title: \"Wine Mixer\",\n      category: \"Social\",\n      startTime: \"2025-06-05T18:00:00Z\",\n    },\n  ];\n\n  return NextResponse.json({ events });\n}\n"],"names":[],"mappings":";;;;AAAA;;AAEO,eAAe;IACpB,MAAM,SAAS;QACb;YACE,IAAI;YACJ,OAAO;YACP,UAAU;YACV,WAAW;QACb;QACA;YACE,IAAI;YACJ,OAAO;YACP,UAAU;YACV,WAAW;QACb;KACD;IAED,OAAO,gJAAY,CAAC,IAAI,CAAC;QAAE;IAAO;AACpC"}}]
+}

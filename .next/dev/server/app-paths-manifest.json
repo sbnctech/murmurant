@@ -1,5 +1,6 @@
 {
   "/admin-frame/page": "app/admin-frame/page.js",
   "/admin/page": "app/admin/page.js",
+  "/api/events/route": "app/api/events/route.js",
   "/api/members/route": "app/api/members/route.js"
 }
