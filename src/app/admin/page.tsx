@@ -1,5 +1,6 @@
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { listMockEmails, MockEmailEntry } from "@/lib/email";
+import SystemCommsPanel from "./SystemCommsPanel";
 
 type Member = {
   id: string;
@@ -490,6 +491,19 @@ export default async function AdminPage() {
             )}
           </tbody>
         </table>
+      </section>
+
+      <section style={{ marginBottom: "24px", marginTop: "32px" }}>
+        <h2 style={{ fontSize: "18px", marginBottom: "8px" }}>
+          System communications
+        </h2>
+        <p style={{ marginBottom: "12px" }}>
+          Check system health and test email/SMS delivery.
+        </p>
+      </section>
+
+      <section style={{ marginBottom: "32px" }}>
+        <SystemCommsPanel />
       </section>
     </div>
   );
