@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///Users/edf/clubos/src/app/admin-frame/page.tsx"],"sourcesContent":["export default function AdminFramePage() {\n  return (\n    <div style={{ padding: \"20px\" }}>\n      <h1 style={{ fontSize: \"20px\", marginBottom: \"12px\" }}>\n        Admin Frame Wrapper\n      </h1>\n      <p style={{ marginBottom: \"12px\" }}>\n        The admin console is rendered inside the iframe below. This route exists\n        to support testing and embedding.\n      </p>\n      <iframe\n        id=\"admin-frame\"\n        src=\"/admin\"\n        style={{\n          width: \"100%\",\n          height: \"80vh\",\n          border: \"1px solid #ccc\",\n          borderRadius: \"4px\",\n        }}\n      />\n    </div>\n  );\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACtB,qBACE,8OAAC;QAAI,OAAO;YAAE,SAAS;QAAO;;0BAC5B,8OAAC;gBAAG,OAAO;oBAAE,UAAU;oBAAQ,cAAc;gBAAO;0BAAG;;;;;;0BAGvD,8OAAC;gBAAE,OAAO;oBAAE,cAAc;gBAAO;0BAAG;;;;;;0BAIpC,8OAAC;gBACC,IAAG;gBACH,KAAI;gBACJ,OAAO;oBACL,OAAO;oBACP,QAAQ;oBACR,QAAQ;oBACR,cAAc;gBAChB;;;;;;;;;;;;AAIR"}}]
+}

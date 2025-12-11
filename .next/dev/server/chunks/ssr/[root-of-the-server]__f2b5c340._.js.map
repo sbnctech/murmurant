@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///Users/edf/clubos/src/app/admin/page.tsx"],"sourcesContent":["export default function AdminPage() {\n  return (\n    <div data-test-id=\"admin-root\" style={{ padding: \"20px\" }}>\n      <header data-test-id=\"admin-header\" style={{ fontSize: \"24px\", marginBottom: \"20px\" }}>\n        Admin\n      </header>\n      <p>Welcome to the ClubOS Admin Console.</p>\n      <p>This is the initial scaffold. More functionality will be added here.</p>\n    </div>\n  );\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACtB,qBACE,8OAAC;QAAI,gBAAa;QAAa,OAAO;YAAE,SAAS;QAAO;;0BACtD,8OAAC;gBAAO,gBAAa;gBAAe,OAAO;oBAAE,UAAU;oBAAQ,cAAc;gBAAO;0BAAG;;;;;;0BAGvF,8OAAC;0BAAE;;;;;;0BACH,8OAAC;0BAAE;;;;;;;;;;;;AAGT"}}]
+}
