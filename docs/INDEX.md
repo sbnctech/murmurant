@@ -9,6 +9,7 @@ This is the main entry point for all ClubOS developer documentation.
 ## Architecture
 - [Admin Architecture Map](ADMIN_ARCHITECTURE_MAP.md)
 - [API Surface](API_SURFACE.md)
+- [Authorization & RBAC Guide](RBAC_OVERVIEW.md) - For Tech Chair and admins
 
 ## Admin Feature Guides
 - [Admin Dashboard Overview](ADMIN_DASHBOARD_OVERVIEW.md)
