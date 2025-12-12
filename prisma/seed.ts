@@ -12,7 +12,7 @@
  *   npm run db:seed
  */
 
-import { PrismaClient, RegistrationStatus } from "@prisma/client";
+import { PrismaClient, RegistrationStatus, UserRole } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
@@ -180,34 +180,69 @@ async function seedMembers(
   return memberMap;
 }
 
+// Stable tokens for dev/test - deterministic and easy to remember
+// NEVER use these in production!
+const DEV_TOKENS = {
+  admin: "dev-admin-token-alice-12345",
+  member: "dev-member-token-carol-67890",
+};
+
 async function seedUserAccounts(
   memberMap: Map<string, string>
 ): Promise<void> {
   console.log("Seeding user accounts...");
 
   const aliceId = memberMap.get("alice@example.com")!;
+  const carolId = memberMap.get("carol@example.com")!;
 
   // Simple hash for demo purposes - in production use bcrypt
   // This is "password123" - NOT secure, for local dev only
   const demoPasswordHash =
     "$2b$10$demohashdemohashdemohashdemohashdemohashdemoha";
 
+  // Admin user: Alice
   await prisma.userAccount.upsert({
     where: { email: "alice@example.com" },
     update: {
       memberId: aliceId,
       passwordHash: demoPasswordHash,
+      apiToken: DEV_TOKENS.admin,
+      role: UserRole.ADMIN,
       isActive: true,
     },
     create: {
       memberId: aliceId,
       email: "alice@example.com",
       passwordHash: demoPasswordHash,
+      apiToken: DEV_TOKENS.admin,
+      role: UserRole.ADMIN,
       isActive: true,
     },
   });
 
-  console.log("  Created 1 admin user account (alice@example.com)");
+  // Member user: Carol
+  await prisma.userAccount.upsert({
+    where: { email: "carol@example.com" },
+    update: {
+      memberId: carolId,
+      passwordHash: demoPasswordHash,
+      apiToken: DEV_TOKENS.member,
+      role: UserRole.MEMBER,
+      isActive: true,
+    },
+    create: {
+      memberId: carolId,
+      email: "carol@example.com",
+      passwordHash: demoPasswordHash,
+      apiToken: DEV_TOKENS.member,
+      role: UserRole.MEMBER,
+      isActive: true,
+    },
+  });
+
+  console.log("  Created 2 user accounts:");
+  console.log("    - alice@example.com (ADMIN)");
+  console.log("    - carol@example.com (MEMBER)");
 }
 
 async function seedEvents(): Promise<Map<string, string>> {
@@ -334,9 +369,13 @@ async function main(): Promise<void> {
     console.log("Summary:");
     console.log("  - 5 membership statuses");
     console.log("  - 2 members (Alice Chen, Carol Johnson)");
-    console.log("  - 1 admin user account (alice@example.com)");
+    console.log("  - 2 user accounts (1 admin, 1 member)");
     console.log("  - 4 events (3 published, 1 draft)");
     console.log("  - 4 event registrations (3 confirmed, 1 waitlisted)");
+    console.log("\n=== Dev API Tokens (for local testing) ===");
+    console.log(`  Admin token: ${DEV_TOKENS.admin}`);
+    console.log(`  Member token: ${DEV_TOKENS.member}`);
+    console.log("\n  Usage: Authorization: Bearer <token>");
   } catch (error) {
     console.error("Seed failed:", error);
     throw error;

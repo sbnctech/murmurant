@@ -129,17 +129,26 @@ model RoleAssignment {
   @@index([termId, committeeId])
 }
 
-model UserAccount {
-  id           String   @id @default(uuid()) @db.Uuid
-  memberId     String   @unique @db.Uuid
-  email        String   @unique
-  passwordHash String
-  lastLoginAt  DateTime?
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+enum UserRole {
+  MEMBER
+  ADMIN
+}
 
-  member       Member   @relation(fields: [memberId], references: [id])
+model UserAccount {
+  id           String    @id @default(uuid()) @db.Uuid
+  memberId     String    @unique @db.Uuid
+  email        String    @unique
+  passwordHash String
+  apiToken     String?   @unique
+  role         UserRole  @default(MEMBER)
+  lastLoginAt  DateTime?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  member       Member    @relation(fields: [memberId], references: [id])
+
+  @@index([apiToken])
 }
 
 model Event {
