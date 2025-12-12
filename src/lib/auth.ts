@@ -47,7 +47,12 @@ export function parseBearerToken(req: NextRequest): string | null {
  */
 export function unauthorized(message = "Authentication required"): NextResponse {
   return NextResponse.json(
-    { error: "Unauthorized", message },
+    {
+      error: {
+        code: "UNAUTHORIZED",
+        message,
+      },
+    },
     { status: 401 }
   );
 }
@@ -57,7 +62,12 @@ export function unauthorized(message = "Authentication required"): NextResponse 
  */
 export function forbidden(message = "Insufficient permissions"): NextResponse {
   return NextResponse.json(
-    { error: "Forbidden", message },
+    {
+      error: {
+        code: "FORBIDDEN",
+        message,
+      },
+    },
     { status: 403 }
   );
 }

@@ -6,7 +6,10 @@
  * - Return 403 with member token (insufficient permissions)
  * - Return 200 with admin token
  *
- * Dev tokens (from seed):
+ * Token configuration:
+ *   Set ADMIN_API_TOKEN and MEMBER_API_TOKEN env vars, or use defaults from seed.
+ *
+ * Default dev tokens (from seed):
  *   Admin: dev-admin-token-alice-12345
  *   Member: dev-member-token-carol-67890
  */
@@ -15,9 +18,9 @@ import { test, expect } from "@playwright/test";
 
 const BASE_URL = process.env.PW_BASE_URL || "http://localhost:3000";
 
-// Dev tokens from seed script
-const ADMIN_TOKEN = "dev-admin-token-alice-12345";
-const MEMBER_TOKEN = "dev-member-token-carol-67890";
+// Tokens from env or defaults from seed script
+const ADMIN_TOKEN = process.env.ADMIN_API_TOKEN || "dev-admin-token-alice-12345";
+const MEMBER_TOKEN = process.env.MEMBER_API_TOKEN || "dev-member-token-carol-67890";
 
 test.describe("Admin RBAC", () => {
   test.describe("GET /api/admin/members", () => {
@@ -26,7 +29,8 @@ test.describe("Admin RBAC", () => {
       expect(response.status()).toBe(401);
 
       const body = await response.json();
-      expect(body.error).toBe("Unauthorized");
+      expect(body.error.code).toBe("UNAUTHORIZED");
+      expect(body.error.message).toBeDefined();
     });
 
     test("returns 403 with member token", async ({ request }) => {
@@ -38,7 +42,8 @@ test.describe("Admin RBAC", () => {
       expect(response.status()).toBe(403);
 
       const body = await response.json();
-      expect(body.error).toBe("Forbidden");
+      expect(body.error.code).toBe("FORBIDDEN");
+      expect(body.error.message).toBe("Admin access required");
     });
 
     test("returns 200 with admin token", async ({ request }) => {
@@ -59,6 +64,9 @@ test.describe("Admin RBAC", () => {
     test("returns 401 without Authorization header", async ({ request }) => {
       const response = await request.get(`${BASE_URL}/api/admin/dashboard`);
       expect(response.status()).toBe(401);
+
+      const body = await response.json();
+      expect(body.error.code).toBe("UNAUTHORIZED");
     });
 
     test("returns 403 with member token", async ({ request }) => {
@@ -68,6 +76,9 @@ test.describe("Admin RBAC", () => {
         },
       });
       expect(response.status()).toBe(403);
+
+      const body = await response.json();
+      expect(body.error.code).toBe("FORBIDDEN");
     });
 
     test("returns 200 with admin token", async ({ request }) => {
@@ -87,6 +98,9 @@ test.describe("Admin RBAC", () => {
     test("returns 401 without Authorization header", async ({ request }) => {
       const response = await request.get(`${BASE_URL}/api/admin/export/members`);
       expect(response.status()).toBe(401);
+
+      const body = await response.json();
+      expect(body.error.code).toBe("UNAUTHORIZED");
     });
 
     test("returns 403 with member token", async ({ request }) => {
@@ -96,6 +110,9 @@ test.describe("Admin RBAC", () => {
         },
       });
       expect(response.status()).toBe(403);
+
+      const body = await response.json();
+      expect(body.error.code).toBe("FORBIDDEN");
     });
 
     test("returns 200 with admin token", async ({ request }) => {
@@ -121,8 +138,8 @@ test.describe("Admin RBAC", () => {
       expect(response.status()).toBe(401);
 
       const body = await response.json();
-      expect(body.error).toBe("Unauthorized");
-      expect(body.message).toBe("Invalid token");
+      expect(body.error.code).toBe("UNAUTHORIZED");
+      expect(body.error.message).toBe("Invalid token");
     });
 
     test("returns 401 with malformed Authorization header", async ({ request }) => {
@@ -132,6 +149,9 @@ test.describe("Admin RBAC", () => {
         },
       });
       expect(response.status()).toBe(401);
+
+      const body = await response.json();
+      expect(body.error.code).toBe("UNAUTHORIZED");
     });
   });
 });

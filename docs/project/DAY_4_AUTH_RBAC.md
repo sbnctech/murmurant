@@ -35,21 +35,36 @@ npm run db:seed
 
 ## Error Responses
 
+All error responses use a consistent JSON shape:
+
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED|FORBIDDEN",
+    "message": "Human-readable error description"
+  }
+}
+```
+
 ### 401 Unauthorized
 
 Missing or invalid authentication token.
 
 ```json
 {
-  "error": "Unauthorized",
-  "message": "Missing Authorization header"
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Missing Authorization header"
+  }
 }
 ```
 
 ```json
 {
-  "error": "Unauthorized",
-  "message": "Invalid token"
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Invalid token"
+  }
 }
 ```
 
@@ -59,8 +74,10 @@ Valid token but insufficient permissions.
 
 ```json
 {
-  "error": "Forbidden",
-  "message": "Admin access required"
+  "error": {
+    "code": "FORBIDDEN",
+    "message": "Admin access required"
+  }
 }
 ```
 
@@ -170,10 +187,21 @@ model UserAccount {
 
 ## Testing
 
-Run RBAC tests:
+### Environment Variables for Tests
+
+You can configure tokens via environment variables:
 
 ```bash
-npm run test -- tests/api/admin/rbac.spec.ts
+export ADMIN_API_TOKEN="dev-admin-token-alice-12345"
+export MEMBER_API_TOKEN="dev-member-token-carol-67890"
+```
+
+If not set, tests use the default seed tokens.
+
+### Run RBAC Tests
+
+```bash
+npx playwright test tests/api/admin-auth-rbac.spec.ts
 ```
 
 Tests cover:
@@ -181,3 +209,4 @@ Tests cover:
 - 403 with member token
 - 200 with admin token
 - Invalid token handling
+- Malformed Authorization header
