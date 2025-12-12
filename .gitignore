@@ -13,3 +13,5 @@ tmp/mock-email-log.json
 test-results/
 tsconfig.tsbuildinfo
 .vercel/
+
+test-results/.last-run.json
