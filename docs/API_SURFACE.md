@@ -141,17 +141,80 @@ Notifications are domain events triggered by specific API actions, not arbitrary
 
 ## System Operations
 
-### GET /api/health [v1]
+### GET /api/health (Legacy)
 
-Returns the health status of the API server.
+Simple health check endpoint. Returns basic status.
 
 **Response:**
 ```json
 {
   "status": "ok",
-  "timestamp": "2025-06-01T12:00:00.000Z"
+  "timestamp": "2025-06-01T12:00:00.000Z",
+  "database": {
+    "status": "ok"
+  }
 }
 ```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `status` | string | Always `"ok"` when healthy |
+| `timestamp` | string | ISO 8601 timestamp |
+| `database.status` | string | Database connection status |
+
+### GET /api/v1/health [v1] (Canonical)
+
+**This is the canonical health endpoint.** Use this for production monitoring.
+
+**Response (healthy):**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2025-06-01T12:00:00.000Z",
+  "version": "0.1.0",
+  "checks": {
+    "database": {
+      "status": "ok",
+      "latencyMs": 1
+    }
+  },
+  "env": {
+    "dbConfigured": true
+  }
+}
+```
+
+**Response (unhealthy - 503):**
+```json
+{
+  "status": "unhealthy",
+  "timestamp": "2025-06-01T12:00:00.000Z",
+  "version": "0.1.0",
+  "checks": {
+    "database": {
+      "status": "error",
+      "error": "Connection refused"
+    }
+  },
+  "env": {
+    "dbConfigured": true
+  }
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `status` | string | `"healthy"` or `"unhealthy"` |
+| `timestamp` | string | ISO 8601 timestamp |
+| `version` | string | API version (from package.json) |
+| `checks.database.status` | string | `"ok"` or `"error"` |
+| `checks.database.latencyMs` | number | Database ping latency (when healthy) |
+| `checks.database.error` | string | Error message (when unhealthy) |
+| `env.dbConfigured` | boolean | Whether DATABASE_URL is set |
+
+**HTTP Status Codes:**
+- `200` - All checks passing
+- `503` - One or more checks failing
 
 ### GET /api/version [v1]
 
@@ -383,12 +446,19 @@ Returns aggregate statistics for the admin dashboard summary tiles.
 
 ### GET /api/admin/members [v1]
 
-Returns a list of all members with aggregated registration metrics.
+Returns a paginated list of all members with aggregated registration metrics.
+
+**Query Parameters:**
+
+| Parameter  | Type   | Default | Description                              |
+|------------|--------|---------|------------------------------------------|
+| `page`     | number | 1       | Page number (1-indexed)                  |
+| `pageSize` | number | 20      | Items per page (max 100)                 |
 
 **Response:**
 ```json
 {
-  "members": [
+  "items": [
     {
       "id": "m1",
       "name": "Alice Johnson",
@@ -399,18 +469,32 @@ Returns a list of all members with aggregated registration metrics.
       "registrationCount": 3,
       "waitlistedCount": 1
     }
-  ]
+  ],
+  "page": 1,
+  "pageSize": 20,
+  "totalItems": 150,
+  "totalPages": 8
 }
 ```
+
+**Pagination Fields:**
+
+| Field        | Type   | Description                              |
+|--------------|--------|------------------------------------------|
+| `items`      | array  | Array of member objects                  |
+| `page`       | number | Current page number                      |
+| `pageSize`   | number | Items per page                           |
+| `totalItems` | number | Total count of members                   |
+| `totalPages` | number | Total number of pages                    |
 
 **Member fields:**
 
 | Field              | Type   | Description                              |
 |--------------------|--------|------------------------------------------|
-| `id`               | string | Unique member identifier                 |
+| `id`               | string | Unique member identifier (UUID)          |
 | `name`             | string | Full name (first + last)                 |
 | `email`            | string | Member email address                     |
-| `status`           | string | "ACTIVE" or "INACTIVE"                   |
+| `status`           | string | Membership status code                   |
 | `phone`            | string | Phone number (may be null)               |
 | `joinedAt`         | string | ISO 8601 timestamp of membership start   |
 | `registrationCount`| number | Total event registrations for member     |
@@ -418,16 +502,114 @@ Returns a list of all members with aggregated registration metrics.
 
 ### GET /api/admin/events [v1]
 
-Returns a list of all events with aggregated registration metrics.
+Returns a paginated list of all events with aggregated registration metrics.
 
-**Key fields:**
+**Query Parameters:**
 
-- `id` - Unique event identifier
-- `title` - Event title
-- `category` - Event category (e.g., "Outdoors", "Social")
-- `startTime` - ISO 8601 timestamp of event start
-- `registrationCount` - Total registrations for this event
-- `waitlistedCount` - Registrations with WAITLISTED status
+| Parameter  | Type   | Default | Description                              |
+|------------|--------|---------|------------------------------------------|
+| `page`     | number | 1       | Page number (1-indexed)                  |
+| `pageSize` | number | 20      | Items per page (max 100)                 |
+
+**Response:**
+```json
+{
+  "items": [
+    {
+      "id": "e1",
+      "title": "Morning Hike at Rattlesnake Canyon",
+      "category": "Outdoors",
+      "startTime": "2025-06-10T08:00:00.000Z",
+      "registrationCount": 2,
+      "waitlistedCount": 1
+    }
+  ],
+  "page": 1,
+  "pageSize": 20,
+  "totalItems": 10,
+  "totalPages": 1
+}
+```
+
+**Event fields:**
+
+| Field              | Type   | Description                              |
+|--------------------|--------|------------------------------------------|
+| `id`               | string | Unique event identifier (UUID)           |
+| `title`            | string | Event title                              |
+| `category`         | string | Event category (e.g., "Outdoors", "Social") |
+| `startTime`        | string | ISO 8601 timestamp of event start        |
+| `registrationCount`| number | Total registrations for this event       |
+| `waitlistedCount`  | number | Registrations with WAITLISTED status     |
+
+### GET /api/v1/events [v1]
+
+Returns a paginated list of published events with date range filtering.
+
+**Query Parameters:**
+
+| Parameter | Type   | Default | Description                              |
+|-----------|--------|---------|------------------------------------------|
+| `from`    | string | -       | Filter events starting on or after this date (ISO 8601) |
+| `to`      | string | -       | Filter events starting on or before this date (ISO 8601) |
+| `page`    | number | 1       | Page number (1-indexed)                  |
+| `limit`   | number | 20      | Items per page                           |
+
+**Response:**
+```json
+{
+  "events": [
+    {
+      "id": "e1",
+      "title": "Morning Hike at Rattlesnake Canyon",
+      "description": "A moderate 5-mile hike with beautiful ocean views.",
+      "category": "Outdoors",
+      "location": "Rattlesnake Canyon Trailhead",
+      "startTime": "2025-06-10T08:00:00.000Z",
+      "endTime": "2025-06-10T12:00:00.000Z",
+      "capacity": 15,
+      "registeredCount": 1,
+      "isWaitlistOpen": false
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "totalItems": 3,
+    "totalPages": 1,
+    "hasNext": false,
+    "hasPrev": false
+  }
+}
+```
+
+**Event fields (v1):**
+
+| Field            | Type    | Description                              |
+|------------------|---------|------------------------------------------|
+| `id`             | string  | Unique event identifier (UUID)           |
+| `title`          | string  | Event title                              |
+| `description`    | string  | Event description                        |
+| `category`       | string  | Event category                           |
+| `location`       | string  | Event location                           |
+| `startTime`      | string  | ISO 8601 timestamp of event start        |
+| `endTime`        | string  | ISO 8601 timestamp of event end          |
+| `capacity`       | number  | Maximum attendees                        |
+| `registeredCount`| number  | Current registration count               |
+| `isWaitlistOpen` | boolean | Whether waitlist is accepting entries    |
+
+**Pagination fields (v1):**
+
+| Field        | Type    | Description                              |
+|--------------|---------|------------------------------------------|
+| `page`       | number  | Current page number                      |
+| `limit`      | number  | Items per page                           |
+| `totalItems` | number  | Total count of events                    |
+| `totalPages` | number  | Total number of pages                    |
+| `hasNext`    | boolean | Whether next page exists                 |
+| `hasPrev`    | boolean | Whether previous page exists             |
+
+**Note:** Only published events are returned. Draft events are excluded
 
 ### GET /api/admin/events/[id] [v1]
 
@@ -503,17 +685,47 @@ Returns attendance/check-in status for an event. Planned for future release.
 
 ### GET /api/admin/registrations [v1]
 
-Returns a list of all registrations with enriched member and event data.
+Returns a paginated list of all registrations with enriched member and event data.
 
-**Key fields:**
+**Query Parameters:**
 
-- `id` - Unique registration identifier
-- `memberId` - Reference to the member
-- `memberName` - Full name of the member (resolved from memberId)
-- `eventId` - Reference to the event
-- `eventTitle` - Title of the event (resolved from eventId)
-- `status` - REGISTERED, WAITLISTED, or CANCELLED
-- `registeredAt` - ISO 8601 timestamp of registration
+| Parameter  | Type   | Default | Description                              |
+|------------|--------|---------|------------------------------------------|
+| `page`     | number | 1       | Page number (1-indexed)                  |
+| `pageSize` | number | 20      | Items per page (max 100)                 |
+
+**Response:**
+```json
+{
+  "items": [
+    {
+      "id": "r1",
+      "memberId": "m1",
+      "memberName": "Alice Chen",
+      "eventId": "e1",
+      "eventTitle": "Morning Hike at Rattlesnake Canyon",
+      "status": "CONFIRMED",
+      "registeredAt": "2025-06-01T09:00:00.000Z"
+    }
+  ],
+  "page": 1,
+  "pageSize": 20,
+  "totalItems": 10,
+  "totalPages": 1
+}
+```
+
+**Registration fields:**
+
+| Field         | Type   | Description                              |
+|---------------|--------|------------------------------------------|
+| `id`          | string | Unique registration identifier (UUID)    |
+| `memberId`    | string | Reference to the member (UUID)           |
+| `memberName`  | string | Full name of the member (resolved)       |
+| `eventId`     | string | Reference to the event (UUID)            |
+| `eventTitle`  | string | Title of the event (resolved)            |
+| `status`      | string | PENDING, CONFIRMED, WAITLISTED, CANCELLED, NO_SHOW |
+| `registeredAt`| string | ISO 8601 timestamp of registration       |
 
 ### GET /api/admin/registrations/pending [v1]
 
