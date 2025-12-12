@@ -96,10 +96,10 @@ test.describe("GET /api/v1/events", () => {
     expect(body.pagination.page).toBe(1);
   });
 
-  // Future tests that require seeded data or auth:
+  // Filter tests - require seeded data
 
-  test.skip("filters by category", async ({ request }) => {
-    // Requires seeded test data with known categories
+  test("filters by category", async ({ request }) => {
+    // Seed includes: 1 Outdoors event (Morning Hike), 2 Social events
     const response = await request.get(
       `${BASE_URL}/api/v1/events?category=Outdoors`
     );
@@ -107,13 +107,14 @@ test.describe("GET /api/v1/events", () => {
     expect(response.status()).toBe(200);
 
     const body = await response.json();
+    expect(body.events.length).toBeGreaterThan(0);
     for (const event of body.events) {
       expect(event.category).toBe("Outdoors");
     }
   });
 
-  test.skip("filters by date range", async ({ request }) => {
-    // Requires seeded test data with known dates
+  test("filters by date range", async ({ request }) => {
+    // Seed includes: Morning Hike on 2025-06-10, which falls in June 2025
     const from = "2025-06-01T00:00:00Z";
     const to = "2025-06-30T23:59:59Z";
 
@@ -124,10 +125,27 @@ test.describe("GET /api/v1/events", () => {
     expect(response.status()).toBe(200);
 
     const body = await response.json();
+    expect(body.events.length).toBeGreaterThan(0);
     for (const event of body.events) {
       const startTime = new Date(event.startTime);
       expect(startTime >= new Date(from)).toBe(true);
       expect(startTime <= new Date(to)).toBe(true);
+    }
+  });
+
+  test("returns only published events", async ({ request }) => {
+    // Seed includes 1 unpublished event (Draft Event) which should not appear
+    const response = await request.get(`${BASE_URL}/api/v1/events`);
+
+    expect(response.status()).toBe(200);
+
+    const body = await response.json();
+    // Should have 3 published events, not 4
+    expect(body.pagination.totalItems).toBe(3);
+
+    // None should have "Draft" in the title
+    for (const event of body.events) {
+      expect(event.title).not.toContain("Draft");
     }
   });
 });

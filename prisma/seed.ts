@@ -224,6 +224,36 @@ async function seedEvents(): Promise<Map<string, string>> {
       capacity: 20,
       isPublished: true,
     },
+    {
+      title: "Morning Hike at Rattlesnake Canyon",
+      description: "A moderate 5-mile hike with beautiful ocean views.",
+      category: "Outdoors",
+      location: "Rattlesnake Canyon Trailhead",
+      startTime: new Date("2025-06-10T08:00:00Z"),
+      endTime: new Date("2025-06-10T12:00:00Z"),
+      capacity: 15,
+      isPublished: true,
+    },
+    {
+      title: "Summer Beach Picnic",
+      description: "Annual beach gathering with food, games, and swimming.",
+      category: "Social",
+      location: "East Beach Pavilion",
+      startTime: new Date("2025-08-20T11:00:00Z"),
+      endTime: new Date("2025-08-20T15:00:00Z"),
+      capacity: 50,
+      isPublished: true,
+    },
+    {
+      title: "Draft Event (not published)",
+      description: "This event should not appear in member-facing lists.",
+      category: "Social",
+      location: "TBD",
+      startTime: new Date("2025-09-01T10:00:00Z"),
+      endTime: new Date("2025-09-01T12:00:00Z"),
+      capacity: 10,
+      isPublished: false,
+    },
   ];
 
   const eventMap = new Map<string, string>();
@@ -279,7 +309,7 @@ async function main(): Promise<void> {
     console.log("  - 5 membership statuses");
     console.log("  - 2 members (Alice Chen, Carol Johnson)");
     console.log("  - 1 admin user account (alice@example.com)");
-    console.log("  - 1 event (Welcome Coffee)");
+    console.log("  - 4 events (3 published, 1 draft)");
     console.log("  - 1 event registration (Carol -> Welcome Coffee)");
   } catch (error) {
     console.error("Seed failed:", error);
