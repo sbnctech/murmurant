@@ -15,8 +15,10 @@ export async function POST(req: NextRequest) {
       ? body.to
       : "test@example.com";
 
-  const subject = body.subject ?? "Test email from ClubOS";
-  const text = body.body ?? "This is a test email placeholder body.";
+  const subject =
+    typeof body.subject === "string" ? body.subject : "Test email from ClubOS";
+  const text =
+    typeof body.body === "string" ? body.body : "This is a test email placeholder body.";
 
   const { messageId } = await sendEmail({
     to,

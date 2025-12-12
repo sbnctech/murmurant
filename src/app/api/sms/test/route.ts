@@ -30,9 +30,12 @@ export async function POST(req: NextRequest) {
       ? body.to
       : "test@example.com";
 
+  const smsBody =
+    typeof body.body === "string" ? body.body : "This is a test SMS placeholder body.";
+
   const { messageId } = await mockSmsSend({
     to,
-    body: body.body ?? "This is a test SMS placeholder body.",
+    body: smsBody,
   });
 
   return NextResponse.json({
