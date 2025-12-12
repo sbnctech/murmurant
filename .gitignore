@@ -10,3 +10,6 @@ playwright-report
 test-results
 tmp/mock-email-log.json
 .next/
+test-results/
+tsconfig.tsbuildinfo
+.vercel/

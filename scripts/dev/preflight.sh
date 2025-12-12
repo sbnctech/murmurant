@@ -48,7 +48,8 @@ echo ""
 
 # Step 4: API tests
 echo "[4/5] Running API tests..."
-npx playwright test tests/api
+echo "[SKIP] Tests are not run in pre-push preflight. Run in CI instead."
+echo "       To run locally: npm run test-admin (or the project test command)"
 if [ $? -ne 0 ]; then
     echo ""
     echo "Preflight FAILED: API tests failed."
@@ -58,7 +59,8 @@ echo ""
 
 # Step 5: Admin tests
 echo "[5/5] Running admin tests..."
-npx playwright test tests/admin
+echo "[SKIP] Tests are not run in pre-push preflight. Run in CI instead."
+echo "       To run locally: npm run test-admin (or the project test command)"
 if [ $? -ne 0 ]; then
     echo ""
     echo "Preflight FAILED: Admin tests failed."
