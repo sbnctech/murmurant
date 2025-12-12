@@ -1,25 +1,57 @@
 import { NextResponse } from "next/server";
+import { getEnv } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
 
+/**
+ * GET /api/health
+ *
+ * Health check endpoint for monitoring and load balancer health probes.
+ * Returns system health status including database connectivity.
+ *
+ * Contract matches /api/v1/health for consistency.
+ */
 export async function GET() {
-  let dbStatus = "ok";
-  let dbError: string | undefined;
+  const now = new Date().toISOString();
+  const env = getEnv();
 
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-  } catch (err) {
-    dbStatus = "error";
-    dbError = err instanceof Error ? err.message : "Unknown database error";
+  const dbConfigured = !!(env.DATABASE_URL && env.DATABASE_URL.trim().length > 0);
+
+  let dbStatus: "ok" | "error" | "skipped" = dbConfigured ? "ok" : "skipped";
+  let dbLatencyMs: number | null = null;
+
+  if (dbConfigured) {
+    try {
+      const start = Date.now();
+      await prisma.$queryRaw`SELECT 1`;
+      dbLatencyMs = Date.now() - start;
+      dbStatus = "ok";
+    } catch {
+      dbStatus = "error";
+      dbLatencyMs = null;
+    }
   }
 
-  const status = dbStatus === "ok" ? "ok" : "degraded";
-
-  return NextResponse.json({
-    status,
-    timestamp: new Date().toISOString(),
-    database: {
-      status: dbStatus,
-      error: dbError,
+  const response = {
+    status: dbStatus === "error" ? "degraded" : "healthy",
+    timestamp: now,
+    version: process.env.APP_VERSION || "0.1.0",
+    checks: {
+      database: {
+        status: dbStatus,
+        latencyMs: dbLatencyMs,
+      },
     },
-  });
+  };
+
+  const httpStatus = response.status === "healthy" ? 200 : 503;
+
+  return NextResponse.json(
+    {
+      ...response,
+      env: {
+        dbConfigured,
+      },
+    },
+    { status: httpStatus }
+  );
 }
