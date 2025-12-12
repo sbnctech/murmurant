@@ -21,7 +21,7 @@ import { NextRequest, NextResponse } from "next/server";
 export type AuthContext = {
   memberId: string;
   email: string;
-  globalRole: "admin" | "member";
+  globalRole: GlobalRole;
 };
 
 export type AuthResult =
@@ -104,7 +104,7 @@ export async function requireAdmin(req: NextRequest): Promise<AuthResult> {
  */
 export async function requireRole(
   req: NextRequest,
-  roles: Array<"admin" | "member">
+  roles: Array<GlobalRole>
 ): Promise<AuthResult> {
   const authResult = await requireAuth(req);
   if (!authResult.ok) {
@@ -206,4 +206,31 @@ function parseTestToken(token: string): AuthContext | null {
   }
 
   return null;
+}
+
+/**
+ * GlobalRole: top-level RBAC role used by admin and governance checks.
+ * NOTE: vp-activities is trusted to view/edit all events (mutual override model),
+ * but delete remains admin-only (see canDeleteEvents).
+ */
+export type GlobalRole = "member" | "admin" | "vp-activities";
+
+/**
+ * Event governance helpers used by eventScope.ts
+ * These are intentionally simple and centralized.
+ */
+export function canViewAllEvents(globalRole: GlobalRole): boolean {
+  return globalRole === "admin" || globalRole === "vp-activities";
+}
+
+export function canEditAnyEvent(globalRole: GlobalRole): boolean {
+  return globalRole === "admin" || globalRole === "vp-activities";
+}
+
+export function canPublishEvents(globalRole: GlobalRole): boolean {
+  return globalRole === "admin" || globalRole === "vp-activities";
+}
+
+export function canDeleteEvents(globalRole: GlobalRole): boolean {
+  return globalRole === "admin";
 }
