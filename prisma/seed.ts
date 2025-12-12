@@ -210,8 +210,13 @@ async function seedUserAccounts(
   console.log("  Created 1 admin user account (alice@example.com)");
 }
 
-async function seedEvents(): Promise<Map<string, string>> {
+async function seedEvents(
+  memberMap: Map<string, string>
+): Promise<Map<string, string>> {
   console.log("Seeding events...");
+
+  const aliceId = memberMap.get("alice@example.com")!;
+  const carolId = memberMap.get("carol@example.com")!;
 
   const events = [
     {
@@ -223,6 +228,7 @@ async function seedEvents(): Promise<Map<string, string>> {
       endTime: new Date("2025-07-15T12:00:00Z"),
       capacity: 20,
       isPublished: true,
+      eventChairId: aliceId, // Alice chairs this event
     },
     {
       title: "Morning Hike at Rattlesnake Canyon",
@@ -233,6 +239,7 @@ async function seedEvents(): Promise<Map<string, string>> {
       endTime: new Date("2025-06-10T12:00:00Z"),
       capacity: 15,
       isPublished: true,
+      eventChairId: carolId, // Carol chairs this event
     },
     {
       title: "Summer Beach Picnic",
@@ -243,6 +250,7 @@ async function seedEvents(): Promise<Map<string, string>> {
       endTime: new Date("2025-08-20T15:00:00Z"),
       capacity: 50,
       isPublished: true,
+      // No event chair - tests unchained event access
     },
     {
       title: "Draft Event (not published)",
@@ -253,6 +261,7 @@ async function seedEvents(): Promise<Map<string, string>> {
       endTime: new Date("2025-09-01T12:00:00Z"),
       capacity: 10,
       isPublished: false,
+      // No event chair
     },
   ];
 
@@ -265,7 +274,7 @@ async function seedEvents(): Promise<Map<string, string>> {
     eventMap.set(event.title, created.id);
   }
 
-  console.log(`  Created ${events.length} events`);
+  console.log(`  Created ${events.length} events (2 with event chairs)`);
   return eventMap;
 }
 
@@ -327,7 +336,7 @@ async function main(): Promise<void> {
     const statusMap = await seedMembershipStatuses();
     const memberMap = await seedMembers(statusMap);
     await seedUserAccounts(memberMap);
-    const eventMap = await seedEvents();
+    const eventMap = await seedEvents(memberMap);
     await seedEventRegistrations(eventMap, memberMap);
 
     console.log("\n=== Seed Complete ===");

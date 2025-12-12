@@ -83,6 +83,7 @@ export async function GET(req: NextRequest) {
     startTime: e.startTime.toISOString(),
     registrationCount: e._count.registrations,
     waitlistedCount: waitlistedMap.get(e.id) ?? 0,
+    eventChairId: e.eventChairId,
   }));
 
   return NextResponse.json({
