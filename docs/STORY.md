@@ -288,6 +288,120 @@ not a disposable experiment.
 
 ----------------------------------------------------------------
 
+## Chapter 8.5 - The Authorization Philosophy
+
+When the time came to design access control, a key question emerged:
+
+"How should VPs and Event Chairs work together?"
+
+### The Three Options Considered
+
+Option 1: Make Everyone Admin
+
+The simplest approach. Give all officers full access.
+
+- Pros: No permission errors, fast implementation
+- Cons: No accountability, high risk of accidents, no audit trail
+
+This was rejected because mistakes would be hard to trace and there
+would be no clear ownership of activities.
+
+Option 2: Strict Approval Workflow
+
+Require VP approval before any Chair action takes effect.
+
+- Pros: Clear chain of command, no unauthorized changes
+- Cons: Slow, creates bottlenecks, VPs become overloaded
+
+This was rejected because SBNC activities are time sensitive. Events
+have deadlines. Waiting for approval would cause missed publications.
+
+Option 3: Mutual Trust Model (Chosen)
+
+Trust VPs and Chairs to work together. VPs can edit directly but
+all changes are logged.
+
+- Pros: Fast workflow, clear accountability, VP can intervene when needed
+- Cons: Requires trust between officers
+
+### Why Mutual Trust Won
+
+The deciding factors were:
+
+1. SBNC volunteers are trusted community members who know each other
+
+2. Most changes are routine, not controversial
+
+3. When problems occur, they need fast fixes, not approval queues
+
+4. The audit trail provides accountability without blocking work
+
+5. VPs still have oversight through publication control
+
+### The Publication Gate
+
+The key insight was to separate "editing" from "publishing":
+
+- Event Chairs can create and edit freely within their group
+- But only VPs (or Admins) can publish events
+- This creates a natural review point without an explicit approval step
+- VPs review events before they go public to members
+
+This model gives speed where it matters (drafting, fixing typos) and
+control where it matters (what members see).
+
+### The Scope Boundaries
+
+Each VP supervises specific activity groups:
+
+```
+VP Sarah: Hiking, Social
+VP John: Wine Tasting, Book Club
+```
+
+Sarah cannot see John's events. John cannot see Sarah's events.
+
+This was a deliberate choice:
+
+- Prevents accidental changes to wrong events
+- Keeps VP dashboards focused on their responsibilities
+- Limits blast radius of any mistakes
+- Makes accountability crystal clear
+
+### Problems This Model Solves
+
+1. Chair gets sick: VP can take over without admin help
+2. Event has a typo: VP can fix immediately, no approval needed
+3. Scheduling conflict: VP can see all supervised events to catch it
+4. Chair forgets to publish: VP can publish when ready
+5. Need to pull back an event: VP can unpublish without admin
+
+### What the Model Does Not Allow
+
+To keep the system safe, some actions are restricted:
+
+- VPs cannot delete events (Admin only)
+- VPs cannot see events outside their scope (hard boundary)
+- Chairs cannot publish (VP review required)
+- Nobody can modify Committee assignments (Admin only)
+
+These restrictions ensure that even trusted officers cannot cause
+irreversible damage.
+
+### Documentation for Future Tech Chairs
+
+This authorization philosophy is documented in detail in:
+
+- docs/rbac/AUTH_AND_RBAC.md - Overall system explanation
+- docs/rbac/ACTIVITIES_ROLES.md - VP and Chair role guide
+- docs/rbac/VP_ACTIVITIES_SCOPE.md - Technical implementation
+- docs/HISTORY.md - Design decision rationale
+
+The goal is to ensure future Tech Chairs understand not just HOW the
+system works, but WHY it was designed this way.
+
+----------------------------------------------------------------
+
 ## Chapter 9 - Where Things Stand Today
 
 By the end of the initial surge of work, the project has:
