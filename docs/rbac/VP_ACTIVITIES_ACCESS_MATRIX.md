@@ -4,6 +4,15 @@
 
 This document defines the authority boundaries for the VP of Activities role, answering key questions about what VPs can do, how they differ from Event Chairs, and how scope should be enforced.
 
+## Authoritative Policy
+
+**There are TWO VPs of Activities who are peers with mutual trust.**
+
+- VP of Activities can: View ALL events, Edit ALL events, Override Event Chair changes
+- VP of Activities cannot: Delete events (admin-only)
+
+VPs bypass ALL ownership and committee scoping. This is a deliberate design choice based on the peer trust model.
+
 ---
 
 ## Question 1: What Can a VP Do Beyond an Event Chair?

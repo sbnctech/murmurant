@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requireVPOrAdmin } from "@/lib/eventAuth";
 
 type AdminEventListItem = {
   id: string;
@@ -13,7 +13,8 @@ type AdminEventListItem = {
 };
 
 export async function GET(req: NextRequest) {
-  const auth = await requireAdmin(req);
+  // VP of Activities and Admin can view all events
+  const auth = await requireVPOrAdmin(req);
   if (!auth.ok) return auth.response;
 
   const { searchParams } = new URL(req.url);

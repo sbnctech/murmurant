@@ -7,12 +7,20 @@ import { NextRequest, NextResponse } from "next/server";
  * - Check for Authorization header with Bearer token
  * - In development, allow bypass with specific test tokens
  * - Production will integrate with actual JWT/session validation
+ *
+ * Role Hierarchy:
+ * - admin: Full access to everything
+ * - vp-activities: Can view/edit ALL events, cannot delete
+ * - event-chair: Can view/edit own committee's events (future)
+ * - member: Can view published events only
  */
+
+export type GlobalRole = "admin" | "vp-activities" | "event-chair" | "member";
 
 export type AuthContext = {
   memberId: string;
   email: string;
-  globalRole: "admin" | "member";
+  globalRole: GlobalRole;
 };
 
 export type AuthResult =
@@ -82,7 +90,7 @@ export async function requireAdmin(req: NextRequest): Promise<AuthResult> {
  */
 export async function requireRole(
   req: NextRequest,
-  roles: Array<"admin" | "member">
+  roles: GlobalRole[]
 ): Promise<AuthResult> {
   const authResult = await requireAuth(req);
   if (!authResult.ok) {
@@ -103,8 +111,38 @@ export async function requireRole(
 }
 
 /**
+ * Check if role can view all events (including unpublished).
+ */
+export function canViewAllEvents(role: GlobalRole): boolean {
+  return role === "admin" || role === "vp-activities";
+}
+
+/**
+ * Check if role can edit any event.
+ * VP of Activities can edit ALL events (peer trust model).
+ */
+export function canEditAnyEvent(role: GlobalRole): boolean {
+  return role === "admin" || role === "vp-activities";
+}
+
+/**
+ * Check if role can publish events.
+ */
+export function canPublishEvents(role: GlobalRole): boolean {
+  return role === "admin" || role === "vp-activities";
+}
+
+/**
+ * Check if role can delete events.
+ * Only admin can delete - VP cannot.
+ */
+export function canDeleteEvents(role: GlobalRole): boolean {
+  return role === "admin";
+}
+
+/**
  * Parse test tokens for development/testing.
- * Format: "test-admin-{memberId}" or "test-member-{memberId}"
+ * Format: "test-{role}-{memberId}" where role is admin, vp, chair, or member
  *
  * In production, this would be replaced with JWT validation.
  */
@@ -119,6 +157,26 @@ function parseTestToken(token: string): AuthContext | null {
     };
   }
 
+  // Test VP of Activities token
+  if (token.startsWith("test-vp-")) {
+    const memberId = token.slice(8) || "test-vp-id";
+    return {
+      memberId,
+      email: "vp@test.com",
+      globalRole: "vp-activities",
+    };
+  }
+
+  // Test Event Chair token
+  if (token.startsWith("test-chair-")) {
+    const memberId = token.slice(11) || "test-chair-id";
+    return {
+      memberId,
+      email: "chair@test.com",
+      globalRole: "event-chair",
+    };
+  }
+
   // Test member token
   if (token.startsWith("test-member-")) {
     const memberId = token.slice(12) || "test-member-id";
@@ -130,11 +188,27 @@ function parseTestToken(token: string): AuthContext | null {
   }
 
   // Legacy simple tokens for backward compatibility with existing tests
-  if (token === "admin-token" || token === "test-admin") {
+  if (token === "admin-token" || token === "test-admin" || token === "test-admin-token") {
     return {
       memberId: "test-admin-id",
       email: "admin@test.com",
       globalRole: "admin",
+    };
+  }
+
+  if (token === "vp-token" || token === "test-vp") {
+    return {
+      memberId: "test-vp-id",
+      email: "vp@test.com",
+      globalRole: "vp-activities",
+    };
+  }
+
+  if (token === "chair-token" || token === "test-chair") {
+    return {
+      memberId: "test-chair-id",
+      email: "chair@test.com",
+      globalRole: "event-chair",
     };
   }
 

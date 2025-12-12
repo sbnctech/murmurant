@@ -1,77 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, AuthContext, AuthResult } from "@/lib/auth";
+import { requireAuth, AuthContext, AuthResult, GlobalRole } from "@/lib/auth";
 
 /**
- * Event Chair Authorization Utilities
+ * Event Authorization Utilities
  *
- * These utilities implement row-level access control for events:
- * - Event Chairs can view and edit events they own (where eventChairId matches their memberId)
- * - Admins have full access to all events
- * - Regular members cannot access admin event endpoints
+ * These utilities implement access control for events:
  *
- * RBAC Design Principle:
- * RBAC determines who you are (role). Row-level permissions are enforced
- * separately via data relationships (event ownership via eventChairId).
+ * Role Hierarchy:
+ * - Admin: Full access to all events (view, edit, delete)
+ * - VP of Activities: Can view and edit ALL events, but CANNOT delete
+ *   - Two VPs exist as peers with mutual trust
+ *   - VPs bypass all ownership/committee scoping
+ *   - VPs can override Event Chair changes
+ * - Event Chair: Can view and edit events they own (eventChairId matches memberId)
+ * - Member: No admin access
  *
- * ## Future Row-Level Enforcement Notes
- *
- * Current implementation validates access at the API route level using helper
- * functions (requireEventViewAccess, requireEventEditAccess, etc.). This works
- * well for our current scale but has some limitations:
- *
- * ### Scaling Considerations:
- *
- * 1. **Prisma Middleware/Extension**: For more centralized enforcement, consider
- *    using Prisma client extensions to automatically filter queries based on
- *    the authenticated user's permissions. This prevents accidental data leaks
- *    if a route forgets to call the auth helper.
- *
- * 2. **Row-Level Security (RLS) in PostgreSQL**: For maximum security, PostgreSQL
- *    RLS policies can enforce access control at the database level. This requires:
- *    - Setting a session variable (e.g., SET app.current_user_id = '...')
- *    - Creating RLS policies like:
- *      CREATE POLICY event_chair_access ON "Event"
- *      USING (
- *        "eventChairId" = current_setting('app.current_user_id')::uuid
- *        OR current_setting('app.user_role') = 'admin'
- *      );
- *    - Trade-off: Adds complexity and requires careful connection pooling management.
- *
- * 3. **Query Scoping Pattern**: Instead of checking access after fetching,
- *    always scope queries to include ownership:
- *    ```
- *    prisma.event.findMany({
- *      where: {
- *        OR: [
- *          { eventChairId: currentUserId },
- *          // Include if admin (handled by separate logic)
- *        ]
- *      }
- *    })
- *    ```
- *
- * ### Additional Access Patterns to Consider:
- *
- * - **Committee-based access**: Event Chairs of a committee should see all
- *   events under that committee (requires Event-Committee relationship).
- *
- * - **Delegated access**: Allow Event Chairs to delegate view/edit access
- *   to assistants (requires EventAccessGrant table).
- *
- * - **Time-based access**: Chairs might only have access to edit events
- *   before they start, or for a period after they end.
- *
- * - **Audit logging**: Track who accessed/modified events for compliance.
+ * Delete is ALWAYS admin-only. VP cannot delete events.
  */
 
 export type EventAuthContext = AuthContext & {
   isEventChair: boolean;
+  isVP: boolean;
 };
 
 export type EventAuthResult =
   | { ok: true; context: EventAuthContext }
   | { ok: false; response: NextResponse };
+
+/**
+ * Check if role has VP-level access (can view/edit all events).
+ */
+function hasVPAccess(role: GlobalRole): boolean {
+  return role === "admin" || role === "vp-activities";
+}
+
+/**
+ * Check if role can delete events (admin only).
+ */
+function canDelete(role: GlobalRole): boolean {
+  return role === "admin";
+}
 
 /**
  * Check if the authenticated user is the chair of a specific event.
@@ -96,6 +65,7 @@ export async function isEventChair(
 /**
  * Require that the user can view an event.
  * - Admins can view all events
+ * - VP of Activities can view ALL events (peer trust model)
  * - Event chairs can view events they own
  * - Returns 403 for unauthorized access
  * - Returns 404 if event doesn't exist
@@ -111,11 +81,15 @@ export async function requireEventViewAccess(
 
   const { context } = authResult;
 
-  // Admins can view all events
-  if (context.globalRole === "admin") {
+  // Admin and VP can view all events
+  if (hasVPAccess(context.globalRole)) {
     return {
       ok: true,
-      context: { ...context, isEventChair: false },
+      context: {
+        ...context,
+        isEventChair: false,
+        isVP: context.globalRole === "vp-activities",
+      },
     };
   }
 
@@ -153,13 +127,14 @@ export async function requireEventViewAccess(
 
   return {
     ok: true,
-    context: { ...context, isEventChair: true },
+    context: { ...context, isEventChair: true, isVP: false },
   };
 }
 
 /**
  * Require that the user can edit an event.
  * - Admins can edit all events
+ * - VP of Activities can edit ALL events (peer trust model, no ownership check)
  * - Event chairs can edit events they own
  * - Returns 403 for unauthorized access
  * - Returns 404 if event doesn't exist
@@ -175,11 +150,15 @@ export async function requireEventEditAccess(
 
   const { context } = authResult;
 
-  // Admins can edit all events
-  if (context.globalRole === "admin") {
+  // Admin and VP can edit all events
+  if (hasVPAccess(context.globalRole)) {
     return {
       ok: true,
-      context: { ...context, isEventChair: false },
+      context: {
+        ...context,
+        isEventChair: false,
+        isVP: context.globalRole === "vp-activities",
+      },
     };
   }
 
@@ -217,13 +196,15 @@ export async function requireEventEditAccess(
 
   return {
     ok: true,
-    context: { ...context, isEventChair: true },
+    context: { ...context, isEventChair: true, isVP: false },
   };
 }
 
 /**
  * Require that the user can delete an event.
- * - Only admins can delete events (event chairs cannot delete)
+ * - ONLY admins can delete events
+ * - VP of Activities CANNOT delete (this is the key restriction)
+ * - Event chairs cannot delete
  * - Returns 403 for unauthorized access
  * - Returns 404 if event doesn't exist
  */
@@ -238,8 +219,8 @@ export async function requireEventDeleteAccess(
 
   const { context } = authResult;
 
-  // Only admins can delete events
-  if (context.globalRole !== "admin") {
+  // Only admins can delete events - VP CANNOT delete
+  if (!canDelete(context.globalRole)) {
     return {
       ok: false,
       response: NextResponse.json(
@@ -270,7 +251,7 @@ export async function requireEventDeleteAccess(
 
   return {
     ok: true,
-    context: { ...context, isEventChair: false },
+    context: { ...context, isEventChair: false, isVP: false },
   };
 }
 
@@ -289,7 +270,7 @@ export async function getChairedEventIds(memberId: string): Promise<string[]> {
 
 /**
  * Require admin-only access.
- * Event chairs are NOT allowed - only full admins.
+ * Neither VP nor Event Chairs are allowed - only full admins.
  * Use this for sensitive admin operations like:
  * - Viewing all members
  * - Exporting data
@@ -308,6 +289,32 @@ export async function requireAdminOnly(req: NextRequest): Promise<AuthResult> {
         {
           error: "Forbidden",
           message: "This action requires administrator privileges",
+        },
+        { status: 403 }
+      ),
+    };
+  }
+
+  return authResult;
+}
+
+/**
+ * Require VP-level or higher access (VP of Activities or Admin).
+ * Use this for operations that VPs can perform but Event Chairs cannot.
+ */
+export async function requireVPOrAdmin(req: NextRequest): Promise<AuthResult> {
+  const authResult = await requireAuth(req);
+  if (!authResult.ok) {
+    return authResult;
+  }
+
+  if (!hasVPAccess(authResult.context.globalRole)) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        {
+          error: "Forbidden",
+          message: "This action requires VP of Activities or administrator privileges",
         },
         { status: 403 }
       ),
