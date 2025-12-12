@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { RegistrationStatus } from "@prisma/client";
+import { requireAdmin } from "@/lib/auth";
 
 // Fixed reference date for deterministic upcoming events calculation
 const REFERENCE_DATE = new Date("2025-05-01T00:00:00Z");
@@ -14,7 +15,10 @@ type DashboardSummary = {
   waitlistedRegistrations: number;
 };
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const auth = await requireAdmin(req);
+  if (!auth.ok) return auth.response;
+
   // Count all members
   const totalMembers = await prisma.member.count();
 

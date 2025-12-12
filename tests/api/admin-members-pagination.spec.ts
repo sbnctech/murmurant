@@ -1,10 +1,13 @@
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 test.describe("GET /api/admin/members pagination", () => {
   test("returns default pagination metadata", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/members`);
+    const response = await request.get(`${BASE}/api/admin/members`, {
+      headers: ADMIN_HEADERS,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -16,7 +19,10 @@ test.describe("GET /api/admin/members pagination", () => {
   });
 
   test("respects custom page and pageSize params", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/members?page=1&pageSize=1`);
+    const response = await request.get(
+      `${BASE}/api/admin/members?page=1&pageSize=1`,
+      { headers: ADMIN_HEADERS }
+    );
 
     expect(response.status()).toBe(200);
 
@@ -26,7 +32,9 @@ test.describe("GET /api/admin/members pagination", () => {
   });
 
   test("returns empty items for page beyond total", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/members?page=999`);
+    const response = await request.get(`${BASE}/api/admin/members?page=999`, {
+      headers: ADMIN_HEADERS,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -36,7 +44,10 @@ test.describe("GET /api/admin/members pagination", () => {
   });
 
   test("caps pageSize at 100", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/members?pageSize=200`);
+    const response = await request.get(
+      `${BASE}/api/admin/members?pageSize=200`,
+      { headers: ADMIN_HEADERS }
+    );
 
     expect(response.status()).toBe(200);
 
@@ -45,7 +56,9 @@ test.describe("GET /api/admin/members pagination", () => {
   });
 
   test("ignores invalid page values", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/members?page=abc`);
+    const response = await request.get(`${BASE}/api/admin/members?page=abc`, {
+      headers: ADMIN_HEADERS,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -54,11 +67,15 @@ test.describe("GET /api/admin/members pagination", () => {
   });
 
   test("ignores zero or negative page values", async ({ request }) => {
-    const response1 = await request.get(`${BASE}/api/admin/members?page=0`);
+    const response1 = await request.get(`${BASE}/api/admin/members?page=0`, {
+      headers: ADMIN_HEADERS,
+    });
     const data1 = await response1.json();
     expect(data1.page).toBe(1);
 
-    const response2 = await request.get(`${BASE}/api/admin/members?page=-5`);
+    const response2 = await request.get(`${BASE}/api/admin/members?page=-5`, {
+      headers: ADMIN_HEADERS,
+    });
     const data2 = await response2.json();
     expect(data2.page).toBe(1);
   });

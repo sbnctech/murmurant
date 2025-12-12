@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/auth";
 
 type AdminEventListItem = {
   id: string;
@@ -8,9 +9,13 @@ type AdminEventListItem = {
   startTime: string;
   registrationCount: number;
   waitlistedCount: number;
+  eventChairId: string | null;
 };
 
 export async function GET(req: NextRequest) {
+  const auth = await requireAdmin(req);
+  if (!auth.ok) return auth.response;
+
   const { searchParams } = new URL(req.url);
 
   // Parse pagination params with defaults

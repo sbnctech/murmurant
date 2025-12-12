@@ -1,11 +1,16 @@
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 test.describe("GET /api/admin/registrations/[id]", () => {
-  test("returns registration details for a valid registration", async ({ request }) => {
+  test("returns registration details for a valid registration", async ({
+    request,
+  }) => {
     // First get the list to find a valid ID
-    const listResponse = await request.get(`${BASE}/api/admin/registrations`);
+    const listResponse = await request.get(`${BASE}/api/admin/registrations`, {
+      headers: ADMIN_HEADERS,
+    });
     expect(listResponse.ok()).toBe(true);
 
     const listData = await listResponse.json();
@@ -15,7 +20,10 @@ test.describe("GET /api/admin/registrations/[id]", () => {
     const regId = firstReg.id;
 
     // Now fetch that specific registration
-    const response = await request.get(`${BASE}/api/admin/registrations/${regId}`);
+    const response = await request.get(
+      `${BASE}/api/admin/registrations/${regId}`,
+      { headers: ADMIN_HEADERS }
+    );
     expect(response.status()).toBe(200);
 
     const data = await response.json();
@@ -32,7 +40,9 @@ test.describe("GET /api/admin/registrations/[id]", () => {
 
   test("returns correct member and event names", async ({ request }) => {
     // Get the list first
-    const listResponse = await request.get(`${BASE}/api/admin/registrations`);
+    const listResponse = await request.get(`${BASE}/api/admin/registrations`, {
+      headers: ADMIN_HEADERS,
+    });
     const listData = await listResponse.json();
 
     // Find Carol's registration
@@ -42,7 +52,10 @@ test.describe("GET /api/admin/registrations/[id]", () => {
     expect(carolReg).toBeDefined();
 
     // Fetch that registration's detail
-    const response = await request.get(`${BASE}/api/admin/registrations/${carolReg.id}`);
+    const response = await request.get(
+      `${BASE}/api/admin/registrations/${carolReg.id}`,
+      { headers: ADMIN_HEADERS }
+    );
     expect(response.status()).toBe(200);
 
     const data = await response.json();
@@ -51,7 +64,10 @@ test.describe("GET /api/admin/registrations/[id]", () => {
   });
 
   test("returns 404 for unknown id", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/registrations/00000000-0000-0000-0000-000000000000`);
+    const response = await request.get(
+      `${BASE}/api/admin/registrations/00000000-0000-0000-0000-000000000000`,
+      { headers: ADMIN_HEADERS }
+    );
 
     expect(response.status()).toBe(404);
 

@@ -1,10 +1,13 @@
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 test.describe("GET /api/admin/export/events", () => {
   test("returns CSV with correct headers", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/export/events`);
+    const response = await request.get(`${BASE}/api/admin/export/events`, {
+      headers: ADMIN_HEADERS,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -16,11 +19,15 @@ test.describe("GET /api/admin/export/events", () => {
 
     const body = await response.text();
     const firstLine = body.split("\n")[0];
-    expect(firstLine).toBe("id,title,category,startTime,registrationCount,waitlistedCount");
+    expect(firstLine).toBe(
+      "id,title,category,startTime,registrationCount,waitlistedCount"
+    );
   });
 
   test("includes seeded events with correct categories", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/export/events`);
+    const response = await request.get(`${BASE}/api/admin/export/events`, {
+      headers: ADMIN_HEADERS,
+    });
     const body = await response.text();
 
     // Seed data includes these events
@@ -32,7 +39,9 @@ test.describe("GET /api/admin/export/events", () => {
   });
 
   test("events include registration and waitlist counts", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/export/events`);
+    const response = await request.get(`${BASE}/api/admin/export/events`, {
+      headers: ADMIN_HEADERS,
+    });
     const body = await response.text();
     const lines = body.split("\n").filter((line) => line.length > 0);
 
@@ -48,7 +57,9 @@ test.describe("GET /api/admin/export/events", () => {
   });
 
   test("events are ordered by startTime", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/export/events`);
+    const response = await request.get(`${BASE}/api/admin/export/events`, {
+      headers: ADMIN_HEADERS,
+    });
     const body = await response.text();
     const lines = body.split("\n").filter((line) => line.length > 0);
 
@@ -56,8 +67,12 @@ test.describe("GET /api/admin/export/events", () => {
     const dataLines = lines.slice(1);
 
     // Morning Hike (June 10) should come before Welcome Coffee (July 15)
-    const hikeIndex = dataLines.findIndex((line) => line.includes("Morning Hike"));
-    const coffeeIndex = dataLines.findIndex((line) => line.includes("Welcome Coffee"));
+    const hikeIndex = dataLines.findIndex((line) =>
+      line.includes("Morning Hike")
+    );
+    const coffeeIndex = dataLines.findIndex((line) =>
+      line.includes("Welcome Coffee")
+    );
 
     expect(hikeIndex).toBeLessThan(coffeeIndex);
   });

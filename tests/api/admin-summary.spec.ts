@@ -1,9 +1,12 @@
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 test("GET /api/admin/summary returns expected counts", async ({ request }) => {
-  const response = await request.get(`${BASE}/api/admin/summary`);
+  const response = await request.get(`${BASE}/api/admin/summary`, {
+    headers: ADMIN_HEADERS,
+  });
 
   expect(response.status()).toBe(200);
 

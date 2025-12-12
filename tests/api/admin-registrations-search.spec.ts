@@ -1,10 +1,16 @@
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 test.describe("GET /api/admin/registrations/search", () => {
-  test("returns all registrations when no filters are provided", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/registrations/search`);
+  test("returns all registrations when no filters are provided", async ({
+    request,
+  }) => {
+    const response = await request.get(
+      `${BASE}/api/admin/registrations/search`,
+      { headers: ADMIN_HEADERS }
+    );
 
     expect(response.status()).toBe(200);
 
@@ -24,7 +30,8 @@ test.describe("GET /api/admin/registrations/search", () => {
 
   test("filters by status", async ({ request }) => {
     const response = await request.get(
-      `${BASE}/api/admin/registrations/search?status=WAITLISTED`
+      `${BASE}/api/admin/registrations/search?status=WAITLISTED`,
+      { headers: ADMIN_HEADERS }
     );
 
     expect(response.status()).toBe(200);
@@ -39,7 +46,9 @@ test.describe("GET /api/admin/registrations/search", () => {
 
   test("filters by eventId", async ({ request }) => {
     // First get an event ID from the events list
-    const eventsResponse = await request.get(`${BASE}/api/admin/events`);
+    const eventsResponse = await request.get(`${BASE}/api/admin/events`, {
+      headers: ADMIN_HEADERS,
+    });
     const eventsData = await eventsResponse.json();
     const eventWithRegistrations = eventsData.items.find(
       (e: { registrationCount: number }) => e.registrationCount > 0
@@ -51,7 +60,8 @@ test.describe("GET /api/admin/registrations/search", () => {
     }
 
     const response = await request.get(
-      `${BASE}/api/admin/registrations/search?eventId=${eventWithRegistrations.id}`
+      `${BASE}/api/admin/registrations/search?eventId=${eventWithRegistrations.id}`,
+      { headers: ADMIN_HEADERS }
     );
 
     expect(response.status()).toBe(200);
@@ -67,7 +77,8 @@ test.describe("GET /api/admin/registrations/search", () => {
   test("filters by memberId AND status together", async ({ request }) => {
     // First get a waitlisted registration to use its memberId
     const waitlistedResponse = await request.get(
-      `${BASE}/api/admin/registrations/search?status=WAITLISTED`
+      `${BASE}/api/admin/registrations/search?status=WAITLISTED`,
+      { headers: ADMIN_HEADERS }
     );
     const waitlistedData = await waitlistedResponse.json();
 
@@ -79,7 +90,8 @@ test.describe("GET /api/admin/registrations/search", () => {
     const targetMemberId = waitlistedData.registrations[0].memberId;
 
     const response = await request.get(
-      `${BASE}/api/admin/registrations/search?memberId=${targetMemberId}&status=WAITLISTED`
+      `${BASE}/api/admin/registrations/search?memberId=${targetMemberId}&status=WAITLISTED`,
+      { headers: ADMIN_HEADERS }
     );
 
     expect(response.status()).toBe(200);
@@ -93,9 +105,12 @@ test.describe("GET /api/admin/registrations/search", () => {
     }
   });
 
-  test("returns empty array when no registrations match", async ({ request }) => {
+  test("returns empty array when no registrations match", async ({
+    request,
+  }) => {
     const response = await request.get(
-      `${BASE}/api/admin/registrations/search?memberId=00000000-0000-0000-0000-000000000000`
+      `${BASE}/api/admin/registrations/search?memberId=00000000-0000-0000-0000-000000000000`,
+      { headers: ADMIN_HEADERS }
     );
 
     expect(response.status()).toBe(200);

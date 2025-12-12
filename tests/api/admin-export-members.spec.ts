@@ -1,10 +1,13 @@
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 test.describe("GET /api/admin/export/members", () => {
   test("returns CSV with correct headers", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/export/members`);
+    const response = await request.get(`${BASE}/api/admin/export/members`, {
+      headers: ADMIN_HEADERS,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -19,8 +22,12 @@ test.describe("GET /api/admin/export/members", () => {
     expect(firstLine).toBe("id,name,email,status,joinedAt,phone");
   });
 
-  test("includes seeded members (Alice Chen, Carol Johnson)", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/export/members`);
+  test("includes seeded members (Alice Chen, Carol Johnson)", async ({
+    request,
+  }) => {
+    const response = await request.get(`${BASE}/api/admin/export/members`, {
+      headers: ADMIN_HEADERS,
+    });
     const body = await response.text();
 
     // Seed data contains Alice Chen and Carol Johnson
@@ -29,7 +36,9 @@ test.describe("GET /api/admin/export/members", () => {
   });
 
   test("members are ordered by lastName, firstName", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/export/members`);
+    const response = await request.get(`${BASE}/api/admin/export/members`, {
+      headers: ADMIN_HEADERS,
+    });
     const body = await response.text();
     const lines = body.split("\n").filter((line) => line.length > 0);
 

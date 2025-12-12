@@ -1,10 +1,13 @@
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 test.describe("GET /api/admin/registrations", () => {
   test("returns all registrations with joined names", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/registrations`);
+    const response = await request.get(`${BASE}/api/admin/registrations`, {
+      headers: ADMIN_HEADERS,
+    });
 
     expect(response.ok()).toBe(true);
 
@@ -29,7 +32,9 @@ test.describe("GET /api/admin/registrations", () => {
   });
 
   test("includes status and registeredAt fields", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/registrations`);
+    const response = await request.get(`${BASE}/api/admin/registrations`, {
+      headers: ADMIN_HEADERS,
+    });
     const data = await response.json();
 
     for (const reg of data.items) {
@@ -40,8 +45,12 @@ test.describe("GET /api/admin/registrations", () => {
     }
   });
 
-  test("all items have non-empty memberName and eventTitle", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/registrations`);
+  test("all items have non-empty memberName and eventTitle", async ({
+    request,
+  }) => {
+    const response = await request.get(`${BASE}/api/admin/registrations`, {
+      headers: ADMIN_HEADERS,
+    });
     const data = await response.json();
 
     for (const reg of data.items) {

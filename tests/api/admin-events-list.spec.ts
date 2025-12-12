@@ -1,10 +1,13 @@
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 test.describe("GET /api/admin/events", () => {
   test("returns 200 and items array", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/events`);
+    const response = await request.get(`${BASE}/api/admin/events`, {
+      headers: ADMIN_HEADERS,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -15,7 +18,9 @@ test.describe("GET /api/admin/events", () => {
   });
 
   test("returns events with correct shape", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/events`);
+    const response = await request.get(`${BASE}/api/admin/events`, {
+      headers: ADMIN_HEADERS,
+    });
     const data = await response.json();
 
     const event = data.items[0];
@@ -29,7 +34,9 @@ test.describe("GET /api/admin/events", () => {
   });
 
   test("returns events with registration counts", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/events`);
+    const response = await request.get(`${BASE}/api/admin/events`, {
+      headers: ADMIN_HEADERS,
+    });
     const data = await response.json();
 
     // Find an event with registrations (Morning Hike has 2 registered + 1 waitlisted)

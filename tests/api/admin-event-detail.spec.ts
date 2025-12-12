@@ -1,15 +1,20 @@
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 test.describe("GET /api/admin/events/[id]", () => {
   test("returns event details and registrations for valid id", async ({ request }) => {
     // First get the list to find a valid event ID
-    const listResponse = await request.get(`${BASE}/api/admin/events`);
+    const listResponse = await request.get(`${BASE}/api/admin/events`, {
+      headers: ADMIN_HEADERS,
+    });
     const listData = await listResponse.json();
     const eventId = listData.items[0].id;
 
-    const response = await request.get(`${BASE}/api/admin/events/${eventId}`);
+    const response = await request.get(`${BASE}/api/admin/events/${eventId}`, {
+      headers: ADMIN_HEADERS,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -21,13 +26,15 @@ test.describe("GET /api/admin/events/[id]", () => {
     expect(typeof data.event.title).toBe("string");
     expect(typeof data.event.startTime).toBe("string");
 
-    // Assert registrations array exists
-    expect(Array.isArray(data.registrations)).toBe(true);
+    // Assert registrations array exists (now nested in event)
+    expect(Array.isArray(data.event.registrations)).toBe(true);
   });
 
   test("returns event detail with registrations that have correct shape", async ({ request }) => {
     // First get an event with registrations
-    const listResponse = await request.get(`${BASE}/api/admin/events`);
+    const listResponse = await request.get(`${BASE}/api/admin/events`, {
+      headers: ADMIN_HEADERS,
+    });
     const listData = await listResponse.json();
     const eventWithRegs = listData.items.find(
       (e: { registrationCount: number }) => e.registrationCount > 0
@@ -38,14 +45,16 @@ test.describe("GET /api/admin/events/[id]", () => {
       return;
     }
 
-    const response = await request.get(`${BASE}/api/admin/events/${eventWithRegs.id}`);
+    const response = await request.get(`${BASE}/api/admin/events/${eventWithRegs.id}`, {
+      headers: ADMIN_HEADERS,
+    });
     expect(response.status()).toBe(200);
 
     const data = await response.json();
 
-    // Assert registrations have correct shape
-    expect(data.registrations.length).toBeGreaterThanOrEqual(1);
-    const reg = data.registrations[0];
+    // Assert registrations have correct shape (now nested in event)
+    expect(data.event.registrations.length).toBeGreaterThanOrEqual(1);
+    const reg = data.event.registrations[0];
     expect(reg.id).toBeDefined();
     expect(reg.memberId).toBeDefined();
     expect(typeof reg.memberName).toBe("string");
@@ -54,7 +63,9 @@ test.describe("GET /api/admin/events/[id]", () => {
   });
 
   test("returns 404 for unknown id", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/events/unknown`);
+    const response = await request.get(`${BASE}/api/admin/events/unknown`, {
+      headers: ADMIN_HEADERS,
+    });
 
     expect(response.status()).toBe(404);
 
@@ -64,12 +75,27 @@ test.describe("GET /api/admin/events/[id]", () => {
 
   test("returns 404 for non-existent UUID", async ({ request }) => {
     const response = await request.get(
-      `${BASE}/api/admin/events/00000000-0000-0000-0000-000000000000`
+      `${BASE}/api/admin/events/00000000-0000-0000-0000-000000000000`,
+      { headers: ADMIN_HEADERS }
     );
 
     expect(response.status()).toBe(404);
 
     const data = await response.json();
     expect(data.error).toBe("Not found");
+  });
+
+  test("returns 401 for unauthenticated request", async ({ request }) => {
+    const listResponse = await request.get(`${BASE}/api/admin/events`, {
+      headers: ADMIN_HEADERS,
+    });
+    const listData = await listResponse.json();
+    const eventId = listData.items[0].id;
+
+    const response = await request.get(`${BASE}/api/admin/events/${eventId}`);
+
+    expect(response.status()).toBe(401);
+    const data = await response.json();
+    expect(data.error).toBe("Unauthorized");
   });
 });
