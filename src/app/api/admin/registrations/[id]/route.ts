@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { listRegistrations } from "@/lib/mockRegistrations";
-import { getMemberById } from "@/lib/mockMembers";
-import { listEvents } from "@/lib/mockEvents";
+import { prisma } from "@/lib/prisma";
 
 type RegistrationDetailResponse = {
   registration: {
@@ -21,28 +19,38 @@ export async function GET(
 ) {
   const { id } = await params;
 
-  const allRegistrations = listRegistrations();
-  const registration = allRegistrations.find((r) => r.id === id);
+  const registration = await prisma.eventRegistration.findUnique({
+    where: { id },
+    include: {
+      member: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+      event: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+    },
+  });
 
   if (!registration) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const allEvents = listEvents();
-  const member = getMemberById(registration.memberId);
-  const event = allEvents.find((e) => e.id === registration.eventId);
-
   const response: RegistrationDetailResponse = {
     registration: {
       id: registration.id,
       memberId: registration.memberId,
-      memberName: member
-        ? `${member.firstName} ${member.lastName}`
-        : "Unknown member",
+      memberName: `${registration.member.firstName} ${registration.member.lastName}`,
       eventId: registration.eventId,
-      eventTitle: event ? event.title : "Unknown event",
+      eventTitle: registration.event.title,
       status: registration.status,
-      registeredAt: registration.registeredAt,
+      registeredAt: registration.registeredAt.toISOString(),
     },
   };
 

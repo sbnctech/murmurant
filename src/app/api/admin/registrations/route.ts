@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { listRegistrations } from "@/lib/mockRegistrations";
-import { getMemberById } from "@/lib/mockMembers";
-import { listEvents } from "@/lib/mockEvents";
+import { prisma } from "@/lib/prisma";
 
 type AdminRegistrationListItem = {
   id: string;
@@ -37,32 +35,42 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  const allRegistrations = listRegistrations();
-  const allEvents = listEvents();
+  // Get total count
+  const totalItems = await prisma.eventRegistration.count();
 
-  const eventById = new Map(allEvents.map((e) => [e.id, e]));
-
-  const registrations: AdminRegistrationListItem[] = allRegistrations.map((r) => {
-    const member = getMemberById(r.memberId);
-    const event = eventById.get(r.eventId);
-
-    return {
-      id: r.id,
-      memberId: r.memberId,
-      memberName: member
-        ? `${member.firstName} ${member.lastName}`
-        : "Unknown member",
-      eventId: r.eventId,
-      eventTitle: event ? event.title : "Unknown event",
-      status: r.status,
-      registeredAt: r.registeredAt,
-    };
+  // Fetch registrations with member and event data
+  const dbRegistrations = await prisma.eventRegistration.findMany({
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    orderBy: { registeredAt: "desc" },
+    include: {
+      member: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+      event: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+    },
   });
 
-  const totalItems = registrations.length;
+  const items: AdminRegistrationListItem[] = dbRegistrations.map((r) => ({
+    id: r.id,
+    memberId: r.memberId,
+    memberName: `${r.member.firstName} ${r.member.lastName}`,
+    eventId: r.eventId,
+    eventTitle: r.event.title,
+    status: r.status,
+    registeredAt: r.registeredAt.toISOString(),
+  }));
+
   const totalPages = Math.ceil(totalItems / pageSize);
-  const startIndex = (page - 1) * pageSize;
-  const items = registrations.slice(startIndex, startIndex + pageSize);
 
   return NextResponse.json({
     items,

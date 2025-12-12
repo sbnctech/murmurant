@@ -1,25 +1,37 @@
 import { NextResponse } from "next/server";
-import { listRegistrations } from "@/lib/mockRegistrations";
-import { getMemberById } from "@/lib/mockMembers";
-import { listEvents } from "@/lib/mockEvents";
+import { prisma } from "@/lib/prisma";
 
 export async function GET() {
-  const registrations = listRegistrations();
-  const allEvents = listEvents();
-  const eventById = new Map(allEvents.map((e) => [e.id, e]));
+  const registrations = await prisma.eventRegistration.findMany({
+    orderBy: { registeredAt: "desc" },
+    include: {
+      member: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+      event: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+    },
+  });
 
   const headerRow = "id,memberId,memberName,eventId,eventTitle,status,registeredAt";
 
   const dataRows = registrations.map((r) => {
-    const member = getMemberById(r.memberId);
-    const event = eventById.get(r.eventId);
+    const memberName = `${r.member.firstName} ${r.member.lastName}`;
+    const eventTitle = r.event.title;
 
-    const memberName = member
-      ? `${member.firstName} ${member.lastName}`
-      : "Unknown member";
-    const eventTitle = event ? event.title : "Unknown event";
+    // Escape commas in titles by quoting
+    const safeEventTitle = eventTitle.includes(",") ? `"${eventTitle}"` : eventTitle;
+    const safeMemberName = memberName.includes(",") ? `"${memberName}"` : memberName;
 
-    return `${r.id},${r.memberId},${memberName},${r.eventId},${eventTitle},${r.status},${r.registeredAt}`;
+    return `${r.id},${r.memberId},${safeMemberName},${r.eventId},${safeEventTitle},${r.status},${r.registeredAt.toISOString()}`;
   });
 
   const csv = [headerRow, ...dataRows].join("\n");

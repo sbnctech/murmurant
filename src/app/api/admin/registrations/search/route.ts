@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { listRegistrations } from "@/lib/mockRegistrations";
-import { getMemberById } from "@/lib/mockMembers";
-import { listEvents } from "@/lib/mockEvents";
+import { prisma } from "@/lib/prisma";
+import { RegistrationStatus } from "@prisma/client";
 
 type EnrichedRegistration = {
   id: string;
@@ -19,42 +18,54 @@ export async function GET(req: NextRequest) {
   const eventIdFilter = searchParams.get("eventId");
   const statusFilter = searchParams.get("status");
 
-  const allRegistrations = listRegistrations();
-  const allEvents = listEvents();
-  const eventById = new Map(allEvents.map((e) => [e.id, e]));
-
-  // Filter registrations based on query parameters
-  let filtered = allRegistrations;
+  // Build Prisma where clause
+  const where: {
+    memberId?: string;
+    eventId?: string;
+    status?: RegistrationStatus;
+  } = {};
 
   if (memberIdFilter) {
-    filtered = filtered.filter((r) => r.memberId === memberIdFilter);
+    where.memberId = memberIdFilter;
   }
 
   if (eventIdFilter) {
-    filtered = filtered.filter((r) => r.eventId === eventIdFilter);
+    where.eventId = eventIdFilter;
   }
 
-  if (statusFilter) {
-    filtered = filtered.filter((r) => r.status === statusFilter);
+  if (statusFilter && Object.values(RegistrationStatus).includes(statusFilter as RegistrationStatus)) {
+    where.status = statusFilter as RegistrationStatus;
   }
 
-  // Enrich with member and event names
-  const registrations: EnrichedRegistration[] = filtered.map((r) => {
-    const member = getMemberById(r.memberId);
-    const event = eventById.get(r.eventId);
-
-    return {
-      id: r.id,
-      memberId: r.memberId,
-      memberName: member
-        ? `${member.firstName} ${member.lastName}`
-        : "Unknown member",
-      eventId: r.eventId,
-      eventTitle: event ? event.title : "Unknown event",
-      status: r.status,
-      registeredAt: r.registeredAt,
-    };
+  const dbRegistrations = await prisma.eventRegistration.findMany({
+    where,
+    orderBy: { registeredAt: "desc" },
+    include: {
+      member: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+      event: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+    },
   });
+
+  const registrations: EnrichedRegistration[] = dbRegistrations.map((r) => ({
+    id: r.id,
+    memberId: r.memberId,
+    memberName: `${r.member.firstName} ${r.member.lastName}`,
+    eventId: r.eventId,
+    eventTitle: r.event.title,
+    status: r.status,
+    registeredAt: r.registeredAt.toISOString(),
+  }));
 
   return NextResponse.json({ registrations });
 }
