@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const EnvSchema = z.object({
-  DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
+  DATABASE_URL: z.string().optional(),
   AUTH_JWT_SECRET: z.string().optional(),
   EMAIL_PROVIDER: z.string().optional(),
   SMS_PROVIDER: z.string().optional(),
@@ -16,4 +16,11 @@ export function getEnv(): Env {
     throw new Error(`Invalid environment: ${msg}`);
   }
   return parsed.data;
+}
+
+export function requireDatabaseUrl(env: Env): string {
+  if (!env.DATABASE_URL || env.DATABASE_URL.trim().length == 0) {
+    throw new Error("DATABASE_URL is required for database operations");
+  }
+  return env.DATABASE_URL;
 }
