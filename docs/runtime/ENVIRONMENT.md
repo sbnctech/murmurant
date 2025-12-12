@@ -8,11 +8,13 @@ Calendar note: This document is being added while we are still on Calendar Day 2
 - Vercel Preview/Production use Vercel Environment Variables.
 - Do not point Vercel DATABASE_URL at localhost.
 
-## Required
+## Required for DB-backed routes
 ### DATABASE_URL
 - Local dev example:
   postgresql://clubos:clubos@localhost:5432/clubos_dev
 - Vercel must be a hosted Postgres URL.
+- For early Preview deploys, DATABASE_URL may be unset until Day 3 wiring.
+- Any route that performs DB operations will require it.
 
 ## Optional (placeholders for Day 3 wiring)
 ### AUTH_JWT_SECRET
