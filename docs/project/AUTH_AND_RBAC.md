@@ -1,40 +1,101 @@
-# Authentication and RBAC (Role-Based Access Control)
+# Authentication and RBAC
+
+This document describes the authentication and role-based access control (RBAC) system for ClubOS API routes.
 
 ## Overview
-ClubOS uses simple role-based access control enforced at the API layer.
 
-RBAC answers: *what kind of user is making this request?*
+ClubOS uses a simple header-based authentication system for the v1 API. Authentication is performed via Bearer tokens in the `Authorization` header.
 
-Authorization answers: *what data is this user allowed to access?*
+## Dev Tokens (Temporary)
 
-## Roles (Current)
-- ADMIN
-- MEMBER
+For development and testing, the following static tokens are accepted:
 
-(Additional roles such as VP_ACTIVITIES and EVENT_CHAIR will be added later.)
+| Token | Role | Description |
+|-------|------|-------------|
+| `test-admin-token` | admin | Primary admin test token |
+| `admin-dev` | admin | Alternative admin token |
+| `vp-dev` | admin | VP Activities (admin-level access) |
+| `chair-dev` | member | Event Chair (member-level access) |
+| `test-member-token` | member | Primary member test token |
+| `member-dev` | member | Alternative member token |
 
-## Authentication
-APIs expect an Authorization header:
+Dynamic tokens with custom member IDs:
+- `test-admin-{memberId}` - Admin with custom memberId
+- `test-member-{memberId}` - Member with custom memberId
 
-Authorization: Bearer <token>
+**Note:** These tokens are intentionally simple for development. Production will use JWT/OAuth.
 
-Invalid or missing tokens return:
-- 401 Unauthorized
+## Roles
 
-## Authorization
-Routes enforce role checks:
-- /api/admin/* requires ADMIN
-- Public routes require no role
+| Role | Description |
+|------|-------------|
+| `admin` | Full access to all admin endpoints |
+| `member` | Access to member-facing endpoints only |
 
-Insufficient role returns:
-- 403 Forbidden
+## Error Responses
 
-## Example
-A protected admin route will:
-1. Validate the token
-2. Load the user role
-3. Enforce role requirements
-4. Return data or a 401/403 error
+- **401 Unauthorized**: Missing or invalid token
+- **403 Forbidden**: Valid token but insufficient permissions
 
-RBAC does not implement row-level permissions by itself.
-Row-level rules are enforced separately using data relationships.
+## Usage in API Routes
+
+### Example: Protect an Admin Endpoint
+
+```typescript
+import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
+
+export async function GET(req: NextRequest) {
+  const auth = await requireAdmin(req);
+  if (!auth.ok) return auth.response;
+
+  // auth.context.memberId, auth.context.email, auth.context.globalRole
+  return NextResponse.json({ data: "admin-only data" });
+}
+```
+
+### Example: Protect with Multiple Roles
+
+```typescript
+import { requireRole } from "@/lib/auth";
+
+export async function GET(req: NextRequest) {
+  const auth = await requireRole(req, ["admin", "member"]);
+  if (!auth.ok) return auth.response;
+
+  // Authenticated user with admin or member role
+  return NextResponse.json({ userId: auth.context.memberId });
+}
+```
+
+## Auth Module Exports
+
+| Function | Description |
+|----------|-------------|
+| `parseBearerToken(req)` | Extract token from Authorization header |
+| `requireAuth(req)` | Require any valid authentication |
+| `requireAdmin(req)` | Require admin role |
+| `requireRole(req, roles)` | Require one of the specified roles |
+
+## Testing with Auth
+
+When writing tests, include the Authorization header:
+
+```typescript
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
+
+test("admin endpoint", async ({ request }) => {
+  const response = await request.get("/api/admin/members", {
+    headers: ADMIN_HEADERS,
+  });
+  expect(response.status()).toBe(200);
+});
+```
+
+## Future Enhancements
+
+- [ ] JWT token validation
+- [ ] OAuth integration
+- [ ] Database-backed user sessions
+- [ ] Fine-grained permissions (beyond admin/member)
+- [ ] Row-level authorization (e.g., event chair can only edit their events)

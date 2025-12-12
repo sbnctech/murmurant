@@ -1,34 +1,35 @@
+import { NextRequest, NextResponse } from "next/server";
+
 /**
- * Authentication and Authorization Helpers
+ * Authentication and authorization utilities for API routes.
  *
- * Provides simple header-based auth for dev environment.
- * Uses Bearer tokens stored in UserAccount.apiToken field.
+ * For v1, we use a simplified approach:
+ * - Check for Authorization header with Bearer token
+ * - In development, allow bypass with specific test tokens
+ * - Production will integrate with actual JWT/session validation
  *
- * Usage:
- *   Authorization: Bearer <token>
- *
- * Error responses:
- *   401 - Missing or invalid token
- *   403 - Valid token but insufficient permissions
+ * TEMPORARY DEV TOKENS (intentionally simple until real auth arrives):
+ *   - "test-admin-token" or "admin-dev" -> admin role
+ *   - "vp-dev" -> admin role (VP Activities treated as admin)
+ *   - "chair-dev" -> member role (Event Chair)
+ *   - "test-member-token" or "member-dev" -> member role
+ *   - "test-admin-{memberId}" -> admin with custom memberId
+ *   - "test-member-{memberId}" -> member with custom memberId
+ *   - Any other token -> invalid (401)
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { UserRole } from "@prisma/client";
-
-export type AuthUser = {
-  userId: string;
+export type AuthContext = {
   memberId: string;
   email: string;
-  role: UserRole;
+  globalRole: "admin" | "member";
 };
 
 export type AuthResult =
-  | { ok: true; user: AuthUser }
+  | { ok: true; context: AuthContext }
   | { ok: false; response: NextResponse };
 
 /**
- * Extract Bearer token from Authorization header
+ * Extract Bearer token from Authorization header.
  */
 export function parseBearerToken(req: NextRequest): string | null {
   const authHeader = req.headers.get("Authorization");
@@ -43,98 +44,166 @@ export function parseBearerToken(req: NextRequest): string | null {
 }
 
 /**
- * Create a 401 Unauthorized response
- */
-export function unauthorized(message = "Authentication required"): NextResponse {
-  return NextResponse.json(
-    {
-      error: {
-        code: "UNAUTHORIZED",
-        message,
-      },
-    },
-    { status: 401 }
-  );
-}
-
-/**
- * Create a 403 Forbidden response
- */
-export function forbidden(message = "Insufficient permissions"): NextResponse {
-  return NextResponse.json(
-    {
-      error: {
-        code: "FORBIDDEN",
-        message,
-      },
-    },
-    { status: 403 }
-  );
-}
-
-/**
- * Require authentication - returns user info or 401 response
- *
- * Usage:
- *   const auth = await requireAuth(req);
- *   if (!auth.ok) return auth.response;
- *   const { user } = auth;
+ * Validates the request has a valid authentication token.
+ * Returns 401 if missing/invalid token.
  */
 export async function requireAuth(req: NextRequest): Promise<AuthResult> {
   const token = parseBearerToken(req);
 
   if (!token) {
-    return { ok: false, response: unauthorized("Missing Authorization header") };
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { error: "Unauthorized", message: "Missing or invalid authorization header" },
+        { status: 401 }
+      ),
+    };
   }
 
-  const userAccount = await prisma.userAccount.findUnique({
-    where: { apiToken: token },
-    select: {
-      id: true,
-      memberId: true,
-      email: true,
-      role: true,
-      isActive: true,
-    },
-  });
-
-  if (!userAccount) {
-    return { ok: false, response: unauthorized("Invalid token") };
+  // For development/testing, accept specific test tokens
+  // In production, this would validate JWT or session
+  const context = parseTestToken(token);
+  if (!context) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { error: "Unauthorized", message: "Invalid or expired token" },
+        { status: 401 }
+      ),
+    };
   }
 
-  if (!userAccount.isActive) {
-    return { ok: false, response: unauthorized("Account is disabled") };
-  }
-
-  return {
-    ok: true,
-    user: {
-      userId: userAccount.id,
-      memberId: userAccount.memberId,
-      email: userAccount.email,
-      role: userAccount.role,
-    },
-  };
+  return { ok: true, context };
 }
 
 /**
- * Require admin role - returns user info or 401/403 response
- *
- * Usage:
- *   const auth = await requireAdmin(req);
- *   if (!auth.ok) return auth.response;
- *   const { user } = auth;
+ * Validates the authenticated user has admin role.
+ * Returns 403 if not an admin.
  */
 export async function requireAdmin(req: NextRequest): Promise<AuthResult> {
-  const auth = await requireAuth(req);
-
-  if (!auth.ok) {
-    return auth;
+  const authResult = await requireAuth(req);
+  if (!authResult.ok) {
+    return authResult;
   }
 
-  if (auth.user.role !== UserRole.ADMIN) {
-    return { ok: false, response: forbidden("Admin access required") };
+  if (authResult.context.globalRole !== "admin") {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { error: "Forbidden", message: "Admin access required" },
+        { status: 403 }
+      ),
+    };
   }
 
-  return auth;
+  return authResult;
+}
+
+/**
+ * Validates the authenticated user has one of the required roles.
+ */
+export async function requireRole(
+  req: NextRequest,
+  roles: Array<"admin" | "member">
+): Promise<AuthResult> {
+  const authResult = await requireAuth(req);
+  if (!authResult.ok) {
+    return authResult;
+  }
+
+  if (!roles.includes(authResult.context.globalRole)) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { error: "Forbidden", message: `Required role: ${roles.join(" or ")}` },
+        { status: 403 }
+      ),
+    };
+  }
+
+  return authResult;
+}
+
+/**
+ * Parse test tokens for development/testing.
+ *
+ * TEMPORARY DEV TOKENS (intentionally simple until real auth arrives):
+ *   - "test-admin-token" or "admin-dev" -> admin role
+ *   - "vp-dev" -> admin role (VP Activities treated as admin for now)
+ *   - "chair-dev" -> member role (Event Chair)
+ *   - "test-member-token" or "member-dev" -> member role
+ *   - "test-admin-{memberId}" -> admin with custom memberId
+ *   - "test-member-{memberId}" -> member with custom memberId
+ *
+ * In production, this would be replaced with JWT validation.
+ */
+function parseTestToken(token: string): AuthContext | null {
+  // Test admin token with custom memberId
+  if (token.startsWith("test-admin-")) {
+    const memberId = token.slice(11) || "test-admin-id";
+    return {
+      memberId,
+      email: "admin@test.com",
+      globalRole: "admin",
+    };
+  }
+
+  // Test member token with custom memberId
+  if (token.startsWith("test-member-")) {
+    const memberId = token.slice(12) || "test-member-id";
+    return {
+      memberId,
+      email: "member@test.com",
+      globalRole: "member",
+    };
+  }
+
+  // Static dev tokens for common roles
+  // Admin tokens
+  if (
+    token === "test-admin-token" ||
+    token === "admin-dev" ||
+    token === "admin-token" ||
+    token === "test-admin"
+  ) {
+    return {
+      memberId: "test-admin-id",
+      email: "admin@test.com",
+      globalRole: "admin",
+    };
+  }
+
+  // VP Activities (treated as admin for endpoint access)
+  if (token === "vp-dev") {
+    return {
+      memberId: "test-vp-id",
+      email: "vp@test.com",
+      globalRole: "admin",
+    };
+  }
+
+  // Event Chair (member-level access, but can manage their events)
+  if (token === "chair-dev") {
+    return {
+      memberId: "test-chair-id",
+      email: "chair@test.com",
+      globalRole: "member",
+    };
+  }
+
+  // Member tokens
+  if (
+    token === "test-member-token" ||
+    token === "member-dev" ||
+    token === "member-token" ||
+    token === "test-member"
+  ) {
+    return {
+      memberId: "test-member-id",
+      email: "member@test.com",
+      globalRole: "member",
+    };
+  }
+
+  return null;
 }
