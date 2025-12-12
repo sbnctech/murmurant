@@ -1,10 +1,14 @@
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 test.describe("GET /api/admin/export/registrations", () => {
   test("returns CSV with correct headers", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/export/registrations`);
+    const response = await request.get(
+      `${BASE}/api/admin/export/registrations`,
+      { headers: ADMIN_HEADERS }
+    );
 
     expect(response.status()).toBe(200);
 
@@ -16,11 +20,18 @@ test.describe("GET /api/admin/export/registrations", () => {
 
     const body = await response.text();
     const firstLine = body.split("\n")[0];
-    expect(firstLine).toBe("id,memberId,memberName,eventId,eventTitle,status,registeredAt");
+    expect(firstLine).toBe(
+      "id,memberId,memberName,eventId,eventTitle,status,registeredAt"
+    );
   });
 
-  test("includes registrations with enriched names and titles from seed data", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/export/registrations`);
+  test("includes registrations with enriched names and titles from seed data", async ({
+    request,
+  }) => {
+    const response = await request.get(
+      `${BASE}/api/admin/export/registrations`,
+      { headers: ADMIN_HEADERS }
+    );
     const body = await response.text();
 
     // Seed data includes Alice Chen and Carol Johnson
@@ -30,8 +41,13 @@ test.describe("GET /api/admin/export/registrations", () => {
     expect(body).toContain("Welcome Coffee");
   });
 
-  test("CSV has multiple data rows for seed registrations", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/export/registrations`);
+  test("CSV has multiple data rows for seed registrations", async ({
+    request,
+  }) => {
+    const response = await request.get(
+      `${BASE}/api/admin/export/registrations`,
+      { headers: ADMIN_HEADERS }
+    );
     const body = await response.text();
     const lines = body.trim().split("\n");
 

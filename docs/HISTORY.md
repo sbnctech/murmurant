@@ -29,6 +29,7 @@ is intended to capture actual or estimated focused work time.
 | Pagination (API + UI) and refinements     | 2025-12-11    |       | Paginated admin APIs and explorer tables          |
 | Developer tooling and diagnostics         | 2025-12-10-11 |       | Doctor script, smoke tests, preflight, git hooks  |
 | Documentation and onboarding              | 2025-12-11    |       | Admin docs, API surface, onboarding, workflows    |
+| Authentication and RBAC                   | 2025-12-12    |       | Header-based auth, role checks, VP scoping        |
 | Future phases                              | TBD           |       | To be defined as the project evolves              |
 
 Recommended usage:
@@ -161,12 +162,52 @@ When new milestones are reached:
 - Keep entries factual and concise. This file is meant to help future
   maintainers understand how the system grew over time.
 
+## Authorization Design Decisions
+
+### Why "Mutual Trust" for VP/Chair Relationships
+
+When designing the authorization model for activities management, we considered
+three approaches:
+
+1. **Everyone is Admin** - Simple but risky. No accountability.
+2. **Strict Approval Workflow** - Safe but slow. Creates bottlenecks.
+3. **Mutual Trust Model** - VPs can edit Chair events directly. (Chosen)
+
+We chose the mutual trust model because:
+
+- SBNC volunteers are trusted community members
+- Speed matters for event coordination (events have deadlines)
+- Minor mistakes can always be fixed (no destructive actions for non-admins)
+- VP oversight catches problems before publication
+- Audit logging provides accountability without approval queues
+
+This decision is documented in detail in docs/rbac/ACTIVITIES_ROLES.md.
+
+### Problems the VP Scope Model Solves
+
+The VP of Activities scope model addresses several real-world issues:
+
+1. **Chair unavailability**: When an Event Chair is sick or on vacation, their
+   VP can step in without admin intervention.
+
+2. **Quality control**: VPs review events before publication, catching errors
+   before members see them.
+
+3. **Coordination**: VPs can see all events in their supervised groups,
+   preventing scheduling conflicts.
+
+4. **Security boundaries**: VPs cannot see or modify events outside their
+   scope, limiting blast radius of mistakes.
+
+5. **Clear accountability**: Each activity area has one VP responsible,
+   making it clear who to contact for issues.
+
 ## Future Directions (Open-Ended)
 
 The project is intentionally open-ended. Some possible future phases:
 
 - Replacing mock data with a real database and migration plan.
-- Member authentication and role-based access control.
+- Member authentication with real session management.
 - Deeper integration with club workflows (billing, waitlists, renewals).
 - Performance tuning and scaling for larger clubs.
 - Additional documentation for deployment, operations, and support.

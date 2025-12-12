@@ -1,15 +1,20 @@
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
+const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 test.describe("GET /api/admin/dashboard", () => {
   test("returns HTTP 200", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/dashboard`);
+    const response = await request.get(`${BASE}/api/admin/dashboard`, {
+      headers: ADMIN_HEADERS,
+    });
     expect(response.status()).toBe(200);
   });
 
   test("returns object with summary key", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/dashboard`);
+    const response = await request.get(`${BASE}/api/admin/dashboard`, {
+      headers: ADMIN_HEADERS,
+    });
     const data = await response.json();
 
     expect(data.summary).toBeDefined();
@@ -17,7 +22,9 @@ test.describe("GET /api/admin/dashboard", () => {
   });
 
   test("all numeric fields are present", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/dashboard`);
+    const response = await request.get(`${BASE}/api/admin/dashboard`, {
+      headers: ADMIN_HEADERS,
+    });
     const data = await response.json();
 
     const { summary } = data;
@@ -30,7 +37,9 @@ test.describe("GET /api/admin/dashboard", () => {
   });
 
   test("values are consistent with seeded data", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/dashboard`);
+    const response = await request.get(`${BASE}/api/admin/dashboard`, {
+      headers: ADMIN_HEADERS,
+    });
     const data = await response.json();
 
     const { summary } = data;
@@ -46,11 +55,17 @@ test.describe("GET /api/admin/dashboard", () => {
     expect(summary.activeMembers).toBeLessThanOrEqual(summary.totalMembers);
 
     // waitlistedRegistrations should never exceed totalRegistrations
-    expect(summary.waitlistedRegistrations).toBeLessThanOrEqual(summary.totalRegistrations);
+    expect(summary.waitlistedRegistrations).toBeLessThanOrEqual(
+      summary.totalRegistrations
+    );
   });
 
-  test("upcomingEvents uses fixed reference date (2025-05-01)", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/dashboard`);
+  test("upcomingEvents uses fixed reference date (2025-05-01)", async ({
+    request,
+  }) => {
+    const response = await request.get(`${BASE}/api/admin/dashboard`, {
+      headers: ADMIN_HEADERS,
+    });
     const data = await response.json();
 
     const { summary } = data;
