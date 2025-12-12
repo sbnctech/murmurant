@@ -326,3 +326,11 @@ Status: Complete (locked)
 
 Day 2 closes with a clean, reproducible, deployable baseline.
 
+
+### Day 2 Closeout - DB Migration Baseline
+- Confirmed local dev DB had ClubOS tables but no _prisma_migrations history (likely created via db push)
+- Archived prior migration folders to prisma/migrations_archive/
+- Removed non-baseline migrations from prisma/migrations/
+- Marked 00000000000000_init as applied using prisma migrate resolve (no schema changes)
+- Result: migration history now matches existing schema safely
+
