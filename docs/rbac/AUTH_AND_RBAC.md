@@ -278,6 +278,41 @@ canDeleteEvents(role)   // admin only
 
 ---
 
+## External Responsibility Roles
+
+Some roles in ClubOS do not grant in-app powers but instead drive access to
+external systems and define operational responsibilities.
+
+### Purpose
+
+External responsibility roles:
+
+- Map to access scopes in external tools (JotForm, Bill.com, etc.)
+- Define who is responsible for external system administration
+- Drive term-transition checklists and credential rotation
+- Do not grant additional ClubOS permissions
+
+### Examples
+
+| Role | ClubOS Powers | External Responsibility |
+|------|---------------|------------------------|
+| JotForm Admin | None | Administer JotForm forms and webhooks |
+| Bill.com Approver | None | Approve reimbursements in Bill.com |
+| QuickBooks Admin | None | Maintain accounting records |
+
+### Key Principle
+
+These roles exist so that:
+
+1. External access is documented and auditable.
+2. Term transitions include explicit handoff of external responsibilities.
+3. No external system becomes orphaned when a volunteer leaves.
+
+See docs/EXTERNAL_SYSTEMS_AND_SSO.md for complete external integration
+specifications.
+
+---
+
 ## Summary
 
 ```

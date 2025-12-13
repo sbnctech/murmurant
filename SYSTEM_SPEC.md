@@ -268,6 +268,37 @@ Placeholder modules for future expansion:
 
 ----------------------------------------------------------------------
 
+12. External Systems and SSO
+
+ClubOS integrates with external systems for specialized functions while
+maintaining its role as the identity and authorization system of record.
+
+12.1 Requirements
+
+- ClubOS must support SSO for external system access where feasible.
+- External system access must be mapped to ClubOS roles and groups.
+- No core workflow may depend on a single departing volunteer.
+- Credentials for external systems must be owned by roles, not individuals.
+- Term transitions must include access review and credential rotation.
+
+12.2 Integration Patterns
+
+- OIDC/OAuth SSO (preferred for user access)
+- Webhook/API integration (for data sync)
+- Service accounts (break-glass only, documented and rotated)
+
+12.3 Current Integrations
+
+- JotForm: Event request form UI (transitioning to native ClubOS UI)
+- Bill.com: Reimbursement processing (QuickBooks remains accounting SOR)
+- QuickBooks: Accounting system of record
+
+See docs/EXTERNAL_SYSTEMS_AND_SSO.md for the complete specification including
+JotForm migration plan, Bill.com integration flow, and term transition
+procedures.
+
+----------------------------------------------------------------------
+
 END OF SYSTEM SPEC
 
 --------------------------------------------------
@@ -754,4 +785,66 @@ Event registration delegation (partner signups)
 - Third party email provider integration beyond a single outbound channel.
 
 These items may be added in future phases once the core public site and mail system are stable.
+
+----------------------------------------------------------------------
+
+## Event Policy Gates
+
+Event Policy Gates are system-enforced rules that prevent invalid events or invalid
+attendance scenarios. These gates must be checked before an event can be published
+or before a registration can be accepted.
+
+For detailed examples and implementation notes, see docs/policies/EVENT_POLICY_GATES.md.
+
+### Venue Type Gate
+
+- venue_type: PRIVATE_HOME | PUBLIC_VENUE
+- Events at PRIVATE_HOME require House Registrar approval before publishing
+- System must block publishing until approval is recorded
+- Approval includes: liability acknowledgment, capacity confirmation, parking notes
+
+### Non-Member Policy Gate
+
+Private home events:
+- Alumni and guests are NOT permitted (insurance restriction)
+- System must block non-member registrations for private_home events
+
+Public venue events:
+- Alumni and guests are permitted ONLY if the event explicitly enables them
+- Member priority window: non-members may register only after a configured delay
+  (e.g., members-only for first 48 hours)
+- Non-member fee must be >= member fee (system must enforce)
+
+### Registration Required Gate
+
+- If registration_required = true:
+  - Drop-ins are not permitted
+  - Check-in process must verify registration status
+  - Walk-ups must be turned away or registered on-site if capacity allows
+- If registration_required = false:
+  - Event is open; no registration tracking required
+
+### Host and Hostess Rules
+
+- Event may designate host(s) with special privileges
+- Host registration is automatic and does not count against capacity
+- Host may have a limited number of personal guest slots (configured per event)
+- Host guests must still comply with venue type rules (no guests at private homes)
+
+### Special Event Types
+
+Boating events:
+- venue_type = boating requires pre-review with VP Activities before publishing
+- Insurance and liability documentation must be attached to event record
+- System should flag boating events for manual review
+
+### Alcohol Policy Gate
+
+- Events serving alcohol must:
+  - Display alcohol policy acknowledgment to registrants
+  - Designate a responsible party role (not necessarily bartender)
+  - Track that the responsible party assignment was made
+- System should prevent publishing alcohol events without responsible party assigned
+
+----------------------------------------------------------------------
 
