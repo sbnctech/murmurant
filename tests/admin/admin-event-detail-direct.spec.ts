@@ -47,6 +47,12 @@ test.describe("Admin Event Detail Direct Access (Regression Guard)", () => {
     // Verify we're still on the expected URL (no redirect to error page)
     await expect(page).toHaveURL(new RegExp(`/admin/events/${eventId}`));
 
+    // Verify page does NOT contain auth error text
+    // This catches the specific regression where server components fetch /api/admin/*
+    const bodyText = await page.locator("body").textContent();
+    expect(bodyText).not.toContain("Unauthorized");
+    expect(bodyText).not.toContain("Forbidden");
+
     // Verify no error indicators are visible
     const errorIndicator = page.locator(
       '[data-test-id="admin-event-detail-error"]'

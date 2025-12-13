@@ -13,22 +13,36 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  // ═══════════════════════════════════════════════════════════════════════════
   // REGRESSION GUARD: Server components must not fetch from /api/admin/*
-  // Auth headers do not propagate from server components to internal API routes.
-  // Use Prisma queries directly or import from src/server/admin/*.
+  // ═══════════════════════════════════════════════════════════════════════════
   //
-  // This rule targets server component files (page.tsx, layout.tsx) only.
-  // Client components ("use client") CAN safely fetch /api/admin/* because
-  // the browser includes auth cookies/headers in the request.
+  // WHY: Server Components cannot propagate auth headers/cookies to internal
+  // API routes. Fetching /api/admin/* from a Server Component will fail with
+  // "Unauthorized" because the request lacks authentication context.
+  //
+  // FIX: Use Prisma queries directly or import from src/server/admin/*.
+  //
+  // SCOPE: Only applies to Next.js App Router Server Component files:
+  //   - page.tsx, layout.tsx, loading.tsx, error.tsx, not-found.tsx
+  //
+  // ESCAPE HATCH: If you have a legitimate reason to fetch /api/admin/* from
+  // a server component (e.g., forwarding auth explicitly), disable per-line:
+  //   // eslint-disable-next-line no-restricted-syntax -- ALLOW_API_ADMIN_FETCH: <reason>
+  // ═══════════════════════════════════════════════════════════════════════════
   {
     files: [
       "src/app/**/page.tsx",
-      "src/app/**/page.ts",
       "src/app/**/layout.tsx",
-      "src/app/**/layout.ts",
+      "src/app/**/loading.tsx",
+      "src/app/**/error.tsx",
+      "src/app/**/not-found.tsx",
     ],
     ignores: [
       "src/app/api/**",
+      "src/pages/**",
+      "src/**/*.test.*",
+      "src/**/*.spec.*",
       // TODO: These pages have the same bug (fetching /api/admin/*) and need to be
       // migrated to use Prisma queries directly. Tracked for later cleanup.
       "src/app/admin/page.tsx",
@@ -39,22 +53,34 @@ const eslintConfig = defineConfig([
       "no-restricted-syntax": [
         "error",
         {
-          // Match fetch() calls where the first argument is a string containing api/admin
+          // Pattern 1: fetch("/api/admin/...") - string literal
           selector:
             'CallExpression[callee.name="fetch"] Literal[value=/api.*admin/]',
           message:
             "Server components must not fetch from /api/admin/*. " +
             "Auth headers do not propagate. Use Prisma queries directly " +
-            "or import from src/server/admin/*.",
+            "or import from src/server/admin/*. " +
+            "Escape: // eslint-disable-next-line no-restricted-syntax -- ALLOW_API_ADMIN_FETCH: <reason>",
         },
         {
-          // Match fetch() calls with template literal containing api/admin
+          // Pattern 2: fetch(`${base}/api/admin/...`) - template literal
           selector:
             'CallExpression[callee.name="fetch"] TemplateElement[value.raw=/api.*admin/]',
           message:
             "Server components must not fetch from /api/admin/*. " +
             "Auth headers do not propagate. Use Prisma queries directly " +
-            "or import from src/server/admin/*.",
+            "or import from src/server/admin/*. " +
+            "Escape: // eslint-disable-next-line no-restricted-syntax -- ALLOW_API_ADMIN_FETCH: <reason>",
+        },
+        {
+          // Pattern 3: fetch(new URL("/api/admin/...", base)) - URL constructor
+          selector:
+            'CallExpression[callee.name="fetch"] NewExpression[callee.name="URL"] Literal[value=/api.*admin/]',
+          message:
+            "Server components must not fetch from /api/admin/*. " +
+            "Auth headers do not propagate. Use Prisma queries directly " +
+            "or import from src/server/admin/*. " +
+            "Escape: // eslint-disable-next-line no-restricted-syntax -- ALLOW_API_ADMIN_FETCH: <reason>",
         },
       ],
     },
