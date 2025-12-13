@@ -1,0 +1,52 @@
+name: Guardrails (forbidden files)
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  forbidden-files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fail if forbidden files are tracked
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          forbidden=(
+            ".DS_Store"
+            "**/.DS_Store"
+            "Thumbs.db"
+            "**/Thumbs.db"
+          )
+
+          echo "Scanning tracked files for forbidden patterns..."
+          tracked="$(git ls-files)"
+
+          hit=0
+          for pat in "${forbidden[@]}"; do
+            if echo "$tracked" | grep -E "(^|/)\.DS_Store$" >/dev/null 2>&1; then
+              echo "FORBIDDEN: tracked .DS_Store found"
+              hit=1
+              break
+            fi
+            if echo "$tracked" | grep -E "(^|/)Thumbs\.db$" >/dev/null 2>&1; then
+              echo "FORBIDDEN: tracked Thumbs.db found"
+              hit=1
+              break
+            fi
+          done
+
+          if [ "$hit" -ne 0 ]; then
+            echo
+            echo "Fix: remove the file from git history:"
+            echo "  git rm -f --cached path/to/file"
+            echo "  echo '.DS_Store' >> .gitignore"
+            echo "  echo '**/.DS_Store' >> .gitignore"
+            exit 1
+          fi
+
+          echo "OK: no forbidden tracked files"
