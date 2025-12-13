@@ -71,9 +71,9 @@ Once ClubOS knows who you are, it checks what you're allowed to do.
 
 ## Understanding Roles
 
-### The Four Global Roles
+### Global Roles
 
-ClubOS currently uses four global roles (defined in `src/lib/auth.ts`):
+ClubOS uses the following global roles (defined in `src/lib/auth.ts`):
 
 | Role | Slug | What It Means | Example People |
 |------|------|---------------|----------------|
@@ -81,6 +81,12 @@ ClubOS currently uses four global roles (defined in `src/lib/auth.ts`):
 | **VP of Activities** | `vp-activities` | Can view/edit/publish all events | Sarah Martinez, John Kim |
 | **Event Chair** | `event-chair` | Manages events (scoping planned) | Alice (Hiking), Bob (Social) |
 | **Member** | `member` | Basic access, published events only | Regular club members |
+
+Planned additions:
+
+| Role | Slug | What It Means | Example People |
+|------|------|---------------|----------------|
+| **Finance Manager** | `finance-manager` | Approve refunds, apply fees, reconcile | Treasurer, Finance volunteer |
 
 > **Note**: Committee-based scoping (where VPs only see their supervised groups) is planned but not yet implemented. Currently, VPs can see and edit ALL events.
 

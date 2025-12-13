@@ -186,21 +186,39 @@ waitlist actions, surveys, and member assistance.
 - Role-based access
 - Separation between operational roles and developer roles
 
-7.2 Roles
-- System Admin
-- Communications Admin
-- Events Admin
-- Category Chair
-- Read Only Auditor
+7.2 Roles (Summary)
+
+The following roles are defined in ClubOS. See docs/rbac/AUTH_AND_RBAC.md for
+the authoritative role definitions and permission matrix.
+
+Current implementation:
+- Admin: Full system access (Tech Chair, Board)
+- VP of Activities: Can view/edit/publish all events
+- Event Chair: Manages events in assigned categories (scoping planned)
+- Member: Basic access, published events only
+
+Planned additions:
+- Finance Manager: Approve refunds, apply fees, reconcile with QuickBooks
+
+Legacy role names from early specs (retained for reference):
+- System Admin (now: Admin)
+- Events Admin (now: VP of Activities or Event Chair depending on scope)
+- Category Chair (now: Event Chair)
+- Communications Admin (functionality distributed across roles)
+- Read Only Auditor (future)
 
 7.3 Capabilities Matrix
-Each role grants explicit rights to:
+
+See docs/rbac/AUTH_AND_RBAC.md for the detailed permission matrix.
+
+Core capability areas:
 - Create/read/update/delete events
 - Send email
 - Send SMS
 - Manage members
 - Access analytics
 - Access system settings
+- Approve/execute refunds (Finance Manager only)
 
 ----------------------------------------------------------------------
 
@@ -617,33 +635,75 @@ Members API contract (initial)
     - Seed known test records (e.g., sample members), or
     - Assert more generic conditions (shape and semantics) instead of hardcoded names.
 
-Event registration delegation (partner signups)
+Partnership Delegation (Register, Cancel, Pay on Behalf of Partner)
 
-- Requirement:
-  - A member should be able to delegate rights to another member to register them for events.
-  - Primary use case:
-    - Two partners in the same household who are both members want either partner to be able to sign up both of them for an event.
-- Early model sketch:
-  - Delegation is represented explicitly in the data model as:
-    - Delegation:
-      - id
-      - grantorContactId (the member who is delegating)
-      - delegateContactId (the member who is allowed to register on their behalf)
-      - scope (initially: EVENT_REGISTRATION)
-      - activeFrom, activeTo (optional; for future time-bounded delegation)
-  - Business rules (initial):
-    - Both grantor and delegate must be valid members.
-    - UI should make the household/partner use case easy, but the data model should not be limited only to couples.
-    - When a delegate registers for an event, the system:
-      - Records both who is ATTENDING and who performed the ACTION (delegate).
-      - Enforces event-level limits (per-member, per-household, etc.) based on attendees, not the delegate.
-- Implementation stages:
-  - Stage 1: Document requirement and data model concept (this note).
-  - Stage 2: Add Delegation model to Prisma schema (behind a feature flag or non-blocking migration).
-  - Stage 3: Extend event registration API to honor delegations.
-  - Stage 4: Add UI affordances so a member can:
-    - Grant or revoke delegation to another member.
-    - See who they can act on behalf of.
+Requirement:
+- Two members may establish a partnership that allows either to act on behalf of
+  the other for event registration, cancellation, and payment.
+- Primary use case: Partners in the same household want either person to be able
+  to register, cancel, or pay for both of them.
+
+BILATERAL CONSENT REQUIREMENT (Non-Negotiable):
+
+Partnership delegation is INACTIVE until BOTH partners have explicitly agreed.
+
+- Consent is not implied, automatic, or assumed from any other relationship.
+- Each partner must independently confirm their consent.
+- Consent is recorded per person with a timestamp.
+- Either partner may revoke consent at any time, effective immediately.
+- Revocation by either partner disables delegation in BOTH directions.
+
+Terminology:
+- Acting member: The member who initiates an action (register, cancel, pay).
+- Affected member: The member whose registration or payment is changed.
+- Partner consent: Explicit, recorded agreement to allow a partner to act on
+  one's behalf.
+
+Delegation Scope:
+- Register on behalf: Acting member creates registration for affected member.
+- Cancel on behalf: Acting member cancels registration for affected member.
+- Pay on behalf: Acting member uses their payment method for affected member.
+
+Data Model:
+- Partnership:
+  - id
+  - partnerAContactId
+  - partnerBContactId
+  - partnerAConsentedAt (timestamp, nullable until consent given)
+  - partnerBConsentedAt (timestamp, nullable until consent given)
+  - delegationMode (INACTIVE, MUTUAL, PRIMARY_A, PRIMARY_B)
+  - revokedAt (timestamp, nullable)
+  - createdAt
+  - updatedAt
+
+Business Rules:
+- Both partners must be valid members.
+- Delegation is INACTIVE until both partnerAConsentedAt and partnerBConsentedAt
+  are non-null.
+- If either partner revokes (sets revokedAt), delegation becomes INACTIVE.
+- When an acting member performs an action for an affected member, the system
+  records both identities in the audit trail.
+- Event-level limits (per-member, per-household) are enforced based on the
+  affected member, not the acting member.
+
+Audit Requirements:
+- Every partner-delegated action must record:
+  - Acting member (who performed the action)
+  - Affected member (whose registration/payment was changed)
+  - Timestamp
+  - Action type (register, cancel, pay)
+  - Consent status at time of action (verified active)
+
+Implementation Stages:
+- Stage 1: Document requirement and bilateral consent model (this section).
+- Stage 2: Add Partnership model to Prisma schema.
+- Stage 3: Extend event registration API to honor partnership delegation.
+- Stage 4: Extend payment flow to allow partner payment method selection.
+- Stage 5: Add UI for:
+  - Requesting partnership with another member
+  - Confirming consent (bilateral)
+  - Revoking consent
+  - Viewing who you can act on behalf of
 
 ----------------------------------------------------------------
 
