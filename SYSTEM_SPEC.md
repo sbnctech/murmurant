@@ -179,28 +179,162 @@ waitlist actions, surveys, and member assistance.
 
 ----------------------------------------------------------------------
 
-7. Permissions and Roles
+7. Access Control Model: Roles, Groups, and Capabilities
 
-7.1 Principles
-- Least privilege
-- Role-based access
-- Separation between operational roles and developer roles
+7.1 Definitions
 
-7.2 Roles
-- System Admin
-- Communications Admin
-- Events Admin
-- Category Chair
-- Read Only Auditor
+- Role: A named set of capabilities assigned to a user. Roles define what
+  actions a user may perform system-wide (e.g., Event Chair, Finance Manager).
 
-7.3 Capabilities Matrix
-Each role grants explicit rights to:
-- Create/read/update/delete events
-- Send email
-- Send SMS
-- Manage members
-- Access analytics
-- Access system settings
+- Group: A membership-based segment that can grant additional capabilities or
+  visibility rules (e.g., committees, interest groups, activity categories).
+  A user may belong to zero or more groups.
+
+- Capability (Permission): An atomic action or read right expressed as a
+  dot-notation string (e.g., "events.refund.approve", "events.waitlist.manage").
+  Capabilities are additive; a user's effective permissions are the union of
+  all capabilities from their role plus any group-derived capabilities.
+
+- Visibility Rule: Content is shown or hidden depending on role, group, or
+  capability. Pages, blocks, and data views may render differently based on
+  the viewer's effective permissions.
+
+7.2 How Evaluation Works
+
+Authorization is evaluated in this order:
+
+1. Authentication: Is the user logged in? If not, treat as Guest.
+2. Role Capabilities: What capabilities does the user's role grant?
+3. Group-Derived Capabilities: What additional capabilities do the user's
+   group memberships grant?
+4. Object-Level Rules: Does the specific resource (event, page, etc.) have
+   additional access restrictions?
+
+Principles:
+
+- Least Privilege: Users receive only the minimum permissions needed.
+- Deny-by-Default: Access is denied unless explicitly granted.
+- Additive Permissions: Capabilities from roles and groups combine (union).
+- UI Adaptation: Different pages and components render different controls
+  based on the viewer's effective capabilities.
+
+7.3 Role List (Initial)
+
+| Role               | Description                                          |
+|--------------------|------------------------------------------------------|
+| Guest              | Unauthenticated visitor. Public content only.        |
+| Member             | Authenticated member. Own profile and registrations. |
+| Event Organizer    | Can create and manage specific events they own.      |
+| Event Chair        | Full control over events in assigned categories.     |
+| Finance Manager    | Approve refunds, run reconciliation, view finances.  |
+| Membership Manager | Manage member records, renewals, and statuses.       |
+| Content Editor     | Edit and publish public pages and news articles.     |
+| System Admin       | Full system access. Restricted to tech staff.        |
+
+7.4 Capability Naming Convention
+
+Capabilities use a hierarchical dot-notation: {domain}.{resource}.{action}
+
+Domains:
+- events: Event and registration management
+- finance: Payments, refunds, reconciliation
+- membership: Member records and statuses
+- content: Pages, news, navigation
+- admin: System configuration and user management
+
+7.5 Capabilities List (Initial)
+
+Events Domain:
+- events.view: View event listings and details
+- events.create: Create new events
+- events.edit: Edit event details
+- events.delete: Delete events
+- events.registration.view: View registrations for an event
+- events.registration.cancel: Cancel a registration
+- events.waitlist.manage: Promote or reorder waitlist entries
+- events.attendance.mark: Mark attendance at events
+
+Finance Domain:
+- finance.view: View financial summaries and reports
+- finance.refund.request: Submit a refund request
+- finance.refund.approve: Approve pending refund requests
+- finance.refund.execute: Execute approved refunds
+- finance.reconcile.run: Run payment reconciliation
+
+Membership Domain:
+- membership.view: View member directory and profiles
+- membership.edit: Edit member profiles
+- membership.status.change: Change membership status (renew, lapse)
+- membership.export: Export member data to CSV
+
+Content Domain:
+- content.page.view: View CMS pages
+- content.page.edit: Edit page content
+- content.page.publish: Publish or unpublish pages
+- content.nav.edit: Edit navigation menus
+
+Admin Domain:
+- admin.users.view: View user accounts and roles
+- admin.users.manage: Create, edit, or disable user accounts
+- admin.roles.assign: Assign roles to users
+- admin.groups.manage: Create and manage groups
+- admin.audit.view: View audit logs
+- admin.settings.edit: Edit system settings
+
+7.6 Role-Capability Matrix
+
+| Capability                  | Guest | Member | Organizer | Chair | Finance | Membership | Editor | Admin |
+|-----------------------------|:-----:|:------:|:---------:|:-----:|:-------:|:----------:|:------:|:-----:|
+| events.view                 |   Y   |   Y    |     Y     |   Y   |    Y    |     Y      |   Y    |   Y   |
+| events.create               |       |        |     Y     |   Y   |         |            |        |   Y   |
+| events.edit                 |       |        |    own    |   Y   |         |            |        |   Y   |
+| events.registration.cancel  |       |  own   |    own    |   Y   |         |            |        |   Y   |
+| events.waitlist.manage      |       |        |    own    |   Y   |         |            |        |   Y   |
+| finance.refund.request      |       |   Y    |     Y     |   Y   |    Y    |            |        |   Y   |
+| finance.refund.approve      |       |        |           |       |    Y    |            |        |   Y   |
+| finance.refund.execute      |       |        |           |       |    Y    |            |        |   Y   |
+| finance.reconcile.run       |       |        |           |       |    Y    |            |        |   Y   |
+| membership.view             |       |   Y    |     Y     |   Y   |    Y    |     Y      |   Y    |   Y   |
+| membership.edit             |       |        |           |       |         |     Y      |        |   Y   |
+| content.page.edit           |       |        |           |       |         |            |   Y    |   Y   |
+| content.page.publish        |       |        |           |       |         |            |   Y    |   Y   |
+| admin.users.manage          |       |        |           |       |         |            |        |   Y   |
+| admin.audit.view            |       |        |           |       |    Y    |     Y      |        |   Y   |
+
+Legend: Y = full access, own = access to own resources only, blank = no access
+
+7.7 Groups and Visibility
+
+Groups enable dynamic content visibility and scoped permissions:
+
+- Committee Groups: Members of a committee see committee-specific pages and
+  can receive committee-targeted emails.
+- Activity Category Groups: Event Chairs and Organizers are scoped to specific
+  activity categories (e.g., Dining, Hiking, Travel).
+- Interest Groups: Members opt into interest groups to see related content
+  and receive targeted communications.
+
+Group membership can grant additional capabilities. For example:
+
+- Hiking Committee group grants events.create for Hiking category events.
+- Board group grants visibility to board-only pages and documents.
+
+7.8 Future Expansion
+
+The following features are planned for future phases:
+
+- Object-Level Permissions: Fine-grained access control per event, per page,
+  or per document (e.g., "only this committee can edit this event").
+
+- Delegation: Temporary role grants (e.g., a Chair can delegate Event
+  Organizer rights to another member for a specific period).
+
+- Audit Logging: All sensitive actions (role changes, refund approvals,
+  member status changes) must be logged with actor, action, target, and
+  timestamp for compliance and accountability.
+
+- Permission Templates: Predefined capability bundles that can be assigned
+  to groups to simplify administration.
 
 ----------------------------------------------------------------------
 
