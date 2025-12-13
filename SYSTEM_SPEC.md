@@ -186,21 +186,39 @@ waitlist actions, surveys, and member assistance.
 - Role-based access
 - Separation between operational roles and developer roles
 
-7.2 Roles
-- System Admin
-- Communications Admin
-- Events Admin
-- Category Chair
-- Read Only Auditor
+7.2 Roles (Summary)
+
+The following roles are defined in ClubOS. See docs/rbac/AUTH_AND_RBAC.md for
+the authoritative role definitions and permission matrix.
+
+Current implementation:
+- Admin: Full system access (Tech Chair, Board)
+- VP of Activities: Can view/edit/publish all events
+- Event Chair: Manages events in assigned categories (scoping planned)
+- Member: Basic access, published events only
+
+Planned additions:
+- Finance Manager: Approve refunds, apply fees, reconcile with QuickBooks
+
+Legacy role names from early specs (retained for reference):
+- System Admin (now: Admin)
+- Events Admin (now: VP of Activities or Event Chair depending on scope)
+- Category Chair (now: Event Chair)
+- Communications Admin (functionality distributed across roles)
+- Read Only Auditor (future)
 
 7.3 Capabilities Matrix
-Each role grants explicit rights to:
+
+See docs/rbac/AUTH_AND_RBAC.md for the detailed permission matrix.
+
+Core capability areas:
 - Create/read/update/delete events
 - Send email
 - Send SMS
 - Manage members
 - Access analytics
 - Access system settings
+- Approve/execute refunds (Finance Manager only)
 
 ----------------------------------------------------------------------
 

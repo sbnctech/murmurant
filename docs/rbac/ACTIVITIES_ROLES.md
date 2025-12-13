@@ -439,11 +439,30 @@ Step 3: Scope Check
 
 ---
 
+## Refund Handoff (Separation of Duties)
+
+When a cancellation requires a refund, Event Chairs must hand off to the
+Finance Manager. This separation of duties is critical:
+
+1. Event Chair cancels the registration (operational action)
+2. Event Chair initiates refund request if applicable
+3. Finance Manager approves and executes refund (financial action)
+
+**Key rule**: Cancellation is not a refund. These are separate, intentional
+actions with different authorization.
+
+See FINANCE_ROLES.md (when available) for the complete Finance Manager
+specification.
+
+---
+
 ## Related Documents
 
 - [AUTH_AND_RBAC.md](./AUTH_AND_RBAC.md) - Overall auth system
 - [VP_ACTIVITIES_SCOPE.md](./VP_ACTIVITIES_SCOPE.md) - Technical implementation
 - [VP_ACTIVITIES_ACCESS_MATRIX.md](./VP_ACTIVITIES_ACCESS_MATRIX.md) - Detailed permission tables
+- FINANCE_ROLES.md - Finance Manager role and refund workflow handoffs (planned)
+- docs/workflows/ - Detailed workflow specifications (planned)
 
 ---
 
