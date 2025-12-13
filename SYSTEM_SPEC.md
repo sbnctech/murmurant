@@ -202,6 +202,13 @@ Each role grants explicit rights to:
 - Access analytics
 - Access system settings
 
+7.4 Detailed RBAC Documentation
+See docs/rbac/AUTH_AND_RBAC.md for:
+- Evaluation order (Auth -> Roles -> Scope -> Delegation -> Hard Gates)
+- Scope rules for committee-scoped Event Chair access
+- Delegation layer (Partnerships) rules and bilateral consent
+- Hard gates (Membership Agreement, Media Rights, Guest Release)
+
 ----------------------------------------------------------------------
 
 8. Notifications Framework

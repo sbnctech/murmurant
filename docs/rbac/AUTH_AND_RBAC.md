@@ -184,6 +184,83 @@ User Request: "Show me the events"
 
 ---
 
+## Evaluation Order
+
+When processing any request, ClubOS evaluates access in this order:
+
+1. **Authenticate user** - Verify identity (401 if failed)
+2. **Resolve roles and capabilities** - Determine global role and any committee roles
+3. **Apply scope rules** - Check committee/event assignment for scoped roles
+4. **Apply delegation layer** - Check partnership delegation if acting on behalf
+5. **Apply hard gates** - Check agreement and release requirements
+
+Hard gates (agreements/releases) are checked last and override all other checks.
+A user may pass authentication, role, scope, and delegation checks but still be
+blocked by a missing or outdated agreement.
+
+---
+
+## Scope Rules: Committee-Scoped Event Chair Access
+
+Event Chair capabilities apply only to events within the chair's scope:
+
+**Scope rule**: An Event Chair can act on an event if and only if:
+- The user is assigned as chair or co-chair for that specific event, OR
+- The event's committee_id matches one of the user's committee memberships
+
+**Pseudo-rule**:
+```
+IF user.role == "event-chair" THEN
+  allowed = (user.id IN event.chair_ids)
+         OR (event.committee_id IN user.committee_memberships)
+  IF NOT allowed THEN DENY
+```
+
+If neither condition is true, Event Chair actions are denied even if the role
+is present. This prevents chairs from accidentally modifying events outside
+their responsibility.
+
+---
+
+## Delegation Layer: Partnerships
+
+Partnerships enable one member to act on behalf of another for specific actions
+(registration, cancellation, payment). Key rules:
+
+- Delegation does not grant global privileges (cannot access admin features)
+- Delegation is active only after explicit bilateral consent by both partners
+- Either partner may revoke consent at any time, effective immediately
+- Delegation cannot override agreement gates (see Hard Gates below)
+- All delegated actions must record both the acting member and affected member
+
+See SYSTEM_SPEC.md "Partnership Delegation" section for the full specification.
+
+---
+
+## Hard Gates: Agreements and Releases
+
+Certain actions require signed agreements regardless of role, scope, or
+delegation status. These are non-negotiable gates:
+
+| Gate | Requirement |
+|------|-------------|
+| Membership Agreement | Required (current version) for any event registration |
+| Media Rights Agreement | Required (current version) for media-covered events |
+| Guest Release | Required (guest-signed) for events requiring guest release |
+
+These gates apply to:
+- Self actions (member registering themselves)
+- Partner on-behalf actions (partner registering for member)
+- Admin-assisted actions (admin registering a member)
+
+**Guest release is non-delegable**: A member cannot accept a guest release on
+behalf of a guest. The guest must accept directly.
+
+If an agreement is missing, outdated, or revoked, the action is blocked with a
+clear error message indicating which agreement is required.
+
+---
+
 ## Error Messages You Might See
 
 ### 401 Unauthorized
