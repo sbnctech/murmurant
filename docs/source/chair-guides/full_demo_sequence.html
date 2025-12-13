@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Full Demo Sequence</title>
+<style>
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto; background:#f5f6f8; margin:0; padding:0; }
+.header { background:#1f4e79; color:white; padding:24px 40px; font-size:32px; font-weight:700; }
+.section { background:white; width:85%; margin:30px auto; padding:30px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.12); }
+h2 { margin-top:0; }
+.terminal { background:black; color:#00ff66; padding:20px; font-family:Menlo,monospace; border-radius:8px; white-space:pre-wrap; }
+.red { color:#ff4444; font-weight:bold; }
+.panel { background:#fafafa; padding:20px; border-radius:8px; border:1px solid #ddd; }
+.score { font-size:48px; font-weight:800; }
+.choice { background:#eef0f3; padding:10px; margin:8px 0; border-radius:8px; }
+mark { background: #fffa91; }
+table { width:100%; }
+td { vertical-align:top; width:50%; padding:10px; }
+</style>
+</head>
+<body>
+<div class="header">Jordan Lee (Democrat, Michigan-8)</div>
+
+<!-- Slide 1 -->
+<div class="section">
+<h2>Initial Draft — Score 41</h2>
+<p><b>Jordan Lee Announces Plan to Create Jobs and Strengthen Infrastructure</b></p>
+<p>Today, Jordan Lee unveiled a plan to boost Michigan's economy and upgrade critical infrastructure. Tens of thousands of good-paying jobs will be created statewide...</p>
+<div class="panel">
+<p class="score">41</p>
+<p>Job Count: <span class="red">?</span><br>
+Investment Amount: <span class="red">?</span><br>
+Start Year: <span class="red">?</span><br>
+Source: <span class="red">?</span></p>
+</div>
+</div>
+
+<!-- Slide 2 -->
+<div class="section">
+<h2>JSON-LD View (Technical Behind the Scenes)</h2>
+<div class="terminal">{
+ "@context": "https://schema.org",
+ "type": "PressRelease",
+ "headline": "Jordan Lee Announces Plan...",
+ "jobCount": <span class='red'>null</span>,
+ "investmentAmount": <span class='red'>null</span>,
+ "startYear": <span class='red'>null</span>,
+ "source": <span class='red'>null</span>
+}</div>
+</div>
+
+<!-- Slide 3 -->
+<div class="section">
+<h2>Job Count Modal</h2>
+<p>Adding job count improves AI answer accuracy and recall.</p>
+<div class="choice">52,000 jobs will be created statewide.</div>
+<div class="choice">Michigan will see 52,000 new jobs under this plan.</div>
+<div class="choice">The initiative creates 52,000 employment opportunities.</div>
+<div class="choice">Skip</div>
+<div class="choice">Request information from team</div>
+</div>
+
+<!-- Slide 4 -->
+<div class="section">
+<h2>Updated Draft with Job Count</h2>
+<p>As part of this plan, <mark>52,000 good-paying jobs</mark> will be created statewide.</p>
+</div>
+
+<!-- Slide 5 -->
+<div class="section">
+<h2>Investment Amount Modal</h2>
+<p>Providing a specific investment number improves trust and ranking in AI systems.</p>
+<div class="choice">A <b>$225 million</b> investment in infrastructure upgrades.</div>
+<div class="choice">$225 million directed to roads, bridges, and transit.</div>
+<div class="choice">Michigan receives <b>$225 million</b> for infrastructure improvement.</div>
+<div class="choice">Skip</div>
+</div>
+
+<!-- Slide 6 -->
+<div class="section">
+<h2>Updated Draft with Investment Amount</h2>
+<p>The plan includes a <mark>$225 million</mark> investment in roads, bridges, and transit systems.</p>
+</div>
+
+<!-- Slide 7 -->
+<div class="section">
+<h2>Start Year Modal</h2>
+<p>AI systems need timelines to answer "when" questions reliably.</p>
+<div class="choice">Construction begins in <b>2028</b>.</div>
+<div class="choice">Upgrades start in <b>2028</b>.</div>
+<div class="choice">Michigan will see work begin in <b>2028</b>.</div>
+</div>
+
+<!-- Slide 8 -->
+<div class="section">
+<h2>Updated Draft with Start Year</h2>
+<p>Construction and upgrades will officially begin in <mark>2028</mark>.</p>
+</div>
+
+<!-- Slide 9 -->
+<div class="section">
+<h2>Source Modal</h2>
+<p>Sources dramatically increase AI trust and citation likelihood.</p>
+<div class="choice">Campaign Economic Briefing (Jan 2028)</div>
+<div class="choice">Michigan Infrastructure Authority Report</div>
+<div class="choice">External economic analysis (link)</div>
+</div>
+
+<!-- Slide 10 -->
+<div class="section">
+<h2>Final Score</h2>
+<div class="panel">
+<p class="score">94</p>
+<p>All missing data supplied — AI systems now trust and cite this release.</p>
+</div>
+</div>
+
+<!-- Slide 11 -->
+<div class="section">
+<h2>Final Release (Human-readable)</h2>
+<p>Jordan Lee announced a plan to create <b>52,000 new jobs</b> and invest <b>$225 million</b> in infrastructure beginning in <b>2028</b>. According to the <b>Campaign Economic Briefing (Jan 2028)</b>, this plan will strengthen Michigan’s economy and improve public transit, roads, and bridges statewide.</p>
+</div>
+
+<!-- Slide 12 -->
+<div class="section">
+<h2>Before / After — Narrative + JSON-LD</h2>
+<table>
+<tr>
+<td><h3><u>Before — Prose</u></h3>
+<p>Jobs will be created… major investment… vague timeline…</p></td>
+<td><h3><u>After — Prose</u></h3>
+<p>52,000 jobs, $225M, 2028 start, source included.</p></td>
+</tr>
+<tr>
+<td>
+<h3><u>Before — JSON-LD</u></h3>
+<div class="terminal">
+"jobCount": <span class='red'>null</span><br>
+"investmentAmount": <span class='red'>null</span><br>
+"startYear": <span class='red'>null</span><br>
+"source": <span class='red'>null</span>
+</div></td>
+<td>
+<h3><u>After — JSON-LD</u></h3>
+<div class="terminal">
+"jobCount": 52000<br>
+"investmentAmount": 225000000<br>
+"startYear": 2028<br>
+"source": "Campaign Economic Briefing (Jan 2028)"
+</div></td>
+</tr>
+</table>
+</div>
+
+</body></html>

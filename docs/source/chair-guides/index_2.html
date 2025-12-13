@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBNC Listens - Research Resources</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        h1 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .meta {
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        h2 {
+            color: #2c5aa0;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .resource-card {
+            background: #f9f9f9;
+            border-left: 4px solid #2c5aa0;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .resource-card h3 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+        }
+        
+        .resource-card p {
+            margin-bottom: 12px;
+            color: #555;
+        }
+        
+        .resource-card .description {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .download-link {
+            display: inline-block;
+            background: #2c5aa0;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+        
+        .download-link:hover {
+            background: #1e4070;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .note strong {
+            color: #856404;
+        }
+        
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2c5aa0;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Back to SBNC Listens</a>
+        
+        <header>
+            <h1>Research Resources</h1>
+            <p class="subtitle">Wild Apricot Website Analysis & Best Practices</p>
+            <p class="meta">Prepared for SBNC Design Thinking Initiative | November 2025</p>
+        </header>
+
+        <section>
+            <h2>Overview</h2>
+            <p>These resources were compiled as part of the SBNC Listens initiative to help inform website improvements and design decisions. The analyses examine Wild Apricot website examples, platform options, and best practices relevant to SBNC's needs.</p>
+        </section>
+
+        <section>
+            <h2>Available Resources</h2>
+            
+            <div class="resource-card">
+                <h3>Wild Apricot Example Sites Analysis</h3>
+                <p class="description">A curated collection of well-designed Wild Apricot websites with analysis of what makes them effective.</p>
+                <p><strong>What's included:</strong></p>
+                <ul style="margin-left: 20px; margin-bottom: 15px;">
+                    <li>5 confirmed native Wild Apricot sites with detailed breakdowns</li>
+                    <li>Common success patterns across effective sites</li>
+                    <li>Design investment spectrum (free themes to custom designs)</li>
+                    <li>Platform verification methodology</li>
+                    <li>Key takeaways and resources</li>
+                </ul>
+                <p><strong>Best for:</strong> Understanding what's possible within Wild Apricot's native platform and identifying effective design patterns.</p>
+                <a href="Wild_Apricot_Example_Sites.md" class="download-link" download>Download Analysis (Markdown)</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>WordPress + Wild Apricot Integration Analysis</h3>
+                <p class="description">Comprehensive examination of using WordPress for the main website while integrating Wild Apricot for membership management.</p>
+                <p><strong>What's included:</strong></p>
+                <ul style="margin-left: 20px; margin-bottom: 15px;">
+                    <li>Detailed comparison of integration approaches (official plugin vs. third-party)</li>
+                    <li>Confirmed example (CMMA.org) with analysis</li>
+                    <li>Known technical issues and user feedback</li>
+                    <li>Complete cost/complexity comparison table</li>
+                    <li>Specific recommendations for SBNC</li>
+                </ul>
+                <p><strong>Best for:</strong> Understanding whether WordPress integration would benefit SBNC (spoiler: probably not).</p>
+                <a href="WordPress_WildApricot_Integration_Analysis.md" class="download-link" download>Download Analysis (Markdown)</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>Platform Verification Notes</h3>
+                <p class="description">Technical reference for identifying whether a site is native Wild Apricot, WordPress, or a hybrid integration.</p>
+                <p><strong>What's included:</strong></p>
+                <ul style="margin-left: 20px; margin-bottom: 15px;">
+                    <li>Verification status of all example sites</li>
+                    <li>Key indicators to look for (HTML paths, meta tags, footer text)</li>
+                    <li>How to verify platforms yourself</li>
+                </ul>
+                <p><strong>Best for:</strong> Technical reference when evaluating other Wild Apricot sites.</p>
+                <a href="Platform_Verification_Notes.md" class="download-link" download>Download Notes (Markdown)</a>
+            </div>
+        </section>
+
+        <section>
+            <h2>Key Findings Summary</h2>
+            
+            <div class="note">
+                <strong>Important Context:</strong> All the "interesting example" sites analyzed are <strong>native Wild Apricot sites</strong>, not WordPress integrations. This is actually ideal for SBNC since it shows what's achievable within the platform you're already using.
+            </div>
+
+            <p><strong>Native Wild Apricot sites can be highly effective</strong> without custom design investment. Success comes from:</p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Clear communication of purpose and benefits</li>
+                <li>Easy navigation to key information</li>
+                <li>Multiple engagement channels (newsletter, social media, events)</li>
+                <li>Fresh, updated content</li>
+                <li>Strong calls-to-action</li>
+            </ul>
+
+            <p><strong>WordPress + Wild Apricot integration</strong> adds significant complexity and cost without necessarily solving SBNC's identified UX challenges. Better to optimize within the native platform.</p>
+        </section>
+
+        <section>
+            <h2>How to Use These Resources</h2>
+            
+            <p><strong>For the November 18th Design Thinking Workshop:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Use example sites to show what's possible within Wild Apricot</li>
+                <li>Reference success patterns when discussing improvements</li>
+                <li>Share WordPress analysis to explain why platform migration isn't recommended</li>
+            </ul>
+
+            <p><strong>For ongoing website improvements:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Bookmark example sites for inspiration</li>
+                <li>Reference success patterns when making design decisions</li>
+                <li>Use verification notes to evaluate other Wild Apricot sites you discover</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Important Disclaimers</h2>
+            
+            <p>These analyses are based on:</p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Sites mentioned in Wild Apricot forums/blog or showcased by design firms</li>
+                <li>Sites that could be accessed and verified at time of analysis (November 2025)</li>
+                <li>Subjective assessment of "interesting features"</li>
+            </ul>
+
+            <p>This is <strong>not</strong> a comprehensive scientific survey or expert-curated "best of" list. Rather, it's an illustrative sample to inform SBNC's design thinking process.</p>
+        </section>
+
+        <footer>
+            <p>Resources compiled for Santa Barbara Newcomers Club Design Thinking Initiative</p>
+            <p>November 2025</p>
+        </footer>
+    </div>
+</body>
+</html>

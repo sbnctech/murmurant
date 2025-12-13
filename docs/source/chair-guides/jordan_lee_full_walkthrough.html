@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Jordan Lee – AI Discoverability Demo Walkthrough</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #f3f4f6;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    color: #111827;
+  }
+  .header {
+    background: #1f4e79;
+    color: #ffffff;
+    padding: 22px 42px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.45);
+  }
+  .header-sub {
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 400;
+    margin-top: 4px;
+  }
+  .container {
+    max-width: 1180px;
+    margin: 30px auto 32px;
+    padding: 0 24px 40px;
+  }
+  .section {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
+    padding: 26px 30px 24px;
+    margin-bottom: 24px;
+    border: 1px solid #e5e7eb;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .section-caption {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 14px;
+  }
+  .two-col {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .col-left {
+    flex: 1.7;
+    min-width: 260px;
+  }
+  .col-right {
+    flex: 1.1;
+    min-width: 230px;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+  .headline {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .body-text p {
+    margin: 6px 0;
+    line-height: 1.55;
+  }
+  .score-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #6b7280;
+  }
+  .score-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin: 3px 0 5px;
+  }
+  .score-value {
+    font-size: 30px;
+    font-weight: 700;
+  }
+  .score-delta {
+    font-size: 12px;
+    font-weight: 500;
+    color: #16a34a;
+  }
+  .score-note {
+    font-size: 12px;
+    color: #4b5563;
+    margin-top: 4px;
+  }
+  .facts-title {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+  .facts-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    font-size: 12px;
+  }
+  .facts-list li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 2px 0;
+  }
+  .dot-miss, .dot-ok {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+  }
+  .dot-miss {
+    background: #fb923c;
+  }
+  .dot-ok {
+    background: #22c55e;
+  }
+  .fact-miss {
+    color: #9ca3af;
+  }
+  .terminal {
+    background: #020617;
+    color: #22c55e;
+    border-radius: 10px;
+    border: 1px solid #111827;
+    padding: 14px 14px 12px;
+    font-family: ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-x: auto;
+  }
+  .json-line {
+    white-space: pre;
+  }
+  .json-miss {
+    color: #ef4444;
+    font-weight: 600;
+  }
+  .modal-shell {
+    max-width: 560px;
+  }
+  .modal {
+    border-radius: 14px;
+    border: 1px solid #d1d5db;
+    box-shadow: 0 20px 48px rgba(15, 23, 42, 0.55);
+    padding: 18px 18px 14px;
+    background: #ffffff;
+    font-size: 13px;
+  }
+  .modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .modal-sub {
+    font-size: 12px;
+    color: #4b5563;
+    margin-bottom: 10px;
+  }
+  .modal-label {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .modal-input {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    padding: 6px 8px;
+    font-size: 13px;
+    margin-bottom: 10px;
+    background: #f9fafb;
+  }
+  .modal-choice {
+    border-radius: 9px;
+    border: 1px solid #e5e7eb;
+    padding: 7px 9px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    background: #f9fafb;
+  }
+  .modal-choice.selected {
+    border-color: #2563eb;
+    background: #eff6ff;
+  }
+  .modal-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 11px;
+    color: #6b7280;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 6px;
+  }
+  .btn-pill {
+    border-radius: 999px;
+    border: 1px solid #d1d5db;
+    padding: 4px 10px;
+    font-size: 11px;
+    background: #ffffff;
+    cursor: default;
+  }
+  .btn-pill.primary {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+  }
+  .btn-pill.ghost {
+    background: transparent;
+    border-color: transparent;
+    color: #4b5563;
+  }
+  mark {
+    background: #fef9c3;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  .delta-inline {
+    font-size: 11px;
+    color: #16a34a;
+    font-weight: 500;
+  }
+  .quadrant-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .quad-cell {
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    padding: 10px 10px 8px;
+    background: #ffffff;
+  }
+  .quad-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #6b7280;
+    margin-bottom: 4px;
+  }
+  .quad-body {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .quad-body .json-miss {
+    color: #ef4444;
+    font-weight: 600;
+  }
+  .quad-body .hl {
+    background: #dcfce7;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  .note {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 8px;
+  }
+  @media (max-width: 900px) {
+    .section {
+      padding: 20px 18px 18px;
+    }
+    .two-col {
+      flex-direction: column;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  JORDAN LEE
+  <div class="header-sub">Democrat · Michigan-8 — AI Discoverability Demo Walkthrough</div>
+</div>
+<div class="container">
+
+  <!-- 1a. Starting prose with low score -->
+  <div class="section">
+    <div class="section-title">Starting draft — reads fine to humans, underspecified to AI</div>
+    <div class="section-caption">Editor opens the original press release. It looks reasonable, but it’s missing the concrete facts AI assistants look for.</div>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card">
+          <div class="headline">Jordan Lee Announces Plan to Create Jobs and Strengthen Infrastructure</div>
+          <div class="body-text">
+            <p>Today, Jordan Lee unveiled a comprehensive plan to boost Michigan’s economy and upgrade critical infrastructure across the 8th district.</p>
+            <p>As part of this plan, tens of thousands of good-paying jobs will be created across the state. Additionally, significant investment will be made in modernizing roads, bridges, and public transit systems.</p>
+            <p>This proposal is designed to make communities safer, commute times shorter, and local economies stronger.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div class="score-label">Discoverability score</div>
+          <div class="score-row">
+            <div class="score-value">41</div>
+          </div>
+          <div class="score-note">Good narrative, but too vague for AI systems to confidently answer “how many jobs?”, “how much investment?”, or “when?”.</div>
+          <div class="facts-title">Missing facts for AI answers</div>
+          <ul class="facts-list">
+            <li><span class="dot-miss"></span> Job count <span class="fact-miss">?</span></li>
+            <li><span class="dot-miss"></span> Investment amount <span class="fact-miss">?</span></li>
+            <li><span class="dot-miss"></span> Start year <span class="fact-miss">?</span></li>
+            <li><span class="dot-miss"></span> Source / evidence <span class="fact-miss">?</span></li>
+          </ul>
+          <div class="note">To a chatbot, this sounds like “a nice idea” with no numbers to anchor or verify.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1b. JSON-LD view with red missing fields -->
+  <div class="section">
+    <div class="section-title">Technical view — the same release, as AI sees it</div>
+    <div class="section-caption">The editor toggles to the JSON-LD view. Non-technical, but clearly sees where the gaps are.</div>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="terminal">
+          <div class="json-line">{</div>
+          <div class="json-line">  "@context": "https://schema.org",</div>
+          <div class="json-line">  "@type": "PressRelease",</div>
+          <div class="json-line">  "headline": "Jordan Lee Announces Plan to Create Jobs and Strengthen Infrastructure",</div>
+          <div class="json-line">  "about": "Economic growth and infrastructure upgrades in Michigan’s 8th district",</div>
+          <div class="json-line">  "jobCount": <span class="json-miss">null</span>,</div>
+          <div class="json-line">  "investmentAmount": <span class="json-miss">null</span>,</div>
+          <div class="json-line">  "startYear": <span class="json-miss">null</span>,</div>
+          <div class="json-line">  "source": <span class="json-miss">null</span></div>
+          <div class="json-line">}</div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div class="score-label">Why this matters</div>
+          <div class="body-text">
+            <p>Red fields highlight the missing facts that keep AI systems from giving strong, confident answers about Jordan’s plan.</p>
+            <p>The editor never has to write JSON — they just see where the gaps are, and the system turns their words into structured data automatically.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Discoverability panel with question marks -->
+  <div class="section">
+    <div class="section-title">Discoverability checklist — what AI still needs</div>
+    <div class="section-caption">The right rail keeps a running list of which AI-critical facts are filled and which are still missing.</div>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card">
+          <div class="headline">Discoverability data for this release</div>
+          <div class="body-text">
+            <p>The editor stays in prose. The system quietly tracks the underlying facts and keeps score.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div class="score-label">Discoverability score</div>
+          <div class="score-row">
+            <div class="score-value">41</div>
+          </div>
+          <div class="facts-title">Fact coverage</div>
+          <ul class="facts-list">
+            <li><span class="dot-miss"></span> Job count <span class="fact-miss">missing</span></li>
+            <li><span class="dot-miss"></span> Investment amount <span class="fact-miss">missing</span></li>
+            <li><span class="dot-miss"></span> Start year <span class="fact-miss">missing</span></li>
+            <li><span class="dot-miss"></span> Source / evidence <span class="fact-miss">missing</span></li>
+          </ul>
+          <div class="note">The editor clicks a suggestion card to start filling in the most impactful fact: job count.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Job count modal -->
+  <div class="section">
+    <div class="section-title">Suggestion: “How many jobs?”</div>
+    <div class="section-caption">The system asks for the missing fact, proposes language, and explains why it matters for AI answers.</div>
+    <div class="modal-shell">
+      <div class="modal">
+        <div class="modal-title">Add the job count</div>
+        <div class="modal-sub">
+          When voters ask a chatbot “How many jobs will Jordan’s plan create?”, systems need a specific number to answer clearly and cite this release.
+        </div>
+        <div class="modal-label">Fill in the blank:</div>
+        <input class="modal-input" value="52,000" />
+        <div class="modal-label">Choose how to phrase it in the release:</div>
+        <div class="modal-choice selected">Jordan’s plan will create <b>52,000 good‑paying jobs</b> across Michigan.</div>
+        <div class="modal-choice">This proposal is projected to create <b>52,000 new jobs</b> in communities across the 8th district and beyond.</div>
+        <div class="modal-choice">Economists estimate the plan will support <b>52,000 employment opportunities</b> statewide.</div>
+        <div class="modal-footer-row">
+          <div class="modal-actions">
+            <div class="btn-pill primary">Insert into release</div>
+            <div class="btn-pill ghost">Skip</div>
+            <div class="btn-pill ghost">Request info from team</div>
+          </div>
+          <div>Filling this field gives a strong answer to “How many jobs?” and improves AI trust.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Updated prose with job count -->
+  <div class="section">
+    <div class="section-title">The editor sees the change in context</div>
+    <div class="section-caption">Accepted suggestions show up as familiar inline edits — the editor remains in control of the narrative.</div>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card">
+          <div class="headline">Jordan Lee Announces Plan to Create Jobs and Strengthen Infrastructure</div>
+          <div class="body-text">
+            <p>Today, Jordan Lee unveiled a comprehensive plan to boost Michigan’s economy and upgrade critical infrastructure across the 8th district.</p>
+            <p>As part of this plan, <mark>52,000 good‑paying jobs</mark> will be created across the state.</p>
+            <p>Additionally, significant investment will be made in modernizing roads, bridges, and public transit systems.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div class="score-label">Discoverability score</div>
+          <div class="score-row">
+            <div class="score-value">52</div>
+            <div class="score-delta">+11</div>
+          </div>
+          <div class="facts-title">Fact coverage</div>
+          <ul class="facts-list">
+            <li><span class="dot-ok"></span> Job count: 52,000</li>
+            <li><span class="dot-miss"></span> Investment amount <span class="fact-miss">missing</span></li>
+            <li><span class="dot-miss"></span> Start year <span class="fact-miss">missing</span></li>
+            <li><span class="dot-miss"></span> Source / evidence <span class="fact-miss">missing</span></li>
+          </ul>
+          <div class="note">Now, when someone asks a chatbot “How many jobs?”, Jordan has a clear, cited answer.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Investment modal -->
+  <div class="section">
+    <div class="section-title">Suggestion: “How much investment?”</div>
+    <div class="section-caption">Next, the system helps the editor add the total investment — again staying in prose.</div>
+    <div class="modal-shell">
+      <div class="modal">
+        <div class="modal-title">Add the investment amount</div>
+        <div class="modal-sub">
+          Chatbots look for concrete dollar figures to answer “How big is this plan?” and compare it to other proposals.
+        </div>
+        <div class="modal-label">Fill in the blank:</div>
+        <input class="modal-input" value="$225 million" />
+        <div class="modal-label">Choose how to phrase it:</div>
+        <div class="modal-choice selected">The plan includes a <b>$225 million investment</b> in modernizing Michigan’s roads, bridges, and public transit.</div>
+        <div class="modal-choice">Jordan’s proposal directs <b>$225 million</b> toward critical infrastructure upgrades in the 8th district and across Michigan.</div>
+        <div class="modal-choice">Under this plan, Michigan communities will benefit from <b>$225 million</b> in infrastructure improvements.</div>
+        <div class="modal-footer-row">
+          <div class="modal-actions">
+            <div class="btn-pill primary">Insert into release</div>
+            <div class="btn-pill ghost">Skip</div>
+            <div class="btn-pill ghost">Request info from team</div>
+          </div>
+          <div>Specific amounts help AI answer “How big is it?” and build trust with voters.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Updated prose with investment -->
+  <div class="section">
+    <div class="section-title">Narrative after investment is added</div>
+    <div class="section-caption">The release gets more concrete — and more discoverable — without changing the editor’s voice.</div>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card">
+          <div class="headline">Jordan Lee Announces Plan to Create Jobs and Strengthen Infrastructure</div>
+          <div class="body-text">
+            <p>Today, Jordan Lee unveiled a comprehensive plan to boost Michigan’s economy and upgrade critical infrastructure across the 8th district.</p>
+            <p>As part of this plan, 52,000 good‑paying jobs will be created across the state.</p>
+            <p>The plan includes a <mark>$225 million investment</mark> in modernizing Michigan’s roads, bridges, and public transit systems.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div class="score-label">Discoverability score</div>
+          <div class="score-row">
+            <div class="score-value">68</div>
+            <div class="score-delta">+16</div>
+          </div>
+          <div class="facts-title">Fact coverage</div>
+          <ul class="facts-list">
+            <li><span class="dot-ok"></span> Job count: 52,000</li>
+            <li><span class="dot-ok"></span> Investment: $225M</li>
+            <li><span class="dot-miss"></span> Start year <span class="fact-miss">missing</span></li>
+            <li><span class="dot-miss"></span> Source / evidence <span class="fact-miss">missing</span></li>
+          </ul>
+          <div class="note">AI answers can now confidently state both “how many jobs” and “how much investment.”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Start year modal -->
+  <div class="section">
+    <div class="section-title">Suggestion: “When does this start?”</div>
+    <div class="section-caption">The editor fills in timing details so chatbots can answer “when” questions accurately.</div>
+    <div class="modal-shell">
+      <div class="modal">
+        <div class="modal-title">Add the start year</div>
+        <div class="modal-sub">
+          Timelines help AI distinguish between “plans” and “results” when voters ask “When will this happen?”.
+        </div>
+        <div class="modal-label">Fill in the blank:</div>
+        <input class="modal-input" value="2028" />
+        <div class="modal-label">Choose how to phrase it:</div>
+        <div class="modal-choice selected">Construction and upgrades will officially begin in <b>2028</b>.</div>
+        <div class="modal-choice">Infrastructure projects funded by this plan will start in <b>2028</b>.</div>
+        <div class="modal-choice">Communities across Michigan will see work begin in <b>2028</b>.</div>
+        <div class="modal-footer-row">
+          <div class="modal-actions">
+            <div class="btn-pill primary">Insert into release</div>
+            <div class="btn-pill ghost">Skip</div>
+            <div class="btn-pill ghost">Request info from team</div>
+          </div>
+          <div>Adding timing lets AI answer “when” directly, instead of hedging.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Updated prose with start year -->
+  <div class="section">
+    <div class="section-title">Narrative after start year is added</div>
+    <div class="section-caption">With the start year in place, the plan feels more real — and answers more questions.</div>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card">
+          <div class="headline">Jordan Lee Announces Plan to Create Jobs and Strengthen Infrastructure</div>
+          <div class="body-text">
+            <p>Today, Jordan Lee unveiled a comprehensive plan to boost Michigan’s economy and upgrade critical infrastructure across the 8th district.</p>
+            <p>As part of this plan, 52,000 good‑paying jobs will be created across the state.</p>
+            <p>The plan includes a $225 million investment in modernizing Michigan’s roads, bridges, and public transit systems.</p>
+            <p><mark>Construction and upgrades will officially begin in 2028.</mark></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div class="score-label">Discoverability score</div>
+          <div class="score-row">
+            <div class="score-value">82</div>
+            <div class="score-delta">+14</div>
+          </div>
+          <div class="facts-title">Fact coverage</div>
+          <ul class="facts-list">
+            <li><span class="dot-ok"></span> Job count: 52,000</li>
+            <li><span class="dot-ok"></span> Investment: $225M</li>
+            <li><span class="dot-ok"></span> Start year: 2028</li>
+            <li><span class="dot-miss"></span> Source / evidence <span class="fact-miss">missing</span></li>
+          </ul>
+          <div class="note">Chatbots can now answer “how many?”, “how much?”, and “when?”. One last step: prove it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Source modal -->
+  <div class="section">
+    <div class="section-title">Suggestion: “What’s your source?”</div>
+    <div class="section-caption">The final — and most powerful — boost to trust: a verifiable source the AI can cite.</div>
+    <div class="modal-shell">
+      <div class="modal">
+        <div class="modal-title">Add a source for these numbers</div>
+        <div class="modal-sub">
+          Providing a source dramatically increases AI trust and makes it more likely this release will be cited in generated answers.
+        </div>
+        <div class="modal-label">Choose or add a source:</div>
+        <div class="modal-choice selected"><b>Campaign Economic Briefing (Jan 2028)</b></div>
+        <div class="modal-choice">Michigan Infrastructure Authority planning memo</div>
+        <div class="modal-choice">Upload or link to external economic analysis</div>
+        <div class="modal-footer-row">
+          <div class="modal-actions">
+            <div class="btn-pill primary">Attach source</div>
+            <div class="btn-pill ghost">Skip</div>
+          </div>
+          <div>Verified sources are heavily weighted in AI trust scoring — this is where the score jumps most.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Score jumps to 94 -->
+  <div class="section">
+    <div class="section-title">Score jumps once everything is verifiable</div>
+    <div class="section-caption">With all key facts and a source in place, the release is now highly discoverable and trusted by AI systems.</div>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="card">
+          <div class="body-text">
+            <p>The editor hasn’t touched the JSON. They’ve just answered a few targeted questions in their own words.</p>
+            <p>Behind the scenes, the system updates the structured data to match the narrative, field by field.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-right">
+        <div class="card">
+          <div class="score-label">Discoverability score</div>
+          <div class="score-row">
+            <div class="score-value">94</div>
+            <div class="score-delta">+53</div>
+          </div>
+          <div class="score-note">
+            All AI-critical fields are now populated with specific, sourced facts. The release is ready for chatbots to quote and trust.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. Final release text -->
+  <div class="section">
+    <div class="section-title">Final release — editor-friendly prose</div>
+    <div class="section-caption">What the communications team actually publishes — a clean, confident, fact-rich narrative.</div>
+    <div class="card">
+      <div class="headline">Jordan Lee Announces $225 Million Plan to Create 52,000 Jobs and Rebuild Michigan’s Infrastructure</div>
+      <div class="body-text">
+        <p>Today, Jordan Lee announced a comprehensive plan to create <b>52,000 new good‑paying jobs</b> and invest <b>$225 million</b> in rebuilding Michigan’s infrastructure across the 8th district and the entire state.</p>
+        <p>The plan directs funding to modernize local roads, repair aging bridges, and expand public transit options so families can spend less time in traffic and more time at home.</p>
+        <p><b>Construction and upgrades will officially begin in 2028</b>, according to the <b>Campaign Economic Briefing (Jan 2028)</b>, supporting long‑term economic growth and safer communities.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12. Final JSON-LD view -->
+  <div class="section">
+    <div class="section-title">Final JSON-LD — all fields filled in</div>
+    <div class="section-caption">The technical representation updates automatically. The editor never has to touch this.</div>
+    <div class="terminal">
+      <div class="json-line">{</div>
+      <div class="json-line">  "@context": "https://schema.org",</div>
+      <div class="json-line">  "@type": "PressRelease",</div>
+      <div class="json-line">  "headline": "Jordan Lee Announces $225 Million Plan to Create 52,000 Jobs and Rebuild Michigan’s Infrastructure",</div>
+      <div class="json-line">  "about": "Economic growth and infrastructure upgrades in Michigan’s 8th district",</div>
+      <div class="json-line">  "jobCount": 52000,</div>
+      <div class="json-line">  "investmentAmount": 225000000,</div>
+      <div class="json-line">  "startYear": 2028,</div>
+      <div class="json-line">  "source": "Campaign Economic Briefing (Jan 2028)"</div>
+      <div class="json-line">}</div>
+    </div>
+    <div class="note">This is what AI systems actually read and index — and it now matches the prose one‑to‑one.</div>
+  </div>
+
+  <!-- 13. Quadrant comparison -->
+  <div class="section">
+    <div class="section-title">Before vs. after — prose and JSON-LD together</div>
+    <div class="section-caption">In one view, the campaign can see how the story and the structured data improved at the same time.</div>
+    <div class="quadrant-grid">
+      <div class="quad-cell">
+        <div class="quad-label">Before · Prose</div>
+        <div class="quad-body">
+          <p>“Tens of thousands of good‑paying jobs will be created…”</p>
+          <p>“Significant investment will be made…”</p>
+          <p>No dates. No numbers. No source. Hard for AI to quote without hedging.</p>
+        </div>
+      </div>
+      <div class="quad-cell">
+        <div class="quad-label">After · Prose</div>
+        <div class="quad-body">
+          <p>“Jordan Lee announced a plan to create <span class="hl">52,000 new good‑paying jobs</span> and invest <span class="hl">$225 million</span> in infrastructure improvements.”</p>
+          <p>“<span class="hl">Construction and upgrades will officially begin in 2028</span>, according to the <span class="hl">Campaign Economic Briefing (Jan 2028)</span>.”</p>
+          <p>Clear, specific, and easy for AI to reuse verbatim.</p>
+        </div>
+      </div>
+      <div class="quad-cell">
+        <div class="quad-label">Before · JSON‑LD</div>
+        <div class="quad-body">
+          <p><code>"jobCount": </code><span class="json-miss">null</span><br>
+             <code>"investmentAmount": </code><span class="json-miss">null</span><br>
+             <code>"startYear": </code><span class="json-miss">null</span><br>
+             <code>"source": </code><span class="json-miss">null</span></p>
+          <p>From an AI’s perspective: “Interesting, but not grounded. Hard to trust.”</p>
+        </div>
+      </div>
+      <div class="quad-cell">
+        <div class="quad-label">After · JSON‑LD</div>
+        <div class="quad-body">
+          <p><code>"jobCount": </code><span class="hl">52000</span><br>
+             <code>"investmentAmount": </code><span class="hl">225000000</span><br>
+             <code>"startYear": </code><span class="hl">2028</span><br>
+             <code>"source": </code><span class="hl">"Campaign Economic Briefing (Jan 2028)"</span></p>
+          <p>All fields aligned with the narrative. High trust. High likelihood of being cited in AI answers.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14. Why not 100? -->
+  <div class="section">
+    <div class="section-title">Why the score is 94 — and what 100 would look like</div>
+    <div class="section-caption">The goal isn’t a “perfect score” — it’s a release that AI systems can trust and reuse responsibly.</div>
+    <div class="card">
+      <div class="body-text">
+        <p>The editor sees that a 94 means the key facts are in great shape — job count, investment, timing, and source are all present and consistent.</p>
+        <p>To reach 100, the system suggests future enhancements like:</p>
+        <ul>
+          <li>Linking to supporting charts or downloadable PDFs for deeper context.</li>
+          <li>Adding media assets (photo, video) with structured captions.</li>
+          <li>Including follow‑up Q&amp;A content specifically designed for chatbots to reference.</li>
+        </ul>
+        <p>The important part: <b>the editor stayed in prose the whole time.</b> The AI quietly handled the JSON‑LD and alignment work — turning a typical press release into something AI assistants can actually understand, trust, and cite.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,782 @@
+<style>
+/* SBNC Event Finder Styles - Scoped to .sbnc-event-finder */
+.sbnc-event-finder * {
+    box-sizing: border-box;
+}
+
+.sbnc-event-finder {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.sbnc-event-finder .ef-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0;
+}
+
+.sbnc-event-finder .ef-tab-btn {
+    flex: 1;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    background: #e8e8e8;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 8px 8px 0 0;
+}
+
+.sbnc-event-finder .ef-tab-btn:hover {
+    background: #d0d0d0;
+}
+
+.sbnc-event-finder .ef-tab-btn.active {
+    background: white;
+    color: #1e4d8c;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+}
+
+.sbnc-event-finder .ef-tab-content {
+    display: none;
+    background: white;
+    padding: 24px;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.sbnc-event-finder .ef-tab-content.active {
+    display: block;
+}
+
+.sbnc-event-finder .ef-search-box {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.sbnc-event-finder .ef-search-input {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+}
+
+.sbnc-event-finder .ef-search-input:focus {
+    border-color: #1e4d8c;
+}
+
+.sbnc-event-finder .ef-search-btn {
+    padding: 12px 24px;
+    background: #1e4d8c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.sbnc-event-finder .ef-search-btn:hover {
+    background: #163a6a;
+}
+
+.sbnc-event-finder .ef-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.sbnc-event-finder .ef-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sbnc-event-finder .ef-filter-group label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.sbnc-event-finder .ef-filter-group select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    min-width: 140px;
+    cursor: pointer;
+}
+
+.sbnc-event-finder .ef-quick-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.sbnc-event-finder .ef-quick-filter {
+    padding: 6px 14px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 16px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sbnc-event-finder .ef-quick-filter:hover,
+.sbnc-event-finder .ef-quick-filter.active {
+    background: #1e4d8c;
+    color: white;
+}
+
+.sbnc-event-finder .ef-results {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.sbnc-event-finder .ef-results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.sbnc-event-finder .ef-results-header h3 {
+    font-size: 18px;
+    margin: 0;
+    color: #333;
+}
+
+.sbnc-event-finder .ef-results-count {
+    color: #666;
+    font-size: 14px;
+}
+
+.sbnc-event-finder .ef-event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sbnc-event-finder .ef-event-card {
+    display: flex;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.sbnc-event-finder .ef-event-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.sbnc-event-finder .ef-event-date {
+    background: linear-gradient(135deg, #1e4d8c 0%, #2a5f9e 100%);
+    color: white;
+    padding: 14px;
+    min-width: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.sbnc-event-finder .ef-event-date .month {
+    font-size: 11px;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.sbnc-event-finder .ef-event-date .day {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.sbnc-event-finder .ef-event-date .weekday {
+    font-size: 10px;
+    opacity: 0.8;
+    margin-top: 3px;
+}
+
+.sbnc-event-finder .ef-event-details {
+    flex: 1;
+    padding: 14px;
+}
+
+.sbnc-event-finder .ef-event-category {
+    display: inline-block;
+    padding: 3px 8px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.sbnc-event-finder .ef-event-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.sbnc-event-finder .ef-event-title a {
+    color: #333;
+    text-decoration: none;
+}
+
+.sbnc-event-finder .ef-event-title a:hover {
+    color: #1e4d8c;
+    text-decoration: underline;
+}
+
+.sbnc-event-finder .ef-event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+    color: #666;
+}
+
+.sbnc-event-finder .ef-event-status {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    border-left: 1px solid #eee;
+}
+
+.sbnc-event-finder .ef-spots {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4caf50;
+}
+
+.sbnc-event-finder .ef-spots.low {
+    color: #ff9800;
+}
+
+.sbnc-event-finder .ef-spots.full {
+    color: #f44336;
+}
+
+.sbnc-event-finder .ef-spots-label {
+    font-size: 10px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.sbnc-event-finder .ef-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 600;
+    margin-left: 6px;
+}
+
+.sbnc-event-finder .ef-tag.public {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.sbnc-event-finder .ef-tag.free {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.sbnc-event-finder .ef-tag.newbie {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.sbnc-event-finder .ef-no-results {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.sbnc-event-finder .ef-loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.sbnc-event-finder .ef-email-lookup {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.sbnc-event-finder .ef-email-input {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+    .sbnc-event-finder .ef-search-box,
+    .sbnc-event-finder .ef-email-lookup {
+        flex-direction: column;
+    }
+
+    .sbnc-event-finder .ef-filters {
+        flex-direction: column;
+    }
+
+    .sbnc-event-finder .ef-filter-group select {
+        width: 100%;
+    }
+
+    .sbnc-event-finder .ef-event-card {
+        flex-direction: column;
+    }
+
+    .sbnc-event-finder .ef-event-date {
+        flex-direction: row;
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .sbnc-event-finder .ef-event-status {
+        border-left: none;
+        border-top: 1px solid #eee;
+        flex-direction: row;
+        gap: 8px;
+    }
+}
+</style>
+
+<div class="sbnc-event-finder">
+    <!-- Tabs -->
+    <div class="ef-tabs">
+        <button class="ef-tab-btn active" onclick="efSwitchTab('search')">Find Events</button>
+        <button class="ef-tab-btn" onclick="efSwitchTab('my-events')">My Events</button>
+    </div>
+
+    <!-- Search Tab -->
+    <div id="ef-search-tab" class="ef-tab-content active">
+        <div class="ef-search-box">
+            <input type="text" id="ef-search-input" class="ef-search-input" placeholder="Search events... (e.g., wine, hiking, games)">
+            <button class="ef-search-btn" onclick="efSearch()">Search</button>
+        </div>
+
+        <div class="ef-filters">
+            <div class="ef-filter-group">
+                <label>Interest</label>
+                <select id="ef-filter-interest" onchange="efApplyFilters()">
+                    <option value="">All Interests</option>
+                    <option value="outdoor-recreation">Outdoor Recreation</option>
+                    <option value="cultural-exploration">Cultural Exploration</option>
+                    <option value="dining-together">Dining Together</option>
+                    <option value="beer-wine">Beer &amp; Wine</option>
+                    <option value="social-connections">Social Connections</option>
+                    <option value="learning-growing">Learning &amp; Growing</option>
+                </select>
+            </div>
+
+            <div class="ef-filter-group">
+                <label>When</label>
+                <select id="ef-filter-time" onchange="efApplyFilters()">
+                    <option value="upcoming">All Upcoming</option>
+                    <option value="this-week">This Week</option>
+                    <option value="next-week">Next Week</option>
+                    <option value="this-month">This Month</option>
+                    <option value="weekend">Weekends Only</option>
+                </select>
+            </div>
+
+            <div class="ef-filter-group">
+                <label>Availability</label>
+                <select id="ef-filter-availability" onchange="efApplyFilters()">
+                    <option value="">Any</option>
+                    <option value="available">Has Openings</option>
+                    <option value="full">Full / Waitlist</option>
+                </select>
+            </div>
+
+            <div class="ef-filter-group">
+                <label>Cost</label>
+                <select id="ef-filter-cost" onchange="efApplyFilters()">
+                    <option value="">Any Price</option>
+                    <option value="free">Free Events</option>
+                    <option value="under50">Under $50</option>
+                    <option value="under100">Under $100</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="ef-quick-filters">
+            <span style="font-size: 12px; color: #666; margin-right: 8px;">Quick:</span>
+            <button class="ef-quick-filter" onclick="efQuickFilter('this-weekend')">This Weekend</button>
+            <button class="ef-quick-filter" onclick="efQuickFilter('has-openings')">Has Openings</button>
+            <button class="ef-quick-filter" onclick="efQuickFilter('free')">Free Events</button>
+            <button class="ef-quick-filter" onclick="efQuickFilter('clear')">Clear All</button>
+        </div>
+    </div>
+
+    <!-- My Events Tab -->
+    <div id="ef-my-events-tab" class="ef-tab-content">
+        <div class="ef-email-lookup">
+            <input type="email" id="ef-member-email" class="ef-email-input" placeholder="Enter your email to find your registrations...">
+            <button class="ef-search-btn" onclick="efFindMyEvents()">Find My Events</button>
+        </div>
+        <label style="display: flex; align-items: center; gap: 8px; color: #666; font-size: 13px;">
+            <input type="checkbox" id="ef-include-past" checked>
+            Include past events (last 14 days)
+        </label>
+    </div>
+
+    <!-- Results -->
+    <div class="ef-results">
+        <div class="ef-results-header">
+            <h3 id="ef-results-title">Upcoming Events</h3>
+            <span class="ef-results-count" id="ef-results-count">Loading...</span>
+        </div>
+        <div class="ef-event-list" id="ef-event-list">
+            <div class="ef-loading">Loading events...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const EF_API_BASE = 'https://mail.sbnewcomers.org/chatbot/api';
+
+    let efAllEvents = [];
+    let efFilteredEvents = [];
+
+    const efInterestKeywords = {
+        'outdoor-recreation': ['hike', 'hiking', 'walk', 'kayak', 'golf', 'cycling', 'bike', 'trail', 'beach', 'outdoor', 'nature', 'tennis', 'swim'],
+        'cultural-exploration': ['heritage', 'historic', 'tour', 'theater', 'theatre', 'concert', 'symphony', 'opera', 'ballet', 'art', 'museum', 'gallery', 'garden', 'botanic'],
+        'dining-together': ['dinner', 'lunch', 'brunch', 'restaurant', 'food', 'cooking', 'potluck', 'picnic', 'meal', 'dining', 'epicurious'],
+        'beer-wine': ['wine', 'winery', 'vineyard', 'tasting', 'beer', 'brewery', 'pub', 'brew'],
+        'social-connections': ['happy hour', 'social', 'mixer', 'game', 'games', 'trivia', 'cards', 'bunco', 'tgif', 'cocktail'],
+        'learning-growing': ['book', 'wellness', 'meditation', 'yoga', 'dance', 'workshop', 'class', 'learn', 'knit', 'craft', 'discussion', 'speaker']
+    };
+
+    window.efSwitchTab = function(tab) {
+        document.querySelectorAll('.sbnc-event-finder .ef-tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.sbnc-event-finder .ef-tab-content').forEach(content => content.classList.remove('active'));
+
+        if (tab === 'search') {
+            document.querySelectorAll('.sbnc-event-finder .ef-tab-btn')[0].classList.add('active');
+            document.getElementById('ef-search-tab').classList.add('active');
+            document.getElementById('ef-results-title').textContent = 'Upcoming Events';
+            efFilteredEvents = [...efAllEvents];
+            efRenderEvents();
+        } else if (tab === 'my-events') {
+            document.querySelectorAll('.sbnc-event-finder .ef-tab-btn')[1].classList.add('active');
+            document.getElementById('ef-my-events-tab').classList.add('active');
+            document.getElementById('ef-results-title').textContent = 'My Events';
+            document.getElementById('ef-event-list').innerHTML = '<div class="ef-no-results"><p>Enter your email and click "Find My Events" to see your registrations.</p></div>';
+            document.getElementById('ef-results-count').textContent = '';
+        }
+    };
+
+    async function efLoadEvents() {
+        try {
+            const sql = `SELECT Id, Name, StartDate, EndDate, Location, RegistrationsLimit, ConfirmedRegistrationsCount, Tags, Status, MinPrice, MaxPrice, IsFree, HasGuestTickets
+                FROM events
+                WHERE datetime(StartDate) >= datetime('now')
+                AND (Status IS NULL OR Status NOT LIKE '%Cancelled%')
+                AND Name NOT LIKE '%CANCELLED%'
+                ORDER BY StartDate
+                LIMIT 150`;
+
+            const response = await fetch(`${EF_API_BASE}/query`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sql })
+            });
+
+            const data = await response.json();
+
+            if (data.rows) {
+                efAllEvents = data.rows.map(row => ({
+                    id: row[0],
+                    name: row[1],
+                    startDate: row[2],
+                    endDate: row[3],
+                    location: row[4],
+                    limit: row[5],
+                    confirmed: row[6],
+                    tags: row[7],
+                    status: row[8],
+                    minPrice: row[9],
+                    maxPrice: row[10],
+                    isFree: row[11],
+                    hasGuestTickets: row[12]
+                }));
+
+                efFilteredEvents = [...efAllEvents];
+                efRenderEvents();
+            }
+        } catch (error) {
+            console.error('Error loading events:', error);
+            document.getElementById('ef-event-list').innerHTML = '<div class="ef-no-results"><p>Unable to load events. Please try again later.</p></div>';
+        }
+    }
+
+    window.efApplyFilters = function() {
+        const interestFilter = document.getElementById('ef-filter-interest').value;
+        const timeFilter = document.getElementById('ef-filter-time').value;
+        const availabilityFilter = document.getElementById('ef-filter-availability').value;
+        const costFilter = document.getElementById('ef-filter-cost').value;
+        const searchTerm = document.getElementById('ef-search-input').value.toLowerCase();
+
+        const now = new Date();
+        const endOfWeek = new Date(now);
+        endOfWeek.setDate(now.getDate() + (7 - now.getDay()));
+        const startOfNextWeek = new Date(endOfWeek);
+        startOfNextWeek.setDate(endOfWeek.getDate() + 1);
+        const endOfNextWeek = new Date(startOfNextWeek);
+        endOfNextWeek.setDate(startOfNextWeek.getDate() + 6);
+        const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+        efFilteredEvents = efAllEvents.filter(event => {
+            const eventDate = new Date(event.startDate);
+
+            if (interestFilter) {
+                const keywords = efInterestKeywords[interestFilter] || [];
+                const nameLower = event.name.toLowerCase();
+                const matches = keywords.some(kw => nameLower.includes(kw));
+                if (!matches) return false;
+            }
+
+            if (timeFilter === 'this-week' && eventDate > endOfWeek) return false;
+            if (timeFilter === 'next-week' && (eventDate < startOfNextWeek || eventDate > endOfNextWeek)) return false;
+            if (timeFilter === 'this-month' && eventDate > endOfMonth) return false;
+            if (timeFilter === 'weekend') {
+                const day = eventDate.getDay();
+                if (day !== 0 && day !== 6) return false;
+            }
+
+            const spots = event.limit ? event.limit - (event.confirmed || 0) : null;
+            if (availabilityFilter === 'available' && spots !== null && spots <= 0) return false;
+            if (availabilityFilter === 'full' && (spots === null || spots > 0)) return false;
+
+            const isFree = event.isFree === 1 || event.minPrice === 0;
+            const price = event.minPrice;
+            if (costFilter === 'free' && !isFree) return false;
+            if (costFilter === 'under50' && !isFree && (price === null || price >= 50)) return false;
+            if (costFilter === 'under100' && !isFree && (price === null || price >= 100)) return false;
+
+            if (searchTerm) {
+                const searchIn = (event.name + ' ' + (event.location || '')).toLowerCase();
+                if (!searchIn.includes(searchTerm)) return false;
+            }
+
+            return true;
+        });
+
+        efRenderEvents();
+    };
+
+    window.efSearch = function() {
+        efApplyFilters();
+    };
+
+    window.efQuickFilter = function(type) {
+        document.getElementById('ef-filter-interest').value = '';
+        document.getElementById('ef-filter-time').value = 'upcoming';
+        document.getElementById('ef-filter-availability').value = '';
+        document.getElementById('ef-filter-cost').value = '';
+        document.getElementById('ef-search-input').value = '';
+
+        document.querySelectorAll('.sbnc-event-finder .ef-quick-filter').forEach(btn => btn.classList.remove('active'));
+
+        if (type === 'clear') {
+            efFilteredEvents = [...efAllEvents];
+            efRenderEvents();
+            return;
+        }
+
+        event.target.classList.add('active');
+
+        if (type === 'this-weekend') {
+            document.getElementById('ef-filter-time').value = 'weekend';
+        } else if (type === 'has-openings') {
+            document.getElementById('ef-filter-availability').value = 'available';
+        } else if (type === 'free') {
+            document.getElementById('ef-filter-cost').value = 'free';
+        }
+
+        efApplyFilters();
+    };
+
+    window.efFindMyEvents = async function() {
+        const email = document.getElementById('ef-member-email').value.trim();
+        const includePast = document.getElementById('ef-include-past').checked;
+
+        if (!email) {
+            alert('Please enter your email address');
+            return;
+        }
+
+        const dateFilter = includePast
+            ? "datetime(e.StartDate) >= datetime('now', '-14 days')"
+            : "datetime(e.StartDate) >= datetime('now')";
+
+        try {
+            const response = await fetch(`${EF_API_BASE}/query`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    sql: `SELECT e.Id, e.Name, e.StartDate, e.EndDate, e.Location, e.RegistrationsLimit, e.ConfirmedRegistrationsCount, e.Tags, e.Status, e.MinPrice, e.MaxPrice, e.IsFree, e.HasGuestTickets
+                        FROM events e
+                        JOIN event_registrations er ON e.Id = er.EventId
+                        JOIN contacts c ON er.ContactId = c.id
+                        WHERE LOWER(c.email) = LOWER('${email.replace(/'/g, "''")}')
+                        AND ${dateFilter}
+                        AND er.Status IN ('Confirmed', 'Paid', 'Free', 'Completed')
+                        ORDER BY e.StartDate
+                        LIMIT 50`
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.rows && data.rows.length > 0) {
+                efFilteredEvents = data.rows.map(row => ({
+                    id: row[0],
+                    name: row[1],
+                    startDate: row[2],
+                    endDate: row[3],
+                    location: row[4],
+                    limit: row[5],
+                    confirmed: row[6],
+                    tags: row[7],
+                    status: row[8],
+                    minPrice: row[9],
+                    maxPrice: row[10],
+                    isFree: row[11],
+                    hasGuestTickets: row[12],
+                    isMyEvent: true
+                }));
+                efRenderEvents();
+            } else {
+                document.getElementById('ef-event-list').innerHTML = '<div class="ef-no-results"><p>No registrations found for this email.</p></div>';
+                document.getElementById('ef-results-count').textContent = '0 events';
+            }
+        } catch (error) {
+            console.error('Error finding events:', error);
+            alert('Error looking up your events. Please try again.');
+        }
+    };
+
+    function efRenderEvents() {
+        const container = document.getElementById('ef-event-list');
+        const countEl = document.getElementById('ef-results-count');
+
+        countEl.textContent = `${efFilteredEvents.length} event${efFilteredEvents.length !== 1 ? 's' : ''}`;
+
+        if (efFilteredEvents.length === 0) {
+            container.innerHTML = '<div class="ef-no-results"><p>No events found matching your criteria.</p></div>';
+            return;
+        }
+
+        container.innerHTML = efFilteredEvents.map(event => {
+            const date = new Date(event.startDate);
+            const month = date.toLocaleDateString('en-US', { month: 'short' });
+            const day = date.getDate();
+            const weekday = date.toLocaleDateString('en-US', { weekday: 'short' });
+            const time = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+            const colonIdx = event.name.indexOf(':');
+            const category = colonIdx > 0 && colonIdx < 30 ? event.name.substring(0, colonIdx).replace(/[*\-()]/g, '').trim() : 'Event';
+            const title = colonIdx > 0 && colonIdx < 30 ? event.name.substring(colonIdx + 1).trim() : event.name;
+
+            const spots = event.limit ? event.limit - (event.confirmed || 0) : null;
+            let spotsClass = '';
+            let spotsText = 'Open';
+            let spotsLabel = '';
+
+            if (spots !== null) {
+                if (spots <= 0) {
+                    spotsClass = 'full';
+                    spotsText = 'Full';
+                    spotsLabel = 'Waitlist';
+                } else if (spots <= 3) {
+                    spotsClass = 'low';
+                    spotsText = spots;
+                    spotsLabel = 'Spots Left';
+                } else {
+                    spotsText = spots;
+                    spotsLabel = 'Spots';
+                }
+            }
+
+            let priceDisplay = '';
+            if (event.isFree === 1 || event.minPrice === 0) {
+                priceDisplay = 'Free';
+            } else if (event.minPrice) {
+                priceDisplay = '$' + Math.round(event.minPrice);
+            }
+            if (!spotsLabel && priceDisplay) spotsLabel = priceDisplay;
+
+            let tagHtml = '';
+            if (event.hasGuestTickets === 1) tagHtml += '<span class="ef-tag public">Guests OK</span>';
+            if (event.isFree === 1 || event.minPrice === 0) tagHtml += '<span class="ef-tag free">Free</span>';
+
+            return `
+                <div class="ef-event-card">
+                    <div class="ef-event-date">
+                        <span class="month">${month}</span>
+                        <span class="day">${day}</span>
+                        <span class="weekday">${weekday}</span>
+                    </div>
+                    <div class="ef-event-details">
+                        <span class="ef-event-category">${category}</span>${tagHtml}
+                        <div class="ef-event-title"><a href="https://www.sbnewcomers.org/event-${event.id}" target="_blank">${title}</a></div>
+                        <div class="ef-event-meta">
+                            <span>${time}</span>
+                            ${event.location ? `<span>${event.location.substring(0, 35)}${event.location.length > 35 ? '...' : ''}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="ef-event-status">
+                        <span class="ef-spots ${spotsClass}">${spotsText}</span>
+                        <span class="ef-spots-label">${spotsLabel || 'Register'}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', efLoadEvents);
+    } else {
+        efLoadEvents();
+    }
+
+    document.getElementById('ef-search-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') efSearch();
+    });
+    document.getElementById('ef-member-email').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') efFindMyEvents();
+    });
+})();
+</script>

@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structured Data Chatbot Demonstration | KyanosTech</title>
+    
+    <!-- JSON-LD Schema for this page -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "KyanosTech Dual Chatbot Demonstration",
+        "description": "Interactive demonstration comparing AI chatbot responses with and without structured data markup",
+        "applicationCategory": "Educational",
+        "creator": {
+            "@type": "Organization",
+            "name": "KyanosTech"
+        }
+    }
+    </script>
+    
+    <style>
+        :root {
+            --primary-blue: #1e3a5f;
+            --secondary-blue: #2c5282;
+            --accent-blue: #3182ce;
+            --light-blue: #ebf8ff;
+            --success-green: #38a169;
+            --warning-orange: #dd6b20;
+            --error-red: #e53e3e;
+            --text-dark: #1a202c;
+            --text-medium: #4a5568;
+            --border-color: #e2e8f0;
+            --raw-bg: #fef2f2;
+            --raw-border: #fca5a5;
+            --structured-bg: #f0fdf4;
+            --structured-border: #86efac;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        }
+        
+        .site-header {
+            background: var(--primary-blue);
+            padding: 1rem 2rem;
+        }
+        
+        .site-header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .site-logo {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .site-nav a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .site-nav a:hover { color: white; }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .header-series {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            font-style: italic;
+            opacity: 0.95;
+        }
+        
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .intro-section {
+            background: var(--light-blue);
+            border-left: 4px solid var(--accent-blue);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        
+        .intro-section h2 {
+            font-weight: 700;
+            font-style: normal;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .question-input-section {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .question-input-section h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        #question-input {
+            flex: 1;
+            padding: 1rem;
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+            border: 2px solid var(--border-color);
+            border-radius: 0 8px 8px 0;
+            border-left: 4px solid var(--accent-blue);
+            transition: border-color 0.2s;
+        }
+        
+        #question-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+        
+        .ask-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .ask-btn:hover {
+            background: var(--secondary-blue);
+        }
+        
+        .ask-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+        
+        .clear-btn {
+            background: #f1f5f9;
+            color: var(--text-medium);
+            border: 2px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .clear-btn:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+        
+        .preset-questions {
+            margin-top: 1rem;
+        }
+        
+        .preset-questions label {
+            font-weight: 600;
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+        
+        .preset-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .preset-btn {
+            background: var(--light-blue);
+            border: 1px solid var(--accent-blue);
+            color: var(--primary-blue);
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .preset-btn:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        @media (max-width: 900px) {
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .chatbot-panel {
+            background: white;
+            border-radius: 0 8px 8px 0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .panel-header {
+            padding: 1.25rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        
+        .panel-title {
+            font-family: 'Georgia', serif;
+        }
+        
+        .panel-description {
+            font-weight: 400;
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 0.35rem;
+            line-height: 1.5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .raw-panel .panel-header {
+            background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            color: #991b1b;
+        }
+        
+        .structured-panel .panel-header {
+            background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%);
+            border-left: 4px solid #22c55e;
+            color: #166534;
+        }
+        
+        .panel-icon {
+            font-size: 1.5rem;
+        }
+        
+        .panel-subtitle {
+            font-weight: 400;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        .chat-area {
+            min-height: 350px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .message {
+            margin-bottom: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+        }
+        
+        .message-user {
+            background: var(--light-blue);
+            border-left: 3px solid var(--accent-blue);
+        }
+        
+        .message-assistant {
+            background: #f8fafc;
+            border-left: 3px solid #cbd5e0;
+        }
+        
+        .message-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.35rem;
+            color: var(--text-medium);
+        }
+        
+        .message-content {
+            line-height: 1.35;
+            font-size: 0.875rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .message-content p {
+            margin-bottom: 0.4rem;
+        }
+        
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .citation {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 0.25rem 0;
+        }
+        
+        .stat-highlight {
+            background: #dbeafe;
+            border-radius: 4px;
+            padding: 0.1rem 0.4rem;
+            font-weight: 600;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-medium);
+            font-style: italic;
+        }
+        
+        .loading-dots {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            animation: bounce 0.5s ease-in-out infinite;
+        }
+        
+        .loading-dot:nth-child(2) { animation-delay: 0.1s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.2s; }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        
+        .schema-viewer {
+            background: white;
+            border-radius: 0 8px 8px 0;
+            border-left: 4px solid var(--accent-blue);
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .schema-viewer h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .schema-toggle {
+            background: var(--light-blue);
+            border: 1px solid var(--accent-blue);
+            color: var(--primary-blue);
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+        
+        .schema-code {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            max-height: 500px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .schema-code.visible {
+            display: block;
+        }
+        
+        .json-key { color: #7dd3fc; }
+        .json-string { color: #86efac; }
+        .json-number { color: #fcd34d; }
+        .json-boolean { color: #f9a8d4; }
+        
+        .methodology-section {
+            background: white;
+            border-radius: 0 8px 8px 0;
+            border-left: 4px solid var(--primary-blue);
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .methodology-section h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .method-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        @media (max-width: 700px) {
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .method-card {
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .method-card.raw {
+            background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+        }
+        
+        .method-card.structured {
+            background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%);
+            border-left: 4px solid #22c55e;
+        }
+        
+        .method-card h4 {
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+        }
+        
+        .method-card ul {
+            margin-left: 1.25rem;
+        }
+        
+        .method-card li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer {
+            background: var(--primary-blue);
+            color: white;
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .footer-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer a { color: rgba(255,255,255,0.8); }
+        .footer a:hover { color: white; }
+        
+        .accuracy-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+        
+        .accuracy-low {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        
+        .accuracy-high {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="https://edforman-75.github.io/kyanos-research/" class="site-logo">KyanosTech Research</a>
+            <nav class="site-nav">
+                <a href="https://edforman-75.github.io/kyanos-research/">Research</a>
+                <a href="https://edforman-75.github.io/kyanos-research/papers/paper-1-synthesis.html">Paper I</a>
+                <a href="https://edforman-75.github.io/kyanos-research/about.html">About</a>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="header">
+        <div class="header-series">Interactive Demonstration</div>
+        <h1>Structured Data Chatbot Comparison</h1>
+        <p>See the difference JSON-LD makes in AI responses</p>
+    </div>
+    
+    <main class="main-container">
+        <section class="intro-section">
+            <h2>The Experiment</h2>
+            <p>This demonstration shows how the same AI model produces dramatically different responses when given access to structured data (JSON-LD) versus parsing raw HTML text.</p>
+        </section>
+        
+        <section class="question-input-section">
+            <h3>Ask a Question</h3>
+            <div class="input-row">
+                <input type="text" id="question-input" placeholder="Ask about AI chatbot effectiveness, voter persuasion, structured data..." />
+                <button class="ask-btn" id="ask-btn" onclick="askQuestion()">Ask Both</button>
+                <button class="clear-btn" onclick="clearChats()">Clear</button>
+            </div>
+            <div class="preset-questions">
+                <label>Try these questions:</label>
+                <div class="preset-btns">
+                    <button class="preset-btn" onclick="usePreset('How effective are AI chatbots at changing voter attitudes?')">How effective are AI chatbots at changing voter attitudes?</button>
+                    <button class="preset-btn" onclick="usePreset('What was the vote margin in the 2024 presidential election?')">What was the vote margin in the 2024 presidential election?</button>
+                    <button class="preset-btn" onclick="usePreset('What evidence shows that AI cannot be politically neutral?')">What evidence shows that AI cannot be politically neutral?</button>
+                    <button class="preset-btn" onclick="usePreset('Who conducted the research on AI voter persuasion?')">Who conducted the research on AI voter persuasion?</button>
+                    <button class="preset-btn" onclick="usePreset('How many people use ChatGPT weekly?')">How many people use ChatGPT weekly?</button>
+                    <button class="preset-btn" onclick="usePreset('What does the 1-in-21 statistic mean?')">What does the 1-in-21 statistic mean?</button>
+                </div>
+            </div>
+        </section>
+        
+        <div class="comparison-container">
+            <!-- Raw HTML Panel -->
+            <div class="chatbot-panel raw-panel">
+                <div class="panel-header">
+                    <span class="panel-icon">📄</span>
+                    <div>
+                        <div>Raw HTML Parsing</div>
+                        <div class="panel-description">This chatbot reads the page as raw HTML text—like a typical web crawler. It can find information, but lacks semantic understanding of claims, citations, and data relationships.</div>
+                    </div>
+                </div>
+                <div class="chat-area" id="raw-chat">
+                </div>
+            </div>
+            
+            <!-- Structured Data Panel -->
+            <div class="chatbot-panel structured-panel">
+                <div class="panel-header">
+                    <span class="panel-icon">🔗</span>
+                    <div>
+                        <div>JSON-LD Enhanced</div>
+                        <div class="panel-description">This chatbot uses a comprehensive JSON-LD schema—accessing structured claims with evidence levels, verified citations with URLs, statistical datasets, and semantic relationships between concepts.</div>
+                    </div>
+                </div>
+                <div class="chat-area" id="structured-chat">
+                </div>
+            </div>
+        </div>
+        
+        <section class="methodology-section">
+            <h3>How This Works</h3>
+            <div class="method-grid">
+                <div class="method-card raw">
+                    <h4>📄 Raw HTML Method</h4>
+                    <ul>
+                        <li>Extracts visible text from HTML</li>
+                        <li>No understanding of what constitutes a "claim"</li>
+                        <li>Citations appear as inline text, not verified sources</li>
+                        <li>Statistics are just numbers without context</li>
+                        <li>Cannot distinguish evidence levels</li>
+                    </ul>
+                </div>
+                <div class="method-card structured">
+                    <h4>🔗 JSON-LD Method</h4>
+                    <ul>
+                        <li>Access to typed claims with evidence levels</li>
+                        <li>Citations linked to DOIs, URLs, and author info</li>
+                        <li>Statistical data with units, dates, and methodology</li>
+                        <li>Relationships between premises and conclusions</li>
+                        <li>Can verify and attribute every claim</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section class="schema-viewer">
+            <h3>View the JSON-LD Schema</h3>
+            <p style="margin-bottom: 1rem;">This is the actual structured data that powers the enhanced chatbot. It contains <strong>11 typed claims</strong>, <strong>10 citations</strong>, and <strong>statistical datasets</strong> with full provenance.</p>
+            <button class="schema-toggle" onclick="toggleSchema()">Show/Hide Schema (350+ lines)</button>
+            <pre class="schema-code" id="schema-display"></pre>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-inner">
+            <p><a href="https://edforman-75.github.io/kyanos-research/">← Research Overview</a>  ·  <a href="https://edforman-75.github.io/kyanos-research/papers/paper-1-synthesis.html">Paper I: The Synthesis →</a></p>
+            <p style="margin-top: 0.5rem;">© 2025 KyanosTech. <a href="https://edforman-75.github.io/kyanos-research/">Return to index</a>.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // The comprehensive JSON-LD schema (embedded for demo)
+        const fullSchema = {
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "claim": "https://schema.org/Claim",
+    "citation": "https://schema.org/citation",
+    "evidence": "https://schema.org/evidence",
+    "politicalParty": {
+      "@id": "https://schema.org/politicalParty",
+      "@type": "@id"
+    },
+    "statisticalVariable": "https://schema.org/statisticalVariable",
+    "marginOfVictory": {
+      "@id": "https://kyanos.tech/schema/marginOfVictory",
+      "@type": "xsd:integer"
+    },
+    "conversionRate": {
+      "@id": "https://kyanos.tech/schema/conversionRate",
+      "@type": "xsd:decimal"
+    },
+    "effectSize": {
+      "@id": "https://kyanos.tech/schema/effectSize",
+      "@type": "xsd:decimal"
+    }
+  },
+  "@type": "ScholarlyArticle",
+  "@id": "https://edforman-75.github.io/kyanos-research/papers/paper-1-synthesis.html",
+  "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "KyanosTech Paper ID",
+    "value": "KYANOS-2025-001"
+  },
+  "headline": "The Synthesis: Why Progressive Organizations Must Invest in AI-Readable Infrastructure Now",
+  "alternativeHeadline": "Paper I: The Case for Progressive AI Infrastructure",
+  "datePublished": "2025-12",
+  "dateModified": "2025-12-09",
+  "author": [
+    {
+      "@type": "Person",
+      "@id": "https://kyanos.tech/about#ed-forman",
+      "name": "Ed Forman",
+      "email": "forman.ed@gmail.com",
+      "jobTitle": "Founder",
+      "affiliation": {
+        "@type": "Organization",
+        "@id": "https://kyanos.tech",
+        "name": "KyanosTech",
+        "description": "Political technology company developing AI optimization infrastructure for progressive campaigns",
+        "foundingDate": "2025",
+        "areaServed": "United States"
+      },
+      "alumniOf": {
+        "@type": "EducationalOrganization",
+        "name": "Stanford Graduate School of Business"
+      },
+      "knowsAbout": [
+        "AI optimization",
+        "Political technology",
+        "Structured data",
+        "Knowledge graphs",
+        "Progressive campaigns"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Claude",
+      "applicationCategory": "AI Research Assistant",
+      "creator": {
+        "@type": "Organization",
+        "name": "Anthropic"
+      },
+      "description": "AI research partner providing analytical assistance"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "@id": "https://kyanos.tech",
+    "name": "KyanosTech"
+  },
+  "abstract": "This paper synthesizes evidence from five companion analyses to establish the case for immediate investment in structured data infrastructure for progressive political communication. The argument draws on peer-reviewed research published in Nature and Science (December 2025) demonstrating that AI chatbots are four times more effective than traditional political advertising at changing voter attitudes\u2014with a single conversation capable of flipping 1 in 21 voters. The argument proceeds through five premises: (1) AI systems are becoming the primary information gatekeepers for political content; (2) political neutrality in AI is theoretically impossible; (3) progressive communication patterns naturally align with AI training objectives; (4) structured data provides independent value regardless of AI company cooperation; and (5) all technical approaches to AI visibility require the same foundational investment. The conclusion: progressive organizations that fail to build AI-readable infrastructure now will be structurally disadvantaged in the 2028 information environment.",
+  "keywords": [
+    "AI chatbots",
+    "political communication",
+    "structured data",
+    "JSON-LD",
+    "knowledge graphs",
+    "progressive politics",
+    "voter persuasion",
+    "2028 election",
+    "AI bias",
+    "information gatekeepers"
+  ],
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "AI Political Influence",
+      "description": "The impact of AI chatbots on voter attitudes and political information"
+    },
+    {
+      "@type": "Thing",
+      "name": "Structured Data for Politics",
+      "description": "Using JSON-LD and schema.org to make political content AI-readable"
+    }
+  ],
+  "isPartOf": {
+    "@type": "PublicationVolume",
+    "name": "KyanosTech Research Monograph: Progressive AI Infrastructure",
+    "volumeNumber": "1",
+    "datePublished": "2025-12"
+  },
+  "hasPart": [
+    {
+      "@type": "WebPageElement",
+      "name": "Section I: The Argument Structure",
+      "position": 1
+    },
+    {
+      "@type": "WebPageElement",
+      "name": "Section II: Premise One - AI as Information Gatekeeper",
+      "position": 2
+    },
+    {
+      "@type": "WebPageElement",
+      "name": "Section III: Premise Two - The Impossibility of Neutrality",
+      "position": 3
+    },
+    {
+      "@type": "WebPageElement",
+      "name": "Section IV: Premise Three - Structural Alignment",
+      "position": 4
+    },
+    {
+      "@type": "WebPageElement",
+      "name": "Section V: Premise Four - Independent Value of Structured Data",
+      "position": 5
+    },
+    {
+      "@type": "WebPageElement",
+      "name": "Section VI: Premise Five - All Paths Lead to Knowledge Graphs",
+      "position": 6
+    },
+    {
+      "@type": "WebPageElement",
+      "name": "Section VII: The Conclusion",
+      "position": 7
+    },
+    {
+      "@type": "WebPageElement",
+      "name": "Section VIII: The Podcast Precedent",
+      "position": 8
+    },
+    {
+      "@type": "WebPageElement",
+      "name": "Section IX: Addressing Objections",
+      "position": 9
+    },
+    {
+      "@type": "WebPageElement",
+      "name": "Section X: The Call to Action",
+      "position": 10
+    },
+    {
+      "@type": "WebPageElement",
+      "name": "Section XI: Conclusion",
+      "position": 11
+    }
+  ],
+  "mainEntity": {
+    "@type": "Claim",
+    "@id": "#central-thesis",
+    "name": "Central Thesis",
+    "claimText": "Progressive organizations must invest immediately in structured data infrastructure that makes their evidence-based content visible to AI systems. This investment provides value regardless of AI company policies, leverages natural communication advantages, and positions organizations for the information environment of 2028.",
+    "evidenceLevel": "Strong - synthesized from peer-reviewed research",
+    "dateCreated": "2025-12"
+  },
+  "claims": [
+    {
+      "@type": "Claim",
+      "@id": "#claim-persuasion-effectiveness",
+      "name": "AI Chatbot Persuasion Effectiveness",
+      "claimText": "AI chatbots are 4 times more effective than traditional political advertising at changing voter attitudes",
+      "effectSize": 4.0,
+      "comparisonBasis": "traditional political advertising",
+      "evidenceLevel": "Peer-reviewed (Nature/Science)",
+      "dateCreated": "2025-12",
+      "citation": [
+        {
+          "@type": "ScholarlyArticle",
+          "@id": "#citation-rand-2025",
+          "name": "Persuading Voters Using Human-Artificial Intelligence Dialogues",
+          "author": {
+            "@type": "Person",
+            "name": "David G. Rand",
+            "affiliation": {
+              "@type": "Organization",
+              "name": "MIT"
+            }
+          },
+          "datePublished": "2025-12-04",
+          "isPartOf": {
+            "@type": "Periodical",
+            "name": "Nature",
+            "issn": "0028-0836"
+          },
+          "url": "https://www.nature.com/articles/s41586-025-08735-7"
+        },
+        {
+          "@type": "ScholarlyArticle",
+          "@id": "#citation-hackenburg-2025",
+          "name": "The Levers of Political Persuasion with Conversational Artificial Intelligence",
+          "author": {
+            "@type": "Person",
+            "name": "Katherine Hackenburg"
+          },
+          "datePublished": "2025-12-04",
+          "isPartOf": {
+            "@type": "Periodical",
+            "name": "Science",
+            "issn": "0036-8075"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "Claim",
+      "@id": "#claim-conversion-rate",
+      "name": "Voter Conversion Rate",
+      "claimText": "A single AI conversation can flip 1 in 21 voters",
+      "conversionRate": 0.0476,
+      "conversionRateFraction": "1/21",
+      "evidenceLevel": "Peer-reviewed (Nature/Science)",
+      "citation": {
+        "@type": "ScholarlyArticle",
+        "@id": "#citation-rand-2025"
+      }
+    },
+    {
+      "@type": "Claim",
+      "@id": "#claim-chatgpt-users",
+      "name": "ChatGPT Weekly Active Users",
+      "claimText": "ChatGPT reaches 800 million weekly active users",
+      "value": {
+        "@type": "QuantitativeValue",
+        "value": 800000000,
+        "unitText": "weekly active users"
+      },
+      "dateObserved": "2025-10",
+      "evidenceLevel": "Company disclosure",
+      "citation": {
+        "@type": "Report",
+        "name": "OpenAI Public Disclosures",
+        "datePublished": "2025-10",
+        "publisher": {
+          "@type": "Organization",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "@type": "Claim",
+      "@id": "#claim-gemini-growth",
+      "name": "Google Gemini User Growth",
+      "claimText": "Google Gemini grew from 450M to 650M monthly users between July and November 2025",
+      "startValue": {
+        "@type": "QuantitativeValue",
+        "value": 450000000,
+        "unitText": "monthly active users"
+      },
+      "endValue": {
+        "@type": "QuantitativeValue",
+        "value": 650000000,
+        "unitText": "monthly active users"
+      },
+      "startDate": "2025-07",
+      "endDate": "2025-11",
+      "growthRate": 0.444,
+      "evidenceLevel": "Industry analysis",
+      "citation": {
+        "@type": "Article",
+        "name": "Understanding AI Newsletter",
+        "author": {
+          "@type": "Person",
+          "name": "Timothy B. Lee"
+        },
+        "datePublished": "2025-12-04"
+      }
+    },
+    {
+      "@type": "Claim",
+      "@id": "#claim-click-reduction",
+      "name": "AI Summary Click-Through Reduction",
+      "claimText": "When AI summaries appear in Google results, users are 47% less likely to click through to original sources",
+      "effectSize": -0.47,
+      "evidenceLevel": "Peer-reviewed research",
+      "citation": {
+        "@type": "Article",
+        "@id": "#citation-pew-2025",
+        "name": "Google users are less likely to click on links when an AI summary appears in the results",
+        "author": {
+          "@type": "Organization",
+          "name": "Pew Research Center"
+        },
+        "datePublished": "2025-07-22",
+        "url": "https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/",
+        "studyDetails": {
+          "sampleSize": 68879,
+          "participants": 900,
+          "location": "United States"
+        }
+      }
+    },
+    {
+      "@type": "Claim",
+      "@id": "#claim-neutrality-impossible",
+      "name": "AI Political Neutrality Impossibility",
+      "claimText": "Political neutrality is theoretically impossible for AI systems\u2014the very concepts of neutrality, objectivity, and balance presuppose value commitments that are not themselves neutral",
+      "evidenceLevel": "Peer-reviewed philosophical analysis",
+      "citation": {
+        "@type": "ScholarlyArticle",
+        "@id": "#citation-fisher-2025",
+        "name": "Political Neutrality in AI Is Impossible",
+        "author": {
+          "@type": "Person",
+          "name": "Jillian Fisher"
+        },
+        "datePublished": "2025",
+        "identifier": "arXiv:2503.05728",
+        "url": "https://arxiv.org/abs/2503.05728"
+      }
+    },
+    {
+      "@type": "Claim",
+      "@id": "#claim-truth-bias-paradox",
+      "name": "Truth-Bias Paradox",
+      "claimText": "Optimizing AI systems for truthfulness systematically produces left-leaning outputs\u2014creating an unavoidable tradeoff between accuracy and perceived neutrality",
+      "evidenceLevel": "Peer-reviewed (EMNLP 2024)",
+      "citation": {
+        "@type": "ScholarlyArticle",
+        "@id": "#citation-fulay-2024",
+        "name": "On the Relationship between Truth and Political Bias in Language Models",
+        "author": {
+          "@type": "Person",
+          "name": "Suyash Fulay",
+          "affiliation": {
+            "@type": "Organization",
+            "name": "MIT"
+          }
+        },
+        "datePublished": "2024",
+        "isPartOf": {
+          "@type": "Event",
+          "name": "EMNLP 2024"
+        },
+        "url": "https://aclanthology.org/2024.emnlp-main.508/"
+      }
+    },
+    {
+      "@type": "Claim",
+      "@id": "#claim-democratic-citations",
+      "name": "Democratic Scientific Citation Patterns",
+      "claimText": "Democratic-led congressional committees cite scientific papers at nearly twice the rate of Republican-led committees, and cite higher-quality sources including recent, peer-reviewed, and widely-cited research",
+      "citationRateRatio": 1.8,
+      "comparisonGroups": [
+        "Democratic-led committees",
+        "Republican-led committees"
+      ],
+      "evidenceLevel": "Peer-reviewed",
+      "citation": {
+        "@type": "ScholarlyArticle",
+        "name": "Congressional citation patterns study",
+        "isPartOf": {
+          "@type": "Periodical",
+          "name": "Science"
+        },
+        "datePublished": "2025-04-24",
+        "url": "https://www.science.org/content/article/congress-using-more-science-two-parties-rarely-cite-same-studies"
+      }
+    },
+    {
+      "@type": "Claim",
+      "@id": "#claim-fact-check-ratio",
+      "name": "Fact-Check False Rating Disparity",
+      "claimText": "Multiple independent studies find that Republican claims receive 'false' ratings at approximately three times the rate of Democratic claims",
+      "falseRatingRatio": 3.0,
+      "evidenceLevel": "Multiple independent studies",
+      "citation": {
+        "@type": "Report",
+        "name": "Media fact-checker analysis",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Center for Media and Public Affairs, George Mason University"
+        },
+        "datePublished": "2011-2013",
+        "url": "https://cmpa.gmu.edu/study-media-fact-checker-says-republicans-lie-more/"
+      }
+    },
+    {
+      "@type": "Claim",
+      "@id": "#claim-knowledge-graph-accuracy",
+      "name": "Knowledge Graph Accuracy Improvement",
+      "claimText": "Knowledge graph integration can improve AI accuracy by approximately threefold, reducing hallucination and ensuring factual consistency",
+      "accuracyImprovement": 3.0,
+      "evidenceLevel": "Industry research",
+      "citation": {
+        "@type": "Report",
+        "@id": "#citation-dataworld-2024",
+        "name": "Generative AI Benchmark: Increasing the Accuracy of LLMs in the Enterprise with a Knowledge Graph",
+        "publisher": {
+          "@type": "Organization",
+          "name": "data.world"
+        },
+        "datePublished": "2024",
+        "url": "https://data.world/blog/generative-ai-benchmark-increasing-the-accuracy-of-llms-in-the-enterprise-with-a-knowledge-graph/"
+      }
+    },
+    {
+      "@type": "Claim",
+      "@id": "#claim-knowledge-graph-prerequisite",
+      "name": "Knowledge Graph as Universal Prerequisite",
+      "claimText": "Knowledge graph infrastructure is prerequisite to every technical approach for AI visibility\u2014whether pursuing direct partnerships, RAG optimization, or independent political AI",
+      "evidenceLevel": "Author analysis of six technical pathways"
+    }
+  ],
+  "statisticalData": [
+    {
+      "@type": "Dataset",
+      "@id": "#election-margins-2024",
+      "name": "2024 Presidential Election Margins in Decisive States",
+      "description": "Vote margins in the three states that determined the 2024 presidential election outcome",
+      "dateCreated": "2024-12",
+      "creator": {
+        "@type": "Organization",
+        "name": "Council on Foreign Relations"
+      },
+      "url": "https://www.cfr.org/article/2024-election-numbers",
+      "distribution": {
+        "@type": "DataDownload",
+        "contentUrl": "#election-margins-table"
+      },
+      "variableMeasured": [
+        {
+          "@type": "PropertyValue",
+          "name": "Wisconsin Margin",
+          "value": 29397,
+          "unitText": "votes",
+          "additionalProperty": {
+            "@type": "PropertyValue",
+            "name": "Percentage Margin",
+            "value": 0.86,
+            "unitText": "percent"
+          }
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Michigan Margin",
+          "value": 80103,
+          "unitText": "votes",
+          "additionalProperty": {
+            "@type": "PropertyValue",
+            "name": "Percentage Margin",
+            "value": 1.42,
+            "unitText": "percent"
+          }
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Pennsylvania Margin",
+          "value": 120266,
+          "unitText": "votes",
+          "additionalProperty": {
+            "@type": "PropertyValue",
+            "name": "Percentage Margin",
+            "value": 1.71,
+            "unitText": "percent"
+          }
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Total Decisive Margin",
+          "value": 229766,
+          "unitText": "votes",
+          "description": "Combined margin across Wisconsin, Michigan, and Pennsylvania that determined the 2024 presidential election"
+        }
+      ]
+    }
+  ],
+  "calculatedProjection": {
+    "@type": "Claim",
+    "@id": "#projection-vote-shift",
+    "name": "Theoretical Vote Shift Calculation",
+    "claimText": "At the Nature/Science-documented conversion rate of 1 in 21 voters per AI conversation, reaching 4.8 million voters with a biased chatbot could theoretically shift 229,766 votes\u2014the exact margin that decided the 2024 election",
+    "calculation": {
+      "formula": "voters_reached \u00d7 conversion_rate = votes_shifted",
+      "voters_reached": 4800000,
+      "conversion_rate": 0.0476,
+      "result": 229766
+    },
+    "evidenceLevel": "Author projection based on peer-reviewed conversion rate",
+    "caveat": "Theoretical calculation assuming uniform application of research findings"
+  },
+  "relatedPapers": [
+    {
+      "@type": "ScholarlyArticle",
+      "name": "Paper II: AI as the New Information Gatekeeper",
+      "url": "https://edforman-75.github.io/kyanos-research/papers/paper-2-gatekeeper.html"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "name": "Paper III: Evidence Asymmetry and Structural Alignment",
+      "url": "https://edforman-75.github.io/kyanos-research/papers/paper-3-structural-alignment.html"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "name": "Paper IV: The Impossibility of Political Neutrality",
+      "url": "https://edforman-75.github.io/kyanos-research/papers/paper-4-neutrality.html"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "name": "Paper V: Structured Data as Independent Value",
+      "url": "https://edforman-75.github.io/kyanos-research/papers/paper-5-structured-data.html"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "name": "Paper VI: Technical Pathways to AI Visibility",
+      "url": "https://edforman-75.github.io/kyanos-research/papers/paper-6-technical-pathways.html"
+    }
+  ],
+  "fiveKeyPremises": [
+    {
+      "@type": "Claim",
+      "position": 1,
+      "name": "Premise One: AI as Information Gatekeeper",
+      "claimText": "AI is becoming the primary information gatekeeper for how citizens learn about candidates, policies, and political events",
+      "supportingEvidence": [
+        "#claim-chatgpt-users",
+        "#claim-gemini-growth",
+        "#claim-click-reduction"
+      ]
+    },
+    {
+      "@type": "Claim",
+      "position": 2,
+      "name": "Premise Two: Impossibility of Neutrality",
+      "claimText": "AI cannot be politically neutral\u2014the concept is incoherent, and attempts to achieve it produce their own biases",
+      "supportingEvidence": [
+        "#claim-neutrality-impossible",
+        "#claim-truth-bias-paradox"
+      ]
+    },
+    {
+      "@type": "Claim",
+      "position": 3,
+      "name": "Premise Three: Structural Alignment",
+      "claimText": "Evidence-based communication has structural advantages in AI environments, and progressive communications exhibit more evidence-based patterns than conservative communications",
+      "supportingEvidence": [
+        "#claim-democratic-citations",
+        "#claim-fact-check-ratio"
+      ]
+    },
+    {
+      "@type": "Claim",
+      "position": 4,
+      "name": "Premise Four: Independent Value",
+      "claimText": "Structured data provides value without requiring cooperation from AI companies\u2014it works through existing technical pathways",
+      "supportingEvidence": [
+        "#claim-knowledge-graph-accuracy"
+      ]
+    },
+    {
+      "@type": "Claim",
+      "position": 5,
+      "name": "Premise Five: Universal Foundation",
+      "claimText": "All technical approaches require the same foundation\u2014investment in knowledge graph infrastructure is prerequisite to every strategy for AI visibility",
+      "supportingEvidence": [
+        "#claim-knowledge-graph-prerequisite"
+      ]
+    }
+  ],
+  "strategicImplications": {
+    "@type": "ItemList",
+    "name": "Strategic Implications for Different Stakeholders",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "For Campaign Organizations",
+        "description": "Budget for AI infrastructure alongside traditional digital spending. Ensure campaign websites include JSON-LD structured data for candidate information, policy positions, and biographical details."
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "For Advocacy Organizations",
+        "description": "Encode issue positions and factual claims in structured formats. Build citation practices into content workflows. Monitor AI representations of priority issues."
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "For Funders",
+        "description": "Support infrastructure development that benefits the ecosystem, not just individual campaigns. Tools that enable structured data creation at scale will have multiplier effects across progressive organizations."
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "For Technology Providers",
+        "description": "Develop WordPress plugins, CMS integrations, and content management tools that make structured data creation accessible to non-technical campaign staff."
+      }
+    ]
+  },
+  "license": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "copyrightHolder": {
+    "@type": "Organization",
+    "name": "KyanosTech"
+  }
+};
+        
+        // Simplified raw text version (what a crawler would see)
+        const rawTextContent = `
+Paper I: The Synthesis - Why Progressive Organizations Must Invest in AI-Readable Infrastructure Now
+
+By Ed Forman with Claude (Anthropic), December 2025
+
+Abstract: This paper synthesizes evidence from five companion analyses to establish the case for immediate investment in structured data infrastructure for progressive political communication. The argument draws on peer-reviewed research published in Nature and Science (December 2025) demonstrating that AI chatbots are four times more effective than traditional political advertising at changing voter attitudes—with a single conversation capable of flipping 1 in 21 voters.
+
+The argument proceeds through five premises:
+1. AI systems are becoming the primary information gatekeepers for political content
+2. Political neutrality in AI is theoretically impossible  
+3. Progressive communication patterns naturally align with AI training objectives
+4. Structured data provides independent value regardless of AI company cooperation
+5. All technical approaches to AI visibility require the same foundational investment
+
+Key Evidence:
+- AI chatbots are 4x more effective than traditional political advertising
+- A single AI conversation can flip 1 in 21 voters
+- ChatGPT reaches 800 million weekly active users
+- Google Gemini grew from 450M to 650M monthly users (July-November 2025)
+- Users are 47% less likely to click through when AI summaries appear
+
+2024 Election Margins:
+- Wisconsin: 29,397 votes (0.86%)
+- Michigan: 80,103 votes (1.42%)  
+- Pennsylvania: 120,266 votes (1.71%)
+- Total decisive margin: 229,766 votes
+
+The conclusion: progressive organizations that fail to build AI-readable infrastructure now will be structurally disadvantaged in the 2028 information environment.
+
+Sources cited include Nature, Science, Pew Research Center, MIT, arXiv, data.world, and Council on Foreign Relations.
+`;
+
+        // Display formatted schema
+        function displaySchema() {
+            const schemaDisplay = document.getElementById('schema-display');
+            const formatted = JSON.stringify(fullSchema, null, 2);
+            // Simple syntax highlighting
+            const highlighted = formatted
+                .replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:')
+                .replace(/: "([^"]*)"/g, ': <span class="json-string">"$1"</span>')
+                .replace(/: (\d+\.?\d*)/g, ': <span class="json-number">$1</span>')
+                .replace(/: (true|false)/g, ': <span class="json-boolean">$1</span>');
+            schemaDisplay.innerHTML = highlighted;
+        }
+        
+        function toggleSchema() {
+            const schemaDisplay = document.getElementById('schema-display');
+            schemaDisplay.classList.toggle('visible');
+        }
+        
+        function usePreset(question) {
+            document.getElementById('question-input').value = question;
+            askQuestion();
+        }
+        
+        function clearChats() {
+            document.getElementById('raw-chat').innerHTML = '';
+            document.getElementById('structured-chat').innerHTML = '';
+        }
+        
+        function addMessage(chatId, role, content) {
+            const chat = document.getElementById(chatId);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${role}`;
+            messageDiv.innerHTML = `
+                <div class="message-label">${role === 'user' ? 'You' : 'Assistant'}</div>
+                <div class="message-content">${content}</div>
+            `;
+            chat.appendChild(messageDiv);
+        }
+        
+        function addLoading(chatId) {
+            const chat = document.getElementById(chatId);
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message message-assistant loading-message';
+            loadingDiv.innerHTML = `
+                <div class="loading">
+                    <div class="loading-dots">
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                    </div>
+                    <span>Thinking...</span>
+                </div>
+            `;
+            chat.appendChild(loadingDiv);
+        }
+        
+        function removeLoading(chatId) {
+            const chat = document.getElementById(chatId);
+            const loading = chat.querySelector('.loading-message');
+            if (loading) loading.remove();
+        }
+        
+        async function askQuestion() {
+            const input = document.getElementById('question-input');
+            const question = input.value.trim();
+            if (!question) return;
+            
+            const askBtn = document.getElementById('ask-btn');
+            askBtn.disabled = true;
+            
+            // Clear previous messages for a clean comparison
+            clearChats();
+            
+            // Add user message to both panels
+            addMessage('raw-chat', 'user', question);
+            addMessage('structured-chat', 'user', question);
+            
+            // Add loading indicators
+            addLoading('raw-chat');
+            addLoading('structured-chat');
+            
+            try {
+                // Call both chatbots in parallel
+                const [rawResponse, structuredResponse] = await Promise.all([
+                    callChatbot(question, 'raw'),
+                    callChatbot(question, 'structured')
+                ]);
+                
+                removeLoading('raw-chat');
+                removeLoading('structured-chat');
+                
+                addMessage('raw-chat', 'assistant', rawResponse);
+                addMessage('structured-chat', 'assistant', structuredResponse);
+                
+                // Scroll to top of panels to see the question and answer from the beginning
+                document.getElementById('raw-chat').scrollTop = 0;
+                document.getElementById('structured-chat').scrollTop = 0;
+                
+            } catch (error) {
+                removeLoading('raw-chat');
+                removeLoading('structured-chat');
+                const errorMsg = error.message || 'Unknown error occurred';
+                addMessage('raw-chat', 'assistant', '<p style="color: #dc2626;">Error: ' + errorMsg + '</p>');
+                addMessage('structured-chat', 'assistant', '<p style="color: #dc2626;">Error: ' + errorMsg + '</p>');
+            }
+            
+            askBtn.disabled = false;
+            input.value = '';
+        }
+        
+        async function callChatbot(question, mode) {
+            const systemPrompt = mode === 'raw' 
+                ? `You are a chatbot that has only read the raw text of a webpage about AI and politics. You do NOT have access to structured data, citations with URLs, or semantic relationships. You can only work with the plain text you've been given. When you cite things, you cannot provide specific URLs or DOIs because you don't have that structured information.
+
+Here is the raw text content you have access to:
+
+${rawTextContent}
+
+Answer questions based ONLY on this text. Be helpful but acknowledge when you're uncertain about specific details like exact citations or methodology. Do not make up URLs or DOIs.
+
+IMPORTANT: Keep your response concise—under 200 words. Be direct and to the point.`
+                
+                : `You are a chatbot with access to comprehensive JSON-LD structured data about a research paper on AI and politics. You have typed claims with evidence levels, full citations with URLs and DOIs, statistical datasets with methodology, and semantic relationships between concepts.
+
+Here is your structured knowledge:
+
+${JSON.stringify(fullSchema, null, 2)}
+
+Answer questions using this structured data. You can:
+- Cite specific sources with URLs
+- Distinguish between peer-reviewed and other evidence
+- Provide exact statistics with their provenance
+- Explain relationships between claims
+- Note evidence levels (peer-reviewed, industry research, author analysis)
+
+Format citations properly and be precise about what the data shows.
+
+IMPORTANT: Keep your response concise—under 200 words. Be direct and precise.`;
+
+            const response = await fetch("https://api.anthropic.com/v1/messages", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    model: "claude-sonnet-4-20250514",
+                    max_tokens: 500,
+                    system: systemPrompt,
+                    messages: [
+                        { role: "user", content: question }
+                    ]
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error.message);
+            }
+            
+            // Format the response with some basic HTML
+            let text = data.content[0].text;
+            
+            // Convert markdown-style formatting
+            text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/\n\n/g, '</p><p>');
+            text = '<p>' + text + '</p>';
+            
+            // Highlight statistics in structured responses
+            if (mode === 'structured') {
+                text = text.replace(/(\d+(?:\.\d+)?%)/g, '<span class="stat-highlight">$1</span>');
+                text = text.replace(/([\d,]+ (?:votes|users|million))/gi, '<span class="stat-highlight">$1</span>');
+            }
+            
+            return text;
+        }
+        
+        // Initialize
+        displaySchema();
+        
+        // Handle Enter key
+        document.getElementById('question-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                askQuestion();
+            }
+        });
+    </script>
+</body>
+</html>

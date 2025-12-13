@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <title>SBNC Photo Gallery - Filter UI Mockup</title>
+    
+    <!-- jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+    
+    <!-- Select2 for searchable dropdowns -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <!-- nanogallery2 -->
+    <link href="https://cdn.jsdelivr.net/npm/nanogallery2@3/dist/css/nanogallery2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/nanogallery2@3/dist/jquery.nanogallery2.min.js"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c5aa0;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        /* Filter bar */
+        .filter-bar {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 180px;
+        }
+        .filter-group label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .filter-group select {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+        .filter-group select:hover {
+            border-color: #2c5aa0;
+        }
+        .filter-group select:focus {
+            outline: none;
+            border-color: #2c5aa0;
+            box-shadow: 0 0 0 2px rgba(44,90,160,0.2);
+        }
+        
+        /* Member search with Select2 */
+        .member-search-group {
+            flex: 1;
+            min-width: 280px;
+            max-width: 400px;
+        }
+        .select2-container {
+            width: 100% !important;
+        }
+        .select2-container--default .select2-selection--single {
+            height: 42px;
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 28px;
+            padding-left: 0;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 40px;
+        }
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .select2-results__option {
+            padding: 10px 12px;
+        }
+        .select2-results__option--highlighted {
+            background-color: #2c5aa0 !important;
+        }
+        
+        /* Action buttons */
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .btn-search {
+            background: #2c5aa0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            height: 42px;
+        }
+        .btn-search:hover {
+            background: #234a80;
+        }
+        .btn-clear {
+            background: #f0f0f0;
+            color: #666;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            height: 42px;
+        }
+        .btn-clear:hover {
+            background: #e0e0e0;
+        }
+        
+        /* Active filters display */
+        .active-filters {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            display: none;
+        }
+        .active-filters.visible {
+            display: block;
+        }
+        .active-filters-label {
+            font-size: 12px;
+            color: #666;
+            margin-right: 10px;
+        }
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            background: #e8f0fe;
+            color: #2c5aa0;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            margin-right: 8px;
+            margin-bottom: 5px;
+        }
+        .filter-tag .remove {
+            margin-left: 8px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+        .filter-tag .remove:hover {
+            opacity: 1;
+        }
+        .filter-tag.person {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+        
+        /* Results count */
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .results-count {
+            font-size: 14px;
+            color: #666;
+        }
+        .results-count strong {
+            color: #333;
+        }
+        .view-options {
+            display: flex;
+            gap: 5px;
+        }
+        .view-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .view-btn:first-child {
+            border-radius: 5px 0 0 5px;
+        }
+        .view-btn:last-child {
+            border-radius: 0 5px 5px 0;
+        }
+        .view-btn.active {
+            background: #2c5aa0;
+            color: white;
+            border-color: #2c5aa0;
+        }
+        
+        /* Gallery container */
+        .gallery-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Quick links section */
+        .quick-links {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .quick-links h3 {
+            margin: 0 0 15px;
+            font-size: 16px;
+            color: #333;
+        }
+        .quick-link-grid {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .quick-link {
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .quick-link:hover {
+            background: #e8f0fe;
+            border-color: #2c5aa0;
+            color: #2c5aa0;
+        }
+        .quick-link .icon {
+            margin-right: 5px;
+        }
+        
+        /* Member photo option in dropdown */
+        .member-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .member-option img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .member-option .name {
+            font-weight: 500;
+        }
+        .member-option .count {
+            color: #888;
+            font-size: 12px;
+        }
+        
+        /* Help text */
+        .help-text {
+            background: #f0f7ff;
+            border-left: 4px solid #2c5aa0;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🌴 Santa Barbara Newcomers Club Photo Gallery</h1>
+<p class="subtitle">Browse photos from SBNC events • Find yourself and friends</p>
+
+<div class="help-text">
+    <strong>💡 Tip:</strong> Use the "Find a Member" search to see all photos of yourself or any member. 
+    You can combine filters — for example, select a member AND an activity to see just their hiking or golf photos.
+</div>
+
+<!-- Filter Bar -->
+<div class="filter-bar">
+    <div class="filter-row">
+        <!-- Member Search (Primary) -->
+        <div class="filter-group member-search-group">
+            <label>🔍 Find a Member</label>
+            <select id="member-search" class="member-select">
+                <option value="">Type to search 700+ members...</option>
+            </select>
+        </div>
+        
+        <!-- Activity Group -->
+        <div class="filter-group">
+            <label>Activity Group</label>
+            <select id="filter-activity">
+                <option value="">All Activities</option>
+                <option value="happy-hikers">🥾 Happy Hikers</option>
+                <option value="golf">⛳ Golf Group</option>
+                <option value="wine">🍷 Wine Club</option>
+                <option value="cycling">🚴 Cycling</option>
+                <option value="book-club">📚 Book Club</option>
+                <option value="dining">🍽️ Dining Out</option>
+                <option value="tennis">🎾 Tennis</option>
+                <option value="art">🎨 Arts & Culture</option>
+            </select>
+        </div>
+        
+        <!-- Event -->
+        <div class="filter-group">
+            <label>Event</label>
+            <select id="filter-event">
+                <option value="">All Events</option>
+                <optgroup label="2024">
+                    <option value="fall-picnic-2024">Fall Picnic 2024</option>
+                    <option value="holiday-party-2024">Holiday Party 2024</option>
+                    <option value="summer-bbq-2024">Summer BBQ 2024</option>
+                    <option value="spring-gala-2024">Spring Gala 2024</option>
+                </optgroup>
+                <optgroup label="2023">
+                    <option value="holiday-party-2023">Holiday Party 2023</option>
+                    <option value="fall-picnic-2023">Fall Picnic 2023</option>
+                    <option value="summer-bbq-2023">Summer BBQ 2023</option>
+                </optgroup>
+            </select>
+        </div>
+        
+        <!-- Year/Month -->
+        <div class="filter-group">
+            <label>Date Range</label>
+            <select id="filter-date">
+                <option value="">All Time</option>
+                <option value="2024-11">November 2024</option>
+                <option value="2024-10">October 2024</option>
+                <option value="2024-09">September 2024</option>
+                <option value="2024">All of 2024</option>
+                <option value="2023">All of 2023</option>
+                <option value="2022">All of 2022</option>
+            </select>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="filter-actions">
+            <button class="btn-search" onclick="applyFilters()">Search</button>
+            <button class="btn-clear" onclick="clearFilters()">Clear All</button>
+        </div>
+    </div>
+    
+    <!-- Active Filters Display -->
+    <div class="active-filters visible" id="active-filters">
+        <span class="active-filters-label">Active filters:</span>
+        <span class="filter-tag person">
+            John Smith <span class="remove" onclick="removeFilter('member')">✕</span>
+        </span>
+        <span class="filter-tag">
+            Happy Hikers <span class="remove" onclick="removeFilter('activity')">✕</span>
+        </span>
+    </div>
+</div>
+
+<!-- Quick Links -->
+<div class="quick-links">
+    <h3>📌 Quick Links</h3>
+    <div class="quick-link-grid">
+        <a href="#" class="quick-link"><span class="icon">🎄</span> Holiday Party 2024</a>
+        <a href="#" class="quick-link"><span class="icon">🍂</span> Fall Picnic 2024</a>
+        <a href="#" class="quick-link"><span class="icon">🥾</span> Recent Hikes</a>
+        <a href="#" class="quick-link"><span class="icon">⛳</span> Golf Outings</a>
+        <a href="#" class="quick-link"><span class="icon">🍷</span> Wine Tours</a>
+        <a href="#" class="quick-link"><span class="icon">📅</span> This Month</a>
+    </div>
+</div>
+
+<!-- Results Info -->
+<div class="results-info">
+    <div class="results-count">
+        Showing <strong>47 photos</strong> matching your filters
+    </div>
+    <div class="view-options">
+        <button class="view-btn active">Grid</button>
+        <button class="view-btn">List</button>
+    </div>
+</div>
+
+<!-- Gallery Container -->
+<div class="gallery-container">
+    <div id="sbnc-gallery"></div>
+</div>
+
+<script>
+// Sample member data (in production, this would come from WA API)
+const members = [
+    { id: 'john-smith', name: 'John Smith', photoCount: 45, thumb: 'https://i.pravatar.cc/60?img=1' },
+    { id: 'mary-johnson', name: 'Mary Johnson', photoCount: 38, thumb: 'https://i.pravatar.cc/60?img=5' },
+    { id: 'bob-wilson', name: 'Bob Wilson', photoCount: 52, thumb: 'https://i.pravatar.cc/60?img=3' },
+    { id: 'sarah-davis', name: 'Sarah Davis', photoCount: 29, thumb: 'https://i.pravatar.cc/60?img=9' },
+    { id: 'tom-brown', name: 'Tom Brown', photoCount: 41, thumb: 'https://i.pravatar.cc/60?img=7' },
+    { id: 'jennifer-lee', name: 'Jennifer Lee', photoCount: 33, thumb: 'https://i.pravatar.cc/60?img=10' },
+    { id: 'michael-chen', name: 'Michael Chen', photoCount: 27, thumb: 'https://i.pravatar.cc/60?img=11' },
+    { id: 'lisa-martinez', name: 'Lisa Martinez', photoCount: 36, thumb: 'https://i.pravatar.cc/60?img=12' },
+    { id: 'david-anderson', name: 'David Anderson', photoCount: 44, thumb: 'https://i.pravatar.cc/60?img=13' },
+    { id: 'susan-taylor', name: 'Susan Taylor', photoCount: 31, thumb: 'https://i.pravatar.cc/60?img=14' },
+    // ... in production, all 700+ members would be here
+];
+
+// Initialize Select2 for member search
+$(document).ready(function() {
+    $('#member-search').select2({
+        placeholder: 'Type to search 700+ members...',
+        allowClear: true,
+        minimumInputLength: 1,
+        data: members.map(m => ({
+            id: m.id,
+            text: m.name,
+            photoCount: m.photoCount,
+            thumb: m.thumb
+        })),
+        templateResult: formatMember,
+        templateSelection: formatMemberSelection
+    });
+    
+    // Initialize gallery
+    initGallery();
+});
+
+// Format member option in dropdown
+function formatMember(member) {
+    if (!member.id) return member.text;
+    
+    var $member = $(
+        '<div class="member-option">' +
+            '<img src="' + member.thumb + '" />' +
+            '<div>' +
+                '<div class="name">' + member.text + '</div>' +
+                '<div class="count">' + member.photoCount + ' photos</div>' +
+            '</div>' +
+        '</div>'
+    );
+    return $member;
+}
+
+// Format selected member
+function formatMemberSelection(member) {
+    return member.text || member.id;
+}
+
+// Sample photo data
+const photos = [
+    { src: 'https://images.unsplash.com/photo-1529543544277-05bfc67e5647?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1529543544277-05bfc67e5647?w=300',
+      title: 'Fall Picnic - Group Photo',
+      tags: ['john-smith', 'mary-johnson', 'fall-picnic-2024', 'happy-hikers', '2024-10'] },
+    { src: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=300',
+      title: 'Happy Hikers - Summit',
+      tags: ['john-smith', 'tom-brown', 'happy-hikers', '2024-11'] },
+    { src: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=300',
+      title: 'Golf - Sandpiper',
+      tags: ['bob-wilson', 'tom-brown', 'golf', '2024-10'] },
+    { src: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=300',
+      title: 'Wine Club - Tasting',
+      tags: ['mary-johnson', 'sarah-davis', 'wine', '2024-10'] },
+    { src: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300',
+      title: 'Fall Picnic - Food',
+      tags: ['fall-picnic-2024', '2024-10'] },
+    { src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300',
+      title: 'Hikers - Mountain View',
+      tags: ['mary-johnson', 'happy-hikers', '2024-11'] },
+    { src: 'https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?w=300',
+      title: 'Golf Tournament Winners',
+      tags: ['john-smith', 'sarah-davis', 'golf', '2024-11'] },
+    { src: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=300',
+      title: 'Wine Club - Los Olivos',
+      tags: ['bob-wilson', 'tom-brown', 'john-smith', 'wine', '2024-11'] },
+    { src: 'https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=300',
+      title: 'Holiday Party 2023',
+      tags: ['john-smith', 'mary-johnson', 'bob-wilson', 'sarah-davis', 'holiday-party-2023', '2023-12'] },
+    { src: 'https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=300',
+      title: 'Holiday Decorations',
+      tags: ['holiday-party-2023', '2023-12'] },
+    { src: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=300',
+      title: 'Holiday Party Dancing',
+      tags: ['mary-johnson', 'tom-brown', 'holiday-party-2023', '2023-12'] },
+    { src: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=1200',
+      thumb: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=300',
+      title: 'Harbor View',
+      tags: ['bob-wilson', 'sarah-davis', 'fall-picnic-2024', '2024-10'] }
+];
+
+// Current filter state
+let currentFilters = {
+    member: null,
+    activity: null,
+    event: null,
+    date: null
+};
+
+// Initialize gallery with all photos
+function initGallery(filteredPhotos = null) {
+    const photosToShow = filteredPhotos || photos;
+    
+    // Destroy existing gallery if it exists
+    if ($('#sbnc-gallery').data('nanogallery2')) {
+        $('#sbnc-gallery').nanogallery2('destroy');
+    }
+    
+    // Build items array for nanogallery2
+    const items = photosToShow.map(p => ({
+        src: p.src,
+        srct: p.thumb,
+        title: p.title
+    }));
+    
+    // Initialize nanogallery2
+    $('#sbnc-gallery').nanogallery2({
+        items: items,
+        thumbnailWidth: 'auto',
+        thumbnailHeight: 180,
+        thumbnailLabel: {
+            display: true,
+            position: 'overImageOnBottom'
+        },
+        thumbnailHoverEffect2: 'imageScale150',
+        galleryDisplayMode: 'pagination',
+        galleryMaxRows: 3,
+        galleryPaginationMode: 'numbers'
+    });
+    
+    // Update results count
+    $('.results-count').html('Showing <strong>' + photosToShow.length + ' photos</strong>' + 
+        (Object.values(currentFilters).some(v => v) ? ' matching your filters' : ''));
+}
+
+// Apply filters
+function applyFilters() {
+    currentFilters.member = $('#member-search').val() || null;
+    currentFilters.activity = $('#filter-activity').val() || null;
+    currentFilters.event = $('#filter-event').val() || null;
+    currentFilters.date = $('#filter-date').val() || null;
+    
+    // Filter photos
+    let filtered = photos.filter(photo => {
+        if (currentFilters.member && !photo.tags.includes(currentFilters.member)) return false;
+        if (currentFilters.activity && !photo.tags.includes(currentFilters.activity)) return false;
+        if (currentFilters.event && !photo.tags.includes(currentFilters.event)) return false;
+        if (currentFilters.date) {
+            // Check if any tag starts with the date filter
+            const hasDate = photo.tags.some(t => t.startsWith(currentFilters.date));
+            if (!hasDate) return false;
+        }
+        return true;
+    });
+    
+    // Update active filters display
+    updateActiveFilters();
+    
+    // Reinitialize gallery with filtered photos
+    initGallery(filtered);
+}
+
+// Update active filters display
+function updateActiveFilters() {
+    const $container = $('#active-filters');
+    $container.empty();
+    
+    let hasFilters = false;
+    
+    if (currentFilters.member) {
+        const member = members.find(m => m.id === currentFilters.member);
+        if (member) {
+            $container.append('<span class="filter-tag person">' + member.name + 
+                ' <span class="remove" onclick="removeFilter(\'member\')">✕</span></span>');
+            hasFilters = true;
+        }
+    }
+    
+    if (currentFilters.activity) {
+        const activityName = $('#filter-activity option:selected').text();
+        $container.append('<span class="filter-tag">' + activityName + 
+            ' <span class="remove" onclick="removeFilter(\'activity\')">✕</span></span>');
+        hasFilters = true;
+    }
+    
+    if (currentFilters.event) {
+        const eventName = $('#filter-event option:selected').text();
+        $container.append('<span class="filter-tag">' + eventName + 
+            ' <span class="remove" onclick="removeFilter(\'event\')">✕</span></span>');
+        hasFilters = true;
+    }
+    
+    if (currentFilters.date) {
+        const dateName = $('#filter-date option:selected').text();
+        $container.append('<span class="filter-tag">' + dateName + 
+            ' <span class="remove" onclick="removeFilter(\'date\')">✕</span></span>');
+        hasFilters = true;
+    }
+    
+    if (hasFilters) {
+        $container.prepend('<span class="active-filters-label">Active filters:</span>');
+        $container.addClass('visible');
+    } else {
+        $container.removeClass('visible');
+    }
+}
+
+// Remove a filter
+function removeFilter(type) {
+    currentFilters[type] = null;
+    
+    // Update UI
+    if (type === 'member') $('#member-search').val(null).trigger('change');
+    if (type === 'activity') $('#filter-activity').val('');
+    if (type === 'event') $('#filter-event').val('');
+    if (type === 'date') $('#filter-date').val('');
+    
+    applyFilters();
+}
+
+// Clear all filters
+function clearFilters() {
+    currentFilters = { member: null, activity: null, event: null, date: null };
+    
+    $('#member-search').val(null).trigger('change');
+    $('#filter-activity').val('');
+    $('#filter-event').val('');
+    $('#filter-date').val('');
+    
+    updateActiveFilters();
+    initGallery();
+}
+
+// Auto-apply filters when dropdowns change
+$('#filter-activity, #filter-event, #filter-date').on('change', function() {
+    applyFilters();
+});
+
+$('#member-search').on('change', function() {
+    applyFilters();
+});
+</script>
+
+</body>
+</html>

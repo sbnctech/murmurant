@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBNC Webmaster Resources - READ FIRST</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 { color: #1a5276; border-bottom: 3px solid #1a5276; padding-bottom: 10px; }
+        h2 { color: #2874a6; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        h3 { color: #3498db; margin-top: 20px; }
+        .date { color: #666; font-style: italic; margin-bottom: 20px; }
+        .section { background: #f8f9fa; padding: 15px; margin: 15px 0; border-left: 4px solid #3498db; }
+        code { background: #e8e8e8; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
+        a { color: #2874a6; }
+        ul { margin: 10px 0; }
+        li { margin: 8px 0; }
+        .doc-item { margin-left: 20px; }
+        .doc-title { font-weight: bold; }
+        .doc-desc { color: #666; font-size: 0.95em; margin-left: 15px; }
+        .warning { background: #fef9e7; padding: 15px; border-left: 4px solid #f39c12; margin: 15px 0; }
+        .priority { background: #e8f4fd; padding: 20px; border: 2px solid #2196F3; border-radius: 8px; margin: 20px 0; }
+        .priority strong { color: #1565C0; }
+        .checklist { background: #e8f8f5; padding: 15px; border-left: 4px solid #1abc9c; margin: 15px 0; }
+        .checklist ul { list-style: none; padding-left: 5px; }
+        .checklist li { margin: 8px 0; }
+        .checklist li:before { content: "[ ] "; font-family: monospace; color: #1abc9c; }
+        .tip { background: #eaf2f8; padding: 15px; border-left: 4px solid #3498db; margin: 15px 0; }
+        .folder-structure { background: #f5f5f5; padding: 15px; font-family: monospace; border-radius: 5px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <h1>SBNC Webmaster Resources</h1>
+    <p class="date">Last Updated: November 2025</p>
+
+    <p>Welcome! This folder contains documentation for managing Wild Apricot and SBNC technology systems.</p>
+
+    <h2>Folder Structure</h2>
+
+    <div class="folder-structure">
+        Webmaster_Resources/<br>
+        ├── <strong>Webmaster_Resources_README.html</strong> ← You are here<br>
+        ├── <strong>Technology_Chair_Notes_from_Ed_Forman.html</strong> ← Lessons learned & support resources<br>
+        ├── <strong>HOW_TO_guides/</strong> ← Step-by-step procedures<br>
+        └── <strong>webmaster_history/</strong> ← Legacy archive (2019-2025)
+    </div>
+
+    <h2>New Technology Chair? Start Here</h2>
+
+    <div class="priority">
+        <strong>FIRST STEP:</strong> Make sure you have all credentials and access before anything else. Request access to the <strong>SBNCTech@gmail.com</strong> account from your predecessor - this is where password manager access and key accounts are managed.
+    </div>
+
+    <div class="section">
+        <strong>How the Transition Works:</strong>
+        <ul>
+            <li>The <strong>departing</strong> Technology Chair leads the leadership transition execution at the end of their term</li>
+            <li>As the incoming chair, you should be involved and observe the process so you're prepared to do it yourself next time</li>
+            <li>New chairs are often eager to get started - completing the transition promptly is appreciated by everyone</li>
+            <li>Aim to complete the transition on or immediately after Feb 1 or Aug 1 (the first day of each new term)</li>
+        </ul>
+    </div>
+
+    <h3>Request These From Your Predecessor</h3>
+
+    <div class="checklist">
+        <strong>Before your predecessor's term ends, get:</strong>
+        <ul>
+            <li>Access to SBNCTech@gmail.com account (this is critical - do this first!)</li>
+            <li>Password manager access (1Password/LastPass) with all service credentials</li>
+            <li>Wild Apricot admin login credentials</li>
+            <li>Server SSH credentials (mail.sbnewcomers.org)</li>
+            <li>Leadership Transition Portal login</li>
+            <li>GitHub repository access (added to sbnctech organization)</li>
+            <li>cPanel login for email forwarding</li>
+            <li>30-minute handoff call to walk through systems</li>
+            <li>List of any ongoing issues or projects</li>
+        </ul>
+    </div>
+
+    <div class="checklist">
+        <strong>Information about each board/committee position:</strong>
+        <ul>
+            <li>New officer's full name (as they want it displayed)</li>
+            <li>New officer's personal email address</li>
+        </ul>
+    </div>
+
+    <div class="tip">
+        <strong>Your First Big Task:</strong> After getting credentials, your most important job is installing the new leadership team. See <strong>HOW_TO_Install_New_Leadership.html</strong> in the HOW_TO_guides folder.
+    </div>
+
+    <h2>GitHub Repository</h2>
+
+    <p>Technical documentation and code live in a GitHub repository. This is where you'll find detailed guides, troubleshooting info, and system documentation.</p>
+
+    <p style="font-size: 1.1em;"><strong>Repository:</strong> <a href="https://github.com/sbnctech/wa-dev">https://github.com/sbnctech/wa-dev</a></p>
+
+    <h3>How to Navigate the Repository (For Non-Technical Users)</h3>
+
+    <div class="tip">
+        <strong>What is GitHub?</strong> GitHub is like Google Drive for code and documentation. You don't need to download anything - you can read all documents directly in your web browser.
+    </div>
+
+    <div class="section">
+        <strong>Step-by-step to find documents:</strong>
+        <ol>
+            <li>Go to <a href="https://github.com/sbnctech/wa-dev">github.com/sbnctech/wa-dev</a></li>
+            <li>You'll see a list of files and folders - this is the repository contents</li>
+            <li>Click any file ending in <code>.md</code> to read it (like ONBOARDING.md)</li>
+            <li>The <code>README.md</code> file displays automatically at the bottom - this is your starting point</li>
+            <li>Use the search bar at the top to find specific topics</li>
+        </ol>
+    </div>
+
+    <h3>What Are .md Files?</h3>
+
+    <div class="section">
+        <p><strong>.md files</strong> are "Markdown" files - a simple text format that can display with nice formatting (headers, bold, lists, links). They're the standard for documentation on GitHub.</p>
+
+        <p><strong>How to read .md files:</strong></p>
+        <ul>
+            <li><strong>On GitHub:</strong> Just click the file - GitHub automatically renders it with formatting</li>
+            <li><strong>On your Mac:</strong> Use <a href="https://macdown.uranusjr.com/">MacDown</a> (free app) to view .md files with formatting</li>
+            <li><strong>In any text editor:</strong> You can open .md files in TextEdit or any editor - you'll see the raw text with simple markup like *bold* and # headers</li>
+        </ul>
+
+        <p><strong>Learn more:</strong> <a href="https://www.markdownguide.org/getting-started/">Markdown Guide - Getting Started</a></p>
+    </div>
+
+    <div class="section">
+        <strong>Key documents to read first:</strong>
+        <ol>
+            <li><strong>README.md</strong> - Overview and links to everything else</li>
+            <li><strong>ONBOARDING.md</strong> - Complete new tech chair guide</li>
+            <li><strong>CREDENTIALS.md</strong> - All account credentials and rotation procedures</li>
+            <li><strong>RUNBOOK.md</strong> - Troubleshooting guide</li>
+        </ol>
+    </div>
+
+    <div class="tip">
+        <strong>Tip:</strong> You don't need to understand the code files (ending in <code>.py</code>). Focus on the <code>.md</code> files - those are the documentation written for you.
+    </div>
+
+    <h3>Key Repository Documents</h3>
+
+    <div class="section">
+        <p><strong>SBNC_Data_Architecture.md</strong> (Important Reference)</p>
+        <ul>
+            <li>How SBNC uses Wild Apricot data entities</li>
+            <li>Custom contact fields explained (35 fields)</li>
+            <li>How committees are stored as "Admin" contacts</li>
+            <li>SQLite database sync structure</li>
+            <li>API access and limitations</li>
+        </ul>
+    </div>
+
+    <div class="doc-item">
+        <p class="doc-title">ONBOARDING.md</p>
+        <ul class="doc-desc">
+            <li>New Technology Chair start guide</li>
+            <li>First week checklist</li>
+            <li>System overview for non-programmers</li>
+        </ul>
+    </div>
+
+    <div class="doc-item">
+        <p class="doc-title">CREDENTIALS.md</p>
+        <ul class="doc-desc">
+            <li>Credential management procedures</li>
+            <li>Password rotation during transitions</li>
+            <li>All service provider accounts</li>
+        </ul>
+    </div>
+
+    <div class="doc-item">
+        <p class="doc-title">RUNBOOK.md</p>
+        <ul class="doc-desc">
+            <li>Technical troubleshooting</li>
+            <li>Server access commands</li>
+            <li>Committee management details</li>
+        </ul>
+    </div>
+
+    <h2>HOW TO Guides (HOW_TO_guides folder)</h2>
+
+    <p>The <strong>HOW_TO_guides</strong> folder (at the same level as this README) contains step-by-step procedures for common tasks.</p>
+
+    <h3>Main Guides:</h3>
+
+    <div class="doc-item">
+        <p class="doc-title">HOW_TO_Install_New_Leadership</p>
+        <ul class="doc-desc">
+            <li>Complete start-of-term leadership installation</li>
+            <li>Using the Leadership Transition Portal</li>
+            <li>Testing and verification checklist</li>
+            <li><strong>This is your first priority after getting credentials</strong></li>
+        </ul>
+    </div>
+
+    <div class="doc-item">
+        <p class="doc-title">HOW_TO_Members_and_Memberships</p>
+        <ul class="doc-desc">
+            <li>Approve membership applications</li>
+            <li>Add/archive members</li>
+            <li>Change membership levels</li>
+            <li>Search and filter members</li>
+            <li>Use chatbot for member queries</li>
+        </ul>
+    </div>
+
+    <div class="doc-item">
+        <p class="doc-title">HOW_TO_Events</p>
+        <ul class="doc-desc">
+            <li>Create and manage events</li>
+            <li>Set up registration types</li>
+            <li>Manage wait lists</li>
+            <li>Cancel events and registrations</li>
+            <li>Jotform workflow for committee events</li>
+        </ul>
+    </div>
+
+    <div class="doc-item">
+        <p class="doc-title">HOW_TO_Website_Editing</p>
+        <ul class="doc-desc">
+            <li>Edit web pages</li>
+            <li>Add text and images</li>
+            <li>Create redirects</li>
+            <li>Edit custom HTML gadgets</li>
+        </ul>
+    </div>
+
+    <div class="doc-item">
+        <p class="doc-title">HOW_TO_Leadership_and_Committees</p>
+        <ul class="doc-desc">
+            <li>Update board/officer information</li>
+            <li>Change committee chairs</li>
+            <li>Update email forwarding</li>
+            <li>Add/remove committees</li>
+        </ul>
+    </div>
+
+    <h3>Quick Reference Guides:</h3>
+    <ul>
+        <li><strong>HOW_TO_Create_New_Committee</strong> - Step-by-step for new committees</li>
+        <li><strong>HOW_TO_Retire_Committee</strong> - Deactivating or closing committees</li>
+        <li><strong>HOW_TO_Add_Committee_Chair</strong> - Adding new chairs</li>
+        <li><strong>HOW_TO_Remove_Committee_Chair</strong> - Removing departing chairs</li>
+    </ul>
+
+    <h2>Historical Archive (webmaster_history folder)</h2>
+
+    <p>The <strong>webmaster_history</strong> folder (at the same level as this README) contains legacy documentation from 2019-2025. These documents are kept for historical reference but have been <strong>superseded</strong> by the current HOW TO guides and the GitHub repository documentation.</p>
+
+    <p><strong>ACCESS:</strong> Full admin access required for webmaster_history folder.</p>
+
+    <div class="warning">
+        <strong>Note:</strong> Legacy docs may contain outdated information, especially regarding:
+        <ul>
+            <li>Password procedures (we now use rotation, not sharing)</li>
+            <li>DNS records (current records documented in repo)</li>
+            <li>Service providers (A2Hosting is now Hosting.com)</li>
+            <li>Wild Apricot UI (interface has changed since 2019)</li>
+        </ul>
+    </div>
+
+    <h2>Troubleshooting and Support</h2>
+
+    <div class="tip">
+        <p>For practical advice on researching support issues, using AI to solve problems, and when to bring in professional help, see <strong>Technology_Chair_Notes_from_Ed_Forman.html</strong> in this folder.</p>
+    </div>
+
+    <h2>Quick Links</h2>
+    <ul>
+        <li><strong>Wild Apricot Admin:</strong> <a href="https://sbnewcomers.wildapricot.org/admin/">https://sbnewcomers.wildapricot.org/admin/</a></li>
+        <li><strong>CHAD Chatbot:</strong> <a href="https://mail.sbnewcomers.org/chatbot/">https://mail.sbnewcomers.org/chatbot/</a></li>
+        <li><strong>Leadership Transition Portal:</strong> <a href="https://mail.sbnewcomers.org/admin/">https://mail.sbnewcomers.org/admin/</a></li>
+        <li><strong>cPanel (Email Forwarding):</strong> <a href="https://mail.sbnewcomers.org:2083">https://mail.sbnewcomers.org:2083</a></li>
+        <li><strong>GitHub Repository:</strong> <a href="https://github.com/sbnctech/wa-dev">https://github.com/sbnctech/wa-dev</a></li>
+        <li><strong>Wild Apricot Help:</strong> <a href="https://gethelp.wildapricot.com">https://gethelp.wildapricot.com</a></li>
+    </ul>
+
+    <h2>Support</h2>
+    <ul>
+        <li><strong>Technology questions:</strong> <a href="mailto:technology@sbnewcomers.org">technology@sbnewcomers.org</a></li>
+        <li><strong>Wild Apricot issues:</strong> <a href="https://gethelp.wildapricot.com">https://gethelp.wildapricot.com</a></li>
+        <li><strong>GitHub Issues:</strong> <a href="https://github.com/sbnctech/wa-dev/issues">https://github.com/sbnctech/wa-dev/issues</a></li>
+    </ul>
+</body>
+</html>

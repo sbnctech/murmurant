@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBNC Calendar Solutions - Evaluation Summary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a5a5a 0%, #2d3a4a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .slide-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .slide-header {
+            background: linear-gradient(135deg, #1a5a5a 0%, #2d8a8a 100%);
+            color: white;
+            padding: 20px 32px;
+        }
+        
+        .slide-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .slide-header .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .slide-content {
+            padding: 20px;
+        }
+        
+        .evaluation-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        .evaluation-table th,
+        .evaluation-table td {
+            padding: 8px 10px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .evaluation-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+            position: sticky;
+            top: 0;
+        }
+        
+        .evaluation-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            background: #fafafa;
+            width: 160px;
+        }
+        
+        .evaluation-table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        /* Column header colors */
+        .col-wa { background: #f5f5f5 !important; color: #666; }
+        .col-fc { background: #c8e6c9 !important; color: #1b5e20; }
+        .col-sx { background: #dcedc8 !important; color: #33691e; }
+        .col-mo { background: #ffe0b2 !important; color: #e65100; }
+        .col-tu { background: #bbdefb !important; color: #0d47a1; }
+        
+        /* Status indicators */
+        .yes { color: #2e7d32; font-weight: 600; }
+        .no { color: #c62828; font-weight: 600; }
+        .partial { color: #ef6c00; font-weight: 600; }
+        
+        /* Bottom line row */
+        .bottom-line td {
+            font-size: 11px;
+            font-style: italic;
+            color: #555;
+            padding-top: 12px;
+        }
+        
+        .footer-notes {
+            padding: 16px 20px;
+            background: #f5f5f5;
+            font-size: 12px;
+            color: #555;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .footer-notes p {
+            margin-bottom: 6px;
+        }
+        
+        .footer-notes strong {
+            color: #1a5a5a;
+        }
+        
+        .source-info {
+            text-align: center;
+            padding: 12px;
+            font-size: 11px;
+            color: #888;
+            border-top: 1px solid #eee;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .slide-container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="slide-header">
+            <h1>Calendar Solutions Evaluation</h1>
+            <div class="subtitle">SBNC Website Improvement Initiative • November 2025</div>
+        </div>
+        
+        <div class="slide-content">
+            <table class="evaluation-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="col-wa">WA Native</th>
+                        <th class="col-fc">FullCalendar</th>
+                        <th class="col-sx">Schedule-X</th>
+                        <th class="col-mo">Mobiscroll</th>
+                        <th class="col-tu">TeamUp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Category</td>
+                        <td>Current</td>
+                        <td>Free JavaScript</td>
+                        <td>Free JavaScript</td>
+                        <td>Paid JavaScript</td>
+                        <td>Paid Iframe</td>
+                    </tr>
+                    <tr>
+                        <td>License</td>
+                        <td>Included</td>
+                        <td>MIT (free)</td>
+                        <td>MIT (free)</td>
+                        <td>Commercial</td>
+                        <td>Subscription</td>
+                    </tr>
+                    <tr>
+                        <td>Addresses Pain Points</td>
+                        <td class="no">✗</td>
+                        <td class="yes">✓</td>
+                        <td class="yes">✓</td>
+                        <td class="yes">✓</td>
+                        <td class="partial">◐</td>
+                    </tr>
+                    <tr>
+                        <td>Brand Control</td>
+                        <td>Limited</td>
+                        <td>Full</td>
+                        <td>Full</td>
+                        <td>Full</td>
+                        <td>Limited</td>
+                    </tr>
+                    <tr>
+                        <td>Tech Skills Needed</td>
+                        <td>None</td>
+                        <td>JavaScript</td>
+                        <td>JavaScript</td>
+                        <td>JavaScript</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>Community / Maturity</td>
+                        <td>WA Support</td>
+                        <td>18K GitHub ★<br>15+ years</td>
+                        <td>1.4K GitHub ★<br>2 years</td>
+                        <td>Commercial<br>vendor</td>
+                        <td>Commercial<br>vendor</td>
+                    </tr>
+                    <tr>
+                        <td>Out-of-Pocket (3yr)</td>
+                        <td>$0</td>
+                        <td>$0</td>
+                        <td>$0</td>
+                        <td>$1,500–3,000</td>
+                        <td>~$290</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Best Case Total</strong></td>
+                        <td>$0</td>
+                        <td><strong>$0</strong></td>
+                        <td><strong>$0</strong></td>
+                        <td>$1,500–3,000</td>
+                        <td>~$290</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Worst Case Total</strong></td>
+                        <td>$0</td>
+                        <td>~$3,800</td>
+                        <td>~$4,000</td>
+                        <td>~$4,400</td>
+                        <td><strong>~$2,300</strong></td>
+                    </tr>
+                    <tr class="bottom-line">
+                        <td><strong>Bottom Line</strong></td>
+                        <td>No improvement</td>
+                        <td>Best features, proven</td>
+                        <td>Modern, less mature</td>
+                        <td>Premium + support</td>
+                        <td>Easiest, lowest risk</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer-notes">
+            <p><strong>Best Case:</strong> Tech volunteer or AI assistance available — only out-of-pocket costs apply</p>
+            <p><strong>Worst Case:</strong> Must hire contractor at market rates ($400/day) for all technical work</p>
+            <p><strong>Pain Points:</strong> Position resets after viewing events • No search • Can't filter by event type • Status not visible without clicking</p>
+        </div>
+        
+        <div class="source-info">
+            SBNC Listens Initiative • Based on 22 user interviews, 67 pain points identified • Implementation target: January 15, 2025
+        </div>
+    </div>
+</body>
+</html>

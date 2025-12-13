@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBNC Events Calendar - FullCalendar.io Prototype</title>
+    
+    <!-- FullCalendar v6 from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
+    
+    <style>
+        /* ============================================
+           SBNC Brand Colors
+           ============================================ */
+        :root {
+            --sbnc-turquoise: #3BB4C1;
+            --sbnc-turquoise-dark: #2A9AA6;
+            --sbnc-purple: #8B6FAE;
+            --sbnc-purple-dark: #6B4F8E;
+            --sbnc-orange: #E8A54B;
+            --sbnc-navy: #2B5F82;
+            --text-dark: #333;
+            --text-medium: #666;
+            --text-light: #999;
+            --border-color: #ddd;
+            --bg-light: #f5f5f5;
+        }
+        
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            background: #fff;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+        
+        /* Header */
+        .page-header {
+            text-align: center;
+            padding: 25px 20px 15px;
+        }
+        
+        .logo-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 400;
+            margin: 0;
+            color: var(--text-dark);
+        }
+        
+        .prototype-badge {
+            display: inline-block;
+            background: var(--sbnc-orange);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 10px;
+            text-transform: uppercase;
+            vertical-align: middle;
+        }
+        
+        /* Nav bar */
+        .nav-bar {
+            background: var(--sbnc-turquoise);
+            padding: 0 20px;
+        }
+        
+        .nav-bar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .nav-bar li a {
+            display: block;
+            padding: 10px 15px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .nav-bar li a:hover,
+        .nav-bar li a.active {
+            text-decoration: underline;
+        }
+        
+        /* Main container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* ============================================
+           Rich Filter Panel (Event Finder Style)
+           ============================================ */
+        .filter-panel {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .filter-panel-header {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .filter-panel-header h3 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .filter-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--sbnc-turquoise);
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .filter-panel-body {
+            padding: 15px;
+        }
+        
+        /* Search row */
+        .search-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--sbnc-turquoise);
+        }
+        
+        .search-input::placeholder {
+            color: #aaa;
+        }
+        
+        .search-btn {
+            padding: 10px 25px;
+            background: var(--sbnc-turquoise);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .search-btn:hover {
+            background: var(--sbnc-turquoise-dark);
+        }
+        
+        /* Filter dropdowns grid */
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .filter-group label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        
+        .filter-group select {
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            font-size: 13px;
+            font-family: inherit;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--sbnc-turquoise);
+        }
+        
+        /* Quick filter buttons */
+        .quick-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+        
+        .quick-label {
+            font-size: 12px;
+            color: var(--text-medium);
+            margin-right: 5px;
+        }
+        
+        .quick-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 15px;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            color: var(--text-medium);
+            transition: all 0.15s;
+        }
+        
+        .quick-btn:hover {
+            border-color: var(--sbnc-turquoise);
+            color: var(--sbnc-turquoise);
+        }
+        
+        .quick-btn.active {
+            background: var(--sbnc-turquoise);
+            border-color: var(--sbnc-turquoise);
+            color: white;
+        }
+        
+        .clear-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-light);
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--text-medium);
+        }
+        
+        .clear-btn:hover {
+            background: #e8e8e8;
+        }
+        
+        .include-past {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: var(--text-medium);
+            margin-left: auto;
+        }
+        
+        .include-past input {
+            accent-color: var(--sbnc-turquoise);
+        }
+        
+        /* Active filters display */
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 10px 15px;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+        
+        .active-filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: var(--sbnc-purple);
+            color: white;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .active-filter-tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+            line-height: 1;
+            opacity: 0.8;
+        }
+        
+        .active-filter-tag button:hover {
+            opacity: 1;
+        }
+        
+        /* Results count */
+        .results-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            font-size: 13px;
+            color: var(--text-medium);
+        }
+        
+        .results-count {
+            font-weight: 500;
+        }
+        
+        /* ============================================
+           Calendar Container
+           ============================================ */
+        .calendar-wrapper {
+            border: 1px solid var(--border-color);
+            background: white;
+        }
+        
+        /* ============================================
+           FullCalendar - WA Style
+           ============================================ */
+        .fc {
+            font-family: inherit;
+            font-size: 14px;
+        }
+        
+        .fc .fc-toolbar {
+            padding: 12px 15px;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--border-color);
+            background: #fafafa;
+        }
+        
+        .fc .fc-toolbar-title {
+            font-size: 16px !important;
+            font-weight: 600;
+        }
+        
+        .fc .fc-button {
+            font-family: inherit;
+            font-size: 13px;
+            padding: 5px 10px;
+            background: transparent;
+            border: none;
+            color: var(--sbnc-turquoise);
+        }
+        
+        .fc .fc-button:hover {
+            color: var(--sbnc-turquoise-dark);
+            text-decoration: underline;
+            background: transparent;
+        }
+        
+        .fc .fc-button:focus {
+            box-shadow: none;
+        }
+        
+        .fc .fc-button-primary:not(:disabled).fc-button-active {
+            background: transparent;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        
+        /* Column headers */
+        .fc .fc-col-header-cell {
+            padding: 10px 5px;
+            border: 1px solid var(--border-color);
+            font-weight: 400;
+            background: transparent;
+        }
+        
+        /* Day cells */
+        .fc .fc-daygrid-day {
+            border: 1px solid var(--border-color);
+        }
+        
+        .fc .fc-daygrid-day-top {
+            padding: 5px 8px;
+        }
+        
+        .fc .fc-daygrid-day-number {
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+        
+        .fc .fc-daygrid-day.fc-day-today {
+            background: transparent;
+        }
+        
+        .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+            color: var(--sbnc-turquoise);
+            text-decoration: underline;
+        }
+        
+        .fc .fc-daygrid-day-frame {
+            min-height: 80px;
+        }
+        
+        /* Events in month view - WA style teal boxes */
+        .fc-daygrid-event {
+            background: var(--sbnc-turquoise) !important;
+            border: none !important;
+            border-radius: 2px;
+            padding: 2px 5px;
+            margin: 1px 2px;
+            font-size: 12px;
+            color: white !important;
+            cursor: pointer;
+        }
+        
+        .fc-daygrid-event:hover {
+            background: var(--sbnc-turquoise-dark) !important;
+        }
+        
+        /* Event content - time inline */
+        .fc-event-main-frame {
+            display: block;
+        }
+        
+        .fc-daygrid-event .fc-event-time {
+            font-weight: 600;
+            margin-right: 4px;
+        }
+        
+        .fc-daygrid-event .fc-event-title {
+            font-weight: 400;
+        }
+        
+        /* Category colors */
+        .fc-daygrid-event.category-social { background: var(--sbnc-turquoise) !important; }
+        .fc-daygrid-event.category-outdoor { background: #4CAF50 !important; }
+        .fc-daygrid-event.category-arts { background: var(--sbnc-purple) !important; }
+        .fc-daygrid-event.category-dining { background: var(--sbnc-orange) !important; }
+        .fc-daygrid-event.category-yp { background: var(--sbnc-navy) !important; }
+        .fc-daygrid-event.category-wellness { background: #26A69A !important; }
+        .fc-daygrid-event.category-volunteers { background: #7B1FA2 !important; }
+        
+        /* +more link */
+        .fc .fc-daygrid-more-link {
+            color: var(--sbnc-turquoise);
+            font-size: 12px;
+        }
+        
+        /* ============================================
+           List View - Event Finder Style
+           ============================================ */
+        .fc .fc-list {
+            border: none;
+        }
+        
+        .fc .fc-list-table {
+            border-collapse: collapse;
+        }
+        
+        /* Hide default list day headers - we'll use custom rendering */
+        .fc .fc-list-day {
+            display: none;
+        }
+        
+        /* Custom event list container */
+        .event-list-container {
+            display: none;
+        }
+        
+        .event-list-container.active {
+            display: block;
+        }
+        
+        .event-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            background: #fafafa;
+        }
+        
+        .event-list-header h2 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .event-list-count {
+            font-size: 13px;
+            color: var(--text-medium);
+        }
+        
+        /* Event card - Event Finder style */
+        .event-card {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+        
+        .event-card:hover {
+            background: #f9f9f9;
+        }
+        
+        /* Date badge */
+        .event-date-badge {
+            flex-shrink: 0;
+            width: 55px;
+            text-align: center;
+            background: var(--sbnc-purple);
+            color: white;
+            border-radius: 4px;
+            padding: 8px 5px;
+        }
+        
+        .event-date-badge .month {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.9;
+        }
+        
+        .event-date-badge .day {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.1;
+        }
+        
+        .event-date-badge .weekday {
+            font-size: 10px;
+            opacity: 0.9;
+        }
+        
+        /* Event details */
+        .event-details {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .event-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 6px;
+        }
+        
+        .event-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        
+        .event-tag.tag-committee {
+            background: var(--sbnc-navy);
+            color: white;
+        }
+        
+        .event-tag.tag-guests {
+            background: transparent;
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+        
+        .event-tag.tag-waitlist {
+            background: transparent;
+            color: var(--sbnc-orange);
+            border: 1px solid var(--sbnc-orange);
+        }
+        
+        .event-tag.tag-free {
+            background: transparent;
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+        
+        .event-tag.tag-new {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .event-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0 0 5px 0;
+        }
+        
+        .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 13px;
+            color: var(--text-medium);
+        }
+        
+        .event-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .event-meta-item .icon {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        /* Registration status */
+        .event-status {
+            flex-shrink: 0;
+            text-align: right;
+            min-width: 70px;
+        }
+        
+        .status-open {
+            color: #4CAF50;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .status-full {
+            color: #f44336;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .status-label {
+            font-size: 10px;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+        
+        .spots-left {
+            font-size: 11px;
+            color: var(--sbnc-orange);
+            font-weight: 500;
+        }
+        
+        /* ============================================
+           Event Popup
+           ============================================ */
+        .event-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .event-popup.active { display: flex; }
+        
+        .event-popup-content {
+            background: white;
+            border-radius: 6px;
+            max-width: 480px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .event-popup-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+        
+        .event-popup-header h3 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            font-weight: 600;
+            padding-right: 30px;
+        }
+        
+        .event-popup-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .event-popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+            line-height: 1;
+        }
+        
+        .event-popup-close:hover { color: var(--text-dark); }
+        
+        .event-popup-body { padding: 20px; }
+        
+        .event-detail {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .event-detail-icon {
+            font-size: 16px;
+            width: 24px;
+            text-align: center;
+            color: var(--text-light);
+        }
+        
+        .event-detail-content { flex: 1; }
+        
+        .event-detail-label {
+            font-size: 10px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        
+        .event-detail-value {
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+        
+        .event-popup-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            background: #fafafa;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-register {
+            flex: 1;
+            padding: 12px;
+            background: var(--sbnc-turquoise);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .btn-register:hover { background: var(--sbnc-turquoise-dark); }
+        
+        .btn-register.disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        /* ============================================
+           Legend
+           ============================================ */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px 15px;
+            background: #fafafa;
+            border-top: 1px solid var(--border-color);
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-medium);
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        
+        /* ============================================
+           Responsive
+           ============================================ */
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 22px; }
+            .container { padding: 15px; }
+            .filter-grid { grid-template-columns: 1fr 1fr; }
+            .search-row { flex-direction: column; }
+            .event-card { flex-direction: column; gap: 10px; }
+            .event-date-badge { 
+                width: auto; 
+                display: flex; 
+                gap: 10px;
+                padding: 8px 12px;
+            }
+            .event-date-badge .day { font-size: 18px; }
+            .event-status { text-align: left; }
+        }
+        
+        @media (max-width: 480px) {
+            .filter-grid { grid-template-columns: 1fr; }
+            .quick-filters { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <div class="logo-title">
+            <div class="logo-placeholder">SBNC<br>Logo</div>
+            <h1>Santa Barbara Newcomers <span class="prototype-badge">Prototype</span></h1>
+        </div>
+    </header>
+    
+    <nav class="nav-bar">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#" class="active">Events</a></li>
+            <li><a href="#">Contact Us</a></li>
+        </ul>
+    </nav>
+    
+    <main class="container">
+        <!-- Rich Filter Panel -->
+        <div class="filter-panel">
+            <div class="filter-panel-header">
+                <h3>🔍 Find Events</h3>
+                <button class="filter-toggle-btn" onclick="toggleFilters()">Hide Filters</button>
+            </div>
+            
+            <div class="filter-panel-body" id="filterBody">
+                <!-- Search Row -->
+                <div class="search-row">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search events... (e.g., wine tasting, hiking, games)">
+                    <button class="search-btn" onclick="applyFilters()">Search</button>
+                </div>
+                
+                <!-- Filter Dropdowns -->
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label>Interest Area</label>
+                        <select id="filterInterest" onchange="applyFilters()">
+                            <option value="">All Interests</option>
+                            <option value="Social">Social</option>
+                            <option value="Outdoor">Outdoor</option>
+                            <option value="Arts & Culture">Arts & Culture</option>
+                            <option value="Dining">Dining</option>
+                            <option value="20-40 Somethings">20-40 Somethings</option>
+                            <option value="Wellness">Wellness</option>
+                            <option value="Volunteers">Volunteers</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Committee</label>
+                        <select id="filterCommittee" onchange="applyFilters()">
+                            <option value="">All Committees</option>
+                            <option value="Social Committee">Social Committee</option>
+                            <option value="Hiking Committee">Hiking Committee</option>
+                            <option value="Walking Group">Walking Group</option>
+                            <option value="Cycling Committee">Cycling Committee</option>
+                            <option value="Arts Committee">Arts Committee</option>
+                            <option value="Dining Committee">Dining Committee</option>
+                            <option value="Wine Committee">Wine Committee</option>
+                            <option value="20-40 Somethings">20-40 Somethings</option>
+                            <option value="Wellness Committee">Wellness Committee</option>
+                            <option value="Cheers Committee">Cheers Committee</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>When</label>
+                        <select id="filterWhen" onchange="applyFilters()">
+                            <option value="">All Upcoming</option>
+                            <option value="today">Today</option>
+                            <option value="tomorrow">Tomorrow</option>
+                            <option value="this-week">This Week</option>
+                            <option value="this-weekend">This Weekend</option>
+                            <option value="next-week">Next Week</option>
+                            <option value="this-month">This Month</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Availability</label>
+                        <select id="filterAvailability" onchange="applyFilters()">
+                            <option value="">Any</option>
+                            <option value="has-openings">Has Openings</option>
+                            <option value="almost-full">Almost Full (≤5 spots)</option>
+                            <option value="full">Full / Waitlist</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Cost</label>
+                        <select id="filterCost" onchange="applyFilters()">
+                            <option value="">Any Price</option>
+                            <option value="free">Free</option>
+                            <option value="paid">Paid</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Guests</label>
+                        <select id="filterGuests" onchange="applyFilters()">
+                            <option value="">All Events</option>
+                            <option value="guests-welcome">Guests Welcome</option>
+                            <option value="members-only">Members Only</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Quick Filters -->
+                <div class="quick-filters">
+                    <span class="quick-label">Quick:</span>
+                    <button class="quick-btn" data-filter="this-weekend" onclick="toggleQuickFilter(this)">This Weekend</button>
+                    <button class="quick-btn" data-filter="just-opened" onclick="toggleQuickFilter(this)">Just Opened</button>
+                    <button class="quick-btn" data-filter="has-openings" onclick="toggleQuickFilter(this)">Has Openings</button>
+                    <button class="quick-btn" data-filter="guests-welcome" onclick="toggleQuickFilter(this)">Open to Guests</button>
+                    <button class="quick-btn" data-filter="free" onclick="toggleQuickFilter(this)">Free Events</button>
+                    <button class="quick-btn" data-filter="evening" onclick="toggleQuickFilter(this)">Evening</button>
+                    <button class="clear-btn" onclick="clearAllFilters()">Clear All</button>
+                    <label class="include-past">
+                        <input type="checkbox" id="includePast" onchange="applyFilters()">
+                        Include Recent (Past 14 Days)
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Active Filters Display -->
+            <div class="active-filters" id="activeFilters" style="display: none;">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+        
+        <!-- Results Bar -->
+        <div class="results-bar">
+            <span class="results-count" id="resultsCount">Loading events...</span>
+            <div>
+                <button class="quick-btn" id="viewMonthBtn" onclick="switchView('dayGridMonth')">Month</button>
+                <button class="quick-btn active" id="viewListBtn" onclick="switchView('list')">List</button>
+            </div>
+        </div>
+        
+        <!-- Calendar View -->
+        <div class="calendar-wrapper" id="calendarWrapper">
+            <div id="calendar"></div>
+            <div class="legend">
+                <div class="legend-item"><span class="legend-color" style="background: var(--sbnc-turquoise)"></span> Social</div>
+                <div class="legend-item"><span class="legend-color" style="background: #4CAF50"></span> Outdoor</div>
+                <div class="legend-item"><span class="legend-color" style="background: var(--sbnc-purple)"></span> Arts & Culture</div>
+                <div class="legend-item"><span class="legend-color" style="background: var(--sbnc-orange)"></span> Dining</div>
+                <div class="legend-item"><span class="legend-color" style="background: var(--sbnc-navy)"></span> 20-40s</div>
+                <div class="legend-item"><span class="legend-color" style="background: #26A69A"></span> Wellness</div>
+            </div>
+        </div>
+        
+        <!-- Event Finder Style List View -->
+        <div class="event-list-container active" id="eventListContainer">
+            <div class="event-list-header">
+                <h2>Upcoming Events</h2>
+                <span class="event-list-count" id="eventListCount">0 events</span>
+            </div>
+            <div id="eventList">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </main>
+    
+    <!-- Event Popup -->
+    <div class="event-popup" id="eventPopup">
+        <div class="event-popup-content">
+            <div class="event-popup-header">
+                <h3 id="popupTitle">Event Title</h3>
+                <div class="event-popup-tags" id="popupTags"></div>
+                <button class="event-popup-close" onclick="closePopup()">×</button>
+            </div>
+            <div class="event-popup-body">
+                <div class="event-detail">
+                    <span class="event-detail-icon">📅</span>
+                    <div class="event-detail-content">
+                        <div class="event-detail-label">Date & Time</div>
+                        <div class="event-detail-value" id="popupDateTime"></div>
+                    </div>
+                </div>
+                <div class="event-detail">
+                    <span class="event-detail-icon">📍</span>
+                    <div class="event-detail-content">
+                        <div class="event-detail-label">Location</div>
+                        <div class="event-detail-value" id="popupLocation"></div>
+                    </div>
+                </div>
+                <div class="event-detail">
+                    <span class="event-detail-icon">👥</span>
+                    <div class="event-detail-content">
+                        <div class="event-detail-label">Committee</div>
+                        <div class="event-detail-value" id="popupCommittee"></div>
+                    </div>
+                </div>
+                <div class="event-detail">
+                    <span class="event-detail-icon">📝</span>
+                    <div class="event-detail-content">
+                        <div class="event-detail-label">Description</div>
+                        <div class="event-detail-value" id="popupDescription"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="event-popup-footer">
+                <a href="#" class="btn-register" id="popupRegisterBtn">Register on Wild Apricot →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // Mock Event Data
+        // ============================================
+        function makeDate(daysFromNow) {
+            const d = new Date();
+            d.setDate(d.getDate() + daysFromNow);
+            return d.toISOString().split('T')[0];
+        }
+        
+        const mockEvents = [
+            // Multiple events same day to test stacking
+            { id: '101', title: 'Morning Coffee Chat', start: makeDate(3) + 'T08:00:00', end: makeDate(3) + 'T09:00:00', className: 'category-social',
+              extendedProps: { category: 'Social', location: 'Handlebar Coffee, 128 E Canon Perdido', committee: 'Social Committee', description: 'Casual morning coffee with fellow newcomers.', registrationUrl: 'https://sbnewcomers.org/event-101', guestsWelcome: true, isFree: false, cost: 0 }},
+            { id: '102', title: 'Yoga in the Park', start: makeDate(3) + 'T09:30:00', end: makeDate(3) + 'T10:30:00', className: 'category-wellness',
+              extendedProps: { category: 'Wellness', location: 'Alameda Park', committee: 'Wellness Committee', description: 'All levels welcome. Bring your own mat.', registrationUrl: 'https://sbnewcomers.org/event-102', isNew: true, guestsWelcome: true, isFree: true }},
+            { id: '103', title: 'Docent Tour: Courthouse', start: makeDate(3) + 'T11:00:00', end: makeDate(3) + 'T12:30:00', className: 'category-arts',
+              extendedProps: { category: 'Arts & Culture', location: 'SB County Courthouse', committee: 'Arts Committee', description: 'Explore the historic courthouse architecture.', registrationUrl: 'https://sbnewcomers.org/event-103', spotsLeft: 4, guestsWelcome: true, isFree: true }},
+            { id: '104', title: 'Lunch: State Street Tacos', start: makeDate(3) + 'T12:30:00', end: makeDate(3) + 'T14:00:00', className: 'category-dining',
+              extendedProps: { category: 'Dining', location: 'Corazon Cocina, Public Market', committee: 'Dining Committee', description: 'Delicious tacos at the public market.', registrationUrl: 'https://sbnewcomers.org/event-104', spotsLeft: 2, isNew: true, guestsWelcome: false }},
+            { id: '11', title: 'YP: Trivia Night', start: makeDate(3) + 'T19:00:00', end: makeDate(3) + 'T21:30:00', className: 'category-yp',
+              extendedProps: { category: '20-40 Somethings', location: 'Dargan\'s Irish Pub, 18 E Ortega St', committee: '20-40 Somethings', description: 'Join our team for pub trivia!', registrationUrl: 'https://sbnewcomers.org/event-133', guestsWelcome: true, isFree: false }},
+            
+            // More events
+            { id: '105', title: 'Sunrise Beach Walk', start: makeDate(6) + 'T06:30:00', end: makeDate(6) + 'T07:30:00', className: 'category-outdoor',
+              extendedProps: { category: 'Outdoor', location: 'Butterfly Beach', committee: 'Walking Group', description: 'Early morning walk to watch the sunrise.', registrationUrl: 'https://sbnewcomers.org/event-105', guestsWelcome: true, isFree: true }},
+            { id: '5', title: 'Cycling: Wine Country', start: makeDate(6) + 'T09:00:00', end: makeDate(6) + 'T14:00:00', className: 'category-outdoor',
+              extendedProps: { category: 'Outdoor', location: 'Meet at Los Olivos', committee: 'Cycling Committee', description: '35-mile intermediate ride through Santa Ynez wine country.', registrationUrl: 'https://sbnewcomers.org/event-127', spotsLeft: 0, guestsWelcome: false }},
+            { id: '106', title: 'Afternoon Tea Social', start: makeDate(6) + 'T15:00:00', end: makeDate(6) + 'T17:00:00', className: 'category-social',
+              extendedProps: { category: 'Social', location: 'Rosewood Miramar', committee: 'Social Committee', description: 'Elegant afternoon tea experience.', registrationUrl: 'https://sbnewcomers.org/event-106', spotsLeft: 3, isNew: true, guestsWelcome: true, isFree: false }},
+            { id: '107', title: 'Sunset Sailing', start: makeDate(6) + 'T17:30:00', end: makeDate(6) + 'T20:00:00', className: 'category-outdoor',
+              extendedProps: { category: 'Outdoor', location: 'Santa Barbara Harbor', committee: 'Sailing Club', description: 'Watch the sunset from the water.', registrationUrl: 'https://sbnewcomers.org/event-107', spotsLeft: 1, guestsWelcome: true }},
+            
+            { id: '1', title: 'TGIF Happy Hour', start: makeDate(2) + 'T17:00:00', end: makeDate(2) + 'T19:00:00', className: 'category-social',
+              extendedProps: { category: 'Social', location: 'The Lark, 131 Anacapa St', committee: 'Social Committee', description: 'Join fellow newcomers for drinks and appetizers.', registrationUrl: 'https://sbnewcomers.org/event-123', spotsLeft: 12, guestsWelcome: true }},
+            { id: '2', title: 'Cheers Monthly Social', start: makeDate(8) + 'T18:00:00', end: makeDate(8) + 'T21:00:00', className: 'category-social',
+              extendedProps: { category: 'Social', location: 'Santa Barbara Yacht Club', committee: 'Cheers Committee', description: 'Our signature monthly event with wine, hors d\'oeuvres, and harbor views.', registrationUrl: 'https://sbnewcomers.org/event-124', spotsLeft: 3, guestsWelcome: true }},
+            { id: '3', title: 'New Member Welcome', start: makeDate(5) + 'T10:00:00', end: makeDate(5) + 'T11:30:00', className: 'category-social',
+              extendedProps: { category: 'Social', location: 'Hotel Californian, 36 State St', committee: 'Welcoming Committee', description: 'Information meeting for prospective and new members.', registrationUrl: 'https://sbnewcomers.org/event-125', isNew: true, guestsWelcome: true, isFree: true }},
+            { id: '4', title: 'East Riviera Walk', start: makeDate(1) + 'T09:00:00', end: makeDate(1) + 'T10:30:00', className: 'category-outdoor',
+              extendedProps: { category: 'Outdoor', location: 'Sylvan Park, 1321 Dover Rd', committee: 'Walking Group', description: 'Easy-paced walk through the beautiful Riviera neighborhood.', registrationUrl: 'https://sbnewcomers.org/event-126', guestsWelcome: true, isFree: true }},
+            { id: '6', title: 'Happy Hikers: Inspiration Point', start: makeDate(9) + 'T08:30:00', end: makeDate(9) + 'T12:00:00', className: 'category-outdoor',
+              extendedProps: { category: 'Outdoor', location: 'Tunnel Rd Trailhead', committee: 'Hiking Committee', description: 'Moderate 4-mile hike with stunning views.', registrationUrl: 'https://sbnewcomers.org/event-128', spotsLeft: 8, guestsWelcome: true }},
+            { id: '7', title: 'Museum Tour: SBMA', start: makeDate(4) + 'T14:00:00', end: makeDate(4) + 'T16:00:00', className: 'category-arts',
+              extendedProps: { category: 'Arts & Culture', location: 'Santa Barbara Museum of Art', committee: 'Arts Committee', description: 'Docent-led tour of the current exhibition.', registrationUrl: 'https://sbnewcomers.org/event-129', spotsLeft: 2, guestsWelcome: true }},
+            { id: '8', title: 'Afternoon Book Club', start: makeDate(12) + 'T14:00:00', end: makeDate(12) + 'T15:30:00', className: 'category-arts',
+              extendedProps: { category: 'Arts & Culture', location: 'Member\'s Home', committee: 'Book Club', description: 'This month: "The House in the Cerulean Sea" by TJ Klune.', registrationUrl: 'https://sbnewcomers.org/event-130', guestsWelcome: false }},
+            { id: '9', title: 'Dining Out: La Super-Rica', start: makeDate(7) + 'T18:30:00', end: makeDate(7) + 'T20:30:00', className: 'category-dining',
+              extendedProps: { category: 'Dining', location: 'La Super-Rica Taqueria, 622 N Milpas St', committee: 'Dining Committee', description: 'Julia Child\'s favorite taqueria! Limited to 12.', registrationUrl: 'https://sbnewcomers.org/event-131', spotsLeft: 0, isNew: true, guestsWelcome: true }},
+            { id: '10', title: 'Wine Tasting: Funk Zone', start: makeDate(10) + 'T15:00:00', end: makeDate(10) + 'T18:00:00', className: 'category-dining',
+              extendedProps: { category: 'Dining', location: 'Meet at Municipal Winemakers', committee: 'Wine Committee', description: 'Self-guided tasting tour of 4 Funk Zone tasting rooms.', registrationUrl: 'https://sbnewcomers.org/event-132', isNew: true, guestsWelcome: true }},
+            { id: '12', title: 'YP: Beach Volleyball', start: makeDate(11) + 'T16:00:00', end: makeDate(11) + 'T18:00:00', className: 'category-yp',
+              extendedProps: { category: '20-40 Somethings', location: 'East Beach Volleyball Courts', committee: '20-40 Somethings', description: 'Casual volleyball for all skill levels.', registrationUrl: 'https://sbnewcomers.org/event-134', spotsLeft: 4, guestsWelcome: true }},
+            { id: '13', title: 'Morning Yoga', start: makeDate(0) + 'T08:00:00', end: makeDate(0) + 'T09:00:00', className: 'category-wellness',
+              extendedProps: { category: 'Wellness', location: 'Alameda Park', committee: 'Wellness Committee', description: 'Gentle yoga suitable for all levels.', registrationUrl: 'https://sbnewcomers.org/event-135', guestsWelcome: true, isFree: true }},
+            { id: '14', title: 'SoundBath Meditation', start: makeDate(13) + 'T10:00:00', end: makeDate(13) + 'T11:30:00', className: 'category-wellness',
+              extendedProps: { category: 'Wellness', location: 'Private Home', committee: 'Wellness Committee', description: 'Guided meditation session with sound bowls.', registrationUrl: 'https://sbnewcomers.org/event-136', isNew: true, spotsLeft: 0, guestsWelcome: true, isFree: true }},
+            { id: '15', title: 'Sunset Kayaking', start: makeDate(15) + 'T16:30:00', end: makeDate(15) + 'T19:00:00', className: 'category-outdoor',
+              extendedProps: { category: 'Outdoor', location: 'Santa Barbara Harbor', committee: 'Outdoor Adventures', description: 'Paddle along the coast at golden hour.', registrationUrl: 'https://sbnewcomers.org/event-137', spotsLeft: 2, isNew: true, guestsWelcome: true }},
+            { id: '16', title: 'Cooking Class: Italian', start: makeDate(16) + 'T18:00:00', end: makeDate(16) + 'T21:00:00', className: 'category-dining',
+              extendedProps: { category: 'Dining', location: 'Santa Barbara Culinary School', committee: 'Dining Committee', description: 'Learn to make fresh pasta from scratch.', registrationUrl: 'https://sbnewcomers.org/event-138', spotsLeft: 1, isNew: true, guestsWelcome: false }},
+            { id: '17', title: 'Photography Walk', start: makeDate(17) + 'T09:00:00', end: makeDate(17) + 'T11:00:00', className: 'category-arts',
+              extendedProps: { category: 'Arts & Culture', location: 'Santa Barbara Courthouse', committee: 'Arts Committee', description: 'Capture the beauty of downtown architecture.', registrationUrl: 'https://sbnewcomers.org/event-139', guestsWelcome: true }},
+            { id: '18', title: 'Game Night', start: makeDate(18) + 'T19:00:00', end: makeDate(18) + 'T22:00:00', className: 'category-social',
+              extendedProps: { category: 'Social', location: 'Member\'s Home', committee: 'Social Committee', description: 'Board games, card games, and fun!', registrationUrl: 'https://sbnewcomers.org/event-140', spotsLeft: 5, guestsWelcome: false }},
+            { id: '19', title: 'YP: Rooftop Happy Hour', start: makeDate(19) + 'T17:30:00', end: makeDate(19) + 'T20:00:00', className: 'category-yp',
+              extendedProps: { category: '20-40 Somethings', location: 'Kimpton Canary Hotel Rooftop', committee: '20-40 Somethings', description: 'Drinks with a view!', registrationUrl: 'https://sbnewcomers.org/event-141', spotsLeft: 3, isNew: true, guestsWelcome: true }},
+            { id: '20', title: 'Bird Watching', start: makeDate(20) + 'T07:00:00', end: makeDate(20) + 'T10:00:00', className: 'category-outdoor',
+              extendedProps: { category: 'Outdoor', location: 'Andree Clark Bird Refuge', committee: 'Nature Group', description: 'Binoculars provided. Beginners welcome!', registrationUrl: 'https://sbnewcomers.org/event-142', guestsWelcome: true, isFree: true }},
+            // Volunteers event
+            { id: '21', title: 'St. Vincent\'s Fashion Show & Luncheon', start: makeDate(4) + 'T09:30:00', end: makeDate(4) + 'T14:00:00', className: 'category-volunteers',
+              extendedProps: { category: 'Volunteers', location: 'Rosewood Miramar Beach, 1759 S. Jameson', committee: 'Volunteers', description: 'Annual fashion show fundraiser. Multiple shifts available.', registrationUrl: 'https://sbnewcomers.org/event-143', spotsLeft: 0, guestsWelcome: true, isFree: true }}
+        ];
+        
+        // ============================================
+        // Global State
+        // ============================================
+        let calendar;
+        let currentView = 'list'; // 'list' or 'dayGridMonth'
+        let filteredEvents = [...mockEvents];
+        let activeQuickFilters = new Set();
+        
+        // ============================================
+        // Filter Functions
+        // ============================================
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const interest = document.getElementById('filterInterest').value;
+            const committee = document.getElementById('filterCommittee').value;
+            const when = document.getElementById('filterWhen').value;
+            const availability = document.getElementById('filterAvailability').value;
+            const cost = document.getElementById('filterCost').value;
+            const guests = document.getElementById('filterGuests').value;
+            const includePast = document.getElementById('includePast').checked;
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            filteredEvents = mockEvents.filter(event => {
+                const props = event.extendedProps;
+                const eventDate = new Date(event.start);
+                
+                // Search term
+                if (searchTerm) {
+                    const searchFields = [
+                        event.title,
+                        props.category,
+                        props.committee,
+                        props.location,
+                        props.description
+                    ].join(' ').toLowerCase();
+                    if (!searchFields.includes(searchTerm)) return false;
+                }
+                
+                // Past events
+                if (!includePast && eventDate < today) return false;
+                
+                // Interest/Category
+                if (interest && props.category !== interest) return false;
+                
+                // Committee
+                if (committee && props.committee !== committee) return false;
+                
+                // When filter
+                if (when) {
+                    const eventDay = new Date(event.start);
+                    eventDay.setHours(0, 0, 0, 0);
+                    
+                    const tomorrow = new Date(today);
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    
+                    const endOfWeek = new Date(today);
+                    endOfWeek.setDate(endOfWeek.getDate() + (7 - endOfWeek.getDay()));
+                    
+                    const startOfNextWeek = new Date(endOfWeek);
+                    startOfNextWeek.setDate(startOfNextWeek.getDate() + 1);
+                    
+                    const endOfNextWeek = new Date(startOfNextWeek);
+                    endOfNextWeek.setDate(endOfNextWeek.getDate() + 6);
+                    
+                    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                    
+                    switch (when) {
+                        case 'today':
+                            if (eventDay.getTime() !== today.getTime()) return false;
+                            break;
+                        case 'tomorrow':
+                            if (eventDay.getTime() !== tomorrow.getTime()) return false;
+                            break;
+                        case 'this-week':
+                            if (eventDay > endOfWeek) return false;
+                            break;
+                        case 'this-weekend':
+                            const dayOfWeek = eventDay.getDay();
+                            if (dayOfWeek !== 0 && dayOfWeek !== 6) return false;
+                            if (eventDay > endOfWeek) return false;
+                            break;
+                        case 'next-week':
+                            if (eventDay < startOfNextWeek || eventDay > endOfNextWeek) return false;
+                            break;
+                        case 'this-month':
+                            if (eventDay > endOfMonth) return false;
+                            break;
+                    }
+                }
+                
+                // Availability
+                if (availability) {
+                    const spots = props.spotsLeft;
+                    switch (availability) {
+                        case 'has-openings':
+                            if (spots !== undefined && spots <= 0) return false;
+                            break;
+                        case 'almost-full':
+                            if (spots === undefined || spots > 5 || spots <= 0) return false;
+                            break;
+                        case 'full':
+                            if (spots === undefined || spots > 0) return false;
+                            break;
+                    }
+                }
+                
+                // Cost
+                if (cost) {
+                    if (cost === 'free' && !props.isFree) return false;
+                    if (cost === 'paid' && props.isFree) return false;
+                }
+                
+                // Guests
+                if (guests) {
+                    if (guests === 'guests-welcome' && !props.guestsWelcome) return false;
+                    if (guests === 'members-only' && props.guestsWelcome) return false;
+                }
+                
+                // Quick filters
+                if (activeQuickFilters.has('this-weekend')) {
+                    const eventDay = new Date(event.start);
+                    const dayOfWeek = eventDay.getDay();
+                    const endOfWeek = new Date(today);
+                    endOfWeek.setDate(endOfWeek.getDate() + (7 - endOfWeek.getDay()));
+                    if ((dayOfWeek !== 0 && dayOfWeek !== 6) || eventDay > endOfWeek) return false;
+                }
+                
+                if (activeQuickFilters.has('just-opened') && !props.isNew) return false;
+                
+                if (activeQuickFilters.has('has-openings')) {
+                    if (props.spotsLeft !== undefined && props.spotsLeft <= 0) return false;
+                }
+                
+                if (activeQuickFilters.has('guests-welcome') && !props.guestsWelcome) return false;
+                
+                if (activeQuickFilters.has('free') && !props.isFree) return false;
+                
+                if (activeQuickFilters.has('evening')) {
+                    const hour = new Date(event.start).getHours();
+                    if (hour < 17) return false; // After 5 PM
+                }
+                
+                return true;
+            });
+            
+            // Sort by date
+            filteredEvents.sort((a, b) => new Date(a.start) - new Date(b.start));
+            
+            updateDisplay();
+            updateActiveFiltersDisplay();
+        }
+        
+        function toggleQuickFilter(btn) {
+            const filter = btn.dataset.filter;
+            if (activeQuickFilters.has(filter)) {
+                activeQuickFilters.delete(filter);
+                btn.classList.remove('active');
+            } else {
+                activeQuickFilters.add(filter);
+                btn.classList.add('active');
+            }
+            applyFilters();
+        }
+        
+        function clearAllFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterInterest').value = '';
+            document.getElementById('filterCommittee').value = '';
+            document.getElementById('filterWhen').value = '';
+            document.getElementById('filterAvailability').value = '';
+            document.getElementById('filterCost').value = '';
+            document.getElementById('filterGuests').value = '';
+            document.getElementById('includePast').checked = false;
+            
+            activeQuickFilters.clear();
+            document.querySelectorAll('.quick-btn').forEach(btn => btn.classList.remove('active'));
+            
+            applyFilters();
+        }
+        
+        function updateActiveFiltersDisplay() {
+            const container = document.getElementById('activeFilters');
+            const tags = [];
+            
+            const interest = document.getElementById('filterInterest').value;
+            const committee = document.getElementById('filterCommittee').value;
+            const when = document.getElementById('filterWhen').value;
+            const search = document.getElementById('searchInput').value;
+            
+            if (search) tags.push({ label: `Search: "${search}"`, clear: () => { document.getElementById('searchInput').value = ''; applyFilters(); }});
+            if (interest) tags.push({ label: interest, clear: () => { document.getElementById('filterInterest').value = ''; applyFilters(); }});
+            if (committee) tags.push({ label: committee, clear: () => { document.getElementById('filterCommittee').value = ''; applyFilters(); }});
+            if (when) tags.push({ label: when.replace('-', ' '), clear: () => { document.getElementById('filterWhen').value = ''; applyFilters(); }});
+            
+            activeQuickFilters.forEach(f => {
+                tags.push({ label: f.replace('-', ' '), clear: () => {
+                    activeQuickFilters.delete(f);
+                    document.querySelector(`.quick-btn[data-filter="${f}"]`).classList.remove('active');
+                    applyFilters();
+                }});
+            });
+            
+            if (tags.length > 0) {
+                container.style.display = 'flex';
+                container.innerHTML = tags.map(t => 
+                    `<span class="active-filter-tag">${t.label} <button onclick="this.parentElement.remove(); (${t.clear.toString()})()">×</button></span>`
+                ).join('');
+            } else {
+                container.style.display = 'none';
+            }
+        }
+        
+        function toggleFilters() {
+            const body = document.getElementById('filterBody');
+            const btn = document.querySelector('.filter-toggle-btn');
+            if (body.style.display === 'none') {
+                body.style.display = 'block';
+                btn.textContent = 'Hide Filters';
+            } else {
+                body.style.display = 'none';
+                btn.textContent = 'Show Filters';
+            }
+        }
+        
+        // ============================================
+        // View Functions
+        // ============================================
+        function updateDisplay() {
+            // Update results count
+            document.getElementById('resultsCount').textContent = `${filteredEvents.length} events`;
+            document.getElementById('eventListCount').textContent = `${filteredEvents.length} events`;
+            
+            if (currentView === 'list') {
+                renderEventList();
+            } else {
+                // Update calendar events
+                calendar.removeAllEvents();
+                calendar.addEventSource(filteredEvents);
+            }
+        }
+        
+        function switchView(view) {
+            currentView = view;
+            
+            document.getElementById('viewListBtn').classList.toggle('active', view === 'list');
+            document.getElementById('viewMonthBtn').classList.toggle('active', view === 'dayGridMonth');
+            
+            if (view === 'list') {
+                document.getElementById('calendarWrapper').style.display = 'none';
+                document.getElementById('eventListContainer').classList.add('active');
+                renderEventList();
+            } else {
+                document.getElementById('calendarWrapper').style.display = 'block';
+                document.getElementById('eventListContainer').classList.remove('active');
+                calendar.changeView(view);
+                calendar.removeAllEvents();
+                calendar.addEventSource(filteredEvents);
+            }
+        }
+        
+        function renderEventList() {
+            const container = document.getElementById('eventList');
+            
+            if (filteredEvents.length === 0) {
+                container.innerHTML = '<div style="padding: 40px; text-align: center; color: #999;">No events match your filters. Try adjusting your search criteria.</div>';
+                return;
+            }
+            
+            container.innerHTML = filteredEvents.map(event => {
+                const props = event.extendedProps;
+                const startDate = new Date(event.start);
+                
+                const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                
+                const month = monthNames[startDate.getMonth()];
+                const day = startDate.getDate();
+                const weekday = dayNames[startDate.getDay()];
+                const time = startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                
+                // Build tags
+                let tags = `<span class="event-tag tag-committee">${props.committee || props.category}</span>`;
+                if (props.guestsWelcome) tags += '<span class="event-tag tag-guests">Guests Welcome</span>';
+                if (props.spotsLeft === 0) tags += '<span class="event-tag tag-waitlist">Waitlist</span>';
+                if (props.isFree) tags += '<span class="event-tag tag-free">Free</span>';
+                if (props.isNew) tags += '<span class="event-tag tag-new">New</span>';
+                
+                // Status
+                let status = '';
+                if (props.spotsLeft === 0) {
+                    status = `<div class="status-full">Full</div><div class="status-label">${props.isFree ? 'FREE' : 'WAITLIST'}</div>`;
+                } else if (props.spotsLeft !== undefined && props.spotsLeft <= 5) {
+                    status = `<div class="status-open">Open</div><div class="spots-left">Only ${props.spotsLeft} left</div><div class="status-label">REGISTER</div>`;
+                } else {
+                    status = `<div class="status-open">Open</div><div class="status-label">REGISTER</div>`;
+                }
+                
+                return `
+                    <div class="event-card" onclick="showEventPopup('${event.id}')">
+                        <div class="event-date-badge">
+                            <div class="month">${month}</div>
+                            <div class="day">${day}</div>
+                            <div class="weekday">${weekday}</div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-tags">${tags}</div>
+                            <h3 class="event-title">${event.title}</h3>
+                            <div class="event-meta">
+                                <span class="event-meta-item"><span class="icon">🕐</span> ${time}</span>
+                                <span class="event-meta-item"><span class="icon">📍</span> ${props.location}</span>
+                            </div>
+                        </div>
+                        <div class="event-status">${status}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // ============================================
+        // Event Popup
+        // ============================================
+        function showEventPopup(eventId) {
+            const event = mockEvents.find(e => e.id === eventId);
+            if (!event) return;
+            
+            const props = event.extendedProps;
+            const startDate = new Date(event.start);
+            
+            document.getElementById('popupTitle').textContent = event.title;
+            
+            // Tags
+            let tags = `<span class="event-tag tag-committee">${props.category}</span>`;
+            if (props.guestsWelcome) tags += '<span class="event-tag tag-guests">Guests Welcome</span>';
+            if (props.isFree) tags += '<span class="event-tag tag-free">Free</span>';
+            if (props.isNew) tags += '<span class="event-tag tag-new">New</span>';
+            document.getElementById('popupTags').innerHTML = tags;
+            
+            document.getElementById('popupDateTime').textContent = startDate.toLocaleString('en-US', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                hour: 'numeric', minute: '2-digit', hour12: true
+            });
+            document.getElementById('popupLocation').textContent = props.location;
+            document.getElementById('popupCommittee').textContent = props.committee;
+            document.getElementById('popupDescription').textContent = props.description;
+            
+            const registerBtn = document.getElementById('popupRegisterBtn');
+            if (props.spotsLeft === 0) {
+                registerBtn.textContent = 'Join Waitlist →';
+            } else {
+                registerBtn.textContent = 'Register on Wild Apricot →';
+            }
+            registerBtn.href = props.registrationUrl;
+            
+            document.getElementById('eventPopup').classList.add('active');
+        }
+        
+        function closePopup() {
+            document.getElementById('eventPopup').classList.remove('active');
+        }
+        
+        // Close popup on outside click or Escape
+        document.getElementById('eventPopup').addEventListener('click', function(e) {
+            if (e.target === this) closePopup();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closePopup();
+        });
+        
+        // ============================================
+        // Initialize
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+            
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek'
+                },
+                events: filteredEvents,
+                eventClick: function(info) {
+                    showEventPopup(info.event.id);
+                },
+                displayEventTime: true,
+                eventTimeFormat: {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    meridiem: 'short'
+                },
+                dayMaxEvents: 4,
+                fixedWeekCount: false
+            });
+            
+            calendar.render();
+            
+            // Start with list view
+            applyFilters();
+            switchView('list');
+        });
+        
+        // Enter key in search
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') applyFilters();
+        });
+    </script>
+</body>
+</html>

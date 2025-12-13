@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOW TO: Install New Leadership Team - SBNC</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 { color: #1a5276; border-bottom: 3px solid #1a5276; padding-bottom: 10px; }
+        h2 { color: #2874a6; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        h3 { color: #3498db; }
+        .date { color: #666; font-style: italic; margin-bottom: 20px; }
+        .step { background: #f8f9fa; padding: 15px; margin: 10px 0; border-left: 4px solid #3498db; }
+        .step-number { font-weight: bold; color: #1a5276; }
+        code { background: #e8e8e8; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+        .note { background: #e8f6f3; padding: 15px; border-left: 4px solid #1abc9c; margin: 15px 0; }
+        .note strong { color: #16a085; }
+        .warning { background: #fef9e7; padding: 15px; border-left: 4px solid #f39c12; margin: 15px 0; }
+        .warning strong { color: #d68910; }
+        .tip { background: #eaf2f8; padding: 15px; border-left: 4px solid #3498db; margin: 15px 0; }
+        .tip strong { color: #2874a6; }
+        .toc { background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .toc h3 { margin-top: 0; color: #1a5276; }
+        .toc ol { margin: 0; padding-left: 25px; }
+        .toc li { margin: 5px 0; }
+        .toc a { color: #2874a6; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        ul { margin: 10px 0; }
+        li { margin: 5px 0; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 0.9em; }
+        a { color: #2874a6; }
+        .repo-ref { background: #f0f4f8; padding: 15px; border-left: 4px solid #1a5276; margin: 15px 0; }
+        .repo-ref strong { color: #1a5276; }
+        .checklist { background: #f8f9fa; padding: 15px; margin: 15px 0; border-left: 4px solid #27ae60; }
+        .checklist strong { color: #27ae60; }
+        .checklist ul { list-style: none; padding-left: 5px; }
+        .checklist li { margin: 8px 0; }
+        .checklist li:before { content: "☐ "; color: #27ae60; font-weight: bold; }
+        .success { background: #d4edda; padding: 15px; border-left: 4px solid #28a745; margin: 15px 0; }
+        .success strong { color: #155724; }
+        .portal { background: #e8f4fd; padding: 20px; border: 2px solid #2196F3; border-radius: 8px; margin: 20px 0; }
+        .portal strong { color: #1565C0; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #f8f9fa; color: #1a5276; }
+    </style>
+</head>
+<body>
+    <h1>HOW TO: Install New Leadership Team</h1>
+    <p class="date">Last Updated: November 2025</p>
+
+    <p>This guide covers the complete process of installing a new leadership team at the start of a term using the <strong>Leadership Transition Portal</strong>.</p>
+
+    <div class="portal">
+        <strong>Leadership Transition Portal</strong>
+        <p style="font-size: 1.2em; margin: 10px 0;"><a href="https://mail.sbnewcomers.org/admin/">https://mail.sbnewcomers.org/admin/</a></p>
+        <p>This web-based tool automates leadership transitions by updating both Wild Apricot and email forwarding in a single workflow. Use this tool instead of manual updates.</p>
+        <p><em>Repository: sbnctech/sbnc-leadership-transition</em></p>
+    </div>
+
+    <div class="warning">
+        <strong>Timing:</strong> This process should be completed on or immediately after the first day of the new term (Feb 1 or Aug 1). Coordinate with outgoing leadership to ensure a smooth handoff.
+    </div>
+
+    <div class="toc">
+        <h3>Contents</h3>
+        <ol>
+            <li><a href="#overview">What the Portal Does</a></li>
+            <li><a href="#before">Before You Start</a></li>
+            <li><a href="#using">Using the Leadership Transition Portal</a></li>
+            <li><a href="#behind">What Happens Behind the Scenes</a></li>
+            <li><a href="#testing">Testing the Installation</a></li>
+            <li><a href="#website">Update the Website (Manual Step)</a></li>
+            <li><a href="#credentials">Credential Handoff</a></li>
+            <li><a href="#checklist">Final Verification Checklist</a></li>
+        </ol>
+    </div>
+
+    <h2 id="overview">1. What the Portal Does</h2>
+
+    <p>The Leadership Transition Portal automates the tedious parts of installing new leadership:</p>
+
+    <table>
+        <tr>
+            <th>Portal Feature</th>
+            <th>What It Does</th>
+        </tr>
+        <tr>
+            <td>Email Forwarding Management</td>
+            <td>View, add, and remove email forwarders without cPanel access</td>
+        </tr>
+        <tr>
+            <td>Leadership Transitions</td>
+            <td>Update multiple positions at once with validation</td>
+        </tr>
+        <tr>
+            <td>Wild Apricot Integration</td>
+            <td>Automatically updates WA Admin contacts when changing leadership</td>
+        </tr>
+        <tr>
+            <td>Transition Spreadsheet</td>
+            <td>Generates a spreadsheet of all positions for record-keeping</td>
+        </tr>
+        <tr>
+            <td>Google Drive Integration</td>
+            <td>Archives transition documents</td>
+        </tr>
+    </table>
+
+    <div class="note">
+        <strong>Why use the portal?</strong> Manual updates require logging into three different systems (Wild Apricot, cPanel, Website). The portal coordinates WA and email changes together, reducing errors and ensuring consistency.
+    </div>
+
+    <h2 id="before">2. Before You Start</h2>
+
+    <h3>Required Information</h3>
+    <p>Gather this information for each incoming officer:</p>
+
+    <div class="checklist">
+        <strong>For Each Position:</strong>
+        <ul>
+            <li>Full name (as they want it displayed)</li>
+            <li>Personal email address (where role emails will forward)</li>
+        </ul>
+    </div>
+
+    <h3>Board Positions to Update</h3>
+    <table>
+        <tr>
+            <th>Position</th>
+            <th>Role Email</th>
+        </tr>
+        <tr><td>President</td><td>president@sbnewcomers.org</td></tr>
+        <tr><td>1st Vice President</td><td>vicepresident@sbnewcomers.org</td></tr>
+        <tr><td>2nd Vice President</td><td>vicepresident2@sbnewcomers.org</td></tr>
+        <tr><td>Secretary</td><td>secretary@sbnewcomers.org</td></tr>
+        <tr><td>Treasurer</td><td>treasurer@sbnewcomers.org</td></tr>
+        <tr><td>Activities VP</td><td>activities@sbnewcomers.org</td></tr>
+        <tr><td>Membership VP</td><td>membership@sbnewcomers.org</td></tr>
+        <tr><td>Technology Chair</td><td>technology@sbnewcomers.org</td></tr>
+        <tr><td>Communications</td><td>communications@sbnewcomers.org</td></tr>
+    </table>
+
+    <h2 id="using">3. Using the Leadership Transition Portal</h2>
+
+    <div class="step">
+        <p><span class="step-number">1.</span> Go to the Leadership Transition Portal<br>
+        <a href="https://mail.sbnewcomers.org/admin/">https://mail.sbnewcomers.org/admin/</a></p>
+    </div>
+
+    <div class="step">
+        <p><span class="step-number">2.</span> Log in with your admin credentials<br>
+        <em>(See CREDENTIALS.md for login information)</em></p>
+    </div>
+
+    <div class="step">
+        <p><span class="step-number">3.</span> Navigate to <strong>Leadership Transitions</strong></p>
+    </div>
+
+    <div class="step">
+        <p><span class="step-number">4.</span> For each position being changed:</p>
+        <ul>
+            <li>Select the position from the list</li>
+            <li>Enter the new officer's name</li>
+            <li>Enter the new officer's personal email address</li>
+            <li>Click <strong>Update</strong></li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <p><span class="step-number">5.</span> Review the changes in the confirmation screen</p>
+    </div>
+
+    <div class="step">
+        <p><span class="step-number">6.</span> Click <strong>Apply All Changes</strong> to execute the transition</p>
+    </div>
+
+    <div class="tip">
+        <strong>Tip:</strong> The portal shows a preview of changes before applying them. Review carefully to ensure names and emails are correct.
+    </div>
+
+    <h2 id="behind">4. What Happens Behind the Scenes</h2>
+
+    <p>When you submit changes through the portal, it automatically:</p>
+
+    <div class="note">
+        <strong>Wild Apricot Updates:</strong>
+        <ol>
+            <li>Finds the Admin contact for the position (e.g., "President Event_Chair")</li>
+            <li>Updates the <code>"Board or Chair member names"</code> custom field</li>
+            <li>Updates the <code>"Board or Chair member emails"</code> custom field</li>
+        </ol>
+    </div>
+
+    <div class="note">
+        <strong>Email Forwarding Updates:</strong>
+        <ol>
+            <li>Removes the old email forwarder (e.g., president → old_email@gmail.com)</li>
+            <li>Creates a new forwarder (e.g., president → new_email@gmail.com)</li>
+            <li>Updates take effect immediately</li>
+        </ol>
+    </div>
+
+    <div class="note">
+        <strong>Logging:</strong>
+        <ol>
+            <li>Records who made the change and when</li>
+            <li>Archives the transition in Google Drive</li>
+            <li>Generates a transition spreadsheet for records</li>
+        </ol>
+    </div>
+
+    <h2 id="testing">5. Testing the Installation</h2>
+
+    <p>After using the portal, verify everything worked correctly:</p>
+
+    <h3>Test 1: Email Forwarding</h3>
+    <div class="step">
+        <p><span class="step-number">1.</span> Send a test email to each role address you updated<br>
+        <em>(e.g., president@sbnewcomers.org, treasurer@sbnewcomers.org)</em></p>
+    </div>
+    <div class="step">
+        <p><span class="step-number">2.</span> Have the <strong>NEW officer</strong> confirm they received the email</p>
+    </div>
+    <div class="step">
+        <p><span class="step-number">3.</span> Have the <strong>OLD officer</strong> confirm they did NOT receive the email</p>
+    </div>
+
+    <div class="success">
+        <strong>Expected Result:</strong> Each role email arrives ONLY at the new officer's personal email within 1-2 minutes.
+    </div>
+
+    <h3>Test 2: Wild Apricot Data Updated</h3>
+    <div class="step">
+        <p><span class="step-number">1.</span> Log into Wild Apricot Admin: <a href="https://sbnewcomers.wildapricot.org/admin/">sbnewcomers.wildapricot.org/admin</a></p>
+    </div>
+    <div class="step">
+        <p><span class="step-number">2.</span> Go to <strong>Contacts</strong> > Filter by <strong>"Admins"</strong></p>
+    </div>
+    <div class="step">
+        <p><span class="step-number">3.</span> Open each position contact (e.g., "President Event_Chair")</p>
+    </div>
+    <div class="step">
+        <p><span class="step-number">4.</span> Verify the custom fields show the new officer's name and email</p>
+    </div>
+
+    <div class="success">
+        <strong>Expected Result:</strong> The "Board or Chair member names" and "Board or Chair member emails" fields show the new officer's information.
+    </div>
+
+    <h3>Test 3: Chatbot Query (After Nightly Sync)</h3>
+    <div class="step">
+        <p><span class="step-number">1.</span> Wait for the nightly database sync (runs at 2 AM), OR ask Technology Chair to run a manual sync</p>
+    </div>
+    <div class="step">
+        <p><span class="step-number">2.</span> Go to the CHAD chatbot: <a href="https://mail.sbnewcomers.org/chatbot/">https://mail.sbnewcomers.org/chatbot/</a></p>
+    </div>
+    <div class="step">
+        <p><span class="step-number">3.</span> Ask: <code>"Who is the president?"</code> (or other positions)</p>
+    </div>
+    <div class="step">
+        <p><span class="step-number">4.</span> Verify the chatbot returns the NEW officer's name</p>
+    </div>
+
+    <div class="success">
+        <strong>Expected Result:</strong> The chatbot shows the new officer's name for each position.
+    </div>
+
+    <h3>Test 4: Portal Email Dashboard</h3>
+    <div class="step">
+        <p><span class="step-number">1.</span> In the Leadership Transition Portal, go to <strong>Email Management</strong></p>
+    </div>
+    <div class="step">
+        <p><span class="step-number">2.</span> Find the role email (e.g., "president")</p>
+    </div>
+    <div class="step">
+        <p><span class="step-number">3.</span> Verify it shows forwarding to the correct personal email</p>
+    </div>
+
+    <h2 id="website">6. Update the Website (Manual Step)</h2>
+
+    <div class="warning">
+        <strong>Note:</strong> The portal does NOT update the website. This step must be done manually in Wild Apricot.
+    </div>
+
+    <div class="step">
+        <p><span class="step-number">1.</span> In Wild Apricot Admin, go to <strong>Website > Site pages</strong></p>
+    </div>
+
+    <div class="step">
+        <p><span class="step-number">2.</span> Find and edit the Board/Leadership page</p>
+    </div>
+
+    <div class="step">
+        <p><span class="step-number">3.</span> Update each officer's information:</p>
+        <ul>
+            <li>Name</li>
+            <li>Photo (if used)</li>
+            <li>Keep the role email (e.g., president@sbnewcomers.org) - don't use personal emails</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <p><span class="step-number">4.</span> <strong>Save</strong> and <strong>Publish</strong></p>
+    </div>
+
+    <div class="step">
+        <p><span class="step-number">5.</span> Visit the public website and verify the page shows correct information</p>
+    </div>
+
+    <h2 id="credentials">7. Credential Handoff</h2>
+
+    <p>Certain positions require access to specific accounts. Handle these separately:</p>
+
+    <table>
+        <tr>
+            <th>Position</th>
+            <th>Accounts Needing Access</th>
+        </tr>
+        <tr>
+            <td>President</td>
+            <td>Wild Apricot (full admin)</td>
+        </tr>
+        <tr>
+            <td>Treasurer</td>
+            <td>Wild Apricot (finance), Bank accounts</td>
+        </tr>
+        <tr>
+            <td>Technology Chair</td>
+            <td>Leadership Portal, Server access, all technical accounts</td>
+        </tr>
+        <tr>
+            <td>Activities VP</td>
+            <td>Jotform (SBNCActivities)</td>
+        </tr>
+        <tr>
+            <td>Communications</td>
+            <td>Newsletter system, Social media</td>
+        </tr>
+    </table>
+
+    <div class="repo-ref">
+        <strong>See CREDENTIALS.md</strong> in the GitHub repository for:
+        <ul>
+            <li>Complete list of all accounts and current credentials</li>
+            <li>Password rotation procedures during transitions</li>
+            <li>How to add/remove Wild Apricot admin access</li>
+        </ul>
+    </div>
+
+    <h2 id="checklist">8. Final Verification Checklist</h2>
+
+    <div class="checklist">
+        <strong>Portal Completed:</strong>
+        <ul>
+            <li>All board positions updated via Leadership Transition Portal</li>
+            <li>Portal shows correct email forwarding for all positions</li>
+            <li>Transition spreadsheet generated and archived</li>
+        </ul>
+    </div>
+
+    <div class="checklist">
+        <strong>Testing Completed:</strong>
+        <ul>
+            <li>Test emails sent to all role addresses</li>
+            <li>New officers confirmed receipt of test emails</li>
+            <li>Old officers confirmed they did NOT receive test emails</li>
+            <li>Wild Apricot Admin contacts verified (names and emails correct)</li>
+            <li>Chatbot returns correct names (after sync)</li>
+        </ul>
+    </div>
+
+    <div class="checklist">
+        <strong>Manual Steps Completed:</strong>
+        <ul>
+            <li>Website leadership page updated and published</li>
+            <li>Website displays role emails (not personal emails)</li>
+            <li>Wild Apricot admin access granted to new officers who need it</li>
+            <li>Wild Apricot admin access removed from outgoing officers</li>
+            <li>Passwords rotated for shared accounts</li>
+            <li>Credential handoff completed for each position</li>
+        </ul>
+    </div>
+
+    <div class="tip">
+        <strong>Troubleshooting:</strong> If something doesn't work as expected:
+        <ul>
+            <li>Check the portal's change log for errors</li>
+            <li>Verify the email address was typed correctly (no typos)</li>
+            <li>For chatbot issues, wait for nightly sync or request manual sync</li>
+            <li>Contact technology@sbnewcomers.org for help</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <h3>Need More Help?</h3>
+        <ul>
+            <li>Leadership Transition Portal: <a href="https://mail.sbnewcomers.org/admin/">https://mail.sbnewcomers.org/admin/</a></li>
+            <li>Technology Support: <a href="mailto:technology@sbnewcomers.org">technology@sbnewcomers.org</a></li>
+            <li>GitHub Repository: <a href="https://github.com/sbnctech/sbnc-leadership-transition">sbnctech/sbnc-leadership-transition</a></li>
+        </ul>
+    </div>
+</body>
+</html>

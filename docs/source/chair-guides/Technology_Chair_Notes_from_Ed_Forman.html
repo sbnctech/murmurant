@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Technology Chair Notes from Ed Forman</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 { color: #1a5276; border-bottom: 3px solid #1a5276; padding-bottom: 10px; }
+        h2 { color: #2874a6; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        h3 { color: #3498db; margin-top: 20px; }
+        .date { color: #666; font-style: italic; margin-bottom: 20px; }
+        .section { background: #f8f9fa; padding: 15px; margin: 15px 0; border-left: 4px solid #3498db; }
+        .tip { background: #eaf2f8; padding: 15px; border-left: 4px solid #3498db; margin: 15px 0; }
+        .warning { background: #fef9e7; padding: 15px; border-left: 4px solid #f39c12; margin: 15px 0; }
+        a { color: #2874a6; }
+        ul { margin: 10px 0; }
+        li { margin: 8px 0; }
+    </style>
+</head>
+<body>
+    <h1>Technology Chair Notes from Ed Forman</h1>
+    <p class="date">November 2025</p>
+
+    <p>These are personal notes and lessons learned from my time as Technology Chair. I hope they help future chairs understand that you don't need to be a programmer to manage these systems effectively.</p>
+
+    <h2>How This System Was Built</h2>
+
+    <div class="section">
+        <p>I am not a programmer. I haven't written code by typing it since I learned BASIC in the mid-1970s. Everything in the wa-dev repository - all the code, all the documentation - was created using <strong>Claude.AI</strong> as a resource to implement code and compose documentation.</p>
+
+        <p>If I can do this, so can you.</p>
+    </div>
+
+    <h2>My Best Support Resources: AI Assistants</h2>
+
+    <div class="section">
+        <p>By far, my best support resources were <strong>Claude</strong> (claude.ai) and <strong>ChatGPT</strong>. They are exceptionally strong at:</p>
+        <ul>
+            <li>Writing code and documentation</li>
+            <li>Finding bugs and conflicts</li>
+            <li>Explaining things I don't understand</li>
+            <li>Knowing all the systems we use, including Wild Apricot</li>
+        </ul>
+        <p>These AI tools know Wild Apricot well and can help troubleshoot issues faster than traditional support channels.</p>
+    </div>
+
+    <div class="warning">
+        <strong>A Note on Wild Apricot Support:</strong>
+        <p>Wild Apricot's support can be slow, and their agents sometimes provide inaccurate information. There are very few end-to-end support resources for Wild Apricot - most consultants specialize in just one aspect of the platform.</p>
+    </div>
+
+    <h2>Using AI to Solve Problems</h2>
+
+    <div class="tip">
+        <strong>First Stop: The wa-dev Repository</strong>
+        <p>The GitHub repository contains extensive documentation and well-commented code. Start there when researching any issue.</p>
+    </div>
+
+    <div class="section">
+        <p>I've found that Claude (claude.ai) and ChatGPT are remarkably capable at fixing problems when you give them:</p>
+        <ul>
+            <li>The <strong>exact text of error messages</strong></li>
+            <li>A <strong>detailed description</strong> of what's happening vs. what should happen</li>
+            <li>Relevant code or configuration files from the repository</li>
+        </ul>
+
+        <p>Claude can rapidly review information from the repository. My common workflow is to simply paste in:</p>
+        <ul>
+            <li>Error emails from cron jobs</li>
+            <li>Notes from members describing issues</li>
+            <li>Screenshots or copied text from error screens</li>
+        </ul>
+
+        <p>Claude Code often fixes problems automatically ("automagically") when given this information.</p>
+    </div>
+
+    <h2>When to Bring in Professional Help</h2>
+
+    <div class="warning">
+        <strong>Time Check:</strong> If a problem takes you and Claude/ChatGPT more than an hour or two to resolve, it's time to bring in an experienced programmer. A professional familiar with GitHub and Unix shell commands can typically jump right in - the code is well-documented internally to simplify debugging, and many routines have a debug mode.
+    </div>
+
+    <h2>Support Resources</h2>
+
+    <h3>Server Issues - Hosting.com</h3>
+
+    <div class="section">
+        <p>For server-related issues, the <strong>hosting.com</strong> online support team is excellent. They're patient and can work with you regardless of your technical experience level. Don't hesitate to reach out to them for server problems.</p>
+    </div>
+
+    <h3>DNS and Email Deliverability - FTI Services</h3>
+
+    <div class="section">
+        <p>For DNS issues, we worked with <strong>FTI Services</strong>. They have the specialized expertise needed for complex DNS configurations.</p>
+        <p><strong>Website:</strong> <a href="https://www.ftiservices.com/managed-it-services-santa-barbara/">https://www.ftiservices.com/managed-it-services-santa-barbara/</a></p>
+    </div>
+
+    <h3>Website Design - Merge Creative</h3>
+
+    <div class="section">
+        <p>For tuning the look and feel of the site, styling particular elements, or creating new pages that merit high-quality design, I recommend <strong>Merge Creative</strong> (Alan and Gail). They specialize in Wild Apricot websites, which is important because Wild Apricot has an idiosyncratic web publishing system that would have a long learning curve for a graphic designer unfamiliar with the platform.</p>
+        <p>In late 2025, we did a website revamp that was supported by Merge Creative.</p>
+        <p><strong>Important limitation:</strong> Their expertise does not extend beyond the four corners of Wild Apricot - they do not support JavaScript or API extensions. For custom code development, you'll need to use AI tools or bring in a programmer.</p>
+    </div>
+
+    <h2>The 2025 Email Deliverability Crisis</h2>
+
+    <div class="warning">
+        <strong>Background:</strong>
+        <p>In 2025, email hosts (Gmail, Yahoo, etc.) significantly tightened their spam standards, causing a deliverability crisis for SBNC. We had to carefully tune our DNS records (SPF, DKIM, DMARC) to meet the new requirements.</p>
+
+        <p><strong>The challenge:</strong> Wild Apricot runs on shared server infrastructure and cannot modify their DKIM selectors for individual clients. To properly authenticate our email, we had to move our forwarding services from a shared server to a VPS (Virtual Private Server) where we could configure our own selectors.</p>
+
+        <p><strong>The trade-off:</strong> This increased complexity significantly - we went from a fully managed hosting service to running our own UNIX server. This is why the server documentation and troubleshooting guides exist in the repository.</p>
+
+        <p>If you encounter email deliverability problems (messages going to spam, bouncing, etc.), this is a specialized area that may require expert help. The DNS_AND_EMAIL_SETUP.md document in the repository has the current configuration details.</p>
+    </div>
+
+    <h2>Final Thoughts</h2>
+
+    <div class="tip">
+        <p>The technology should serve the club, not require the club to serve the technology. Everything was built with the goal of making life easier for volunteers, not harder.</p>
+
+        <p>Don't be intimidated by what looks like complex systems. With AI assistants and good documentation, you can manage and even improve these systems without being a programmer.</p>
+
+        <p>Good luck!</p>
+        <p>— Ed Forman</p>
+    </div>
+</body>
+</html>
