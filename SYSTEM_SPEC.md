@@ -755,3 +755,23 @@ Event registration delegation (partner signups)
 
 These items may be added in future phases once the core public site and mail system are stable.
 
+----------------------------------------------------------------------
+
+## Reporting and Chatbot Queries
+
+ClubOS must support a reporting and chatbot query interface as a first-class capability.
+
+Requirements:
+- Cross-domain queries (members, events, registrations, payments, committees)
+- Saved query library with 65+ vetted questions
+- Controlled ad hoc queries for authorized roles only
+- Data-layer enforcement of access rights (not UI-only)
+- Full audit logging of all queries (user, roles, parameters, row counts)
+- Sensitive field classification (PII, financial, admin-only)
+- Aggregates by default; detail access requires explicit capability
+
+See docs/REPORTING_AND_CHATBOT.md for architecture and security model.
+See docs/reporting/CHATBOT_QUERY_LIBRARY.md for the initial saved question library.
+
+----------------------------------------------------------------------
+
