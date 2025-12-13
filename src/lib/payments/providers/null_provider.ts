@@ -19,7 +19,7 @@ export class NullPaymentProvider {
     return { id: "null_refund", status: "refunded" };
   }
 
-  verifyWebhook(payload: any) {
+  verifyWebhook(payload: Record<string, unknown>) {
     if (!payload || !payload.event_id) {
       throw new Error("invalid_request");
     }

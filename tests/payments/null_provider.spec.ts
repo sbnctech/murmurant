@@ -1,17 +1,18 @@
+import { test, expect } from "@playwright/test";
 import { NullPaymentProvider } from "../../src/lib/payments/providers/null_provider";
 
-describe("NullPaymentProvider", () => {
+test.describe("NullPaymentProvider", () => {
   const provider = new NullPaymentProvider();
 
-  it("creates intent", () => {
+  test("creates intent", () => {
     expect(provider.createIntent().status).toBe("authorized");
   });
 
-  it("captures intent", () => {
+  test("captures intent", () => {
     expect(provider.captureIntent().status).toBe("captured");
   });
 
-  it("rejects invalid webhook", () => {
+  test("rejects invalid webhook", () => {
     expect(() => provider.verifyWebhook({})).toThrow();
   });
 });
