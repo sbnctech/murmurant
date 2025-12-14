@@ -235,3 +235,20 @@ Key outcomes:
 Notes:
 - The "workers" approach is proving useful for fast, reviewable increments that keep specs and guardrails ahead of implementation.
 - Vercel failures should be investigated, but they are not currently blocking documentation merges.
+
+## Sunday Morning 2025-12-14 (Merge Wave 2: Widget + RBAC + Embed Docs)
+A second Sunday morning merge wave landed a set of docs-only PRs that tighten the security posture and define the first durable contracts for widgets, embeds, and delegated admin.
+
+Merged:
+- PR #34: docs(widgets): embedded widgets security model.
+- PR #36: docs(widgets): RBAC admin widgets security model.
+- PR #45: docs(api): embed widget SDK contract (v1) + finance approval queue widget contract (read-only).
+- PR #53: docs(widgets): embed widget SDK v1 (iframe-first) + public embed README stub.
+- PR #39: docs(rbac): delegated admin model for activities and chairs (includes deny-path tests + an activities chatbot support playbook file).
+
+Closed:
+- PR #40: docs(chatbot): activities RBAC support playbook (read-only).
+  - Reason: superseded by PR #39 (same playbook path), to prevent duplicate/conflicting documentation.
+
+Operational note:
+- Vercel preview deploy checks continue to fail intermittently, but (under current repo plan/settings) they do not gate merges. Treat as advisory for docs-only work, but resolve before relying on previews for user-facing changes.

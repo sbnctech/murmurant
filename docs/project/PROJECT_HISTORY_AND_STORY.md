@@ -104,3 +104,17 @@ Queued docs PRs observed in the open set:
 
 Operational note:
 - Treat deployment preview failures as non-blocking for docs-only changes, but track and resolve them before relying on preview deploys for user-facing work.
+
+## Sunday Morning 2025-12-14 (Merge Wave 2: Contracts First)
+Merged:
+- PR #34: embedded widgets security model.
+- PR #36: RBAC admin widgets security model.
+- PR #45: embed widget SDK contract (v1) + finance approval queue widget contract.
+- PR #53: embed widget SDK v1 (iframe-first) + public embed README stub.
+- PR #39: activities delegated admin model + deny-path tests + activities chatbot support playbook.
+
+Closed:
+- PR #40 closed as superseded by #39 (same playbook path) to avoid conflicting documentation.
+
+Result:
+- The project now has written security models and first-class contracts for embedding and admin widget behavior, plus a concrete delegated-admin blueprint for Activities.
