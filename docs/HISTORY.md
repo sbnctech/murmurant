@@ -252,3 +252,18 @@ Closed:
 
 Operational note:
 - Vercel preview deploy checks continue to fail intermittently, but (under current repo plan/settings) they do not gate merges. Treat as advisory for docs-only work, but resolve before relying on previews for user-facing changes.
+
+## Sunday Morning 2025-12-14 (Merge Wave 3: Chatbot + RBAC + Catalogs)
+A third docs-only merge wave landed additional governance and operating docs, rounding out the chatbot safety posture, delegation clarity, and admin widget cataloging.
+
+Merged:
+- PR #56: docs(chatbot): safety contract.
+- PR #57: docs(rbac): delegation matrix.
+- PR #58: docs(arch): open source audit (candidates list).
+- PR #59: docs(code): query runtime guardrails.
+- PR #63: docs(widgets): admin list widgets catalog (RBAC-safe filters/sorts).
+- PR #64: docs(rbac): delegated admin model for VP Activities and chairs.
+- PR #68: docs(chatbot): read-only chatbot plugin spec.
+
+Operational note:
+- Vercel preview deploy continues to fail intermittently, but does not gate merges under current repo settings. Treat as advisory for docs-only changes; resolve before depending on previews for user-facing work.
