@@ -501,3 +501,17 @@ STORY.md is intended to sit alongside HISTORY.md:
 - STORY.md holds the narrative arc and lessons learned.
 
 Both should grow together as ClubOS moves toward production.
+
+## Sunday, 2025-12-14 ~09:30 PT - The Sunday Morning Docs Wave
+
+Sunday morning began with a clear goal: keep the story and the rules ahead of the code.
+
+Multiple small documentation PRs landed or were opened in parallel, each one scoped to a single concept and designed to be reviewable:
+- One PR codified safe embedding patterns for widgets, explicitly stating what is allowed and what is forbidden.
+- One PR captured a plain-language assessment of how an events/calendar widget fits the ClubOS model without drifting into implementation.
+- Another PR wrote down a bias toward adopting proven open-source modules to reduce long-term maintenance, while insisting on RBAC, auditability, and clear wrapper boundaries.
+
+A key meta-lesson emerged:
+- Even when CI or deployment tooling (like Vercel previews) is noisy, the project can still move forward safely when changes are docs-only, narrowly scoped, and recorded in the canonical history.
+
+This rhythm - short PRs, clear ownership, explicit guardrails - is becoming the working style of the project.

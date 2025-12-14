@@ -215,3 +215,23 @@ The project is intentionally open-ended. Some possible future phases:
 The exact endpoint of the project is not fixed. This history file is
 meant to grow alongside the system, capturing both technical progress
 and the choices that shaped it.
+
+## Sunday, 2025-12-14 ~09:30 PT - Worker Docs Sprint and PR Merge Wave
+
+Context:
+- This morning continued the parallel "worker" workflow producing small, docs-only PRs to lock down governance, RBAC guardrails, and operating conventions.
+
+Key outcomes:
+- Merged PR #60: docs(widgets): embed safety and RBAC guardrails.
+  - Vercel deployment check was failing, but merges are not gated by required checks under current repo plan settings; treated as advisory for now.
+- Opened PR #62: docs(widgets): assess events widget fit to ClubOS model (Worker 1).
+- Opened/updated PR #65: docs(architecture): open source adoption policy (Worker 5).
+- Additional docs PRs visible and queued for review/merge:
+  - PR #66: docs(gadgets): admin gadgets catalog (Worker 3).
+  - PR #68: docs(chatbot): chatbot plugin spec (Worker 4).
+  - PR #61: docs(training): JIT training system spec (Worker 4).
+  - PR #67: docs(governance): implementation authorization checklist (Worker 2).
+
+Notes:
+- The "workers" approach is proving useful for fast, reviewable increments that keep specs and guardrails ahead of implementation.
+- Vercel failures should be investigated, but they are not currently blocking documentation merges.

@@ -83,3 +83,24 @@ Next focus:
 - Developer ergonomics
 - Forward-looking polish
 
+
+## Sunday, 2025-12-14 ~09:30 PT - Worker Docs Sprint (Status Update)
+
+A Sunday morning "worker" sprint produced multiple docs-only pull requests to keep governance, safety, and operating conventions ahead of implementation.
+
+Merged:
+- PR #60: docs(widgets): embed safety and RBAC guardrails.
+  - Notable: Vercel deploy check failed; merges are not gated by required checks under current repo plan settings, so this is treated as advisory for now.
+
+Opened/Updated:
+- PR #62: docs(widgets): assess events widget fit to ClubOS model (Worker 1).
+- PR #65: docs(architecture): open source adoption policy (Worker 5).
+
+Queued docs PRs observed in the open set:
+- PR #66: docs(gadgets): admin gadgets catalog (Worker 3).
+- PR #67: docs(governance): implementation authorization checklist (Worker 2).
+- PR #68: docs(chatbot): chatbot plugin spec (Worker 4).
+- PR #61: docs(training): JIT training system spec (Worker 4).
+
+Operational note:
+- Treat deployment preview failures as non-blocking for docs-only changes, but track and resolve them before relying on preview deploys for user-facing work.
