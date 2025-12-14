@@ -118,3 +118,18 @@ Closed:
 
 Result:
 - The project now has written security models and first-class contracts for embedding and admin widget behavior, plus a concrete delegated-admin blueprint for Activities.
+
+## Sunday Morning 2025-12-14 (Merge Wave 3: Safety + Delegation + Catalogs)
+Merged:
+- PR #56: chatbot safety contract.
+- PR #57: RBAC delegation matrix.
+- PR #58: open source audit (candidates list).
+- PR #59: query runtime guardrails.
+- PR #63: admin list widgets catalog (RBAC-safe filters/sorts).
+- PR #64: delegated admin model for VP Activities and chairs.
+- PR #68: read-only chatbot plugin spec.
+
+Result:
+- Chatbot behavior is constrained by an explicit safety contract.
+- Delegation is easier to audit and explain (matrix + VP Activities model).
+- Query execution guardrails and admin widget catalogs reduce risk of accidental privilege escalation.

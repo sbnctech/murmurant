@@ -528,3 +528,17 @@ A cluster of documentation PRs was merged to lock down how widgets and embedded 
 
 One small but important hygiene step:
 - An overlapping playbook PR was closed as superseded once the richer, bundled version landed, keeping docs canonical and conflict-free.
+
+## Sunday Morning 2025-12-14 (Merge Wave 3)
+With embedding and delegated-admin contracts in place, the next step was tightening "operator safety" and "supportability" - especially around chatbot behavior and delegation boundaries.
+
+This merge wave added:
+- A chatbot safety contract that makes read-only intent explicit and encodes safe failure modes.
+- A delegation matrix that makes who-can-do-what legible at a glance, reducing accidental privilege drift.
+- A short set of query runtime guardrails to prevent unsafe or ambiguous query execution paths.
+- A practical admin list widgets catalog that treats filters/sorts as RBAC-sensitive (deny by default).
+- A VP Activities delegated admin model that complements the broader Activities delegation model already recorded.
+- An open source candidates list that supports the "adopt proven modules" bias with a place to track options.
+
+The underlying theme stayed consistent:
+- If the system will eventually be operated by non-technical volunteers, the rules must be written down first, in plain language, and kept canonical.
