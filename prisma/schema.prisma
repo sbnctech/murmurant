@@ -27,22 +27,23 @@ enum EmailStatus {
 // Core Models
 
 model Member {
-  id                 String             @id @default(uuid()) @db.Uuid
+  id                 String   @id @default(uuid()) @db.Uuid
   firstName          String
   lastName           String
-  email              String             @unique
+  email              String   @unique
   phone              String?
   joinedAt           DateTime
-  membershipStatusId String             @db.Uuid
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
+  membershipStatusId String   @db.Uuid
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
-  membershipStatus   MembershipStatus   @relation(fields: [membershipStatusId], references: [id])
+  membershipStatus   MembershipStatus    @relation(fields: [membershipStatusId], references: [id])
   roleAssignments    RoleAssignment[]
   eventRegistrations EventRegistration[]
   userAccount        UserAccount?
   photos             Photo[]
   emailLogs          EmailLog[]
+  events             Event[]
 
   @@index([membershipStatusId])
 }
@@ -59,17 +60,17 @@ model MembershipStatus {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
-  members              Member[]
+  members Member[]
 }
 
 model Committee {
-  id          String           @id @default(uuid()) @db.Uuid
+  id          String   @id @default(uuid()) @db.Uuid
   name        String
-  slug        String           @unique
+  slug        String   @unique
   description String?
-  isActive    Boolean          @default(true)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   roleAssignments RoleAssignment[]
   committeeRoles  CommitteeRole[]
@@ -78,49 +79,49 @@ model Committee {
 }
 
 model CommitteeRole {
-  id          String          @id @default(uuid()) @db.Uuid
-  committeeId String          @db.Uuid
+  id          String   @id @default(uuid()) @db.Uuid
+  committeeId String   @db.Uuid
   name        String
   slug        String
   description String?
-  sortOrder   Int             @default(0)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  committee   Committee       @relation(fields: [committeeId], references: [id])
+  committee   Committee        @relation(fields: [committeeId], references: [id])
   assignments RoleAssignment[]
 
-  @@index([committeeId])
   @@unique([committeeId, slug])
+  @@index([committeeId])
 }
 
 model Term {
-  id        String           @id @default(uuid()) @db.Uuid
+  id        String   @id @default(uuid()) @db.Uuid
   name      String
   startDate DateTime
   endDate   DateTime
-  isCurrent Boolean          @default(false)
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  isCurrent Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   roleAssignments RoleAssignment[]
 }
 
 model RoleAssignment {
-  id              String        @id @default(uuid()) @db.Uuid
-  memberId        String        @db.Uuid
-  committeeId     String        @db.Uuid
-  committeeRoleId String        @db.Uuid
-  termId          String        @db.Uuid
+  id              String    @id @default(uuid()) @db.Uuid
+  memberId        String    @db.Uuid
+  committeeId     String    @db.Uuid
+  committeeRoleId String    @db.Uuid
+  termId          String    @db.Uuid
   startDate       DateTime
   endDate         DateTime?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  member          Member        @relation(fields: [memberId], references: [id])
-  committee       Committee     @relation(fields: [committeeId], references: [id])
-  committeeRole   CommitteeRole @relation(fields: [committeeRoleId], references: [id])
-  term            Term          @relation(fields: [termId], references: [id])
+  member        Member        @relation(fields: [memberId], references: [id])
+  committee     Committee     @relation(fields: [committeeId], references: [id])
+  committeeRole CommitteeRole @relation(fields: [committeeRoleId], references: [id])
+  term          Term          @relation(fields: [termId], references: [id])
 
   @@index([memberId])
   @@index([committeeId])
@@ -130,20 +131,20 @@ model RoleAssignment {
 }
 
 model UserAccount {
-  id           String   @id @default(uuid()) @db.Uuid
-  memberId     String   @unique @db.Uuid
-  email        String   @unique
+  id           String    @id @default(uuid()) @db.Uuid
+  memberId     String    @unique @db.Uuid
+  email        String    @unique
   passwordHash String
   lastLoginAt  DateTime?
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
-  member       Member   @relation(fields: [memberId], references: [id])
+  member Member @relation(fields: [memberId], references: [id])
 }
 
 model Event {
-  id          String              @id @default(uuid()) @db.Uuid
+  id          String    @id @default(uuid()) @db.Uuid
   title       String
   description String?
   category    String?
@@ -151,13 +152,16 @@ model Event {
   startTime   DateTime
   endTime     DateTime?
   capacity    Int?
-  isPublished Boolean             @default(false)
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  isPublished Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   registrations EventRegistration[]
   photoAlbum    PhotoAlbum?
+  eventChairId  String?             @db.Uuid
+  eventChair    Member?             @relation(fields: [eventChairId], references: [id], onDelete: SetNull)
 
+  @@index([eventChairId])
   @@index([startTime])
   @@index([category])
 }
@@ -173,26 +177,26 @@ model EventRegistration {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
 
-  event            Event              @relation(fields: [eventId], references: [id])
-  member           Member             @relation(fields: [memberId], references: [id])
+  event  Event  @relation(fields: [eventId], references: [id])
+  member Member @relation(fields: [memberId], references: [id])
 
+  @@unique([eventId, memberId])
   @@index([eventId])
   @@index([memberId])
   @@index([eventId, status, waitlistPosition])
   @@index([memberId, eventId])
-  @@unique([eventId, memberId])
 }
 
 model Photo {
-  id         String     @id @default(uuid()) @db.Uuid
-  albumId    String     @db.Uuid
-  uploaderId String     @db.Uuid
+  id         String    @id @default(uuid()) @db.Uuid
+  albumId    String    @db.Uuid
+  uploaderId String    @db.Uuid
   filename   String
   url        String
   caption    String?
   takenAt    DateTime?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   album         PhotoAlbum  @relation(fields: [albumId], references: [id])
   uploader      Member      @relation(fields: [uploaderId], references: [id])
@@ -211,9 +215,9 @@ model PhotoAlbum {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  event      Event?      @relation(fields: [eventId], references: [id])
+  event      Event?  @relation(fields: [eventId], references: [id])
   photos     Photo[]
-  coverPhoto Photo?      @relation("CoverPhoto", fields: [coverPhotoId], references: [id])
+  coverPhoto Photo?  @relation("CoverPhoto", fields: [coverPhotoId], references: [id])
 }
 
 model EmailLog {
@@ -228,7 +232,7 @@ model EmailLog {
   status         EmailStatus @default(QUEUED)
   createdAt      DateTime    @default(now())
 
-  member         Member?     @relation(fields: [memberId], references: [id])
+  member Member? @relation(fields: [memberId], references: [id])
 
   @@index([memberId])
   @@index([sentAt])
