@@ -1,3 +1,14 @@
+/**
+ * List Gadget Runtime Stub
+ *
+ * This runtime accepts ONLY templateId + params. No arbitrary filtering logic.
+ * Server decides what data to return based on the template contract.
+ *
+ * TODO: Evaluate TanStack Table or AG Grid (OSS) for frontend rendering.
+ *       - TanStack Table: headless, React/Vue/Solid, MIT license
+ *       - AG Grid Community: full-featured, MIT license
+ *       Both can consume the items[] array returned here.
+ */
 import { getQueryTemplate, type QueryTemplateId } from "@/lib/query/templates";
 
 export type ViewerContext = {
