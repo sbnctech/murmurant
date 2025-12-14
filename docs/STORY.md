@@ -515,3 +515,16 @@ A key meta-lesson emerged:
 - Even when CI or deployment tooling (like Vercel previews) is noisy, the project can still move forward safely when changes are docs-only, narrowly scoped, and recorded in the canonical history.
 
 This rhythm - short PRs, clear ownership, explicit guardrails - is becoming the working style of the project.
+
+## Sunday Morning 2025-12-14 (Merge Wave 2)
+After capturing the narrative and governance intent, the project moved into "contracts first" mode.
+
+A cluster of documentation PRs was merged to lock down how widgets and embedded experiences must behave:
+- A dedicated security model for embedded widgets clarified sandboxing, allowed capabilities, and the "deny by default" posture.
+- A companion security model for admin widgets clarified RBAC boundaries for list-style gadgets and privileged operations.
+- The embed widget SDK contract and an iframe-first SDK note established a clear boundary between ClubOS and any external site embedding ClubOS widgets.
+- A first read-only finance approval queue contract was recorded to keep money-adjacent UI safely constrained.
+- The Activities delegated admin model landed with explicit deny-path tests and a support playbook, reinforcing that delegation must be auditable and safe.
+
+One small but important hygiene step:
+- An overlapping playbook PR was closed as superseded once the richer, bundled version landed, keeping docs canonical and conflict-free.
