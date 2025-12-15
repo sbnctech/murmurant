@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { formatClubMonthYear } from "@/lib/timezone";
+import { generateMemberHistoryProse } from "@/lib/serviceHistory/proseGenerator";
 
 type MemberHistoryStats = {
   eventsAttended: number;
@@ -39,6 +40,7 @@ export default function MemberHistoryPanel({ memberId }: MemberHistoryPanelProps
   const [error, setError] = useState<string | null>(null);
   const [showTimeline, setShowTimeline] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   useEffect(() => {
     async function fetchHistory() {
@@ -65,16 +67,46 @@ export default function MemberHistoryPanel({ memberId }: MemberHistoryPanelProps
     fetchHistory();
   }, [memberId]);
 
+  // Generate prose for exports
+  const proseOutput = data
+    ? generateMemberHistoryProse({
+        memberId: data.memberId,
+        memberName: data.memberName,
+        stats: data.stats,
+        timeline: data.timeline,
+      })
+    : null;
+
   const handleCopy = useCallback(async () => {
-    if (!data?.summaryText) return;
+    if (!proseOutput?.fullProse) return;
     try {
-      await navigator.clipboard.writeText(data.summaryText);
+      await navigator.clipboard.writeText(proseOutput.fullProse);
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     } catch {
       // Clipboard API failed, ignore
     }
-  }, [data?.summaryText]);
+  }, [proseOutput?.fullProse]);
+
+  const handleDownloadMarkdown = useCallback(() => {
+    if (!proseOutput?.markdown || !data) return;
+    try {
+      const blob = new Blob([proseOutput.markdown], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const safeName = data.memberName.replace(/[^a-zA-Z0-9]/g, "_");
+      a.href = url;
+      a.download = `${safeName}_service_history.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      setDownloadSuccess(true);
+      setTimeout(() => setDownloadSuccess(false), 2000);
+    } catch {
+      // Download failed, ignore
+    }
+  }, [proseOutput?.markdown, data]);
 
   if (loading) {
     return (
@@ -148,13 +180,15 @@ export default function MemberHistoryPanel({ memberId }: MemberHistoryPanelProps
           borderRadius: "4px",
           lineHeight: "1.6",
           marginBottom: "12px",
+          whiteSpace: "pre-wrap",
+          fontFamily: "inherit",
         }}
       >
-        {data.summaryText}
+        {proseOutput?.fullProse || data.summaryText}
       </div>
 
-      {/* Copy Button */}
-      <div style={{ marginBottom: "16px" }}>
+      {/* Export Controls */}
+      <div data-test-id="member-history-export-controls" style={{ marginBottom: "16px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
         <button
           data-test-id="member-history-copy-button"
           onClick={handleCopy}
@@ -167,8 +201,25 @@ export default function MemberHistoryPanel({ memberId }: MemberHistoryPanelProps
             cursor: "pointer",
           }}
         >
-          {copySuccess ? "Copied!" : "Copy Summary"}
+          {copySuccess ? "Copied!" : "Copy to Clipboard"}
         </button>
+        <button
+          data-test-id="member-history-download-md"
+          onClick={handleDownloadMarkdown}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: downloadSuccess ? "#4caf50" : "#555",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          {downloadSuccess ? "Downloaded!" : "Download Markdown"}
+        </button>
+        <span style={{ fontSize: "12px", color: "#666", alignSelf: "center" }}>
+          (Print Markdown to PDF for formal reports)
+        </span>
       </div>
 
       {/* Timeline Toggle */}

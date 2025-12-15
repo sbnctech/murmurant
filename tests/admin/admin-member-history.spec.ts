@@ -85,7 +85,46 @@ test.describe("Admin Member History", () => {
       // Copy button should be visible
       const copyButton = page.locator('[data-test-id="member-history-copy-button"]');
       await expect(copyButton).toBeVisible();
-      await expect(copyButton).toHaveText("Copy Summary");
+      await expect(copyButton).toHaveText("Copy to Clipboard");
+    });
+
+    test("Export controls are visible for admin", async ({ page }) => {
+      await page.goto(`${BASE}/admin/members`);
+
+      const link = page.locator('[data-test-id="admin-members-link"]').first();
+      await expect(link).toBeVisible();
+      await link.click();
+
+      const historyPanel = page.locator('[data-test-id="member-history-panel"]');
+      await expect(historyPanel).toBeVisible({ timeout: 10000 });
+
+      // Export controls container should be visible
+      const exportControls = page.locator('[data-test-id="member-history-export-controls"]');
+      await expect(exportControls).toBeVisible();
+
+      // Copy button should be present
+      const copyButton = page.locator('[data-test-id="member-history-copy-button"]');
+      await expect(copyButton).toBeVisible();
+
+      // Download Markdown button should be present
+      const downloadMdButton = page.locator('[data-test-id="member-history-download-md"]');
+      await expect(downloadMdButton).toBeVisible();
+      await expect(downloadMdButton).toHaveText("Download Markdown");
+    });
+
+    test("Summary text contains prose narrative", async ({ page }) => {
+      await page.goto(`${BASE}/admin/members`);
+
+      const link = page.locator('[data-test-id="admin-members-link"]').first();
+      await expect(link).toBeVisible();
+      await link.click();
+
+      const historyPanel = page.locator('[data-test-id="member-history-panel"]');
+      await expect(historyPanel).toBeVisible({ timeout: 10000 });
+
+      // Summary should contain club name (from prose generator)
+      const summary = page.locator('[data-test-id="member-history-summary"]');
+      await expect(summary).toContainText("Santa Barbara Newcomers Club");
     });
   });
 
