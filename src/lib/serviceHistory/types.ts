@@ -27,6 +27,7 @@ export interface ServiceHistoryRecord {
   notes: string | null;
   isActive: boolean;
   createdAt: string;
+  createdByName: string | null;
 }
 
 export interface ServiceHistoryFilters {

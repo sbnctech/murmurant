@@ -12,7 +12,7 @@ interface RouteParams {
  * GET /api/v1/admin/members/:id/service-history
  *
  * Get all service history records for a specific member.
- * Requires members:view capability.
+ * Requires members:history capability (admin, vp-activities only).
  *
  * Query params:
  * - includeCounts: boolean - include service counts by type (default: false)
@@ -22,7 +22,7 @@ interface RouteParams {
  * - counts?: Record<ServiceType, { total: number, active: number }>
  */
 export async function GET(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireCapability(req, "members:view");
+  const auth = await requireCapability(req, "members:history");
   if (!auth.ok) return auth.response;
 
   const { id: memberId } = await params;

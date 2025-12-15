@@ -35,6 +35,7 @@ function toServiceHistoryRecord(
     notes: string | null;
     createdAt: Date;
     member: { firstName: string; lastName: string };
+    createdBy: { firstName: string; lastName: string } | null;
   }
 ): ServiceHistoryRecord {
   return {
@@ -54,6 +55,9 @@ function toServiceHistoryRecord(
     notes: record.notes,
     isActive: record.endAt === null,
     createdAt: record.createdAt.toISOString(),
+    createdByName: record.createdBy
+      ? `${record.createdBy.firstName} ${record.createdBy.lastName}`
+      : null,
   };
 }
 
@@ -105,6 +109,9 @@ export async function getServiceHistory(
         member: {
           select: { firstName: true, lastName: true },
         },
+        createdBy: {
+          select: { firstName: true, lastName: true },
+        },
       },
       orderBy: [{ startAt: "desc" }, { createdAt: "desc" }],
       skip,
@@ -138,6 +145,9 @@ export async function getMemberServiceHistory(
       member: {
         select: { firstName: true, lastName: true },
       },
+      createdBy: {
+        select: { firstName: true, lastName: true },
+      },
     },
     orderBy: [{ startAt: "desc" }, { createdAt: "desc" }],
   });
@@ -160,6 +170,9 @@ export async function getActiveRoles(
       member: {
         select: { firstName: true, lastName: true },
       },
+      createdBy: {
+        select: { firstName: true, lastName: true },
+      },
     },
     orderBy: { startAt: "desc" },
   });
@@ -177,6 +190,9 @@ export async function getServiceHistoryById(
     where: { id },
     include: {
       member: {
+        select: { firstName: true, lastName: true },
+      },
+      createdBy: {
         select: { firstName: true, lastName: true },
       },
     },
@@ -236,6 +252,9 @@ export async function createServiceRecord(
       member: {
         select: { firstName: true, lastName: true },
       },
+      createdBy: {
+        select: { firstName: true, lastName: true },
+      },
     },
   });
 
@@ -270,6 +289,9 @@ export async function closeServiceRecord(
     data: { endAt },
     include: {
       member: {
+        select: { firstName: true, lastName: true },
+      },
+      createdBy: {
         select: { firstName: true, lastName: true },
       },
     },

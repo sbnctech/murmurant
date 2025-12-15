@@ -195,6 +195,7 @@ export default function ServiceHistoryTable() {
             <th style={thStyle}>Term</th>
             <th style={thStyle}>Period</th>
             <th style={thStyle}>Status</th>
+            <th style={thStyle}>Created By</th>
           </tr>
         </thead>
         <tbody>
@@ -235,12 +236,13 @@ export default function ServiceHistoryTable() {
                   <span style={{ color: "#666" }}>Completed</span>
                 )}
               </td>
+              <td style={tdStyle}>{record.createdByName || "-"}</td>
             </tr>
           ))}
           {!loading && records.length === 0 && (
             <tr data-test-id="service-history-empty-state">
               <td
-                colSpan={7}
+                colSpan={8}
                 style={{
                   padding: "16px",
                   fontStyle: "italic",

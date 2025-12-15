@@ -52,6 +52,7 @@ export default function TransitionsTable({ adminToken }: Props) {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [forbidden, setForbidden] = useState(false);
   const [filters, setFilters] = useState<Filters>({
     status: "",
   });
@@ -59,6 +60,7 @@ export default function TransitionsTable({ adminToken }: Props) {
   useEffect(() => {
     async function fetchPlans() {
       setLoading(true);
+      setForbidden(false);
       try {
         const params = new URLSearchParams({
           page: String(page),
@@ -76,6 +78,12 @@ export default function TransitionsTable({ adminToken }: Props) {
         const res = await fetch(`/api/v1/admin/transitions?${params}`, {
           headers,
         });
+        if (res.status === 403) {
+          setForbidden(true);
+          setPlans([]);
+          setLoading(false);
+          return;
+        }
         if (res.ok) {
           const data: PaginatedResponse = await res.json();
           setPlans(data.items ?? []);
@@ -94,6 +102,26 @@ export default function TransitionsTable({ adminToken }: Props) {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setPage(1);
   };
+
+  if (forbidden) {
+    return (
+      <div
+        data-test-id="transitions-forbidden"
+        style={{
+          padding: "32px",
+          textAlign: "center",
+          color: "#991b1b",
+          backgroundColor: "#fee2e2",
+          borderRadius: "8px",
+        }}
+      >
+        <h2 style={{ margin: "0 0 8px 0", fontSize: "18px" }}>Access Denied</h2>
+        <p style={{ margin: 0 }}>
+          You do not have permission to view transition plans.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>

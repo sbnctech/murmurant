@@ -72,6 +72,7 @@ export async function createEventHostService(
     },
     include: {
       member: { select: { firstName: true, lastName: true } },
+      createdBy: { select: { firstName: true, lastName: true } },
     },
   });
 
@@ -92,6 +93,9 @@ export async function createEventHostService(
     notes: record.notes,
     isActive: record.endAt === null,
     createdAt: record.createdAt.toISOString(),
+    createdByName: record.createdBy
+      ? `${record.createdBy.firstName} ${record.createdBy.lastName}`
+      : null,
   };
 }
 

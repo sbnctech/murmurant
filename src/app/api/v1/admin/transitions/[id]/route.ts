@@ -16,10 +16,10 @@ interface RouteParams {
  * GET /api/v1/admin/transitions/:id
  *
  * Get a transition plan with all details and assignments.
- * Requires members:view capability.
+ * Requires transitions:view capability (admin, president, past-president, vp-activities only).
  */
 export async function GET(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireCapability(req, "members:view");
+  const auth = await requireCapability(req, "transitions:view");
   if (!auth.ok) return auth.response;
 
   const { id } = await params;

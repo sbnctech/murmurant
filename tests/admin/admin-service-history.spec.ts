@@ -52,6 +52,19 @@ test.describe("Service History Explorer", () => {
       expect(response.status()).toBe(403);
     });
 
+    test("GET /api/v1/admin/service-history returns 403 for event-chair", async ({
+      request,
+    }) => {
+      const response = await request.get(`${BASE}/api/v1/admin/service-history`, {
+        headers: {
+          Authorization: "Bearer test-chair-token",
+          "x-admin-test-token": "",
+        },
+      });
+
+      expect(response.status()).toBe(403);
+    });
+
     test("GET /api/v1/admin/service-history supports serviceType filter", async ({
       request,
     }) => {

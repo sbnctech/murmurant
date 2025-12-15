@@ -25,9 +25,9 @@ export async function GET(req: NextRequest) {
   const auth = await requireAuth(req);
   if (!auth.ok) return auth.response;
 
-  // Webmaster cannot see transition widget
-  if (auth.context.globalRole === "webmaster") {
-    return errors.forbidden("president or past-president", auth.context.globalRole);
+  // Webmaster and event-chair cannot see transition widget
+  if (auth.context.globalRole === "webmaster" || auth.context.globalRole === "event-chair") {
+    return errors.forbidden("president, past-president, vp-activities, or admin", auth.context.globalRole);
   }
 
   try {

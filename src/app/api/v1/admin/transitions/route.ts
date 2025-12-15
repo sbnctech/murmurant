@@ -13,7 +13,7 @@ import {
  * GET /api/v1/admin/transitions
  *
  * List transition plans with filters and pagination.
- * Requires members:view capability.
+ * Requires transitions:view capability (admin, president, past-president, vp-activities only).
  *
  * Query params:
  * - status: TransitionStatus - filter by status
@@ -22,7 +22,7 @@ import {
  * - limit: number - items per page (default: 20, max: 100)
  */
 export async function GET(req: NextRequest) {
-  const auth = await requireCapability(req, "members:view");
+  const auth = await requireCapability(req, "transitions:view");
   if (!auth.ok) return auth.response;
 
   try {

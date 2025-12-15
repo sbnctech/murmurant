@@ -13,7 +13,7 @@ import {
  * GET /api/v1/admin/service-history
  *
  * List service history records with filters and pagination.
- * Requires members:view capability.
+ * Requires members:history capability (admin, vp-activities only).
  *
  * Query params:
  * - memberId: UUID - filter by member
@@ -28,7 +28,7 @@ import {
  * - limit: number - items per page (default: 20, max: 100)
  */
 export async function GET(req: NextRequest) {
-  const auth = await requireCapability(req, "members:view");
+  const auth = await requireCapability(req, "members:history");
   if (!auth.ok) return auth.response;
 
   try {
