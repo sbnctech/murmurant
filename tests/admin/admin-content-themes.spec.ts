@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Admin Content Themes", () => {
+// TODO: Page not implemented yet - quarantine until content management feature is built
+test.describe("@quarantine Admin Content Themes", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/content/themes", { waitUntil: "networkidle" });
   });

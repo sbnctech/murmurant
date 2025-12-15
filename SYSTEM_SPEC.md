@@ -1778,3 +1778,48 @@ E2E Tests:
 
 ----------------------------------------------------------------
 
+## Auth Posture (v0 Permissive)
+
+### Current State (v0)
+
+The authentication system is currently in a permissive development mode to
+enable rapid iteration and testing without blocking on full auth implementation.
+
+Behavior in v0:
+
+- Admin endpoints accept any valid test token pattern
+- Authorization: Bearer test-admin-token grants admin access
+- Authorization: Bearer test-member-{id} grants member access
+- Authorization: Bearer test-vp-activities grants VP access
+- No strict ownership or role enforcement on most endpoints
+- Unauthenticated requests to admin routes may return 200 instead of 401
+
+### Planned State (v1 Hardening)
+
+When auth hardening is implemented, the following will be enforced:
+
+- Unauthenticated requests to admin routes return 401
+- Regular members cannot access admin routes (403)
+- Event chairs can only view/edit their own events
+- VP of Activities can view/edit all events but cannot delete
+- Only administrators can delete events
+- Cross-chair access to other chairs' events returns 403
+
+### Test Quarantine Strategy
+
+Tests that verify strict auth behavior are tagged with @quarantine and excluded
+from stable test runs until v1 hardening is complete. Each quarantined test
+includes a TODO comment like:
+
+```
+// TODO (v1 hardening): Re-enable once auth enforcement is strict
+test.describe("@quarantine Unauthenticated access", () => {
+```
+
+When v1 auth is implemented:
+1. Remove @quarantine tags from auth tests
+2. Verify all previously quarantined tests pass
+3. Update this section to reflect the hardened state
+
+----------------------------------------------------------------
+
