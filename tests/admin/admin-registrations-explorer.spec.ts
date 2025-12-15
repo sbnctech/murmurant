@@ -31,7 +31,8 @@ test.describe("Admin Registrations Explorer", () => {
 
     await memberLink.click();
 
-    await expect(page).toHaveURL(/\/admin\/registrations\/r\d+/);
+    // Registration IDs are UUIDs
+    await expect(page).toHaveURL(/\/admin\/registrations\/[a-zA-Z0-9-]+/);
   });
 
   test("nav link from main admin page works", async ({ page }) => {
