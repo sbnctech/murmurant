@@ -37,12 +37,15 @@ model Member {
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
 
-  membershipStatus   MembershipStatus   @relation(fields: [membershipStatusId], references: [id])
-  roleAssignments    RoleAssignment[]
-  eventRegistrations EventRegistration[]
-  userAccount        UserAccount?
-  photos             Photo[]
-  emailLogs          EmailLog[]
+  membershipStatus        MembershipStatus            @relation(fields: [membershipStatusId], references: [id])
+  roleAssignments         RoleAssignment[]
+  eventRegistrations      EventRegistration[]
+  userAccount             UserAccount?
+  photos                  Photo[]
+  emailLogs               EmailLog[]
+  events                  Event[]
+  committeeMemberships    CommitteeMembership[]
+  eligibilityOverrides    TicketEligibilityOverride[]
 
   @@index([membershipStatusId])
 }
@@ -71,8 +74,10 @@ model Committee {
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
-  roleAssignments RoleAssignment[]
-  committeeRoles  CommitteeRole[]
+  roleAssignments      RoleAssignment[]
+  committeeRoles       CommitteeRole[]
+  committeeMemberships CommitteeMembership[]
+  eventSponsorships    EventSponsorship[]
 
   @@index([isActive])
 }
@@ -155,9 +160,15 @@ model Event {
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
 
-  registrations EventRegistration[]
-  photoAlbum    PhotoAlbum?
+  registrations         EventRegistration[]
+  photoAlbum            PhotoAlbum?
+  eventChairId          String?                     @db.Uuid
+  eventChair            Member?                     @relation(fields: [eventChairId], references: [id], onDelete: SetNull)
+  sponsorships          EventSponsorship[]
+  ticketTypes           TicketType[]
+  eligibilityOverrides  TicketEligibilityOverride[]
 
+  @@index([eventChairId])
   @@index([startTime])
   @@index([category])
 }
@@ -233,4 +244,82 @@ model EmailLog {
   @@index([memberId])
   @@index([sentAt])
   @@index([status])
+}
+
+// Eligibility Engine Models
+
+model CommitteeMembership {
+  id          String    @id @default(uuid()) @db.Uuid
+  memberId    String    @db.Uuid
+  committeeId String    @db.Uuid
+  startDate   DateTime
+  endDate     DateTime?
+  role        String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  member    Member    @relation(fields: [memberId], references: [id])
+  committee Committee @relation(fields: [committeeId], references: [id])
+
+  @@unique([memberId, committeeId, startDate])
+  @@index([memberId])
+  @@index([committeeId])
+  @@index([startDate, endDate])
+}
+
+model EventSponsorship {
+  id          String   @id @default(uuid()) @db.Uuid
+  eventId     String   @db.Uuid
+  committeeId String   @db.Uuid
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  event     Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  committee Committee @relation(fields: [committeeId], references: [id])
+
+  @@unique([eventId, committeeId])
+  @@index([eventId])
+  @@index([committeeId])
+}
+
+model TicketType {
+  id          String   @id @default(uuid()) @db.Uuid
+  eventId     String   @db.Uuid
+  code        String
+  name        String
+  description String?
+  price       Int      @default(0)
+  capacity    Int?
+  sortOrder   Int      @default(0)
+  constraints Json?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  event     Event                       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  overrides TicketEligibilityOverride[]
+
+  @@unique([eventId, code])
+  @@index([eventId])
+}
+
+model TicketEligibilityOverride {
+  id           String   @id @default(uuid()) @db.Uuid
+  eventId      String   @db.Uuid
+  ticketTypeId String   @db.Uuid
+  memberId     String   @db.Uuid
+  allow        Boolean
+  reason       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  event      Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  ticketType TicketType @relation(fields: [ticketTypeId], references: [id], onDelete: Cascade)
+  member     Member     @relation(fields: [memberId], references: [id])
+
+  @@unique([eventId, ticketTypeId, memberId])
+  @@index([eventId])
+  @@index([ticketTypeId])
+  @@index([memberId])
 }
