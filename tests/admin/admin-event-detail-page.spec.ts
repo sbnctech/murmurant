@@ -1,10 +1,12 @@
 import { test, expect } from "@playwright/test";
+import { lookupEventIdByTitle } from "./helpers/lookupIds";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
 test.describe("Admin Event Detail Page", () => {
   test("shows event detail page for Welcome Hike", async ({ page }) => {
-    await page.goto(`${BASE}/admin/events/e1`);
+    const eventId = await lookupEventIdByTitle(page.request, "Welcome");
+    await page.goto(`${BASE}/admin/events/${eventId}`);
 
     const root = page.locator('[data-test-id="admin-event-detail-root"]');
     await expect(root).toBeVisible();
@@ -19,7 +21,8 @@ test.describe("Admin Event Detail Page", () => {
   });
 
   test("shows at least one registration row", async ({ page }) => {
-    await page.goto(`${BASE}/admin/events/e1`);
+    const eventId = await lookupEventIdByTitle(page.request, "Welcome");
+    await page.goto(`${BASE}/admin/events/${eventId}`);
 
     const rows = page.locator('[data-test-id="admin-event-detail-registration-row"]');
     const count = await rows.count();
@@ -27,7 +30,9 @@ test.describe("Admin Event Detail Page", () => {
   });
 
   test("returns 404 for invalid event id", async ({ page }) => {
-    const response = await page.goto(`${BASE}/admin/events/unknown`);
+    const eventId = await lookupEventIdByTitle(page.request, "Welcome");
+    const response = await page.goto(`${BASE}/admin/events/${eventId}`);
+
     expect(response?.status()).toBe(404);
   });
 });

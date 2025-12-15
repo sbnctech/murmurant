@@ -1,17 +1,20 @@
 import { test, expect } from "@playwright/test";
+import { lookupRegistrationId } from "./helpers/lookupIds";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
 test.describe("Admin Registration Detail Page", () => {
   test("shows registration detail page for r1", async ({ page }) => {
-    await page.goto(`${BASE}/admin/registrations/r1`);
+    const registrationId = await lookupRegistrationId(page.request, { memberEmail: "alice@example.com" });
+    await page.goto(`${BASE}/admin/registrations/${registrationId}`);
 
     const root = page.locator('[data-test-id="admin-registration-detail-root"]');
     await expect(root).toBeVisible();
   });
 
   test("displays all detail field test IDs", async ({ page }) => {
-    await page.goto(`${BASE}/admin/registrations/r1`);
+    const registrationId = await lookupRegistrationId(page.request, { memberEmail: "alice@example.com" });
+    await page.goto(`${BASE}/admin/registrations/${registrationId}`);
 
     const memberName = page.locator('[data-test-id="admin-registration-member-name"]');
     await expect(memberName).toBeVisible();

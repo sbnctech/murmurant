@@ -1,17 +1,20 @@
 import { test, expect } from "@playwright/test";
+import { lookupMemberIdByEmail } from "./helpers/lookupIds";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
 test.describe("Admin Member Detail Page (API-backed)", () => {
   test("Shows member detail page with correct data-test-id root", async ({ page }) => {
-    await page.goto(`${BASE}/admin/members/m1`);
+    const memberId = await lookupMemberIdByEmail(page.request, "alice@example.com");
+    await page.goto(`${BASE}/admin/members/${memberId}`);
 
     const root = page.locator('[data-test-id="admin-member-detail-root"]');
     await expect(root).toBeVisible();
   });
 
   test("Displays member name, email, and status", async ({ page }) => {
-    await page.goto(`${BASE}/admin/members/m1`);
+    const memberId = await lookupMemberIdByEmail(page.request, "alice@example.com");
+    await page.goto(`${BASE}/admin/members/${memberId}`);
 
     const name = page.locator('[data-test-id="member-detail-name"]');
     await expect(name).toBeVisible();
@@ -27,7 +30,8 @@ test.describe("Admin Member Detail Page (API-backed)", () => {
   });
 
   test("Shows registrations table with at least one row", async ({ page }) => {
-    await page.goto(`${BASE}/admin/members/m1`);
+    const memberId = await lookupMemberIdByEmail(page.request, "alice@example.com");
+    await page.goto(`${BASE}/admin/members/${memberId}`);
 
     const table = page.locator('[data-test-id="member-detail-registrations-table"]');
     await expect(table).toBeVisible();
