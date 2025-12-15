@@ -1,10 +1,10 @@
 #!/bin/zsh
 #
-# install-git-hooks.sh - Install Git pre-push hook for preflight checks
+# install-git-hooks.sh - Install Git pre-push hook for green checks
 # macOS/zsh compatible, ASCII only
 #
-# This installs a pre-push hook that runs "make preflight" before each push.
-# The push will be blocked if preflight fails.
+# This installs a pre-push hook that runs "npm run green" before each push.
+# The push will be blocked if any gate fails.
 #
 
 SCRIPT_DIR="${0:A:h}"
@@ -37,17 +37,56 @@ fi
 cat > "$HOOK_PATH" << 'EOF'
 #!/bin/zsh
 #
-# Git pre-push hook - runs preflight checks before pushing
-# Installed by: make install-hooks
+# Git pre-push hook - runs all green gates before pushing
+# Installed by: make install-hooks or ./scripts/dev/install-git-hooks.sh
 #
 
-echo "Running pre-push hook: make preflight"
+set -uo pipefail
+
+echo "========================================"
+echo "Pre-push hook: Running npm run green"
+echo "========================================"
 echo ""
 
-make preflight
-EXIT_CODE=$?
+RESULTS=()
 
-if [ $EXIT_CODE -ne 0 ]; then
+run_gate() {
+    local name="$1"
+    local cmd="$2"
+    echo "--- $name ---"
+    if eval "$cmd"; then
+        RESULTS+=("$name: PASS")
+        return 0
+    else
+        RESULTS+=("$name: FAIL")
+        return 1
+    fi
+}
+
+FAILED=0
+
+run_gate "typecheck" "npm run typecheck" || FAILED=1
+echo ""
+run_gate "lint" "npm run lint" || FAILED=1
+echo ""
+run_gate "unit" "npm run test:unit" || FAILED=1
+echo ""
+run_gate "db:seed" "npm run db:seed" || FAILED=1
+echo ""
+run_gate "admin:stable" "npm run test-admin:stable" || FAILED=1
+echo ""
+run_gate "api:stable" "npm run test-api:stable" || FAILED=1
+
+echo ""
+echo "========================================"
+echo "Pre-push Results"
+echo "========================================"
+for r in "${RESULTS[@]}"; do
+    echo "  $r"
+done
+echo "========================================"
+
+if [ $FAILED -ne 0 ]; then
     echo ""
     echo "Pre-push hook FAILED. Push blocked."
     echo "Fix the issues above and try again."
@@ -55,7 +94,7 @@ if [ $EXIT_CODE -ne 0 ]; then
 fi
 
 echo ""
-echo "Pre-push hook passed. Proceeding with push."
+echo "All gates passed. Proceeding with push."
 exit 0
 EOF
 
@@ -63,7 +102,7 @@ EOF
 chmod +x "$HOOK_PATH"
 
 echo ""
-echo "Installed Git pre-push hook to run \"make preflight\"."
+echo "Installed Git pre-push hook to run \"npm run green\"."
 echo ""
-echo "Now, before each \"git push\", preflight checks will run automatically."
-echo "If any check fails, the push will be blocked."
+echo "Now, before each \"git push\", all green gates will run automatically."
+echo "If any gate fails, the push will be blocked."
