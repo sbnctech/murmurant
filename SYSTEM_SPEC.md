@@ -54,6 +54,20 @@ Testing:
 
 ----------------------------------------------------------------------
 
+2a. Timezone Policy
+
+All DateTime handling in ClubOS follows these rules:
+
+- All DateTime values are stored in UTC at rest (Prisma default).
+- The system's canonical business timezone is America/Los_Angeles.
+- All user-facing date/time display is rendered in Pacific Time.
+- All day-boundary logic (e.g., "today", role transitions, expirations) is evaluated at 00:00 Pacific Time, accounting for DST.
+- Any logic that depends on calendar days MUST use the shared timezone utility helpers in src/lib/timezone.ts, not ad hoc date math.
+
+This ensures consistent behavior across the club's operations, which are all based in Santa Barbara, California.
+
+----------------------------------------------------------------------
+
 3. Member Subsystem
 
 3.1 Data Model

@@ -500,6 +500,20 @@ A debug endpoint for webmaster support was added:
 
 ----------------------------------------------------------------
 
+## Timezone Policy
+
+All DateTime handling in ClubOS follows these rules:
+
+- **Storage**: All DateTime values are stored in UTC at rest (Prisma default).
+- **Canonical timezone**: The system's canonical business timezone is `America/Los_Angeles`.
+- **Display**: All user-facing date/time display is rendered in Pacific Time.
+- **Day boundaries**: All day-boundary logic (e.g., "today", role transitions, expirations) is evaluated at 00:00 Pacific Time, accounting for DST.
+- **Implementation requirement**: Any logic that depends on calendar days MUST use the shared timezone utility helpers in `src/lib/timezone.ts`, not ad hoc date math.
+
+This ensures consistent behavior across the club's operations, which are all based in Santa Barbara, California.
+
+----------------------------------------------------------------
+
 ## Copyright
 
 Copyright (c) 2025 Santa Barbara Newcomers Club. All rights reserved.
