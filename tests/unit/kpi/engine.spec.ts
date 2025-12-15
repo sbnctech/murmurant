@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { describe, it, expect, beforeEach } from "vitest";
 import { KPIEngine, DefaultConfigLoader } from "../../../src/server/kpi/engine";
 import { kpiRegistry } from "../../../src/server/kpi/registry";
