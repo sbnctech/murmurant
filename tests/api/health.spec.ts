@@ -7,13 +7,14 @@ import { test, expect } from "@playwright/test";
  * Contract matches /api/v1/health for consistency.
  */
 
-test("health endpoint returns healthy status", async ({ request }) => {
+test("health endpoint returns ok status", async ({ request }) => {
   const response = await request.get("/api/health");
 
   expect(response.ok()).toBeTruthy();
 
   const data = await response.json();
-  expect(data.status).toBe("healthy");
+  // Canonical response is status="ok" (aligns with SystemCommsPanel)
+  expect(data.status).toBe("ok");
   expect(typeof data.timestamp).toBe("string");
   expect(data.version).toBeDefined();
 });
