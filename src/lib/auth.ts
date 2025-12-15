@@ -10,12 +10,97 @@ import { NextRequest, NextResponse } from "next/server";
  *
  * Role Hierarchy:
  * - admin: Full access to everything
+ * - webmaster: UI/publishing role - can manage pages, themes, templates, comms
+ *              CANNOT see finance, CANNOT change user entitlements
  * - vp-activities: Can view/edit ALL events, cannot delete
  * - event-chair: Can view/edit own committee's events (future)
  * - member: Can view published events only
  */
 
-export type GlobalRole = "admin" | "vp-activities" | "event-chair" | "member";
+export type GlobalRole = "admin" | "webmaster" | "vp-activities" | "event-chair" | "member";
+
+// ============================================================================
+// CAPABILITY-BASED PERMISSIONS
+// Instead of scattering role checks, we define capabilities and check those.
+// ============================================================================
+
+export type Capability =
+  | "publishing:manage"     // Pages, themes, templates, media
+  | "comms:manage"          // Email templates, audiences, campaigns (no finance fields)
+  | "members:view"          // Read-only member detail
+  | "registrations:view"    // Read-only registration detail
+  | "exports:access"        // Access to data export endpoints
+  | "finance:view"          // View financial data
+  | "finance:manage"        // Edit financial data
+  | "users:manage"          // Create/update user roles and entitlements
+  | "admin:full";           // Full admin access (implies all capabilities)
+
+/**
+ * Map of which capabilities each role has.
+ * This is the source of truth for permission checks.
+ *
+ * IMPORTANT: webmaster is a UI/site role. They can manage publishing and comms,
+ * and view member/registration data for support purposes, but CANNOT:
+ * - Export data
+ * - View/manage finance
+ * - Change user entitlements
+ */
+const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
+  admin: [
+    "admin:full",
+    "publishing:manage",
+    "comms:manage",
+    "members:view",
+    "registrations:view",
+    "exports:access",
+    "finance:view",
+    "finance:manage",
+    "users:manage",
+  ],
+  webmaster: [
+    "publishing:manage",
+    "comms:manage",
+    "members:view",
+    "registrations:view",
+    // NO exports:access
+    // NO finance:view/manage
+    // NO users:manage
+  ],
+  "vp-activities": [
+    "members:view",
+    "registrations:view",
+    // Event-specific permissions are handled separately
+  ],
+  "event-chair": [
+    "members:view",
+    "registrations:view",
+  ],
+  member: [],
+};
+
+/**
+ * Check if a role has a specific capability.
+ */
+export function hasCapability(role: GlobalRole, capability: Capability): boolean {
+  const caps = ROLE_CAPABILITIES[role];
+  // admin:full implies all capabilities
+  if (caps.includes("admin:full")) return true;
+  return caps.includes(capability);
+}
+
+/**
+ * Check if a role has any of the specified capabilities.
+ */
+export function hasAnyCapability(role: GlobalRole, capabilities: Capability[]): boolean {
+  return capabilities.some((cap) => hasCapability(role, cap));
+}
+
+/**
+ * Check if a role is a full admin (has admin:full capability).
+ */
+export function isFullAdmin(role: GlobalRole): boolean {
+  return hasCapability(role, "admin:full");
+}
 
 export type AuthContext = {
   memberId: string;
@@ -124,6 +209,32 @@ export async function requireRole(
 }
 
 /**
+ * Validates the authenticated user has the required capability.
+ * Returns 403 if they lack the capability.
+ */
+export async function requireCapability(
+  req: NextRequest,
+  capability: Capability
+): Promise<AuthResult> {
+  const authResult = await requireAuth(req);
+  if (!authResult.ok) {
+    return authResult;
+  }
+
+  if (!hasCapability(authResult.context.globalRole, capability)) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { error: "Forbidden", message: `Required capability: ${capability}` },
+        { status: 403 }
+      ),
+    };
+  }
+
+  return authResult;
+}
+
+/**
  * Check if role can view all events (including unpublished).
  */
 export function canViewAllEvents(role: GlobalRole): boolean {
@@ -170,6 +281,16 @@ function parseTestToken(token: string): AuthContext | null {
     };
   }
 
+  // Test webmaster token
+  if (token.startsWith("test-webmaster-")) {
+    const memberId = token.slice(15) || "test-webmaster-id";
+    return {
+      memberId,
+      email: "webmaster@test.com",
+      globalRole: "webmaster",
+    };
+  }
+
   // Test VP of Activities token
   if (token.startsWith("test-vp-")) {
     const memberId = token.slice(8) || "test-vp-id";
@@ -206,6 +327,14 @@ function parseTestToken(token: string): AuthContext | null {
       memberId: "test-admin-id",
       email: "admin@test.com",
       globalRole: "admin",
+    };
+  }
+
+  if (token === "webmaster-token" || token === "test-webmaster") {
+    return {
+      memberId: "test-webmaster-id",
+      email: "webmaster@test.com",
+      globalRole: "webmaster",
     };
   }
 

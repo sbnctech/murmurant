@@ -1778,6 +1778,60 @@ E2E Tests:
 
 ----------------------------------------------------------------
 
+## Version 0.2.3 - RBAC Refinement: Webmaster Role
+
+### Role Clarification
+
+The webmaster role is a **UI/site management role**, NOT a full admin.
+
+Webmaster Capabilities:
+- publishing:manage - Pages, themes, templates, media
+- comms:manage - Email templates, audiences, campaigns
+- members:view - Read-only member data (for support)
+- registrations:view - Read-only registration data (for support)
+
+Webmaster Restrictions:
+- NO exports:access - Cannot download CSV exports
+- NO finance:view/manage - Cannot see financial data
+- NO users:manage - Cannot change user roles/entitlements
+- Cannot delete published pages (only full admins can)
+
+### Capability System
+
+Added to src/lib/auth.ts:
+- hasCapability(role, capability) - Check if role has capability
+- hasAnyCapability(role, capabilities) - Check for any of several
+- isFullAdmin(role) - Check for admin:full capability
+- requireCapability(req, capability) - Route guard
+
+### Route Guard Updates
+
+Export endpoints require exports:access (webmaster denied):
+- /api/admin/export/members
+- /api/admin/export/events
+- /api/admin/export/registrations
+- /api/admin/export/activity
+
+Publishing endpoints use publishing:manage (webmaster allowed):
+- /api/admin/content/pages
+- /api/admin/content/pages/[id]
+- DELETE on published pages requires admin:full
+
+### Debug Escape Hatch
+
+For support debugging, when WEBMASTER_SUPPORT_DEBUG=1:
+- GET /api/admin/debug/effective-permissions?email=...
+- Returns capability booleans and role (never finance data)
+- Requires publishing:manage to access
+
+### Test Updates
+
+- 185 unit tests (added auth-capabilities.spec.ts)
+- Added webmaster-access.spec.ts for API restrictions
+- Updated permissions.spec.ts (webmaster NOT full admin)
+
+----------------------------------------------------------------
+
 ## Auth Posture (v0 Permissive)
 
 ### Current State (v0)

@@ -34,7 +34,11 @@ export type ResourceType =
   | "asset";
 
 // Admin role slugs that grant elevated permissions
-const ADMIN_ROLES = ["president", "webmaster", "communications-chair", "board-member"];
+// NOTE: webmaster is NOT a full admin - they can manage content but cannot:
+// - View/manage financial data
+// - Change user roles/entitlements
+// - Delete published pages (only full admins can)
+const FULL_ADMIN_ROLES = ["president", "board-member"];
 const CONTENT_ADMIN_ROLES = ["webmaster", "communications-chair"];
 const COMMS_ADMIN_ROLES = ["communications-chair", "webmaster"];
 
@@ -94,10 +98,28 @@ export async function buildUserContext(memberId: string | null): Promise<UserCon
 }
 
 /**
- * Check if user has any admin role
+ * Check if user has a full admin role (can delete published pages, view finance, etc.)
+ * NOTE: webmaster is NOT a full admin - use isContentAdmin for publishing checks
  */
 export function hasAdminRole(user: UserContext): boolean {
-  return user.roles.some((role) => ADMIN_ROLES.includes(role));
+  return user.roles.some((role) => FULL_ADMIN_ROLES.includes(role));
+}
+
+/**
+ * Check if user is a content admin (can manage pages, themes, templates)
+ * This includes webmaster and communications-chair
+ */
+export function isContentAdmin(user: UserContext): boolean {
+  if (!user.isAuthenticated) return false;
+  return user.roles.some((role) => CONTENT_ADMIN_ROLES.includes(role));
+}
+
+/**
+ * Check if user is a comms admin (can manage mailing lists, campaigns)
+ */
+export function isCommsAdmin(user: UserContext): boolean {
+  if (!user.isAuthenticated) return false;
+  return user.roles.some((role) => COMMS_ADMIN_ROLES.includes(role));
 }
 
 /**

@@ -430,6 +430,76 @@ The following components have been implemented for the publishing and communicat
 
 ----------------------------------------------------------------
 
+## Version 0.2.3 - RBAC Refinement: Webmaster Role
+
+### Webmaster Role Definition
+
+The webmaster role has been clarified to be a **UI/site management role**, NOT a full admin:
+
+**CAN access:**
+- Publishing admin (pages, themes, templates, media)
+- Comms admin (mailing lists, templates, campaigns)
+- Member/registration views (read-only, for support)
+
+**CANNOT access:**
+- Data exports (members.csv, events.csv, etc.)
+- Finance data (view or manage)
+- User entitlements management (roles, permissions)
+- Deleting published pages (only full admins can)
+
+### Capability-Based Permissions
+
+A new capability system was added to `src/lib/auth.ts`:
+
+```typescript
+type Capability =
+  | "publishing:manage"     // Pages, themes, templates, media
+  | "comms:manage"          // Email templates, audiences, campaigns
+  | "members:view"          // Read-only member detail
+  | "registrations:view"    // Read-only registration detail
+  | "exports:access"        // Access to data export endpoints
+  | "finance:view"          // View financial data
+  | "finance:manage"        // Edit financial data
+  | "users:manage"          // Create/update user roles and entitlements
+  | "admin:full";           // Full admin access (implies all)
+```
+
+Role capability mappings:
+- `admin`: All capabilities
+- `webmaster`: publishing:manage, comms:manage, members:view, registrations:view
+- `vp-activities`: members:view, registrations:view (plus event-specific permissions)
+- `event-chair`: members:view, registrations:view
+- `member`: No admin capabilities
+
+### Route Guards Updated
+
+All export endpoints now require `exports:access` capability:
+- `GET /api/admin/export/members` - 403 for webmaster
+- `GET /api/admin/export/events` - 403 for webmaster
+- `GET /api/admin/export/registrations` - 403 for webmaster
+- `GET /api/admin/export/activity` - 403 for webmaster
+
+Publishing endpoints use `publishing:manage` capability:
+- `GET/POST /api/admin/content/pages` - OK for webmaster
+- `GET/PUT/POST /api/admin/content/pages/[id]` - OK for webmaster
+- `DELETE /api/admin/content/pages/[id]` - Published pages require admin:full
+
+### Debug Support Endpoint
+
+A debug endpoint for webmaster support was added:
+- `GET /api/admin/debug/effective-permissions?email=...`
+- Only available when `WEBMASTER_SUPPORT_DEBUG=1` env var is set
+- Requires `publishing:manage` capability
+- Returns capability booleans and role name (never finance data)
+
+### Test Coverage
+
+- **Unit tests:** 185 tests (added auth-capabilities.spec.ts)
+- **API tests:** Added webmaster-access.spec.ts for role restrictions
+- **Permission tests:** Updated to reflect webmaster is NOT full admin
+
+----------------------------------------------------------------
+
 ## Copyright
 
 Copyright (c) 2025 Santa Barbara Newcomers Club. All rights reserved.

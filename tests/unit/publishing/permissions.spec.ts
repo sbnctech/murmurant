@@ -17,7 +17,7 @@ import {
 
 describe("Permission System", () => {
   describe("hasAdminRole", () => {
-    it("returns true for president role", () => {
+    it("returns true for president role (full admin)", () => {
       const user: UserContext = {
         memberId: "123",
         isAuthenticated: true,
@@ -29,7 +29,9 @@ describe("Permission System", () => {
       expect(hasAdminRole(user)).toBe(true);
     });
 
-    it("returns true for webmaster role", () => {
+    it("returns false for webmaster role (webmaster is NOT a full admin)", () => {
+      // IMPORTANT: webmaster is a content admin but NOT a full admin
+      // They cannot view finance, change entitlements, or delete published pages
       const user: UserContext = {
         memberId: "123",
         isAuthenticated: true,
@@ -38,10 +40,10 @@ describe("Permission System", () => {
         committeeIds: [],
       };
 
-      expect(hasAdminRole(user)).toBe(true);
+      expect(hasAdminRole(user)).toBe(false);
     });
 
-    it("returns true for communications-chair role", () => {
+    it("returns false for communications-chair role (not a full admin)", () => {
       const user: UserContext = {
         memberId: "123",
         isAuthenticated: true,
@@ -50,10 +52,10 @@ describe("Permission System", () => {
         committeeIds: [],
       };
 
-      expect(hasAdminRole(user)).toBe(true);
+      expect(hasAdminRole(user)).toBe(false);
     });
 
-    it("returns true for board-member role", () => {
+    it("returns true for board-member role (full admin)", () => {
       const user: UserContext = {
         memberId: "123",
         isAuthenticated: true,
@@ -344,7 +346,7 @@ describe("Permission System", () => {
       expect(canDeletePage(user, publishedPage)).toBe(true);
     });
 
-    it("returns true for webmaster on published page (webmaster is full admin)", () => {
+    it("returns false for webmaster on published page (webmaster is NOT full admin)", () => {
       const user: UserContext = {
         memberId: "456",
         isAuthenticated: true,
@@ -353,8 +355,10 @@ describe("Permission System", () => {
         committeeIds: [],
       };
 
-      // webmaster is in ADMIN_ROLES, so can delete published pages
-      expect(canDeletePage(user, publishedPage)).toBe(true);
+      // webmaster is NOT in FULL_ADMIN_ROLES - cannot delete published pages
+      // This is a key security constraint: webmaster manages content but cannot
+      // delete published content or access finance/entitlements
+      expect(canDeletePage(user, publishedPage)).toBe(false);
     });
 
     it("returns false for regular member on published page", () => {

@@ -4,7 +4,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
-import { requireAuth } from "@/lib/auth";
+import { requireCapability } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 import { validatePageContent, createDefaultPageContent } from "@/lib/publishing/blocks";
 
@@ -19,8 +19,9 @@ type PageListItem = {
 };
 
 // GET /api/admin/content/pages - List all pages
+// Requires publishing:manage capability (webmaster has this)
 export async function GET(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
 
   const { searchParams } = new URL(req.url);
@@ -94,17 +95,10 @@ export async function GET(req: NextRequest) {
 }
 
 // POST /api/admin/content/pages - Create new page
+// Requires publishing:manage capability (webmaster has this)
 export async function POST(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
-
-  // Only admin and content editors can create pages
-  if (auth.context.globalRole !== "admin") {
-    return NextResponse.json(
-      { error: "Forbidden", message: "Only administrators can create pages" },
-      { status: 403 }
-    );
-  }
 
   let body: {
     slug: string;

@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
+import { requireCapability, isFullAdmin } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 import { validatePageContent } from "@/lib/publishing/blocks";
 
@@ -12,8 +12,9 @@ type RouteParams = {
 };
 
 // GET /api/admin/content/pages/[id] - Get page by ID
+// Requires publishing:manage capability (webmaster has this)
 export async function GET(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
 
   const { id } = await params;
@@ -40,16 +41,10 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
 }
 
 // PUT /api/admin/content/pages/[id] - Update page
+// Requires publishing:manage capability (webmaster has this)
 export async function PUT(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
-
-  if (auth.context.globalRole !== "admin") {
-    return NextResponse.json(
-      { error: "Forbidden", message: "Only administrators can edit pages" },
-      { status: 403 }
-    );
-  }
 
   const { id } = await params;
 
@@ -162,16 +157,11 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 }
 
 // DELETE /api/admin/content/pages/[id] - Delete page
+// Requires publishing:manage capability
+// NOTE: Deleting PUBLISHED pages requires admin:full (webmaster cannot)
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
-
-  if (auth.context.globalRole !== "admin") {
-    return NextResponse.json(
-      { error: "Forbidden", message: "Only administrators can delete pages" },
-      { status: 403 }
-    );
-  }
 
   const { id } = await params;
 
@@ -180,6 +170,14 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
     return NextResponse.json(
       { error: "Not Found", message: "Page not found" },
       { status: 404 }
+    );
+  }
+
+  // Published pages can only be deleted by full admins
+  if (existing.status === "PUBLISHED" && !isFullAdmin(auth.context.globalRole)) {
+    return NextResponse.json(
+      { error: "Forbidden", message: "Only full administrators can delete published pages" },
+      { status: 403 }
     );
   }
 
@@ -198,16 +196,10 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
 }
 
 // POST /api/admin/content/pages/[id] - Publish or unpublish page
+// Requires publishing:manage capability (webmaster has this)
 export async function POST(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
-
-  if (auth.context.globalRole !== "admin") {
-    return NextResponse.json(
-      { error: "Forbidden", message: "Only administrators can publish pages" },
-      { status: 403 }
-    );
-  }
 
   const { id } = await params;
   const { searchParams } = new URL(req.url);
