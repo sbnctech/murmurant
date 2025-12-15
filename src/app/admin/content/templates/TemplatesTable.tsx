@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { formatClubDate } from "@/lib/timezone";
 
 type TemplateListItem = {
   id: string;
@@ -14,12 +15,7 @@ type TemplateListItem = {
 };
 
 function formatDate(isoString: string): string {
-  const date = new Date(isoString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  return formatClubDate(new Date(isoString));
 }
 
 export default function TemplatesTable() {

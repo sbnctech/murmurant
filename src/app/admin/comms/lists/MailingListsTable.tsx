@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { formatClubDate } from "@/lib/timezone";
 
 type MailingListItem = {
   id: string;
@@ -15,12 +16,7 @@ type MailingListItem = {
 };
 
 function formatDate(isoString: string): string {
-  const date = new Date(isoString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  return formatClubDate(new Date(isoString));
 }
 
 export default function MailingListsTable() {
@@ -90,6 +86,7 @@ export default function MailingListsTable() {
               )}
             </td>
             <td style={{ borderBottom: "1px solid #eee", padding: "8px", fontWeight: 600 }}>
+              {/* eslint-disable-next-line no-restricted-syntax -- number formatting, not date */}
               {list.subscriberCount.toLocaleString()}
             </td>
             <td style={{ borderBottom: "1px solid #eee", padding: "8px", fontSize: "13px" }}>

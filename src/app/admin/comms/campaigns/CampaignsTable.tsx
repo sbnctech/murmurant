@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { formatClubDateTime } from "@/lib/timezone";
 
 type CampaignListItem = {
   id: string;
@@ -24,14 +25,7 @@ type PaginatedResponse = {
 const PAGE_SIZE = 10;
 
 function formatDate(isoString: string): string {
-  const date = new Date(isoString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatClubDateTime(new Date(isoString));
 }
 
 function getStatusBadge(status: string): { bg: string; text: string } {

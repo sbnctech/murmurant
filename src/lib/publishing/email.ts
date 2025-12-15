@@ -2,6 +2,7 @@
 // Email template token replacement and provider abstraction
 
 import { prisma } from "@/lib/prisma";
+import { formatClubDateLong, formatClubTime } from "@/lib/timezone";
 
 // Token context for email template rendering
 export type TokenContext = {
@@ -103,26 +104,17 @@ function escapeHtml(str: string): string {
 }
 
 /**
- * Format date for display
+ * Format date for display (uses club timezone)
  */
 function formatDate(date: Date): string {
-  return date.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  return formatClubDateLong(date);
 }
 
 /**
- * Format time for display
+ * Format time for display (uses club timezone)
  */
 function formatTime(date: Date): string {
-  return date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
+  return formatClubTime(date);
 }
 
 /**

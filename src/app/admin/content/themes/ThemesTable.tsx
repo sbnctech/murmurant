@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { formatClubDate } from "@/lib/timezone";
 
 type ThemeListItem = {
   id: string;
@@ -13,12 +14,7 @@ type ThemeListItem = {
 };
 
 function formatDate(isoString: string): string {
-  const date = new Date(isoString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  return formatClubDate(new Date(isoString));
 }
 
 function getStatusBadge(status: string): { bg: string; text: string } {
