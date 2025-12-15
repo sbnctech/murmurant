@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
+import { requireCapability } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 import { resolveMailingListRecipients } from "@/lib/publishing/audience";
 import { replaceTokens, getEmailProvider } from "@/lib/publishing/email";
@@ -14,7 +14,7 @@ type RouteParams = {
 
 // GET /api/admin/comms/campaigns/[id] - Get campaign by ID
 export async function GET(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   const { id } = await params;
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
 
 // PUT /api/admin/comms/campaigns/[id] - Update campaign
 export async function PUT(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   if (auth.context.globalRole !== "admin") {
@@ -165,7 +165,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 
 // DELETE /api/admin/comms/campaigns/[id] - Delete campaign
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   if (auth.context.globalRole !== "admin") {
@@ -212,7 +212,7 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
 
 // POST /api/admin/comms/campaigns/[id] - Send, schedule, or cancel campaign
 export async function POST(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   if (auth.context.globalRole !== "admin") {

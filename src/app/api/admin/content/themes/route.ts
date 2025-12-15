@@ -3,13 +3,13 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
+import { requireCapability } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 import { validateThemeTokens, DEFAULT_THEME_TOKENS } from "@/lib/publishing/theme";
 
 // GET /api/admin/content/themes - List all themes
 export async function GET(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
 
   const themes = await prisma.theme.findMany({
@@ -30,9 +30,10 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/content/themes - Create new theme
 export async function POST(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
 
+  // Only full admins can create themes (webmaster can view/use existing ones)
   if (auth.context.globalRole !== "admin") {
     return NextResponse.json(
       { error: "Forbidden", message: "Only administrators can create themes" },
@@ -128,9 +129,10 @@ export async function POST(req: NextRequest) {
 
 // PUT /api/admin/content/themes - Update theme (expects ?id=xxx in query)
 export async function PUT(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
 
+  // Only full admins can edit themes (webmaster can only view)
   if (auth.context.globalRole !== "admin") {
     return NextResponse.json(
       { error: "Forbidden", message: "Only administrators can edit themes" },
@@ -219,9 +221,10 @@ export async function PUT(req: NextRequest) {
 
 // DELETE /api/admin/content/themes - Delete theme (expects ?id=xxx in query)
 export async function DELETE(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
 
+  // Only full admins can delete themes
   if (auth.context.globalRole !== "admin") {
     return NextResponse.json(
       { error: "Forbidden", message: "Only administrators can delete themes" },

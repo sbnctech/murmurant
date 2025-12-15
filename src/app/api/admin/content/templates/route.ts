@@ -4,12 +4,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
-import { requireAuth } from "@/lib/auth";
+import { requireCapability } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 
 // GET /api/admin/content/templates - List all templates
 export async function GET(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
 
   const { searchParams } = new URL(req.url);
@@ -40,9 +40,10 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/content/templates - Create new template
 export async function POST(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
 
+  // Only full admins can create templates (webmaster can edit existing ones)
   if (auth.context.globalRole !== "admin") {
     return NextResponse.json(
       { error: "Forbidden", message: "Only administrators can create templates" },
@@ -135,9 +136,10 @@ export async function POST(req: NextRequest) {
 
 // PUT /api/admin/content/templates - Update template (expects ?id=xxx in query)
 export async function PUT(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
 
+  // Only full admins can edit templates (webmaster can only view)
   if (auth.context.globalRole !== "admin") {
     return NextResponse.json(
       { error: "Forbidden", message: "Only administrators can edit templates" },
@@ -205,9 +207,10 @@ export async function PUT(req: NextRequest) {
 
 // DELETE /api/admin/content/templates - Delete template (expects ?id=xxx in query)
 export async function DELETE(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
 
+  // Only full admins can delete templates
   if (auth.context.globalRole !== "admin") {
     return NextResponse.json(
       { error: "Forbidden", message: "Only administrators can delete templates" },

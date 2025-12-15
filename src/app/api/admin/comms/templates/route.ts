@@ -3,12 +3,12 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
+import { requireCapability } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 
 // GET /api/admin/comms/templates - List all message templates
 export async function GET(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   const templates = await prisma.messageTemplate.findMany({
@@ -28,9 +28,10 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/comms/templates - Create new message template
 export async function POST(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
+  // Only full admins can create message templates
   if (auth.context.globalRole !== "admin") {
     return NextResponse.json(
       { error: "Forbidden", message: "Only administrators can create message templates" },
@@ -108,7 +109,7 @@ export async function POST(req: NextRequest) {
 
 // PUT /api/admin/comms/templates - Update template (expects ?id=xxx in query)
 export async function PUT(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   if (auth.context.globalRole !== "admin") {
@@ -180,7 +181,7 @@ export async function PUT(req: NextRequest) {
 
 // DELETE /api/admin/comms/templates - Delete template (expects ?id=xxx in query)
 export async function DELETE(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   if (auth.context.globalRole !== "admin") {

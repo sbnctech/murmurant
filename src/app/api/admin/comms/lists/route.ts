@@ -3,13 +3,13 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
+import { requireCapability } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 import { getAudienceCount, AudienceRules } from "@/lib/publishing/audience";
 
 // GET /api/admin/comms/lists - List all mailing lists
 export async function GET(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   const lists = await prisma.mailingList.findMany({
@@ -49,9 +49,10 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/comms/lists - Create new mailing list
 export async function POST(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
+  // Only full admins can create mailing lists
   if (auth.context.globalRole !== "admin") {
     return NextResponse.json(
       { error: "Forbidden", message: "Only administrators can create mailing lists" },
@@ -138,9 +139,10 @@ export async function POST(req: NextRequest) {
 
 // PUT /api/admin/comms/lists - Update mailing list (expects ?id=xxx in query)
 export async function PUT(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
+  // Only full admins can edit mailing lists
   if (auth.context.globalRole !== "admin") {
     return NextResponse.json(
       { error: "Forbidden", message: "Only administrators can edit mailing lists" },
@@ -219,9 +221,10 @@ export async function PUT(req: NextRequest) {
 
 // DELETE /api/admin/comms/lists - Delete mailing list (expects ?id=xxx in query)
 export async function DELETE(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
+  // Only full admins can delete mailing lists
   if (auth.context.globalRole !== "admin") {
     return NextResponse.json(
       { error: "Forbidden", message: "Only administrators can delete mailing lists" },

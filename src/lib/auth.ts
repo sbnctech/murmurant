@@ -8,16 +8,34 @@ import { NextRequest, NextResponse } from "next/server";
  * - In development, allow bypass with specific test tokens
  * - Production will integrate with actual JWT/session validation
  *
- * Role Hierarchy:
- * - admin: Full access to everything
+ * Role Hierarchy (SBNC-specific):
+ * - admin: Dev-only full access role (not used in production SBNC)
+ * - president: Club president - approves transitions, full visibility
+ * - past-president: Advisory role - can view transitions, limited edit
+ * - vp-activities: Can view/edit ALL events, approve transitions, cannot delete
+ * - event-chair: Can view/edit own committee's events (future)
  * - webmaster: UI/publishing role - can manage pages, themes, templates, comms
  *              CANNOT see finance, CANNOT change user entitlements
- * - vp-activities: Can view/edit ALL events, cannot delete
- * - event-chair: Can view/edit own committee's events (future)
+ *              CANNOT access member service history by default
  * - member: Can view published events only
+ *
+ * WEBMASTER POSTURE:
+ * Webmaster is NOT a full admin. They work on UI/content/publishing but:
+ * 1. Cannot see any financial information
+ * 2. Cannot change anyone's entitlements/roles
+ * 3. Cannot access data exports
+ * 4. Cannot view member service history narrative
+ * 5. Can optionally have debug read-only access (off by default)
  */
 
-export type GlobalRole = "admin" | "webmaster" | "vp-activities" | "event-chair" | "member";
+export type GlobalRole =
+  | "admin"
+  | "president"
+  | "past-president"
+  | "vp-activities"
+  | "event-chair"
+  | "webmaster"
+  | "member";
 
 // ============================================================================
 // CAPABILITY-BASED PERMISSIONS
@@ -27,65 +45,166 @@ export type GlobalRole = "admin" | "webmaster" | "vp-activities" | "event-chair"
 export type Capability =
   | "publishing:manage"     // Pages, themes, templates, media
   | "comms:manage"          // Email templates, audiences, campaigns (no finance fields)
+  | "comms:send"            // Actually send campaigns (separate from manage)
   | "members:view"          // Read-only member detail
+  | "members:history"       // View member service history narrative (restricted)
   | "registrations:view"    // Read-only registration detail
+  | "events:view"           // View all events including unpublished
+  | "events:edit"           // Edit any event
+  | "events:delete"         // Delete events (admin only)
   | "exports:access"        // Access to data export endpoints
   | "finance:view"          // View financial data
   | "finance:manage"        // Edit financial data
+  | "transitions:view"      // View transition plans
+  | "transitions:approve"   // Approve transition plans
   | "users:manage"          // Create/update user roles and entitlements
-  | "admin:full";           // Full admin access (implies all capabilities)
+  | "admin:full"            // Full admin access (implies all capabilities)
+  | "debug:readonly";       // Debug read-only access (for support, default OFF)
 
 /**
  * Map of which capabilities each role has.
  * This is the source of truth for permission checks.
  *
- * IMPORTANT: webmaster is a UI/site role. They can manage publishing and comms,
- * and view member/registration data for support purposes, but CANNOT:
+ * IMPORTANT: webmaster is a UI/site role. They can manage publishing and comms
+ * templates, but CANNOT:
  * - Export data
  * - View/manage finance
  * - Change user entitlements
+ * - View member service history
+ * - Send campaigns (by default)
+ *
+ * The webmaster role is intentionally limited. For debugging/support,
+ * set WEBMASTER_DEBUG_READONLY=true to enable read-only access to some
+ * additional data (default OFF).
  */
 const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
   admin: [
     "admin:full",
     "publishing:manage",
     "comms:manage",
+    "comms:send",
     "members:view",
+    "members:history",
     "registrations:view",
+    "events:view",
+    "events:edit",
+    "events:delete",
     "exports:access",
     "finance:view",
     "finance:manage",
+    "transitions:view",
+    "transitions:approve",
     "users:manage",
   ],
-  webmaster: [
-    "publishing:manage",
-    "comms:manage",
+  president: [
     "members:view",
+    "members:history",
     "registrations:view",
-    // NO exports:access
-    // NO finance:view/manage
-    // NO users:manage
+    "events:view",
+    "events:edit",
+    "exports:access",
+    "finance:view",
+    "transitions:view",
+    "transitions:approve",
+    // President can view but not directly manage finances
+    // NO finance:manage - treasurer handles that
+    // NO users:manage - handled through transitions
+    // NO events:delete - use cancel flow instead
+  ],
+  "past-president": [
+    "members:view",
+    "members:history",
+    "registrations:view",
+    "events:view",
+    "transitions:view",
+    // Advisory role - can view but limited edit
+    // NO events:edit
+    // NO finance:view - past role doesn't need current finance access
+    // NO transitions:approve - current officers only
   ],
   "vp-activities": [
     "members:view",
+    "members:history",
     "registrations:view",
-    // Event-specific permissions are handled separately
+    "events:view",
+    "events:edit",
+    "transitions:view",
+    "transitions:approve",
+    // VP Activities can edit all events (peer trust model)
+    // NO events:delete - admin only
+    // NO finance:view/manage
+    // NO exports:access
   ],
   "event-chair": [
     "members:view",
     "registrations:view",
+    "events:view",
+    // NO members:history - event chairs see only event-related member info
+    // NO events:edit - committee-scoped edit handled separately
+    // NO exports:access
+    // NO finance:view
+  ],
+  webmaster: [
+    "publishing:manage",
+    "comms:manage",
+    // NO comms:send - webmaster can create templates but not send campaigns
+    // NO members:view - removed to harden restrictions
+    // NO members:history
+    // NO registrations:view
+    // NO events:view/edit/delete
+    // NO exports:access
+    // NO finance:view/manage
+    // NO users:manage
+    // NO transitions:view/approve
   ],
   member: [],
 };
 
 /**
+ * Check if webmaster debug readonly mode is enabled.
+ * This allows webmaster to have read-only access to member/registration data
+ * for debugging purposes. Default is OFF.
+ */
+export function isWebmasterDebugEnabled(): boolean {
+  return process.env.WEBMASTER_DEBUG_READONLY === "true";
+}
+
+/**
+ * Get effective capabilities for a role, considering runtime configuration.
+ */
+function getEffectiveCapabilities(role: GlobalRole): Capability[] {
+  const baseCaps = ROLE_CAPABILITIES[role];
+
+  // If webmaster debug mode is enabled, add read-only access
+  if (role === "webmaster" && isWebmasterDebugEnabled()) {
+    return [
+      ...baseCaps,
+      "members:view",
+      "registrations:view",
+      "events:view",
+      "debug:readonly",
+    ];
+  }
+
+  return baseCaps;
+}
+
+/**
  * Check if a role has a specific capability.
+ * Uses effective capabilities which may include runtime-configured additions.
  */
 export function hasCapability(role: GlobalRole, capability: Capability): boolean {
-  const caps = ROLE_CAPABILITIES[role];
+  const caps = getEffectiveCapabilities(role);
   // admin:full implies all capabilities
   if (caps.includes("admin:full")) return true;
   return caps.includes(capability);
+}
+
+/**
+ * Get all capabilities for a role (for debugging/introspection).
+ */
+export function getRoleCapabilities(role: GlobalRole): Capability[] {
+  return getEffectiveCapabilities(role);
 }
 
 /**
@@ -238,7 +357,7 @@ export async function requireCapability(
  * Check if role can view all events (including unpublished).
  */
 export function canViewAllEvents(role: GlobalRole): boolean {
-  return role === "admin" || role === "vp-activities";
+  return hasCapability(role, "events:view");
 }
 
 /**
@@ -246,14 +365,15 @@ export function canViewAllEvents(role: GlobalRole): boolean {
  * VP of Activities can edit ALL events (peer trust model).
  */
 export function canEditAnyEvent(role: GlobalRole): boolean {
-  return role === "admin" || role === "vp-activities";
+  return hasCapability(role, "events:edit");
 }
 
 /**
  * Check if role can publish events.
+ * Same as edit for now - publishing is an edit operation.
  */
 export function canPublishEvents(role: GlobalRole): boolean {
-  return role === "admin" || role === "vp-activities";
+  return hasCapability(role, "events:edit");
 }
 
 /**
@@ -261,7 +381,7 @@ export function canPublishEvents(role: GlobalRole): boolean {
  * Only admin can delete - VP cannot.
  */
 export function canDeleteEvents(role: GlobalRole): boolean {
-  return role === "admin";
+  return hasCapability(role, "events:delete");
 }
 
 /**
@@ -308,6 +428,26 @@ function parseTestToken(token: string): AuthContext | null {
       memberId,
       email: "chair@test.com",
       globalRole: "event-chair",
+    };
+  }
+
+  // Test President token
+  if (token.startsWith("test-president-")) {
+    const memberId = token.slice(15) || "test-president-id";
+    return {
+      memberId,
+      email: "president@test.com",
+      globalRole: "president",
+    };
+  }
+
+  // Test Past President token
+  if (token.startsWith("test-past-president-")) {
+    const memberId = token.slice(20) || "test-past-president-id";
+    return {
+      memberId,
+      email: "past-president@test.com",
+      globalRole: "past-president",
     };
   }
 
@@ -359,6 +499,22 @@ function parseTestToken(token: string): AuthContext | null {
       memberId: "test-member-id",
       email: "member@test.com",
       globalRole: "member",
+    };
+  }
+
+  if (token === "president-token" || token === "test-president") {
+    return {
+      memberId: "test-president-id",
+      email: "president@test.com",
+      globalRole: "president",
+    };
+  }
+
+  if (token === "past-president-token" || token === "test-past-president") {
+    return {
+      memberId: "test-past-president-id",
+      email: "past-president@test.com",
+      globalRole: "past-president",
     };
   }
 

@@ -3,13 +3,13 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
+import { requireCapability } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 import { getAudienceCount, AudienceRules } from "@/lib/publishing/audience";
 
 // GET /api/admin/comms/audience-rules - List all audience rules
 export async function GET(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   const rules = await prisma.audienceRule.findMany({
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/comms/audience-rules - Create new audience rule
 export async function POST(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   if (auth.context.globalRole !== "admin") {
@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
 
 // PUT /api/admin/comms/audience-rules - Update audience rule (expects ?id=xxx in query)
 export async function PUT(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   if (auth.context.globalRole !== "admin") {
@@ -217,7 +217,7 @@ export async function PUT(req: NextRequest) {
 
 // DELETE /api/admin/comms/audience-rules - Delete audience rule (expects ?id=xxx in query)
 export async function DELETE(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   if (auth.context.globalRole !== "admin") {

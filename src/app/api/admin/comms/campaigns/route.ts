@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
+import { requireCapability } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 
 type CampaignListItem = {
@@ -19,7 +19,7 @@ type CampaignListItem = {
 
 // GET /api/admin/comms/campaigns - List all campaigns
 export async function GET(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   const { searchParams } = new URL(req.url);
@@ -80,7 +80,7 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/comms/campaigns - Create new campaign
 export async function POST(req: NextRequest) {
-  const auth = await requireAuth(req);
+  const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
   if (auth.context.globalRole !== "admin") {

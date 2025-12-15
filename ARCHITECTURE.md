@@ -449,27 +449,48 @@ The webmaster role has been clarified to be a **UI/site management role**, NOT a
 
 ### Capability-Based Permissions
 
-A new capability system was added to `src/lib/auth.ts`:
+The capability system in `src/lib/auth.ts` controls fine-grained access:
 
 ```typescript
 type Capability =
   | "publishing:manage"     // Pages, themes, templates, media
   | "comms:manage"          // Email templates, audiences, campaigns
+  | "comms:send"            // Actually send campaigns (separate from manage)
   | "members:view"          // Read-only member detail
+  | "members:history"       // View member service history narrative
   | "registrations:view"    // Read-only registration detail
+  | "events:view"           // View all events including unpublished
+  | "events:edit"           // Edit any event
+  | "events:delete"         // Delete events (admin only)
   | "exports:access"        // Access to data export endpoints
   | "finance:view"          // View financial data
   | "finance:manage"        // Edit financial data
+  | "transitions:view"      // View transition plans
+  | "transitions:approve"   // Approve transition plans
   | "users:manage"          // Create/update user roles and entitlements
-  | "admin:full";           // Full admin access (implies all)
+  | "admin:full"            // Full admin access (implies all)
+  | "debug:readonly";       // Debug read-only access
 ```
 
-Role capability mappings:
-- `admin`: All capabilities
-- `webmaster`: publishing:manage, comms:manage, members:view, registrations:view
-- `vp-activities`: members:view, registrations:view (plus event-specific permissions)
-- `event-chair`: members:view, registrations:view
+### Role Capability Mappings (v0.2.5)
+
+- `admin`: All capabilities (has admin:full)
+- `president`: members:view/history, events:view/edit, finance:view, transitions:view/approve, exports:access
+- `past-president`: members:view/history, events:view, transitions:view (advisory - no edit/approve)
+- `vp-activities`: members:view/history, events:view/edit, transitions:view/approve
+- `event-chair`: members:view, registrations:view, events:view (committee-scoped edit TBD)
+- `webmaster`: publishing:manage, comms:manage (NO member/registration/finance access)
 - `member`: No admin capabilities
+
+### Webmaster Debug Override
+
+For debugging/support, set `WEBMASTER_DEBUG_READONLY=true` to enable:
+- members:view (read-only)
+- registrations:view (read-only)
+- events:view (read-only)
+- debug:readonly flag
+
+Default is OFF - webmaster has no member/registration access by default.
 
 ### Route Guards Updated
 
@@ -484,6 +505,9 @@ Publishing endpoints use `publishing:manage` capability:
 - `GET/PUT/POST /api/admin/content/pages/[id]` - OK for webmaster
 - `DELETE /api/admin/content/pages/[id]` - Published pages require admin:full
 
+Member history endpoint requires `members:history` capability:
+- `GET /api/admin/members/[id]/history` - 403 for webmaster, event-chair
+
 ### Debug Support Endpoint
 
 A debug endpoint for webmaster support was added:
@@ -494,9 +518,67 @@ A debug endpoint for webmaster support was added:
 
 ### Test Coverage
 
-- **Unit tests:** 185 tests (added auth-capabilities.spec.ts)
+- **Unit tests:** 263+ tests (auth-capabilities.spec.ts with 57 role/capability tests)
 - **API tests:** Added webmaster-access.spec.ts for role restrictions
 - **Permission tests:** Updated to reflect webmaster is NOT full admin
+- **Member history tests:** admin-member-history.spec.ts for UI and API permission checks
+- **New role tests:** president, past-president capability tests added
+
+----------------------------------------------------------------
+
+## Service History and Transitions
+
+### Term Boundaries
+
+ClubOS operates on a semi-annual term cycle:
+
+- **Winter term**: August 1 through January 31
+- **Summer term**: February 1 through July 31
+
+Transitions occur at midnight Pacific Time on Feb 1 and Aug 1.
+
+### Transition Widget
+
+The transition countdown widget helps leadership manage semi-annual role transitions. It appears on dashboards of:
+
+- President (via active `BOARD_OFFICER` service record with roleTitle "President")
+- Past President (via active `BOARD_OFFICER` service record with roleTitle "Past President")
+
+**Visibility window:**
+
+- Default lead time: 60 days before transition date
+- Configurable via `TRANSITION_WIDGET_LEAD_DAYS` environment variable
+- Widget shows: next transition date, days remaining, term name, and plan status
+
+**Permissions:**
+
+| Action | President | Past President | VP | Board | Webmaster |
+|--------|-----------|----------------|-----|-------|-----------|
+| View widget | Yes | Yes | No | No | No |
+| Create plan | Yes | No | No | No | No |
+| Edit plan | Yes | No | No | No | No |
+| Sign off | Yes | Yes | No | No | No |
+| Apply plan | Yes | No | No | No | No |
+
+**API endpoint:**
+
+- `GET /api/v1/admin/transitions/widget` - Returns widget data and visibility status
+
+### Service History Records
+
+The `MemberServiceHistory` model tracks:
+
+- `BOARD_OFFICER`: Board positions (President, VP Activities, etc.)
+- `COMMITTEE_CHAIR`: Committee leadership
+- `COMMITTEE_MEMBER`: Committee membership
+- `EVENT_HOST`: Event hosting (auto-created when assigned as event chair, auto-closed day after event ends)
+- `VOLUNTEER`: General volunteer service
+
+All service records include:
+
+- Start date and optional end date
+- Role title and optional committee/event association
+- Link to transition plan (if created via transition workflow)
 
 ----------------------------------------------------------------
 

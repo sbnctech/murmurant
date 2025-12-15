@@ -31,6 +31,10 @@ describe("Auth Capabilities", () => {
         expect(hasCapability(role, "members:view")).toBe(true);
       });
 
+      it("has members:history capability", () => {
+        expect(hasCapability(role, "members:history")).toBe(true);
+      });
+
       it("has registrations:view capability", () => {
         expect(hasCapability(role, "registrations:view")).toBe(true);
       });
@@ -67,12 +71,20 @@ describe("Auth Capabilities", () => {
         expect(hasCapability(role, "comms:manage")).toBe(true);
       });
 
-      it("has members:view capability (read-only support)", () => {
-        expect(hasCapability(role, "members:view")).toBe(true);
+      it("does NOT have members:view capability (hardened restriction)", () => {
+        // Webmaster is now restricted from viewing member data by default
+        // Set WEBMASTER_DEBUG_READONLY=true to enable for debugging
+        expect(hasCapability(role, "members:view")).toBe(false);
       });
 
-      it("has registrations:view capability (read-only support)", () => {
-        expect(hasCapability(role, "registrations:view")).toBe(true);
+      it("does NOT have registrations:view capability (hardened restriction)", () => {
+        // Webmaster is now restricted from viewing registration data by default
+        expect(hasCapability(role, "registrations:view")).toBe(false);
+      });
+
+      it("does NOT have members:history capability", () => {
+        // Webmaster cannot see member service history narrative
+        expect(hasCapability(role, "members:history")).toBe(false);
       });
 
       it("does NOT have exports:access capability", () => {
@@ -110,6 +122,11 @@ describe("Auth Capabilities", () => {
         expect(hasCapability(role, "members:view")).toBe(true);
       });
 
+      it("has members:history capability", () => {
+        // VP roles can view member service history
+        expect(hasCapability(role, "members:history")).toBe(true);
+      });
+
       it("has registrations:view capability", () => {
         expect(hasCapability(role, "registrations:view")).toBe(true);
       });
@@ -126,8 +143,94 @@ describe("Auth Capabilities", () => {
         expect(hasCapability(role, "registrations:view")).toBe(true);
       });
 
+      it("does NOT have members:history capability", () => {
+        // Event chairs see only event-related member info
+        expect(hasCapability(role, "members:history")).toBe(false);
+      });
+
       it("does NOT have publishing:manage capability", () => {
         expect(hasCapability(role, "publishing:manage")).toBe(false);
+      });
+    });
+
+    describe("president role", () => {
+      const role: GlobalRole = "president";
+
+      it("has members:view capability", () => {
+        expect(hasCapability(role, "members:view")).toBe(true);
+      });
+
+      it("has members:history capability", () => {
+        expect(hasCapability(role, "members:history")).toBe(true);
+      });
+
+      it("has events:view capability", () => {
+        expect(hasCapability(role, "events:view")).toBe(true);
+      });
+
+      it("has events:edit capability", () => {
+        expect(hasCapability(role, "events:edit")).toBe(true);
+      });
+
+      it("has finance:view capability", () => {
+        expect(hasCapability(role, "finance:view")).toBe(true);
+      });
+
+      it("has transitions:approve capability", () => {
+        expect(hasCapability(role, "transitions:approve")).toBe(true);
+      });
+
+      it("has exports:access capability", () => {
+        expect(hasCapability(role, "exports:access")).toBe(true);
+      });
+
+      it("does NOT have admin:full capability", () => {
+        expect(hasCapability(role, "admin:full")).toBe(false);
+      });
+
+      it("does NOT have finance:manage capability", () => {
+        // President views but treasurer manages
+        expect(hasCapability(role, "finance:manage")).toBe(false);
+      });
+
+      it("does NOT have events:delete capability", () => {
+        // Use cancel flow instead
+        expect(hasCapability(role, "events:delete")).toBe(false);
+      });
+    });
+
+    describe("past-president role", () => {
+      const role: GlobalRole = "past-president";
+
+      it("has members:view capability", () => {
+        expect(hasCapability(role, "members:view")).toBe(true);
+      });
+
+      it("has members:history capability", () => {
+        expect(hasCapability(role, "members:history")).toBe(true);
+      });
+
+      it("has events:view capability", () => {
+        expect(hasCapability(role, "events:view")).toBe(true);
+      });
+
+      it("has transitions:view capability", () => {
+        expect(hasCapability(role, "transitions:view")).toBe(true);
+      });
+
+      it("does NOT have events:edit capability", () => {
+        // Advisory role - can view but not edit
+        expect(hasCapability(role, "events:edit")).toBe(false);
+      });
+
+      it("does NOT have transitions:approve capability", () => {
+        // Current officers only
+        expect(hasCapability(role, "transitions:approve")).toBe(false);
+      });
+
+      it("does NOT have finance:view capability", () => {
+        // Past role doesn't need current finance access
+        expect(hasCapability(role, "finance:view")).toBe(false);
       });
     });
 
@@ -139,6 +242,7 @@ describe("Auth Capabilities", () => {
           "publishing:manage",
           "comms:manage",
           "members:view",
+          "members:history",
           "registrations:view",
           "exports:access",
           "finance:view",
@@ -191,6 +295,15 @@ describe("Auth Capabilities", () => {
 
     it("returns false for event-chair role", () => {
       expect(isFullAdmin("event-chair")).toBe(false);
+    });
+
+    it("returns false for president role", () => {
+      // President has extensive access but is NOT admin:full
+      expect(isFullAdmin("president")).toBe(false);
+    });
+
+    it("returns false for past-president role", () => {
+      expect(isFullAdmin("past-president")).toBe(false);
     });
 
     it("returns false for member role", () => {

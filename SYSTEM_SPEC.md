@@ -1808,6 +1808,7 @@ Webmaster Restrictions:
 - NO exports:access - Cannot download CSV exports
 - NO finance:view/manage - Cannot see financial data
 - NO users:manage - Cannot change user roles/entitlements
+- NO members:history - Cannot view member service history narrative
 - Cannot delete published pages (only full admins can)
 
 ### Capability System
@@ -1843,6 +1844,121 @@ For support debugging, when WEBMASTER_SUPPORT_DEBUG=1:
 - 185 unit tests (added auth-capabilities.spec.ts)
 - Added webmaster-access.spec.ts for API restrictions
 - Updated permissions.spec.ts (webmaster NOT full admin)
+
+----------------------------------------------------------------
+
+## Version 0.2.4 - Member History and Permission Refinement
+
+### Member History Feature
+
+Added member service history viewing capability to admin UI.
+
+**New Capability: members:history**
+- View member service history narrative
+- See stats (events attended, volunteer roles, leadership roles, years active)
+- Copy summary text to clipboard
+- View detailed timeline of service records
+
+**Role Access:**
+- admin: Full access (has admin:full)
+- vp-activities: Full access (leadership oversight)
+- webmaster: DENIED (default, not needed for UI/site work)
+- event-chair: DENIED (only see event-related member info)
+- member: DENIED (no admin access)
+
+### Admin UI Integration
+
+Member Detail page (/admin/members/[id]) now includes:
+- History panel below registrations table
+- Stats row showing events, volunteer roles, leadership roles, years active
+- Summary text narrative describing member's involvement
+- Copy button to copy summary to clipboard
+- Collapsible timeline table for audit/detail view
+
+### API Endpoints
+
+**GET /api/admin/members/[id]/history**
+- Requires members:history capability
+- Returns: memberId, memberName, summaryText, stats, timeline
+- 403 Forbidden for unauthorized roles
+- 404 for invalid member ID
+
+### Tests
+
+- Unit tests for members:history capability in auth-capabilities.spec.ts
+- E2E tests in admin-member-history.spec.ts:
+  - Panel visibility for admin role
+  - Summary and stats display
+  - Copy button presence
+  - API permission checks for all roles
+
+----------------------------------------------------------------
+
+## Version 0.2.5 - Authorization Hardening
+
+### Webmaster Posture
+
+The webmaster role has been hardened to reflect SBNC operational reality.
+Webmaster is a **UI/site management role**, NOT a full admin.
+
+**Webmaster CAN:**
+- Manage publishing assets (pages, themes, templates)
+- Manage communication templates (email templates, audience rules)
+- View mailing lists and campaigns
+
+**Webmaster CANNOT (hardened restrictions):**
+- See any financial information (finance:view/manage)
+- Change anyone's entitlements or roles (users:manage)
+- Access data exports (exports:access)
+- View member data (members:view) - removed in v0.2.5
+- View registration data (registrations:view) - removed in v0.2.5
+- View member service history (members:history)
+- Send campaigns (comms:send) - create only, send denied
+
+**Debug Override:**
+For support/debugging purposes, set `WEBMASTER_DEBUG_READONLY=true` to grant
+webmaster read-only access to member and registration data. Default is OFF.
+
+### New Roles
+
+Added SBNC-specific leadership roles:
+
+**president:**
+- Full visibility into operations (members, events, registrations)
+- Can view member service history
+- Can approve transitions
+- Can view financial data (but not manage)
+- Cannot delete events (use cancel flow)
+
+**past-president:**
+- Advisory role with limited access
+- Can view members, events, registrations
+- Can view transitions (but not approve)
+- Cannot edit events
+- No financial access
+
+### New Capabilities
+
+Added to support fine-grained access:
+- events:view - View all events including unpublished
+- events:edit - Edit any event
+- events:delete - Delete events (admin only)
+- comms:send - Actually send campaigns
+- transitions:view - View transition plans
+- transitions:approve - Approve transition plans
+- debug:readonly - Debug read-only access
+
+### Route Hardening
+
+Content and comms routes now use capability-based checks:
+- /api/admin/content/* - publishing:manage
+- /api/admin/comms/* - comms:manage
+
+### Tests
+
+- Updated auth-capabilities.spec.ts with new roles and capabilities
+- Removed webmaster members:view assumption
+- Added president/past-president capability tests
 
 ----------------------------------------------------------------
 
