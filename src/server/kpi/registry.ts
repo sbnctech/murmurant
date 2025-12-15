@@ -1,48 +1,45 @@
-/**
- * KPI Registry - Central registry for KPI evaluators.
- */
+import type { KPIEvaluator } from "./types";
 
-import { KPIEvaluator } from "./types";
+export class KPIRegistry {
+  private readonly byId = new Map<string, KPIEvaluator>();
 
-class KPIRegistry {
-  private evaluators: Map<string, KPIEvaluator> = new Map();
-
-  register(evaluator: KPIEvaluator): void {
-    if (this.evaluators.has(evaluator.id)) {
-      throw new Error(
-        `KPI evaluator with id '${evaluator.id}' is already registered`
-      );
-    }
-    this.evaluators.set(evaluator.id, evaluator);
-  }
-
-  get(id: string): KPIEvaluator | undefined {
-    return this.evaluators.get(id);
-  }
-
-  has(id: string): boolean {
-    return this.evaluators.has(id);
-  }
-
-  getIds(): string[] {
-    return Array.from(this.evaluators.keys());
-  }
-
-  getAll(): KPIEvaluator[] {
-    return Array.from(this.evaluators.values());
-  }
-
-  unregister(id: string): boolean {
-    return this.evaluators.delete(id);
+  get size(): number {
+    return this.byId.size;
   }
 
   clear(): void {
-    this.evaluators.clear();
+    this.byId.clear();
   }
 
-  get size(): number {
-    return this.evaluators.size;
+  has(id: string): boolean {
+    return this.byId.has(id);
+  }
+
+  get(id: string): KPIEvaluator | undefined {
+    return this.byId.get(id);
+  }
+
+  getIds(): string[] {
+    return Array.from(this.byId.keys());
+  }
+
+  getAll(): KPIEvaluator[] {
+    return Array.from(this.byId.values());
+  }
+
+  register(evaluator: KPIEvaluator): void {
+    if (this.byId.has(evaluator.id)) {
+      throw new Error(`KPI evaluator already registered: ${evaluator.id}`);
+    }
+    this.byId.set(evaluator.id, evaluator);
+  }
+
+  unregister(id: string): boolean {
+    return this.byId.delete(id);
   }
 }
 
+/*
+ * Existing files import { kpiRegistry } from "./registry"
+ */
 export const kpiRegistry = new KPIRegistry();

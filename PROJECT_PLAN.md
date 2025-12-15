@@ -428,3 +428,12 @@ Coordination with engineering workflow
 - This plan allows:
   - ClaudeCode and other agents to continue evolving admin views, tests, and communication flows.
   - Minimal churn in core data-model code until the database layer is stable.
+
+## Backlog
+
+- [V2] Testing (system-wide)
+  - Spec: docs/TESTING_STRATEGY.md
+  - Add npm scripts: test:unit, test:integration, test:e2e, test:ci
+  - Establish integration test harness (API + RBAC + DB strategy)
+  - Add RBAC test matrix coverage
+  - Add coverage ratchet (incremental thresholds)

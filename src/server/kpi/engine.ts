@@ -161,6 +161,7 @@ export class KPIEngine {
     return {
       runStartedAt,
       runCompletedAt,
+    evaluatedAt: runCompletedAt,
       total: results.length,
       byStatus,
       overallStatus,

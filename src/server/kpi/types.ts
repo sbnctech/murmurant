@@ -1,81 +1,69 @@
-/**
- * KPI Engine Types
- */
-
 export type KPIStatus = "OK" | "WARNING" | "CRITICAL" | "UNKNOWN";
+
+export type KPIView =
+  | "board"
+  | "vp_activities"
+  | "vp_membership"
+  | "treasurer"
+  | "tech";
 
 export interface KPIResult {
   kpiId: string;
   name: string;
   status: KPIStatus;
   message: string;
-  value?: number;
-  unit?: string;
-  warningThreshold?: number;
-  criticalThreshold?: number;
   evaluatedAt: Date;
+
+  view?: KPIView;
+  details?: Record<string, unknown>;
+  links?: Array<{ label: string; href: string }>;
   metadata?: Record<string, unknown>;
 }
 
 export interface KPIConfig {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   enabled: boolean;
   category: string;
-  warningThreshold?: number;
-  criticalThreshold?: number;
-  options?: Record<string, unknown>;
+
+  view?: KPIView;
+
+  thresholds?: Record<string, number>;
+  flags?: Record<string, boolean>;
 }
 
 export interface KPIContext {
   evaluationTime: Date;
   startDate?: Date;
   endDate?: Date;
-}
-
-export interface KPIEvaluator {
-  readonly id: string;
-  evaluate(config: KPIConfig, context: KPIContext): Promise<KPIResult>;
+  view?: KPIView;
 }
 
 export interface KPIConfigLoader {
   loadConfigs(): Promise<KPIConfig[]>;
-  loadConfig(id: string): Promise<KPIConfig | undefined>;
+  loadConfig(kpiId: string): Promise<KPIConfig | undefined>;
+}
+
+export interface KPIEngineOptions {
+  timeoutMs?: number;
+  configLoader?: KPIConfigLoader;
+  parallel?: boolean;
 }
 
 export interface KPIRunSummary {
   runStartedAt: Date;
   runCompletedAt: Date;
-  total: number;
-  byStatus: Record<KPIStatus, number>;
+  evaluatedAt: Date;
   overallStatus: KPIStatus;
+  byStatus: Record<KPIStatus, number>;
   results: KPIResult[];
+  total: number;
 }
 
-export interface KPIEngineOptions {
-  configLoader?: KPIConfigLoader;
-  parallel?: boolean;
-  timeoutMs?: number;
+export interface KPIEvaluator {
+  id: string;
+  evaluate(config: KPIConfig, context: KPIContext): Promise<KPIResult>;
 }
 
-export const DEFAULT_KPI_CONFIGS: KPIConfig[] = [
-  {
-    id: "website-uptime",
-    name: "Website Uptime",
-    description: "Monitors website availability and response time",
-    enabled: true,
-    category: "operations",
-    warningThreshold: 99.5,
-    criticalThreshold: 99.0,
-  },
-  {
-    id: "email-bounce-rate",
-    name: "Email Bounce Rate",
-    description: "Tracks email delivery bounce rate",
-    enabled: true,
-    category: "operations",
-    warningThreshold: 5,
-    criticalThreshold: 10,
-  },
-];
+export const DEFAULT_KPI_CONFIGS: KPIConfig[] = [];
