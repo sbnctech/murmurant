@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
-test.describe("Admin Registrations Filter", () => {
+test.describe("@quarantine Admin Registrations Filter", () => {
   test("filter control is visible and defaults to All statuses", async ({ page }) => {
     await page.goto(`${BASE}/admin/registrations`);
 

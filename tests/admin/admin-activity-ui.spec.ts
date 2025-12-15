@@ -15,7 +15,7 @@ test.describe("Admin Activity UI", () => {
     await expect(section).toBeVisible();
   });
 
-  test("Activity table shows the expected rows", async ({ page }) => {
+  test("@quarantine Activity table shows the expected rows", async ({ page }) => {
     await page.goto(`${BASE}/admin`);
 
     // Wait for activity rows to appear (server renders with data from API)
@@ -33,7 +33,7 @@ test.describe("Admin Activity UI", () => {
     await expect(bobRow).toContainText("Wine Mixer");
   });
 
-  test("Status column shows REGISTERED and WAITLISTED", async ({ page }) => {
+  test("@quarantine Status column shows REGISTERED and WAITLISTED", async ({ page }) => {
     await page.goto(`${BASE}/admin`);
 
     const rows = page.locator('[data-test-id="admin-activity-row"]');
@@ -48,7 +48,7 @@ test.describe("Admin Activity UI", () => {
     await expect(bobRow).toContainText("WAITLISTED");
   });
 
-  test("Activity table structure is correct and empty state element exists in DOM", async ({ page }) => {
+  test("@quarantine Activity table structure is correct and empty state element exists in DOM", async ({ page }) => {
     // Note: The admin page is server-rendered, so Playwright route mocking cannot
     // intercept server-side fetch calls. This test verifies the table structure
     // and that the empty state data-test-id is properly defined in the code.

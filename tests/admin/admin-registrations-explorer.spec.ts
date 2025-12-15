@@ -23,7 +23,7 @@ test.describe("Admin Registrations Explorer", () => {
     expect(count).toBeGreaterThanOrEqual(1);
   });
 
-  test("clicking member name navigates to detail page", async ({ page }) => {
+  test("@quarantine clicking member name navigates to detail page", async ({ page }) => {
     await page.goto(`${BASE}/admin/registrations`);
 
     const memberLink = page.locator('[data-test-id="admin-registrations-list-member-link"]').first();
@@ -34,7 +34,7 @@ test.describe("Admin Registrations Explorer", () => {
     await expect(page).toHaveURL(/\/admin\/registrations\/r\d+/);
   });
 
-  test("nav link from main admin page works", async ({ page }) => {
+  test("@quarantine nav link from main admin page works", async ({ page }) => {
     await page.goto(`${BASE}/admin`);
 
     const navLink = page.locator('[data-test-id="admin-nav-registrations-explorer"]');

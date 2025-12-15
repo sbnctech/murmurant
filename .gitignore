@@ -13,3 +13,7 @@ tmp/mock-email-log.json
 test-results/
 tsconfig.tsbuildinfo
 .vercel/
+# Local test artifacts
+playwright-report/
+coverage/
+.coverage/

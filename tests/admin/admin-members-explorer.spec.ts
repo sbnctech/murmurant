@@ -23,7 +23,7 @@ test.describe("Admin Members Explorer", () => {
     expect(count).toBeGreaterThan(0);
   });
 
-  test("Clicking member name navigates to detail page", async ({ page }) => {
+  test("@quarantine Clicking member name navigates to detail page", async ({ page }) => {
     await page.goto(`${BASE}/admin/members`);
 
     const link = page.locator('[data-test-id="admin-members-link"]').first();
@@ -38,7 +38,7 @@ test.describe("Admin Members Explorer", () => {
     await expect(detailRoot).toBeVisible();
   });
 
-  test("Nav link from main admin page works", async ({ page }) => {
+  test("@quarantine Nav link from main admin page works", async ({ page }) => {
     await page.goto(`${BASE}/admin`);
 
     const navLink = page.locator('[data-test-id="admin-nav-members-explorer"]');

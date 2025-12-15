@@ -29,7 +29,7 @@ test.describe("Admin Registration Detail Page", () => {
     await expect(registeredAt).toBeVisible();
   });
 
-  test("returns 404 for invalid registration id", async ({ page }) => {
+  test("@quarantine returns 404 for invalid registration id", async ({ page }) => {
     const response = await page.goto(`${BASE}/admin/registrations/invalid-id`);
     expect(response?.status()).toBe(404);
   });

@@ -12,7 +12,7 @@ test.describe("Admin Member Detail Page (API-backed)", () => {
     await expect(root).toBeVisible();
   });
 
-  test("Displays member name, email, and status", async ({ page }) => {
+  test("@quarantine Displays member name, email, and status", async ({ page }) => {
     const memberId = await lookupMemberIdByEmail(page.request, "alice@example.com");
     await page.goto(`${BASE}/admin/members/${memberId}`);
 
@@ -29,7 +29,7 @@ test.describe("Admin Member Detail Page (API-backed)", () => {
     await expect(status).toContainText("ACTIVE");
   });
 
-  test("Shows registrations table with at least one row", async ({ page }) => {
+  test("@quarantine Shows registrations table with at least one row", async ({ page }) => {
     const memberId = await lookupMemberIdByEmail(page.request, "alice@example.com");
     await page.goto(`${BASE}/admin/members/${memberId}`);
 

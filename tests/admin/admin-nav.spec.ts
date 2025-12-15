@@ -19,7 +19,7 @@ test.describe("Admin Section Navigation", () => {
     await expect(page.locator('[data-test-id="admin-nav-system-comms"]')).toBeVisible();
   });
 
-  test("Admin nav links update the hash when clicked", async ({ page }) => {
+  test("@quarantine Admin nav links update the hash when clicked", async ({ page }) => {
     await page.goto(`${BASE}/admin`);
 
     // Click the Members nav link

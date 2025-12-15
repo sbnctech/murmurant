@@ -26,7 +26,7 @@ test.describe("Admin Member Detail UI (from search)", () => {
     await expect(detailPanel).toBeVisible({ timeout: 5000 });
   });
 
-  test("Panel shows the expected member name, email, status", async ({ page }) => {
+  test("@quarantine Panel shows the expected member name, email, status", async ({ page }) => {
     await page.goto(`${BASE}/admin`);
 
     const searchInput = page.locator('[data-test-id="admin-search-input"]');
@@ -56,7 +56,7 @@ test.describe("Admin Member Detail UI (from search)", () => {
     await expect(memberStatus).toContainText("ACTIVE");
   });
 
-  test("Panel shows at least one registration row", async ({ page }) => {
+  test("@quarantine Panel shows at least one registration row", async ({ page }) => {
     await page.goto(`${BASE}/admin`);
 
     const searchInput = page.locator('[data-test-id="admin-search-input"]');

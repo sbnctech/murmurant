@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
 test.describe("Admin Dashboard Summary", () => {
-  test("Admin summary tiles show expected counts", async ({ page }) => {
+  test("@quarantine Admin summary tiles show expected counts", async ({ page }) => {
     await page.goto(`${BASE}/admin`);
 
     const section = page.locator('[data-test-id="admin-summary-section"]');

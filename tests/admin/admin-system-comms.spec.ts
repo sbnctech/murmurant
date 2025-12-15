@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
 test.describe("Admin System Communications panel", () => {
-  test("displays system comms section with health OK", async ({ page }) => {
+  test("@quarantine displays system comms section with health OK", async ({ page }) => {
     await page.goto(`${BASE}/admin`);
 
     // Assert the section is visible

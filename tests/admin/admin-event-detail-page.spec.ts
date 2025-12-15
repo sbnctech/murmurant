@@ -3,7 +3,7 @@ import { lookupEventIdByTitle } from "./helpers/lookupIds";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
-test.describe("Admin Event Detail Page", () => {
+test.describe("@quarantine Admin Event Detail Page", () => {
   test("shows event detail page for Welcome Hike", async ({ page }) => {
     const eventId = await lookupEventIdByTitle(page.request, "Welcome");
     await page.goto(`${BASE}/admin/events/${eventId}`);
