@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import MemberHistoryPanel from "./MemberHistoryPanel";
 
 const adminHeaders = process.env.ADMIN_E2E_TOKEN ? { "x-admin-test-token": process.env.ADMIN_E2E_TOKEN } : undefined;
 
@@ -146,6 +147,9 @@ export default async function MemberDetailPage({ params }: PageProps) {
           )}
         </tbody>
       </table>
+
+      {/* History Tab - client component, permission-gated */}
+      <MemberHistoryPanel memberId={member.id} />
     </div>
   );
 }

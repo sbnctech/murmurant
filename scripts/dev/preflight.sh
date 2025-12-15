@@ -58,19 +58,21 @@ fi
 echo ""
 
 # Step 5: Admin tests
-echo "[5/5] Running admin tests..."
-echo "[SKIP] Tests are not run in pre-push preflight. Run in CI instead."
-echo "       To run locally: npm run test-admin (or the project test command)"
-if [ $? -ne 0 ]; then
+echo "[5/5] Running everything-green suite (stable)..."
+if [ "$SKIP_GREEN" = "1" ]; then
+  echo "[SKIP] SKIP_GREEN=1 set. Skipping green suite."
+  echo "       To run: ./scripts/dev/green.sh"
+else
+  ./scripts/dev/green.sh
+  if [ $? -ne 0 ]; then
     echo ""
-    echo "Preflight FAILED: Admin tests failed."
+    echo "Preflight FAILED: Green suite failed."
     exit 1
+  fi
 fi
-echo ""
 
-# All passed
+echo ""
 echo "========================================"
 echo "All preflight checks passed."
-echo "You are ready to commit and push."
 echo "========================================"
-exit 0
+

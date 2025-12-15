@@ -24,6 +24,23 @@ enum EmailStatus {
   FAILED
 }
 
+// Service History Enums
+
+enum ServiceType {
+  BOARD_OFFICER
+  COMMITTEE_CHAIR
+  COMMITTEE_MEMBER
+  EVENT_HOST
+}
+
+enum TransitionStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  APPLIED
+  CANCELLED
+}
+
 // Core Models
 
 model Member {
@@ -44,6 +61,15 @@ model Member {
   photos             Photo[]
   emailLogs          EmailLog[]
   events             Event[]
+
+  // Service History relations
+  serviceHistory               MemberServiceHistory[]
+  serviceHistoryCreated        MemberServiceHistory[] @relation("ServiceHistoryCreatedBy")
+  transitionAssignments        TransitionAssignment[]
+  transitionsPresidentApproved TransitionPlan[]       @relation("TransitionPresidentApproval")
+  transitionsVPApproved        TransitionPlan[]       @relation("TransitionVPApproval")
+  transitionsApplied           TransitionPlan[]       @relation("TransitionAppliedBy")
+  transitionsCreated           TransitionPlan[]       @relation("TransitionCreatedBy")
 
   // Publishing system relations
   pagesCreated     Page[]            @relation("PageCreatedBy")
@@ -80,8 +106,10 @@ model Committee {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  roleAssignments RoleAssignment[]
-  committeeRoles  CommitteeRole[]
+  roleAssignments       RoleAssignment[]
+  committeeRoles        CommitteeRole[]
+  serviceHistory        MemberServiceHistory[]
+  transitionAssignments TransitionAssignment[]
 
   @@index([isActive])
 }
@@ -113,6 +141,8 @@ model Term {
   updatedAt DateTime @updatedAt
 
   roleAssignments RoleAssignment[]
+  serviceHistory  MemberServiceHistory[]
+  transitionPlans TransitionPlan[]
 }
 
 model RoleAssignment {
@@ -136,6 +166,101 @@ model RoleAssignment {
   @@index([committeeRoleId])
   @@index([termId])
   @@index([termId, committeeId])
+}
+
+// Service History - Immutable records of member service
+model MemberServiceHistory {
+  id               String      @id @default(uuid()) @db.Uuid
+  memberId         String      @db.Uuid
+  serviceType      ServiceType
+  roleTitle        String // Denormalized for immutability
+  committeeId      String?     @db.Uuid
+  committeeName    String? // Denormalized
+  eventId          String?     @db.Uuid
+  eventTitle       String? // Denormalized
+  termId           String?     @db.Uuid
+  termName         String? // Denormalized
+  startAt          DateTime
+  endAt            DateTime? // null = currently active
+  transitionPlanId String?     @db.Uuid
+  notes            String?
+  createdAt        DateTime    @default(now())
+  createdById      String?     @db.Uuid
+
+  member         Member          @relation(fields: [memberId], references: [id])
+  committee      Committee?      @relation(fields: [committeeId], references: [id])
+  event          Event?          @relation(fields: [eventId], references: [id])
+  term           Term?           @relation(fields: [termId], references: [id])
+  transitionPlan TransitionPlan? @relation(fields: [transitionPlanId], references: [id])
+  createdBy      Member?         @relation("ServiceHistoryCreatedBy", fields: [createdById], references: [id])
+
+  // Reverse relation for TransitionAssignment.existingService
+  transitionAssignments TransitionAssignment[]
+
+  @@index([memberId])
+  @@index([committeeId])
+  @@index([eventId])
+  @@index([termId])
+  @@index([serviceType])
+  @@index([startAt])
+  @@index([endAt])
+  @@index([memberId, endAt])
+  @@index([transitionPlanId])
+}
+
+// Transition Plan - Scheduled leadership changes (Feb 1 / Aug 1)
+model TransitionPlan {
+  id                       String           @id @default(uuid()) @db.Uuid
+  name                     String
+  description              String?
+  targetTermId             String           @db.Uuid
+  effectiveAt              DateTime // Feb 1 or Aug 1 at midnight Pacific
+  status                   TransitionStatus @default(DRAFT)
+  presidentApprovedAt      DateTime?
+  presidentApprovedById    String?          @db.Uuid
+  vpActivitiesApprovedAt   DateTime?
+  vpActivitiesApprovedById String?          @db.Uuid
+  appliedAt                DateTime?
+  appliedById              String?          @db.Uuid
+  createdAt                DateTime         @default(now())
+  updatedAt                DateTime         @updatedAt
+  createdById              String?          @db.Uuid
+
+  targetTerm             Term                   @relation(fields: [targetTermId], references: [id])
+  presidentApprovedBy    Member?                @relation("TransitionPresidentApproval", fields: [presidentApprovedById], references: [id])
+  vpActivitiesApprovedBy Member?                @relation("TransitionVPApproval", fields: [vpActivitiesApprovedById], references: [id])
+  appliedBy              Member?                @relation("TransitionAppliedBy", fields: [appliedById], references: [id])
+  createdBy              Member?                @relation("TransitionCreatedBy", fields: [createdById], references: [id])
+  assignments            TransitionAssignment[]
+  serviceHistory         MemberServiceHistory[]
+
+  @@index([status])
+  @@index([effectiveAt])
+  @@index([targetTermId])
+}
+
+// Transition Assignment - Individual role changes in a plan
+model TransitionAssignment {
+  id               String      @id @default(uuid()) @db.Uuid
+  transitionPlanId String      @db.Uuid
+  memberId         String      @db.Uuid
+  serviceType      ServiceType
+  roleTitle        String
+  committeeId      String?     @db.Uuid
+  isOutgoing       Boolean     @default(false)
+  existingServiceId String?    @db.Uuid
+  notes            String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  transitionPlan  TransitionPlan        @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
+  member          Member                @relation(fields: [memberId], references: [id])
+  committee       Committee?            @relation(fields: [committeeId], references: [id])
+  existingService MemberServiceHistory? @relation(fields: [existingServiceId], references: [id])
+
+  @@index([transitionPlanId])
+  @@index([memberId])
+  @@index([committeeId])
 }
 
 model UserAccount {
@@ -164,10 +289,11 @@ model Event {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  registrations EventRegistration[]
-  photoAlbum    PhotoAlbum?
-  eventChairId  String?             @db.Uuid
-  eventChair    Member?             @relation(fields: [eventChairId], references: [id], onDelete: SetNull)
+  registrations  EventRegistration[]
+  photoAlbum     PhotoAlbum?
+  eventChairId   String?              @db.Uuid
+  eventChair     Member?              @relation(fields: [eventChairId], references: [id], onDelete: SetNull)
+  serviceHistory MemberServiceHistory[]
 
   @@index([eventChairId])
   @@index([startTime])

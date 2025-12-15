@@ -3,6 +3,7 @@ import { listMockEmails, MockEmailEntry } from "@/lib/email";
 import SystemCommsPanel from "./SystemCommsPanel";
 import AdminSectionNav from "./AdminSectionNav";
 import AdminSearchPanel from "./AdminSearchPanel";
+import TransitionWidget from "./TransitionWidget";
 
 // Use default dev token if ADMIN_E2E_TOKEN not set (matches auth.ts logic)
 const adminHeaders =
@@ -177,6 +178,9 @@ export default async function AdminPage() {
       </header>
 
       <AdminSectionNav />
+
+      {/* Transition Widget - visible only to President and Past President */}
+      <TransitionWidget adminToken={process.env.ADMIN_E2E_TOKEN ?? "dev-admin-token"} />
 
       <section
         id="admin-search-section"

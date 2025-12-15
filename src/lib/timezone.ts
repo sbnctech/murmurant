@@ -110,3 +110,11 @@ export function formatClubTime(dateUtc: Date, locale = "en-US"): string {
     hour12: true,
   }).format(dateUtc);
 }
+
+export function formatClubMonthYear(dateUtc: Date, locale = "en-US"): string {
+  return new Intl.DateTimeFormat(locale, {
+    timeZone: CLUB_TIMEZONE,
+    month: "short",
+    year: "numeric",
+  }).format(dateUtc);
+}
