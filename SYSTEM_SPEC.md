@@ -755,3 +755,1026 @@ Event registration delegation (partner signups)
 
 These items may be added in future phases once the core public site and mail system are stable.
 
+----------------------------------------------------------------
+
+## Publishing System (Detailed Design)
+
+### Overview
+
+The publishing system enables club administrators and designated editors to create, manage, and publish web pages without writing code. Pages are composed of reusable blocks, styled by themes, and governed by visibility rules that determine who can see what content.
+
+### Data Model
+
+#### Page
+
+Represents a single web page in the site.
+
+Fields:
+
+- id (uuid, primary key)
+- siteId (uuid, foreign key to Site)
+- path (string, unique within site, e.g., "/", "/events", "/groups/hiking")
+- title (string)
+- description (string, optional, used for SEO meta description)
+- templateId (uuid, foreign key to PageTemplate)
+- status (enum: DRAFT, PUBLISHED, ARCHIVED)
+- visibility (enum: PUBLIC, MEMBERS_ONLY, ROLE_RESTRICTED, GROUP_TARGETED)
+- visibilityRuleId (uuid, optional, foreign key to VisibilityRule)
+- publishedAt (datetime, nullable)
+- createdAt (datetime)
+- updatedAt (datetime)
+- createdBy (uuid, foreign key to Contact)
+- updatedBy (uuid, foreign key to Contact)
+
+Constraints:
+
+- Path must be unique within a site.
+- Path must start with "/" and contain only lowercase letters, numbers, hyphens, and forward slashes.
+- A page can only be published if it has at least one block.
+
+#### PageVersion
+
+Tracks version history for pages.
+
+Fields:
+
+- id (uuid, primary key)
+- pageId (uuid, foreign key to Page)
+- versionNumber (integer, auto-incremented per page)
+- snapshot (jsonb, stores serialized page state including blocks)
+- publishedAt (datetime, nullable)
+- createdAt (datetime)
+- createdBy (uuid, foreign key to Contact)
+
+Notes:
+
+- Every publish action creates a new PageVersion.
+- Restoring a previous version creates a new version with the old snapshot.
+
+#### Block
+
+Represents a content component on a page.
+
+Fields:
+
+- id (uuid, primary key)
+- pageId (uuid, foreign key to Page)
+- region (string, e.g., "header", "main", "sidebar", "footer")
+- blockType (string, e.g., "hero", "text", "image", "event-list", "cta", "gallery")
+- sortOrder (integer, position within region)
+- config (jsonb, block-specific configuration)
+- visibility (enum: INHERIT, PUBLIC, MEMBERS_ONLY, ROLE_RESTRICTED, GROUP_TARGETED)
+- visibilityRuleId (uuid, optional, foreign key to VisibilityRule)
+- createdAt (datetime)
+- updatedAt (datetime)
+
+Block Types (initial set):
+
+- hero: Full-width header with title, subtitle, background image, and optional CTA button
+- text: Rich text content (stored as HTML or structured JSON)
+- image: Single image with optional caption and alt text
+- event-list: Dynamic list of upcoming events with optional category filter
+- registration-cta: Call to action for event registration
+- callout: Highlighted message box with icon and styling variant
+- gallery: Grid of images from a media collection
+- nav-links: Custom navigation links for a section
+- member-spotlight: Featured member profile
+- contact-form: Simple contact form that sends to a configured email
+
+Block Config Examples:
+
+```
+// hero block config
+{
+  "title": "Welcome to SBNC",
+  "subtitle": "Your community awaits",
+  "backgroundImage": "/images/hero-bg.jpg",
+  "ctaText": "Join Us",
+  "ctaLink": "/join"
+}
+
+// event-list block config
+{
+  "limit": 5,
+  "categoryFilter": ["social", "outdoor"],
+  "showPastEvents": false
+}
+```
+
+#### VisibilityRule
+
+Defines complex visibility conditions for pages and blocks.
+
+Fields:
+
+- id (uuid, primary key)
+- name (string, human-readable name)
+- description (string, optional)
+- ruleType (enum: ROLE_BASED, GROUP_BASED, MEMBERSHIP_LEVEL, COMPOUND)
+- conditions (jsonb, structured rule definition)
+- createdAt (datetime)
+- updatedAt (datetime)
+
+Condition Examples:
+
+```
+// Role-based: only board members
+{
+  "type": "role",
+  "roles": ["BOARD_MEMBER", "SITE_ADMIN"]
+}
+
+// Group-based: hiking group members
+{
+  "type": "group",
+  "groupIds": ["hiking-group-uuid"]
+}
+
+// Membership level: newcomers and extended only
+{
+  "type": "membershipLevel",
+  "levels": ["NEWCOMER", "EXTENDED"]
+}
+
+// Compound: board members OR hiking group chairs
+{
+  "type": "compound",
+  "operator": "OR",
+  "rules": [
+    { "type": "role", "roles": ["BOARD_MEMBER"] },
+    { "type": "groupRole", "groupId": "hiking-group-uuid", "roles": ["CHAIR"] }
+  ]
+}
+```
+
+### Page Rendering Flow
+
+1. Request arrives for a path (e.g., "/groups/hiking").
+2. System looks up Page by path within the current Site.
+3. If page not found, return 404.
+4. If page status is not PUBLISHED, return 404 (unless viewer is an editor with preview rights).
+5. Evaluate page visibility:
+   - PUBLIC: render for all visitors.
+   - MEMBERS_ONLY: require authenticated member.
+   - ROLE_RESTRICTED or GROUP_TARGETED: evaluate VisibilityRule against viewer.
+6. Load Page, PageTemplate, Theme, and Blocks.
+7. For each Block, evaluate block-level visibility:
+   - INHERIT: use page visibility.
+   - Otherwise: evaluate block's VisibilityRule.
+8. Filter out blocks the viewer cannot see.
+9. Render page using React components, applying Theme tokens.
+
+### Editor Workflow
+
+1. Editor navigates to admin page management.
+2. Editor creates a new page:
+   - Selects a PageTemplate.
+   - Enters path, title, and description.
+   - Sets visibility level.
+3. Editor adds blocks to page regions:
+   - Chooses block type from available types for that region.
+   - Configures block via structured form (not free-form code).
+   - Sets block-level visibility if different from page.
+4. Editor saves draft (creates or updates Page and Blocks).
+5. Editor previews page (renders with editor's permissions applied).
+6. Editor publishes:
+   - System validates page has at least one block.
+   - System creates PageVersion snapshot.
+   - System sets page status to PUBLISHED and records publishedAt.
+
+----------------------------------------------------------------
+
+## Templates and Themes (Detailed Design)
+
+### PageTemplate
+
+Defines the structural layout of a page.
+
+Fields:
+
+- id (uuid, primary key)
+- siteId (uuid, foreign key to Site)
+- name (string, e.g., "Default", "Landing", "Event Detail", "Group Home")
+- slug (string, unique identifier)
+- description (string, optional)
+- regions (jsonb, defines available content regions and their constraints)
+- isDefault (boolean, one default template per site)
+- createdAt (datetime)
+- updatedAt (datetime)
+
+Region Definition:
+
+```
+{
+  "regions": [
+    {
+      "name": "header",
+      "label": "Header",
+      "allowedBlockTypes": ["hero", "nav-links"],
+      "maxBlocks": 1
+    },
+    {
+      "name": "main",
+      "label": "Main Content",
+      "allowedBlockTypes": ["text", "image", "event-list", "registration-cta", "callout", "gallery", "member-spotlight"],
+      "maxBlocks": null
+    },
+    {
+      "name": "sidebar",
+      "label": "Sidebar",
+      "allowedBlockTypes": ["nav-links", "callout", "contact-form"],
+      "maxBlocks": 3
+    },
+    {
+      "name": "footer",
+      "label": "Footer",
+      "allowedBlockTypes": ["text", "nav-links"],
+      "maxBlocks": 2
+    }
+  ]
+}
+```
+
+### Theme
+
+Defines visual styling via design tokens.
+
+Fields:
+
+- id (uuid, primary key)
+- siteId (uuid, foreign key to Site)
+- name (string, e.g., "SBNC Classic", "Modern Light", "Festive")
+- slug (string, unique identifier)
+- description (string, optional)
+- tokens (jsonb, design token definitions)
+- isDefault (boolean, one default theme per site)
+- createdAt (datetime)
+- updatedAt (datetime)
+
+Token Structure:
+
+```
+{
+  "colors": {
+    "primary": "#1a5f7a",
+    "primaryHover": "#134a5e",
+    "secondary": "#f5a623",
+    "background": "#ffffff",
+    "backgroundAlt": "#f8f9fa",
+    "text": "#333333",
+    "textMuted": "#666666",
+    "border": "#e0e0e0",
+    "error": "#dc3545",
+    "success": "#28a745",
+    "warning": "#ffc107"
+  },
+  "typography": {
+    "fontFamily": "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+    "fontFamilyHeading": "'Playfair Display', Georgia, serif",
+    "fontSizeBase": "16px",
+    "fontSizeSmall": "14px",
+    "fontSizeLarge": "18px",
+    "lineHeight": "1.6",
+    "headingLineHeight": "1.3"
+  },
+  "spacing": {
+    "xs": "4px",
+    "sm": "8px",
+    "md": "16px",
+    "lg": "24px",
+    "xl": "32px",
+    "xxl": "48px"
+  },
+  "borderRadius": {
+    "sm": "4px",
+    "md": "8px",
+    "lg": "16px",
+    "full": "9999px"
+  },
+  "shadows": {
+    "sm": "0 1px 2px rgba(0,0,0,0.05)",
+    "md": "0 4px 6px rgba(0,0,0,0.1)",
+    "lg": "0 10px 15px rgba(0,0,0,0.1)"
+  }
+}
+```
+
+### CSS Variable Mapping
+
+Theme tokens are exposed as CSS custom properties:
+
+```
+:root {
+  --color-primary: #1a5f7a;
+  --color-primary-hover: #134a5e;
+  --color-secondary: #f5a623;
+  --color-background: #ffffff;
+  --color-text: #333333;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-heading: 'Playfair Display', Georgia, serif;
+  --font-size-base: 16px;
+  --spacing-md: 16px;
+  --border-radius-md: 8px;
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+}
+```
+
+### Theme Application
+
+1. Page load fetches the active Theme for the Site.
+2. Server generates CSS custom properties from Theme tokens.
+3. CSS is injected into the page head.
+4. Components use variables (e.g., `color: var(--color-text)`).
+5. No component needs to know the actual color values.
+
+### Template and Theme Selection
+
+- Each Page references a PageTemplate.
+- The Site has a default Theme applied to all pages.
+- Future: per-page theme overrides (deferred to v2).
+
+----------------------------------------------------------------
+
+## Email Templates (Detailed Design)
+
+### MailTemplate
+
+Represents a reusable email template.
+
+Fields:
+
+- id (uuid, primary key)
+- siteId (uuid, foreign key to Site)
+- name (string, human-readable name)
+- slug (string, unique identifier, e.g., "event-reminder", "welcome-new-member")
+- type (enum: TRANSACTIONAL, CAMPAIGN)
+- subject (string, supports merge fields)
+- preheader (string, optional, preview text in email clients)
+- bodyHtml (text, HTML content with merge fields)
+- bodyText (text, plain text fallback with merge fields)
+- fromName (string, optional, defaults to site setting)
+- fromEmail (string, optional, defaults to site setting)
+- replyTo (string, optional)
+- isActive (boolean)
+- createdAt (datetime)
+- updatedAt (datetime)
+- createdBy (uuid, foreign key to Contact)
+
+Template Types:
+
+- TRANSACTIONAL: Triggered by system events (registration confirmation, password reset)
+- CAMPAIGN: Manually sent broadcasts (newsletters, announcements)
+
+### Merge Fields
+
+Merge fields use double-brace syntax: `{{fieldName}}`
+
+Standard Member Fields:
+
+- `{{member.firstName}}`
+- `{{member.lastName}}`
+- `{{member.fullName}}`
+- `{{member.email}}`
+- `{{member.membershipLevel}}`
+
+Standard Event Fields:
+
+- `{{event.title}}`
+- `{{event.startDate}}`
+- `{{event.startTime}}`
+- `{{event.endDate}}`
+- `{{event.endTime}}`
+- `{{event.location}}`
+- `{{event.description}}`
+
+Registration Fields:
+
+- `{{registration.status}}`
+- `{{registration.confirmationNumber}}`
+- `{{registration.registeredAt}}`
+
+System Fields:
+
+- `{{club.name}}`
+- `{{club.website}}`
+- `{{unsubscribeLink}}`
+- `{{preferencesLink}}`
+
+Example Subject:
+
+```
+Reminder: {{event.title}} is coming up on {{event.startDate}}
+```
+
+Example Body (HTML):
+
+```
+<p>Hi {{member.firstName}},</p>
+
+<p>This is a friendly reminder that <strong>{{event.title}}</strong> is
+happening on {{event.startDate}} at {{event.startTime}}.</p>
+
+<p><strong>Location:</strong> {{event.location}}</p>
+
+<p>We look forward to seeing you there!</p>
+
+<p>Best regards,<br>
+{{club.name}}</p>
+
+<p style="font-size: 12px; color: #666;">
+<a href="{{unsubscribeLink}}">Unsubscribe</a> |
+<a href="{{preferencesLink}}">Email Preferences</a>
+</p>
+```
+
+### Email Styling
+
+Email templates share design tokens with the web theme where email-safe:
+
+- Colors from Theme.tokens.colors
+- Font family uses web-safe fallbacks for email
+- Inline styles required for email client compatibility
+
+Email CSS is generated separately from web CSS, using only email-compatible properties.
+
+### EmailMessageLog
+
+Tracks all sent emails for audit and debugging.
+
+Fields:
+
+- id (uuid, primary key)
+- templateId (uuid, optional, foreign key to MailTemplate)
+- templateSlug (string, snapshot of template slug at send time)
+- recipientContactId (uuid, optional, foreign key to Contact)
+- recipientEmail (string)
+- subject (string, resolved with merge fields)
+- bodyHtml (text, resolved with merge fields)
+- bodyText (text, resolved with merge fields)
+- status (enum: PENDING, SENT, DELIVERED, BOUNCED, FAILED)
+- providerMessageId (string, optional)
+- sentAt (datetime, nullable)
+- deliveredAt (datetime, nullable)
+- bouncedAt (datetime, nullable)
+- bounceReason (string, optional)
+- metadata (jsonb, additional context like eventId, campaignId)
+- createdAt (datetime)
+
+Audit Requirements:
+
+- Every email send attempt creates an EmailMessageLog entry.
+- Status updates tracked via provider webhooks.
+- Logs retained for compliance and debugging.
+- Admin can view logs filtered by recipient, template, status, or date range.
+
+----------------------------------------------------------------
+
+## Mailing Lists (Detailed Design)
+
+### MailingList
+
+Represents a logical list of email recipients.
+
+Fields:
+
+- id (uuid, primary key)
+- siteId (uuid, foreign key to Site)
+- name (string, e.g., "All Members", "Hiking Group", "Board Members")
+- slug (string, unique identifier)
+- description (string, optional)
+- listType (enum: STATIC, DYNAMIC)
+- audienceSegmentId (uuid, optional, foreign key to AudienceSegment for DYNAMIC lists)
+- ownerRoles (string array, roles that can send to this list)
+- allowMemberSubscribe (boolean, whether members can self-subscribe)
+- allowMemberUnsubscribe (boolean, whether members can self-unsubscribe)
+- isActive (boolean)
+- createdAt (datetime)
+- updatedAt (datetime)
+
+List Types:
+
+- STATIC: Manually curated list of specific contacts
+- DYNAMIC: Membership determined by AudienceSegment rules, evaluated at send time
+
+### MailingListMember
+
+Links contacts to static mailing lists.
+
+Fields:
+
+- id (uuid, primary key)
+- mailingListId (uuid, foreign key to MailingList)
+- contactId (uuid, foreign key to Contact)
+- addedAt (datetime)
+- addedBy (uuid, optional, foreign key to Contact who added them)
+- removedAt (datetime, nullable)
+- removedBy (uuid, optional)
+
+Notes:
+
+- Only used for STATIC lists.
+- DYNAMIC lists compute membership from AudienceSegment at query time.
+- removedAt allows soft-delete for audit purposes.
+
+### AudienceSegment
+
+Defines a dynamic set of contacts based on rules.
+
+Fields:
+
+- id (uuid, primary key)
+- siteId (uuid, foreign key to Site)
+- name (string)
+- description (string, optional)
+- rules (jsonb, structured filter definition)
+- createdAt (datetime)
+- updatedAt (datetime)
+
+Rule Examples:
+
+```
+// All active members
+{
+  "membershipStatus": ["ACTIVE"]
+}
+
+// Members in specific groups
+{
+  "membershipStatus": ["ACTIVE"],
+  "groups": ["hiking-uuid", "book-club-uuid"]
+}
+
+// Board members and committee chairs
+{
+  "roles": ["BOARD_MEMBER", "COMMITTEE_CHAIR"]
+}
+
+// Members who joined in the last 90 days
+{
+  "membershipStatus": ["ACTIVE"],
+  "joinedAfter": "{{today - 90 days}}"
+}
+
+// Members registered for a specific event
+{
+  "eventRegistration": {
+    "eventId": "event-uuid",
+    "status": ["REGISTERED", "WAITLISTED"]
+  }
+}
+```
+
+### Mailing List Resolution
+
+When sending to a mailing list:
+
+1. If STATIC: query MailingListMember for contactIds where removedAt is null.
+2. If DYNAMIC: evaluate AudienceSegment rules against Contact/Membership/Group data.
+3. Filter out contacts who have unsubscribed from this list.
+4. Filter out contacts with invalid email addresses.
+5. Return deduplicated list of recipient contacts.
+
+### Unsubscribe Handling
+
+UnsubscribeRecord:
+
+- id (uuid, primary key)
+- contactId (uuid, foreign key to Contact)
+- mailingListId (uuid, optional, null means unsubscribed from all)
+- unsubscribedAt (datetime)
+- source (enum: LINK_CLICK, ADMIN_ACTION, MEMBER_PREFERENCE)
+
+Rules:
+
+- Global unsubscribe (mailingListId is null) blocks all non-transactional email.
+- List-specific unsubscribe blocks only that list.
+- Transactional emails (password reset, registration confirmation) are never blocked.
+- Unsubscribe links in emails must work with single click (no login required).
+
+----------------------------------------------------------------
+
+## Permissions Model (Detailed Design)
+
+### Overview
+
+ClubOS uses a layered permission model:
+
+1. Role-Based Access Control (RBAC): Global roles with predefined capabilities
+2. Group Membership: Access to group-specific resources
+3. Row-Level Permissions: Fine-grained access to specific records
+
+### Roles
+
+ContactRole (join table):
+
+- id (uuid, primary key)
+- contactId (uuid, foreign key to Contact)
+- role (enum: defined below)
+- grantedAt (datetime)
+- grantedBy (uuid, foreign key to Contact)
+- revokedAt (datetime, nullable)
+- revokedBy (uuid, optional)
+
+Role Definitions:
+
+- SITE_ADMIN: Full access to all site features, content, and settings
+- CONTENT_EDITOR: Can create and edit pages, blocks, and media
+- COMMUNICATIONS_ADMIN: Can manage email templates and send to all mailing lists
+- EVENTS_ADMIN: Can create, edit, and manage all events
+- MEMBERS_ADMIN: Can view and edit member records, manage memberships
+- CATEGORY_CHAIR: Can manage events in assigned categories
+- GROUP_LEADER: Can manage assigned groups and their members
+- READ_ONLY_AUDITOR: Read-only access to admin views for audit purposes
+- MEMBER: Standard member (implicit for all active memberships)
+
+### Capabilities Matrix
+
+```
+Capability                    | SITE_ADMIN | CONTENT_EDITOR | COMMS_ADMIN | EVENTS_ADMIN | MEMBERS_ADMIN | CATEGORY_CHAIR | GROUP_LEADER | AUDITOR | MEMBER
+------------------------------|------------|----------------|-------------|--------------|---------------|----------------|--------------|---------|-------
+Manage site settings          | Yes        | No             | No          | No           | No            | No             | No           | No      | No
+Edit all pages                | Yes        | Yes            | No          | No           | No            | No             | No           | No      | No
+Edit assigned pages           | Yes        | Yes            | No          | No           | No            | No             | Yes          | No      | No
+Manage themes/templates       | Yes        | Yes            | No          | No           | No            | No             | No           | No      | No
+Create/edit email templates   | Yes        | No             | Yes         | No           | No            | No             | No           | No      | No
+Send to any mailing list      | Yes        | No             | Yes         | No           | No            | No             | No           | No      | No
+Send to owned mailing lists   | Yes        | No             | Yes         | Yes          | No            | Yes            | Yes          | No      | No
+Create/edit all events        | Yes        | No             | No          | Yes          | No            | No             | No           | No      | No
+Create/edit category events   | Yes        | No             | No          | Yes          | No            | Yes            | No           | No      | No
+View all members              | Yes        | No             | Yes         | Yes          | Yes           | No             | No           | Yes     | No
+Edit member records           | Yes        | No             | No          | No           | Yes           | No             | No           | No      | No
+Manage group members          | Yes        | No             | No          | No           | Yes           | No             | Yes          | No      | No
+View audit logs               | Yes        | No             | No          | No           | No            | No             | No           | Yes     | No
+Register for events           | Yes        | Yes            | Yes         | Yes          | Yes           | Yes            | Yes          | Yes     | Yes
+View member directory         | Yes        | Yes            | Yes         | Yes          | Yes           | Yes            | Yes          | Yes     | Yes
+```
+
+### Groups
+
+Group:
+
+- id (uuid, primary key)
+- siteId (uuid, foreign key to Site)
+- name (string, e.g., "Hiking", "Book Club", "Wine Tasting")
+- slug (string, unique identifier)
+- description (string, optional)
+- groupType (enum: INTEREST, COMMITTEE, BOARD, SPECIAL)
+- isActive (boolean)
+- createdAt (datetime)
+- updatedAt (datetime)
+
+GroupMember:
+
+- id (uuid, primary key)
+- groupId (uuid, foreign key to Group)
+- contactId (uuid, foreign key to Contact)
+- groupRole (enum: MEMBER, LEADER, CHAIR, COORDINATOR)
+- joinedAt (datetime)
+- leftAt (datetime, nullable)
+
+Group-Scoped Permissions:
+
+- Group leaders can edit group pages (pages with groupId matching their group).
+- Group leaders can send email to their group's mailing list.
+- Group chairs have additional admin capabilities within the group.
+
+### Row-Level Permissions
+
+For fine-grained access beyond roles and groups:
+
+PagePermission:
+
+- id (uuid, primary key)
+- pageId (uuid, foreign key to Page)
+- contactId (uuid, optional, specific contact)
+- role (string, optional, specific role)
+- groupId (uuid, optional, specific group)
+- permission (enum: VIEW, EDIT, PUBLISH, DELETE)
+- grantedAt (datetime)
+- grantedBy (uuid)
+
+EventPermission:
+
+- id (uuid, primary key)
+- eventId (uuid, foreign key to Event)
+- contactId (uuid, optional)
+- role (string, optional)
+- permission (enum: VIEW, EDIT, MANAGE_REGISTRATIONS, DELETE)
+- grantedAt (datetime)
+- grantedBy (uuid)
+
+### Permission Resolution
+
+When checking if a contact can perform an action:
+
+1. Check global role capabilities (fastest path).
+2. If not granted by role, check group membership and group-scoped permissions.
+3. If not granted by group, check row-level permissions on the specific resource.
+4. Cache permission results for the session to avoid repeated queries.
+
+Example: Can contact X edit page Y?
+
+```
+1. Does X have SITE_ADMIN or CONTENT_EDITOR role? -> Yes: allowed
+2. Is Y a group page and X is a leader of that group? -> Yes: allowed
+3. Does PagePermission exist for (pageId=Y, contactId=X, permission=EDIT)? -> Yes: allowed
+4. Otherwise: denied
+```
+
+### Permission Audit
+
+All permission changes are logged:
+
+PermissionAuditLog:
+
+- id (uuid, primary key)
+- action (enum: GRANT, REVOKE, MODIFY)
+- resourceType (string, e.g., "Page", "Event", "MailingList")
+- resourceId (uuid)
+- targetContactId (uuid, who is affected)
+- targetRole (string, optional)
+- targetGroupId (uuid, optional)
+- permission (string)
+- performedBy (uuid, who made the change)
+- performedAt (datetime)
+- metadata (jsonb, additional context)
+
+----------------------------------------------------------------
+
+## Site Configuration
+
+### Site
+
+Represents a club's web presence.
+
+Fields:
+
+- id (uuid, primary key)
+- name (string, e.g., "Santa Barbara Newcomers Club")
+- domain (string, e.g., "sbnewcomers.org")
+- defaultThemeId (uuid, foreign key to Theme)
+- defaultTemplateId (uuid, foreign key to PageTemplate)
+- settings (jsonb, site-wide configuration)
+- createdAt (datetime)
+- updatedAt (datetime)
+
+Settings Structure:
+
+```
+{
+  "branding": {
+    "logoUrl": "/images/logo.png",
+    "faviconUrl": "/images/favicon.ico",
+    "organizationName": "Santa Barbara Newcomers Club"
+  },
+  "email": {
+    "defaultFromName": "SBNC",
+    "defaultFromEmail": "noreply@sbnewcomers.org",
+    "defaultReplyTo": "info@sbnewcomers.org"
+  },
+  "seo": {
+    "defaultTitle": "Santa Barbara Newcomers Club",
+    "defaultDescription": "Welcome to Santa Barbara! Join our community...",
+    "socialImage": "/images/social-share.jpg"
+  },
+  "features": {
+    "memberDirectory": true,
+    "eventRegistration": true,
+    "groupPages": true,
+    "emailCampaigns": true
+  }
+}
+```
+
+### NavigationMenu
+
+Named menus for site navigation.
+
+Fields:
+
+- id (uuid, primary key)
+- siteId (uuid, foreign key to Site)
+- name (string, e.g., "Primary", "Footer", "Member Menu")
+- slug (string, unique identifier)
+- items (jsonb, ordered list of navigation items)
+- createdAt (datetime)
+- updatedAt (datetime)
+
+Items Structure:
+
+```
+{
+  "items": [
+    {
+      "label": "Home",
+      "href": "/",
+      "visibility": "PUBLIC"
+    },
+    {
+      "label": "Events",
+      "href": "/events",
+      "visibility": "PUBLIC"
+    },
+    {
+      "label": "Member Directory",
+      "href": "/members",
+      "visibility": "MEMBERS_ONLY"
+    },
+    {
+      "label": "Admin",
+      "href": "/admin",
+      "visibility": "ROLE_RESTRICTED",
+      "visibilityRoles": ["SITE_ADMIN", "EVENTS_ADMIN", "MEMBERS_ADMIN"]
+    },
+    {
+      "label": "Groups",
+      "href": "/groups",
+      "visibility": "MEMBERS_ONLY",
+      "children": [
+        { "label": "Hiking", "href": "/groups/hiking" },
+        { "label": "Book Club", "href": "/groups/book-club" },
+        { "label": "Wine Tasting", "href": "/groups/wine-tasting" }
+      ]
+    }
+  ]
+}
+```
+
+----------------------------------------------------------------
+
+## API Design Guidelines
+
+### Publishing APIs
+
+Page Management:
+
+- GET /api/pages - List pages (filterable by status, visibility)
+- GET /api/pages/:id - Get page with blocks
+- POST /api/pages - Create new page
+- PUT /api/pages/:id - Update page
+- POST /api/pages/:id/publish - Publish page (creates version)
+- POST /api/pages/:id/unpublish - Revert to draft
+- GET /api/pages/:id/versions - List page versions
+- POST /api/pages/:id/versions/:versionId/restore - Restore version
+
+Block Management:
+
+- GET /api/pages/:pageId/blocks - List blocks for page
+- POST /api/pages/:pageId/blocks - Add block to page
+- PUT /api/pages/:pageId/blocks/:blockId - Update block
+- DELETE /api/pages/:pageId/blocks/:blockId - Remove block
+- POST /api/pages/:pageId/blocks/reorder - Reorder blocks
+
+### Email APIs
+
+Template Management:
+
+- GET /api/email/templates - List templates
+- GET /api/email/templates/:id - Get template
+- POST /api/email/templates - Create template
+- PUT /api/email/templates/:id - Update template
+- POST /api/email/templates/:id/preview - Preview with sample data
+
+Sending:
+
+- POST /api/email/send - Send to specific recipients
+- POST /api/email/send-to-list - Send to mailing list
+- GET /api/email/logs - List sent emails (filterable)
+
+### Mailing List APIs
+
+- GET /api/mailing-lists - List mailing lists
+- GET /api/mailing-lists/:id - Get list details
+- GET /api/mailing-lists/:id/recipients - Get resolved recipients
+- POST /api/mailing-lists - Create list
+- PUT /api/mailing-lists/:id - Update list
+- POST /api/mailing-lists/:id/members - Add member (static lists)
+- DELETE /api/mailing-lists/:id/members/:contactId - Remove member
+
+### Permission APIs
+
+- GET /api/contacts/:id/permissions - Get contact's effective permissions
+- POST /api/permissions/check - Check specific permission
+- POST /api/roles/grant - Grant role to contact
+- POST /api/roles/revoke - Revoke role from contact
+- GET /api/audit/permissions - List permission changes
+
+----------------------------------------------------------------
+
+## Publishing System Implementation (v0.2.1)
+
+The publishing and communications system has been implemented with the following
+capabilities:
+
+### Content Management
+
+**Pages:**
+- Block-based page content with 11 block types (hero, text, image, cards, event-list, gallery, FAQ, contact, CTA, divider, spacer)
+- Status workflow: DRAFT -> PUBLISHED -> ARCHIVED
+- Visibility controls: PUBLIC, MEMBERS_ONLY, ROLE_RESTRICTED
+- SEO fields: seoTitle, seoDescription, seoImage
+- Scheduled publishing via publishAt field
+
+**Themes:**
+- Design tokens for colors, typography, spacing, border-radius, and shadows
+- CSS variable generation from theme tokens
+- Custom CSS support with XSS sanitization
+- Default theme fallback
+
+**Templates:**
+- Page templates with regions and default blocks
+- Template-based page creation
+
+### Communications
+
+**Mailing Lists:**
+- Static lists with explicit member assignments
+- Dynamic lists with audience rules
+- Audience rules support: membership status, roles, committees, specific members, join date filters, exclusions
+
+**Message Templates:**
+- Categories: EVENT, NEWSLETTER, ANNOUNCEMENT, TRANSACTIONAL
+- Token replacement: member.firstName, member.lastName, member.email, event.title, club.name, currentYear
+- XSS protection for token values
+
+**Campaigns:**
+- Status workflow: DRAFT -> SCHEDULED -> SENDING -> SENT
+- Integration with mailing lists
+- Delivery logging
+
+### Permissions
+
+**Role-based Access:**
+- Admin roles: president, webmaster, communications-chair, board-member
+- Content admin roles: webmaster, communications-chair
+- Communications admin roles: communications-chair, webmaster
+
+**Permission Functions:**
+- hasAdminRole, canManageThemes, canManageTemplates
+- canManageMailingLists, canSendCampaign
+- canViewPage, canEditPage, canPublishPage, canDeletePage
+- evaluateAudienceRule, buildUserContext
+
+**Audit Trail:**
+- All operations logged to AuditLog table
+- Actions: CREATE, UPDATE, DELETE, PUBLISH, UNPUBLISH, SEND, ARCHIVE
+
+### API Routes
+
+Content APIs (under /api/admin/content/):
+- pages, pages/[id]
+- templates, templates/[id]
+- themes, themes/[id]
+
+Communications APIs (under /api/admin/comms/):
+- lists, lists/[id]
+- templates, templates/[id]
+- campaigns, campaigns/[id]
+
+Public Routes:
+- /api/theme - CSS variables for active theme
+- /pages/[slug] - Public page rendering
+- /member/[slug] - Member-only page rendering
+
+----------------------------------------------------------------
+
+## Version 0.2.2 - Hardening and Release Readiness
+
+### CI Alignment
+
+New npm scripts for test automation:
+- test:unit - Vitest unit tests
+- test-admin:stable - Playwright admin tests (excludes @quarantine)
+- test-publish:e2e - Publishing/comms specific E2E tests
+- test-api:stable - API E2E tests (excludes @quarantine)
+
+### Test Coverage
+
+Unit Tests (151 total):
+- theme.spec.ts - 23 tests for CSS generation and validation
+- blocks.spec.ts - 44 tests for block types and validation
+- audience.spec.ts - 27 tests for audience rule evaluation
+- email.spec.ts - 17 tests for token replacement
+- permissions.spec.ts - 39 tests for RBAC checks
+
+E2E Tests:
+- Admin content UI tests (pages, themes, templates)
+- Admin comms UI tests (lists, templates, campaigns)
+- API contract tests (page lifecycle, theme validation, list endpoints)
+
+### Stability Decisions
+
+- Tests use waitUntil: networkidle for page loads
+- Assertions use data-test-id attributes
+- CRUD tests create own data (no seed ID dependencies)
+- @quarantine tag excludes flaky tests from stable runs
+
+### Known Limitations
+
+- Page editor UI is stub only
+- No rich text block editing
+- Campaign send logs but doesn't email
+- Seed IDs non-deterministic
+
+----------------------------------------------------------------
+

@@ -10,13 +10,16 @@
     "typecheck": "tsc --noEmit",
     "test": "playwright test",
     "test-admin": "playwright test tests/admin",
+    "test-admin:stable": "playwright test tests/admin --grep-invert @quarantine --workers=2",
+    "test-publish:e2e": "playwright test tests/admin/admin-content-*.spec.ts tests/admin/admin-comms-*.spec.ts tests/api/api-content-*.spec.ts tests/api/api-comms.spec.ts --grep-invert @quarantine",
+    "test-api": "playwright test tests/api",
+    "test-api:stable": "playwright test tests/api --grep-invert @quarantine --workers=2",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "db:seed": "npx tsx prisma/seed.ts",
     "postinstall": "prisma generate",
     "test:unit": "vitest run",
-    "test:unit:coverage": "vitest run --coverage",
-    "test-admin:stable": "playwright test tests/admin --grep-invert @quarantine --workers=2"
+    "test:unit:coverage": "vitest run --coverage"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

@@ -12,8 +12,9 @@ export default function AdminEventsListPage() {
         data-test-id="admin-events-export"
         style={{ marginBottom: "16px" }}
       >
-        <a
+<a
           href="/api/admin/export/events"
+          download
           data-test-id="admin-events-export-button"
           style={{
             display: "inline-block",

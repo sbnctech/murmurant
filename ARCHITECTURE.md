@@ -68,6 +68,368 @@ For now:
 
 This section is the authoritative reference for how the persistence layer is expected to behave in the current phase.
 
+----------------------------------------------------------------
+
+## Publishing and Communications Layer (v0.2)
+
+The publishing and communications layer extends the core persistence model to support page management, email templates, mailing lists, and permissions.
+
+### Site and Configuration Tables
+
+- Site
+  - Fields: id, name, domain, defaultThemeId, defaultTemplateId, settings (jsonb), createdAt, updatedAt.
+  - Purpose: represents a club's web presence with global configuration.
+
+- NavigationMenu
+  - Fields: id, siteId, name, slug, items (jsonb), createdAt, updatedAt.
+  - Purpose: stores navigation menus (Primary, Footer, Member Menu) with ordered items.
+
+### Page and Content Tables
+
+- Page
+  - Fields: id, siteId, path, title, description, templateId, status (DRAFT, PUBLISHED, ARCHIVED), visibility (PUBLIC, MEMBERS_ONLY, ROLE_RESTRICTED, GROUP_TARGETED), visibilityRuleId, publishedAt, createdAt, updatedAt, createdBy, updatedBy.
+  - Constraints: path unique within site, starts with "/".
+  - Purpose: represents a web page with metadata and visibility settings.
+
+- PageVersion
+  - Fields: id, pageId, versionNumber, snapshot (jsonb), publishedAt, createdAt, createdBy.
+  - Purpose: tracks version history for pages; snapshot contains full page state.
+
+- Block
+  - Fields: id, pageId, region, blockType, sortOrder, config (jsonb), visibility, visibilityRuleId, createdAt, updatedAt.
+  - Purpose: content components on pages (hero, text, image, event-list, etc.).
+
+- PageTemplate
+  - Fields: id, siteId, name, slug, description, regions (jsonb), isDefault, createdAt, updatedAt.
+  - Purpose: defines page structure with available regions and block type constraints.
+
+- Theme
+  - Fields: id, siteId, name, slug, description, tokens (jsonb), isDefault, createdAt, updatedAt.
+  - Purpose: design tokens for colors, typography, spacing exposed as CSS variables.
+
+- VisibilityRule
+  - Fields: id, name, description, ruleType (ROLE_BASED, GROUP_BASED, MEMBERSHIP_LEVEL, COMPOUND), conditions (jsonb), createdAt, updatedAt.
+  - Purpose: complex visibility conditions for pages and blocks.
+
+### Email and Communications Tables
+
+- MailTemplate
+  - Fields: id, siteId, name, slug, type (TRANSACTIONAL, CAMPAIGN), subject, preheader, bodyHtml, bodyText, fromName, fromEmail, replyTo, isActive, createdAt, updatedAt, createdBy.
+  - Purpose: reusable email templates with merge field support.
+
+- EmailMessageLog
+  - Fields: id, templateId, templateSlug, recipientContactId, recipientEmail, subject, bodyHtml, bodyText, status (PENDING, SENT, DELIVERED, BOUNCED, FAILED), providerMessageId, sentAt, deliveredAt, bouncedAt, bounceReason, metadata (jsonb), createdAt.
+  - Purpose: audit trail for all sent emails.
+
+- MailingList
+  - Fields: id, siteId, name, slug, description, listType (STATIC, DYNAMIC), audienceSegmentId, ownerRoles (string array), allowMemberSubscribe, allowMemberUnsubscribe, isActive, createdAt, updatedAt.
+  - Purpose: logical groupings of email recipients.
+
+- MailingListMember
+  - Fields: id, mailingListId, contactId, addedAt, addedBy, removedAt, removedBy.
+  - Purpose: links contacts to static mailing lists.
+
+- AudienceSegment
+  - Fields: id, siteId, name, description, rules (jsonb), createdAt, updatedAt.
+  - Purpose: dynamic recipient definitions based on membership, roles, groups, or events.
+
+- UnsubscribeRecord
+  - Fields: id, contactId, mailingListId (nullable for global unsubscribe), unsubscribedAt, source (LINK_CLICK, ADMIN_ACTION, MEMBER_PREFERENCE).
+  - Purpose: tracks unsubscribe preferences per contact.
+
+### Groups and Permissions Tables
+
+- Group
+  - Fields: id, siteId, name, slug, description, groupType (INTEREST, COMMITTEE, BOARD, SPECIAL), isActive, createdAt, updatedAt.
+  - Purpose: interest groups, committees, and other member groupings.
+
+- GroupMember
+  - Fields: id, groupId, contactId, groupRole (MEMBER, LEADER, CHAIR, COORDINATOR), joinedAt, leftAt.
+  - Purpose: links contacts to groups with role information.
+
+- ContactRole
+  - Fields: id, contactId, role (enum), grantedAt, grantedBy, revokedAt, revokedBy.
+  - Purpose: assigns global roles to contacts (SITE_ADMIN, CONTENT_EDITOR, etc.).
+
+- PagePermission
+  - Fields: id, pageId, contactId, role, groupId, permission (VIEW, EDIT, PUBLISH, DELETE), grantedAt, grantedBy.
+  - Purpose: row-level permissions for specific pages.
+
+- EventPermission
+  - Fields: id, eventId, contactId, role, permission (VIEW, EDIT, MANAGE_REGISTRATIONS, DELETE), grantedAt, grantedBy.
+  - Purpose: row-level permissions for specific events.
+
+- PermissionAuditLog
+  - Fields: id, action (GRANT, REVOKE, MODIFY), resourceType, resourceId, targetContactId, targetRole, targetGroupId, permission, performedBy, performedAt, metadata (jsonb).
+  - Purpose: audit trail for all permission changes.
+
+### Entity Relationships
+
+```
+Site
+  |-- has many --> Page
+  |-- has many --> PageTemplate
+  |-- has many --> Theme
+  |-- has many --> NavigationMenu
+  |-- has many --> MailingList
+  |-- has many --> MailTemplate
+  |-- has many --> AudienceSegment
+  |-- has many --> Group
+
+Page
+  |-- belongs to --> PageTemplate
+  |-- may reference --> VisibilityRule
+  |-- has many --> Block
+  |-- has many --> PageVersion
+  |-- has many --> PagePermission
+
+Block
+  |-- belongs to --> Page
+  |-- may reference --> VisibilityRule
+
+MailingList
+  |-- may reference --> AudienceSegment (for DYNAMIC lists)
+  |-- has many --> MailingListMember (for STATIC lists)
+
+MailingListMember
+  |-- belongs to --> MailingList
+  |-- belongs to --> Contact
+
+EmailMessageLog
+  |-- may reference --> MailTemplate
+  |-- may reference --> Contact (recipient)
+
+Group
+  |-- has many --> GroupMember
+
+GroupMember
+  |-- belongs to --> Group
+  |-- belongs to --> Contact
+
+Contact
+  |-- has many --> ContactRole
+  |-- has many --> GroupMember
+  |-- has many --> UnsubscribeRecord
+  |-- has many --> PagePermission
+  |-- has many --> EventPermission
+```
+
+### Prisma Enums (to be added)
+
+```
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PageVisibility {
+  PUBLIC
+  MEMBERS_ONLY
+  ROLE_RESTRICTED
+  GROUP_TARGETED
+}
+
+enum BlockVisibility {
+  INHERIT
+  PUBLIC
+  MEMBERS_ONLY
+  ROLE_RESTRICTED
+  GROUP_TARGETED
+}
+
+enum VisibilityRuleType {
+  ROLE_BASED
+  GROUP_BASED
+  MEMBERSHIP_LEVEL
+  COMPOUND
+}
+
+enum MailTemplateType {
+  TRANSACTIONAL
+  CAMPAIGN
+}
+
+enum EmailStatus {
+  PENDING
+  SENT
+  DELIVERED
+  BOUNCED
+  FAILED
+}
+
+enum MailingListType {
+  STATIC
+  DYNAMIC
+}
+
+enum UnsubscribeSource {
+  LINK_CLICK
+  ADMIN_ACTION
+  MEMBER_PREFERENCE
+}
+
+enum GroupType {
+  INTEREST
+  COMMITTEE
+  BOARD
+  SPECIAL
+}
+
+enum GroupRole {
+  MEMBER
+  LEADER
+  CHAIR
+  COORDINATOR
+}
+
+enum ContactRoleType {
+  SITE_ADMIN
+  CONTENT_EDITOR
+  COMMUNICATIONS_ADMIN
+  EVENTS_ADMIN
+  MEMBERS_ADMIN
+  CATEGORY_CHAIR
+  GROUP_LEADER
+  READ_ONLY_AUDITOR
+}
+
+enum PagePermissionType {
+  VIEW
+  EDIT
+  PUBLISH
+  DELETE
+}
+
+enum EventPermissionType {
+  VIEW
+  EDIT
+  MANAGE_REGISTRATIONS
+  DELETE
+}
+
+enum PermissionAction {
+  GRANT
+  REVOKE
+  MODIFY
+}
+```
+
+----------------------------------------------------------------
+
+## Implementation Status (v0.2.1)
+
+The following components have been implemented for the publishing and communications layer:
+
+### Prisma Models Implemented
+
+- **Page**: Content pages with block-based content, status workflow (DRAFT, PUBLISHED, ARCHIVED), visibility controls (PUBLIC, MEMBERS_ONLY, ROLE_RESTRICTED), and SEO fields
+- **PageTemplate**: Reusable page structures with regions and default blocks
+- **Theme**: Design tokens (colors, typography, spacing, shadows) with CSS variable generation and custom CSS support
+- **AudienceRule**: JSON-based rules for targeting content to specific member segments
+- **MailingList**: Recipient lists with dynamic audience rules
+- **MessageTemplate**: Email/message templates with token replacement
+- **MessageCampaign**: Campaign management with scheduling and delivery tracking
+- **DeliveryLog**: Audit trail for message deliveries
+- **Permission**: Row-level permissions for resources
+- **AuditLog**: System-wide audit trail for all operations
+
+### API Routes Implemented
+
+**Content Management APIs:**
+- `GET/POST /api/admin/content/pages` - List and create pages
+- `GET/PATCH/DELETE /api/admin/content/pages/[id]` - Page CRUD operations
+- `GET/POST /api/admin/content/templates` - Template management
+- `GET/PATCH/DELETE /api/admin/content/templates/[id]` - Template CRUD
+- `GET/POST /api/admin/content/themes` - Theme management
+- `GET/PATCH/DELETE /api/admin/content/themes/[id]` - Theme CRUD
+- `GET /api/theme` - Returns active theme as CSS variables
+
+**Communications APIs:**
+- `GET/POST /api/admin/comms/lists` - Mailing list management
+- `GET/PATCH/DELETE /api/admin/comms/lists/[id]` - List CRUD
+- `GET/POST /api/admin/comms/templates` - Message template management
+- `GET/PATCH/DELETE /api/admin/comms/templates/[id]` - Template CRUD
+- `GET/POST /api/admin/comms/campaigns` - Campaign management
+- `GET/PATCH/DELETE /api/admin/comms/campaigns/[id]` - Campaign CRUD with send action
+
+**Public Routes:**
+- `GET /pages/[slug]` - Public page rendering
+- `GET /member/[slug]` - Member-only page rendering
+
+### Library Modules Implemented
+
+- `src/lib/publishing/theme.ts` - Theme token validation, CSS variable generation, theme caching
+- `src/lib/publishing/blocks.ts` - Block validation, default content creation, block metadata
+- `src/lib/publishing/audience.ts` - Audience rule evaluation against member context
+- `src/lib/publishing/email.ts` - Email token replacement with XSS protection
+- `src/lib/publishing/permissions.ts` - Permission checking, user context building, audit logging
+
+### Admin UI Pages Implemented
+
+- `/admin/content/pages` - Page list with filtering and pagination
+- `/admin/content/pages/[id]` - Page editor (stub)
+- `/admin/content/templates` - Template list
+- `/admin/content/themes` - Theme list with status filtering
+- `/admin/comms/lists` - Mailing list management
+- `/admin/comms/templates` - Message template list
+- `/admin/comms/campaigns` - Campaign list with status filtering and pagination
+
+### Components Implemented
+
+- `BlockRenderer.tsx` - Renders page blocks (hero, text, image, cards, event-list, gallery, FAQ, contact, CTA, divider, spacer)
+- `PagesTable.tsx`, `TemplatesTable.tsx`, `ThemesTable.tsx` - Admin list components
+- `MailingListsTable.tsx`, `MessageTemplatesTable.tsx`, `CampaignsTable.tsx` - Communications admin components
+
+### Test Coverage
+
+- **Unit Tests (151 tests):**
+  - `tests/unit/publishing/theme.spec.ts` - Theme validation and CSS generation
+  - `tests/unit/publishing/blocks.spec.ts` - Block validation and creation
+  - `tests/unit/publishing/audience.spec.ts` - Audience rule evaluation
+  - `tests/unit/publishing/email.spec.ts` - Token replacement and XSS protection
+  - `tests/unit/publishing/permissions.spec.ts` - Permission checking
+
+- **E2E Tests:**
+  - `tests/admin/admin-content-*.spec.ts` - Content admin UI tests
+  - `tests/admin/admin-comms-*.spec.ts` - Communications admin UI tests
+  - `tests/api/api-content-*.spec.ts` - Content API tests
+  - `tests/api/api-comms.spec.ts` - Communications API tests
+  - `tests/api/api-publishing-contracts.spec.ts` - API contract tests
+
+----------------------------------------------------------------
+
+## Version 0.2.2 - Hardening and Release Readiness
+
+### CI Scripts Added
+
+- `npm run test:unit` - Run unit tests (vitest)
+- `npm run test-admin:stable` - Run stable admin E2E tests (excludes @quarantine)
+- `npm run test-publish:e2e` - Run publishing/comms E2E tests
+- `npm run test-api:stable` - Run stable API E2E tests (excludes @quarantine)
+
+### Test Suite Summary
+
+- **Unit tests:** 151 tests across 5 files
+- **Admin E2E:** 6 publishing/comms test files
+- **API E2E:** 4 contract test files covering page lifecycle, theme validation, list endpoints
+
+### Stability Improvements
+
+- Added `test.beforeEach` with `waitUntil: "networkidle"` for stable page loads
+- All assertions use `data-test-id` attributes where possible
+- Tests create own data for CRUD operations (no hardcoded seed IDs)
+- Flaky tests can be tagged `@quarantine` and excluded from stable runs
+
+### Known Limitations
+
+- Page editor UI is a stub (detail view only)
+- No rich text editing for blocks yet
+- Campaign send action logs but doesn't actually send emails
+- Seed data IDs are non-deterministic; tests must query by unique fields
+
+----------------------------------------------------------------
+
 ## Copyright
 
 Copyright (c) 2025 Santa Barbara Newcomers Club. All rights reserved.

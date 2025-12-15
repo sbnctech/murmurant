@@ -428,3 +428,360 @@ Coordination with engineering workflow
 - This plan allows:
   - ClaudeCode and other agents to continue evolving admin views, tests, and communication flows.
   - Minimal churn in core data-model code until the database layer is stable.
+
+--------------------------------------------------
+Phase 5: Publishing System Foundation
+--------------------------------------------------
+
+Goals
+
+- Establish the data model and basic infrastructure for page management.
+- Enable creation and editing of pages with simple text blocks.
+- Lay the groundwork for theming and visibility controls.
+
+Deliverables
+
+Data Model:
+
+- Add Prisma models for: Site, Page, PageVersion, Block, PageTemplate, Theme, VisibilityRule.
+- Add enums: PageStatus, PageVisibility, BlockVisibility, VisibilityRuleType.
+- Run migrations and verify schema.
+
+Seed Data:
+
+- Create default Site record for SBNC.
+- Create default PageTemplate ("Default") with header, main, sidebar, footer regions.
+- Create default Theme ("SBNC Classic") with brand colors.
+- Create sample pages: Home ("/"), About ("/about"), Events ("/events").
+
+API Endpoints:
+
+- GET /api/pages - List pages with filters (status, visibility).
+- GET /api/pages/:id - Get page with blocks.
+- POST /api/pages - Create page.
+- PUT /api/pages/:id - Update page.
+- POST /api/pages/:id/publish - Publish page (creates version).
+- GET /api/pages/:id/versions - List versions.
+
+Block Management:
+
+- POST /api/pages/:pageId/blocks - Add block.
+- PUT /api/pages/:pageId/blocks/:blockId - Update block.
+- DELETE /api/pages/:pageId/blocks/:blockId - Remove block.
+- POST /api/pages/:pageId/blocks/reorder - Reorder blocks.
+
+Initial Block Types:
+
+- text: Rich text content.
+- hero: Header with title, subtitle, background.
+- image: Single image with caption.
+
+Admin UI:
+
+- Page list view with status badges.
+- Page editor with block management.
+- Draft/publish workflow.
+
+Tests:
+
+- API tests for page CRUD operations.
+- Playwright tests for admin page management.
+
+Status: not started.
+
+--------------------------------------------------
+Phase 6: Theming and Templates
+--------------------------------------------------
+
+Goals
+
+- Implement theme system with CSS custom properties.
+- Enable template selection for pages.
+- Establish design token infrastructure.
+
+Deliverables
+
+Theme System:
+
+- Implement theme-to-CSS variable conversion.
+- Inject theme CSS into page head.
+- Support color, typography, spacing, border-radius, and shadow tokens.
+
+Template System:
+
+- Template editor in admin (view regions, allowed block types).
+- Template selection when creating/editing pages.
+- Region validation (enforce maxBlocks, allowedBlockTypes).
+
+Additional Block Types:
+
+- event-list: Dynamic list from /api/events.
+- callout: Styled message box.
+- nav-links: Custom navigation links.
+- gallery: Image grid.
+
+Public Page Rendering:
+
+- Route handler for public pages based on path.
+- Theme application.
+- Block rendering pipeline.
+
+Tests:
+
+- Theme token to CSS conversion unit tests.
+- Template validation tests.
+- Public page rendering integration tests.
+
+Status: not started.
+
+--------------------------------------------------
+Phase 7: Visibility and Permissions
+--------------------------------------------------
+
+Goals
+
+- Implement page and block visibility rules.
+- Establish role-based access control.
+- Enable group-scoped permissions.
+
+Deliverables
+
+Data Model:
+
+- Add Prisma models for: Group, GroupMember, ContactRole, PagePermission, EventPermission, PermissionAuditLog.
+- Add enums: GroupType, GroupRole, ContactRoleType, PagePermissionType, EventPermissionType, PermissionAction.
+
+Visibility Implementation:
+
+- VisibilityRule evaluation engine.
+- Page-level visibility checks.
+- Block-level visibility filtering.
+- Compound rule support (AND/OR).
+
+Role Management:
+
+- API for granting/revoking roles.
+- Role capabilities enforcement in API routes.
+- Admin UI for role assignment.
+
+Group System:
+
+- Group CRUD APIs.
+- Group membership management.
+- Group-scoped page editing permissions.
+
+Permission Checking:
+
+- Centralized permission check utility.
+- Caching for session-based permission results.
+- Audit logging for permission changes.
+
+Tests:
+
+- Permission resolution unit tests.
+- Visibility rule evaluation tests.
+- Role-based access integration tests.
+
+Status: not started.
+
+--------------------------------------------------
+Phase 8: Email Templates and Sending
+--------------------------------------------------
+
+Goals
+
+- Implement reusable email templates with merge fields.
+- Establish email sending infrastructure.
+- Enable audit logging for all sent emails.
+
+Deliverables
+
+Data Model:
+
+- Add Prisma models for: MailTemplate, EmailMessageLog (enhanced from existing).
+- Add enums: MailTemplateType, EmailStatus.
+
+Template Management:
+
+- GET /api/email/templates - List templates.
+- GET /api/email/templates/:id - Get template.
+- POST /api/email/templates - Create template.
+- PUT /api/email/templates/:id - Update template.
+- POST /api/email/templates/:id/preview - Preview with sample data.
+
+Merge Field Processing:
+
+- Template parser for {{field}} syntax.
+- Standard field definitions (member, event, registration, club).
+- Merge field resolution at send time.
+
+Email Sending:
+
+- POST /api/email/send - Send to specific recipients.
+- Provider adapter pattern (mock, Resend, SES).
+- Retry logic for failed sends.
+
+Audit Logging:
+
+- Log all send attempts in EmailMessageLog.
+- Track delivery status via webhooks.
+- Admin view for email logs with filters.
+
+Admin UI:
+
+- Template list and editor.
+- Template preview with test data.
+- Email log viewer.
+
+Tests:
+
+- Merge field parsing unit tests.
+- Email sending integration tests.
+- Template CRUD API tests.
+
+Status: not started.
+
+--------------------------------------------------
+Phase 9: Mailing Lists and Audience Segments
+--------------------------------------------------
+
+Goals
+
+- Implement static and dynamic mailing lists.
+- Enable audience segmentation based on membership, roles, and groups.
+- Support unsubscribe handling.
+
+Deliverables
+
+Data Model:
+
+- Add Prisma models for: MailingList, MailingListMember, AudienceSegment, UnsubscribeRecord.
+- Add enums: MailingListType, UnsubscribeSource.
+
+Mailing List Management:
+
+- GET /api/mailing-lists - List mailing lists.
+- GET /api/mailing-lists/:id - Get list details.
+- GET /api/mailing-lists/:id/recipients - Resolve recipients.
+- POST /api/mailing-lists - Create list.
+- PUT /api/mailing-lists/:id - Update list.
+
+Static Lists:
+
+- Add/remove members manually.
+- Bulk import from CSV.
+- Soft delete with audit trail.
+
+Dynamic Lists:
+
+- Audience segment rule builder.
+- Rule evaluation at send time.
+- Support for membership status, roles, groups, event registrations.
+
+Unsubscribe Handling:
+
+- One-click unsubscribe links.
+- Global and list-specific unsubscribe.
+- Preference center page.
+
+Sending to Lists:
+
+- POST /api/email/send-to-list - Send to mailing list.
+- Recipient resolution with unsubscribe filtering.
+- Batch sending for large lists.
+
+Admin UI:
+
+- Mailing list manager.
+- Audience segment builder.
+- Unsubscribe report.
+
+Tests:
+
+- Audience segment evaluation unit tests.
+- Mailing list resolution integration tests.
+- Unsubscribe handling tests.
+
+Status: not started.
+
+--------------------------------------------------
+Phase 10: Navigation and Site Configuration
+--------------------------------------------------
+
+Goals
+
+- Implement navigation menu management.
+- Enable site-wide settings configuration.
+- Complete public site rendering pipeline.
+
+Deliverables
+
+Navigation System:
+
+- NavigationMenu CRUD APIs.
+- Menu item ordering and nesting.
+- Visibility-aware menu rendering.
+
+Site Settings:
+
+- Site settings editor in admin.
+- Branding configuration (logo, favicon, name).
+- Email defaults (from name, from email, reply-to).
+- SEO defaults (title, description, social image).
+
+Public Site:
+
+- Dynamic route handler for all paths.
+- 404 handling for unpublished/nonexistent pages.
+- SEO meta tag generation.
+- Navigation component with visibility filtering.
+
+Feature Flags:
+
+- Enable/disable features per site.
+- Member directory toggle.
+- Event registration toggle.
+- Email campaigns toggle.
+
+Admin Dashboard Integration:
+
+- Quick links to page management.
+- Recent page edits widget.
+- Email activity summary.
+
+Tests:
+
+- Navigation rendering tests.
+- Site settings persistence tests.
+- Public page routing integration tests.
+
+Status: not started.
+
+--------------------------------------------------
+Implementation Notes
+--------------------------------------------------
+
+Phasing Strategy:
+
+- Phases 5-10 can be worked in sequence or partially in parallel.
+- Phase 5 (Publishing Foundation) is the critical path - most other phases depend on it.
+- Phase 7 (Permissions) should complete before Phase 8-9 to enable proper access control on email features.
+- Phase 10 (Navigation/Site Config) can proceed in parallel with Phases 8-9.
+
+Testing Strategy:
+
+- Each phase includes API tests and Playwright tests.
+- Use seed data fixtures for consistent test state.
+- Mock external services (email providers) in tests.
+
+Migration Strategy:
+
+- Each phase produces one or more Prisma migrations.
+- Migrations should be non-destructive where possible.
+- Include data migrations for existing records when needed.
+
+Documentation:
+
+- Update SYSTEM_SPEC.md as implementation clarifies requirements.
+- Update ARCHITECTURE.md with actual Prisma model definitions.
+- Create admin guides as UI features are completed.
