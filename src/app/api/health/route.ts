@@ -32,7 +32,8 @@ export async function GET() {
   }
 
   const response = {
-    status: dbStatus === "error" ? "degraded" : "healthy",
+    // Use "ok" for healthy status (SystemCommsPanel checks for this)
+    status: dbStatus === "error" ? "degraded" : "ok",
     timestamp: now,
     version: process.env.APP_VERSION || "0.1.0",
     checks: {
@@ -43,7 +44,7 @@ export async function GET() {
     },
   };
 
-  const httpStatus = response.status === "healthy" ? 200 : 503;
+  const httpStatus = response.status === "ok" ? 200 : 503;
 
   return NextResponse.json(
     {

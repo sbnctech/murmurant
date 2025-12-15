@@ -19,24 +19,30 @@ export async function GET(
 ) {
   const { id } = await params;
 
-  const registration = await prisma.eventRegistration.findUnique({
-    where: { id },
-    include: {
-      member: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
+  let registration;
+  try {
+    registration = await prisma.eventRegistration.findUnique({
+      where: { id },
+      include: {
+        member: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        event: {
+          select: {
+            id: true,
+            title: true,
+          },
         },
       },
-      event: {
-        select: {
-          id: true,
-          title: true,
-        },
-      },
-    },
-  });
+    });
+  } catch {
+    // Invalid UUID format or other Prisma error
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
 
   if (!registration) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
