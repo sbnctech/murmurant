@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCapability } from "@/lib/auth";
 import { errors } from "@/lib/api";
+import { auditMutation } from "@/lib/audit";
 import { closeServiceRecord, closeServiceRecordSchema } from "@/lib/serviceHistory";
 
 interface RouteParams {
@@ -33,6 +34,14 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
     }
 
     const record = await closeServiceRecord(id, parseResult.data.endAt);
+
+    await auditMutation(req, auth.context, {
+      action: "UPDATE",
+      capability: "users:manage",
+      objectType: "ServiceRecord",
+      objectId: id,
+      metadata: { action: "close", endAt: parseResult.data.endAt },
+    });
 
     return NextResponse.json(record);
   } catch (error) {

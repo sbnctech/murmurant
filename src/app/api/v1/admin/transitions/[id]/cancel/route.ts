@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCapability } from "@/lib/auth";
 import { errors } from "@/lib/api";
+import { auditMutation } from "@/lib/audit";
 import { cancelTransitionPlan } from "@/lib/serviceHistory";
 
 interface RouteParams {
@@ -24,6 +25,14 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
 
   try {
     const plan = await cancelTransitionPlan(planId);
+
+    await auditMutation(req, auth.context, {
+      action: "UPDATE",
+      capability: "users:manage",
+      objectType: "TransitionPlan",
+      objectId: planId,
+      metadata: { action: "cancel", newStatus: plan.status },
+    });
 
     return NextResponse.json(plan);
   } catch (error) {

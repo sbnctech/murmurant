@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCapability } from "@/lib/auth";
 import { errors } from "@/lib/api";
+import { auditMutation } from "@/lib/audit";
 import {
   getTransitionPlan,
   updateTransitionPlan,
@@ -68,6 +69,14 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
 
     const plan = await updateTransitionPlan(id, parseResult.data);
 
+    await auditMutation(req, auth.context, {
+      action: "UPDATE",
+      capability: "users:manage",
+      objectType: "TransitionPlan",
+      objectId: id,
+      metadata: { updates: Object.keys(parseResult.data) },
+    });
+
     return NextResponse.json(plan);
   } catch (error) {
     console.error("Error updating transition plan:", error);
@@ -100,6 +109,13 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
 
   try {
     await deleteTransitionPlan(id);
+
+    await auditMutation(req, auth.context, {
+      action: "DELETE",
+      capability: "users:manage",
+      objectType: "TransitionPlan",
+      objectId: id,
+    });
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {

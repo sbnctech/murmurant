@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCapability } from "@/lib/auth";
 import { errors } from "@/lib/api";
+import { auditMutation } from "@/lib/audit";
 import {
   getServiceHistory,
   createServiceRecord,
@@ -99,6 +100,14 @@ export async function POST(req: NextRequest) {
       parseResult.data,
       auth.context.memberId
     );
+
+    await auditMutation(req, auth.context, {
+      action: "CREATE",
+      capability: "users:manage",
+      objectType: "ServiceRecord",
+      objectId: record.id,
+      metadata: { memberId: record.memberId, serviceType: record.serviceType, roleTitle: record.roleTitle },
+    });
 
     return NextResponse.json(record, { status: 201 });
   } catch (error) {

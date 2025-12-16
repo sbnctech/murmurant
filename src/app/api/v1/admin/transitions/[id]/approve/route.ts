@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { errors } from "@/lib/api";
+import { auditMutation } from "@/lib/audit";
 import { recordApproval, canApprove, approvalSchema } from "@/lib/serviceHistory";
 
 interface RouteParams {
@@ -47,6 +48,14 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     }
 
     const result = await recordApproval(planId, auth.context.memberId, role);
+
+    await auditMutation(req, auth.context, {
+      action: "UPDATE",
+      capability: "transitions:approve",
+      objectType: "TransitionPlan",
+      objectId: planId,
+      metadata: { action: "approve", approvalRole: role },
+    });
 
     return NextResponse.json(result);
   } catch (error) {

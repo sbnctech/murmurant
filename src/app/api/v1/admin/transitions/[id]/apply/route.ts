@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCapability } from "@/lib/auth";
 import { errors } from "@/lib/api";
+import { auditMutation } from "@/lib/audit";
 import { applyTransition } from "@/lib/serviceHistory";
 
 interface RouteParams {
@@ -27,6 +28,19 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
 
   try {
     const result = await applyTransition(planId, auth.context.memberId);
+
+    await auditMutation(req, auth.context, {
+      action: "UPDATE",
+      capability: "users:manage",
+      objectType: "TransitionPlan",
+      objectId: planId,
+      metadata: {
+        action: "apply",
+        newStatus: "APPLIED",
+        recordsClosed: result.recordsClosed,
+        recordsCreated: result.recordsCreated,
+      },
+    });
 
     return NextResponse.json(result);
   } catch (error) {

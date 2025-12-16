@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCapability } from "@/lib/auth";
 import { errors } from "@/lib/api";
+import { auditMutation } from "@/lib/audit";
 import { addAssignment, createAssignmentSchema } from "@/lib/serviceHistory";
 
 interface RouteParams {
@@ -39,6 +40,14 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     }
 
     const assignment = await addAssignment(planId, parseResult.data);
+
+    await auditMutation(req, auth.context, {
+      action: "CREATE",
+      capability: "users:manage",
+      objectType: "TransitionAssignment",
+      objectId: assignment.id,
+      metadata: { planId, isOutgoing: assignment.isOutgoing, roleTitle: assignment.roleTitle },
+    });
 
     return NextResponse.json(assignment, { status: 201 });
   } catch (error) {

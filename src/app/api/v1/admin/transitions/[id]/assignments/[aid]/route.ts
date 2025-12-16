@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCapability } from "@/lib/auth";
 import { errors } from "@/lib/api";
+import { auditMutation } from "@/lib/audit";
 import { removeAssignment } from "@/lib/serviceHistory";
 
 interface RouteParams {
@@ -21,6 +22,14 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
 
   try {
     await removeAssignment(assignmentId);
+
+    await auditMutation(req, auth.context, {
+      action: "DELETE",
+      capability: "users:manage",
+      objectType: "TransitionAssignment",
+      objectId: assignmentId,
+      metadata: { planId },
+    });
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {
