@@ -25,6 +25,7 @@ export default function ThemePreviewPage() {
     const params = new URLSearchParams(window.location.search);
     const theme = params.get("theme");
     if (theme && THEMES.includes(theme)) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional URL param hydration
       setCurrentTheme(theme);
       document.documentElement.setAttribute("data-theme", theme);
     }
