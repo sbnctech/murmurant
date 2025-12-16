@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { errors, apiSuccess, parsePaginationParams, createPagination } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
-import { authorizeFileList, getVisibilityFilter, FileObjectType } from "@/lib/fileAuthorization";
+import { authorizeFileList, getVisibilityFilter, FileObjectType } from "@/lib/files/authorization";
 
 /**
  * FileSummary - minimal metadata for file picker UI
@@ -61,7 +61,8 @@ export async function GET(request: NextRequest) {
     const visibilityFilter = getVisibilityFilter(context.globalRole);
 
     // Start with base conditions
-    const where: Parameters<typeof prisma.file.findMany>[0]["where"] = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const where: Record<string, any> = {
       deletedAt: null,
       ...visibilityFilter,
     };
