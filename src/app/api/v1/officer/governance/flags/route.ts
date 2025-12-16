@@ -12,7 +12,9 @@ import {
   createGovernanceFlag,
   listGovernanceFlags,
 } from "@/lib/governance/flags";
-import type { GovernanceFlagType, GovernanceFlagStatus } from "@prisma/client";
+// Stub types until Prisma model is added
+type GovernanceFlagType = "RULES_QUESTION" | "BYLAWS_CHECK" | "INSURANCE_REVIEW" | "LEGAL_REVIEW" | "OTHER";
+type GovernanceFlagStatus = "OPEN" | "IN_REVIEW" | "RESOLVED" | "DISMISSED";
 
 /**
  * GET /api/v1/officer/governance/flags

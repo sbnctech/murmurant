@@ -10,7 +10,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireCapability, hasCapability } from "@/lib/auth";
 import { auditMutation } from "@/lib/audit";
 import { getMeeting, updateMeeting, deleteMeeting } from "@/lib/meetings/meetings";
-import type { MeetingType } from "@prisma/client";
+// Stub type until Prisma model is added
+type MeetingType = "BOARD" | "EXECUTIVE" | "SPECIAL" | "ANNUAL";
 
 type RouteParams = {
   params: Promise<{ id: string }>;

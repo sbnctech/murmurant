@@ -12,7 +12,8 @@ import {
   createBoardRecord,
   listBoardRecords,
 } from "@/lib/governance/boardRecords";
-import type { BoardRecordStatus } from "@prisma/client";
+// Stub type until Prisma model is added
+type BoardRecordStatus = "DRAFT" | "SUBMITTED" | "APPROVED" | "PUBLISHED";
 
 /**
  * GET /api/v1/officer/board-records

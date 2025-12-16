@@ -12,7 +12,8 @@ import {
   listAnnotations,
   getAnnotationCounts,
 } from "@/lib/governance/annotations";
-import type { AnnotationSeverity } from "@prisma/client";
+// Stub type until Prisma model is added
+type AnnotationSeverity = "INFO" | "SUGGESTION" | "WARNING" | "ERROR";
 
 /**
  * GET /api/v1/officer/governance/annotations
