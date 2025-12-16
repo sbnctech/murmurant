@@ -42,11 +42,13 @@ const STATUS_OPTIONS = [
 
 const PAGE_SIZE = 20;
 
-type Props = {
-  adminToken?: string;
-};
-
-export default function TransitionsTable({ adminToken }: Props) {
+/**
+ * Transition plans table with filtering and pagination.
+ *
+ * Authentication is handled via HttpOnly session cookies - no tokens are
+ * passed from parent components (Charter P1, P7).
+ */
+export default function TransitionsTable() {
   const [plans, setPlans] = useState<TransitionPlan[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -70,13 +72,9 @@ export default function TransitionsTable({ adminToken }: Props) {
           params.set("status", filters.status);
         }
 
-        const headers: HeadersInit = {};
-        if (adminToken) {
-          headers["x-admin-test-token"] = adminToken;
-        }
-
+        // credentials: 'include' sends HttpOnly session cookies
         const res = await fetch(`/api/v1/admin/transitions?${params}`, {
-          headers,
+          credentials: "include",
         });
         if (res.status === 403) {
           setForbidden(true);
@@ -96,7 +94,7 @@ export default function TransitionsTable({ adminToken }: Props) {
       setLoading(false);
     }
     fetchPlans();
-  }, [page, filters, adminToken]);
+  }, [page, filters]);
 
   const handleFilterChange = (key: keyof Filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));

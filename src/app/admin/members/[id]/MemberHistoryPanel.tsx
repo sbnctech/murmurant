@@ -47,7 +47,10 @@ export default function MemberHistoryPanel({ memberId }: MemberHistoryPanelProps
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/admin/members/${memberId}/history`);
+        // credentials: 'include' sends HttpOnly session cookies (Charter P1, P7)
+        const res = await fetch(`/api/admin/members/${memberId}/history`, {
+          credentials: "include",
+        });
         if (res.status === 403) {
           setError("forbidden");
           return;

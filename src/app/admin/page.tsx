@@ -180,7 +180,8 @@ export default async function AdminPage() {
       <AdminSectionNav />
 
       {/* Transition Widget - visible only to President and Past President */}
-      <TransitionWidget adminToken={process.env.ADMIN_E2E_TOKEN ?? "dev-admin-token"} />
+      {/* Auth is handled via HttpOnly session cookies, not props (Charter P1, P7) */}
+      <TransitionWidget />
 
       <section
         id="admin-search-section"

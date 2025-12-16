@@ -1,10 +1,5 @@
 import TransitionsTable from "./TransitionsTable";
 
-const adminToken =
-  process.env.NODE_ENV !== "production"
-    ? process.env.ADMIN_E2E_TOKEN ?? "dev-admin-token"
-    : undefined;
-
 export default function TransitionsListPage() {
   return (
     <div data-test-id="admin-transitions-root" style={{ padding: "20px" }}>
@@ -23,7 +18,8 @@ export default function TransitionsListPage() {
         and Aug 1.
       </p>
 
-      <TransitionsTable adminToken={adminToken} />
+      {/* Auth is handled via HttpOnly session cookies, not props (Charter P1, P7) */}
+      <TransitionsTable />
     </div>
   );
 }
