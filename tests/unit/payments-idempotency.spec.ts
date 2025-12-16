@@ -274,19 +274,19 @@ describe("Payment Idempotency", () => {
 });
 
 describe("Production Safety", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("fake provider returns false for isAvailable in production", () => {
-    const originalEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = "production";
+    vi.stubEnv("NODE_ENV", "production");
 
     const provider = new FakePaymentProvider();
     expect(provider.isAvailable()).toBe(false);
-
-    process.env.NODE_ENV = originalEnv;
   });
 
   it("fake provider throws error on createPaymentIntent in production", async () => {
-    const originalEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = "production";
+    vi.stubEnv("NODE_ENV", "production");
 
     const provider = new FakePaymentProvider();
 
@@ -297,7 +297,5 @@ describe("Production Safety", () => {
         idempotencyKey: "test-key",
       })
     ).rejects.toThrow("Fake payment provider is not available in production");
-
-    process.env.NODE_ENV = originalEnv;
   });
 });
