@@ -2,6 +2,32 @@
 
 This is the main entry point for all ClubOS developer documentation.
 
+## Canonical Grounding
+
+**Start here.** These documents define SBNC's organizational model and guide all ClubOS behavior.
+
+- [SBNC Business Model](ORG/SBNC_BUSINESS_MODEL.md) - **Canonical grounding document** - must be referenced by all other docs
+- [Chatbot Contributor Rules](CHATBOT_CONTRIBUTOR_RULES.md) - Rules for AI assistants and code generators
+
+## Governance
+
+- [Leadership Action Log](governance/LEADERSHIP_ACTION_LOG.md) - Action types and patterns tracked
+- [Flywheel Metrics](governance/FLYWHEEL_METRICS.md) - Organizational health indicators
+
+## Roles
+
+- [Mentor Role](roles/MENTOR.md) - Mentor role summary (owned by VP Membership)
+- [Mentor Role Specification](roles/MENTOR_ROLE_SPECIFICATION.md) - Detailed mentor spec
+
+## Onboarding
+
+- [Officer Onboarding](onboarding/OFFICER_ONBOARDING.md) - New officer orientation
+- [Board Orientation](onboarding/BOARD_ORIENTATION.md) - New board member orientation
+
+## Human Review
+
+- [Human Review Pack](review/HUMAN_REVIEW_PACK.md) - Decisions requiring human judgment
+
 ## Getting Started
 - [Developer Onboarding](ONBOARDING.md)
 - [Development Workflow](DEVELOPMENT_WORKFLOW.md)

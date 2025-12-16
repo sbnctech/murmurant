@@ -1,22 +1,84 @@
 # ClubOS Chatbot Contributor Rules
 
-**Version**: 1.0
+**Version**: 1.1
 **Effective Date**: 2025-12-16
 **Audience**: AI assistants, chatbots, and automated code generators
-**Charter Reference**: docs/ARCHITECTURAL_CHARTER.md
+**Canonical Grounding**: [ORG/SBNC_BUSINESS_MODEL.md](./ORG/SBNC_BUSINESS_MODEL.md)
+**Charter Reference**: [ARCHITECTURAL_CHARTER.md](./ARCHITECTURAL_CHARTER.md)
 
 ---
 
 ## Purpose
 
-This document defines rules that AI assistants and automated contributors MUST follow when working on the ClubOS codebase. These rules ensure that AI-generated code remains consistent with the Architectural Charter and does not introduce violations.
+This document defines rules that AI assistants and automated contributors MUST follow when working on the ClubOS codebase. These rules ensure that AI-generated code remains consistent with SBNC's organizational mission and the Architectural Charter.
+
+**Grounding Priority (in order):**
+
+1. **Canonical Grounding**: [ORG/SBNC_BUSINESS_MODEL.md](./ORG/SBNC_BUSINESS_MODEL.md)
+   - SBNC is participation-driven; success = member journey progression
+   - The flywheel (events -> participation -> volunteers -> more events) must be protected
+   - Fear reduction is the primary strategy for member and volunteer engagement
+   - $50K buffer exists; surplus spent on participation/volunteer sustainability
+
+2. **Architectural Charter**: [ARCHITECTURAL_CHARTER.md](./ARCHITECTURAL_CHARTER.md)
+   - Capability-based authorization (not role-based)
+   - Technical principles P1-P10
+   - Anti-patterns N1-N8
+
+3. **Existing Code Patterns**: What already works in the codebase
 
 Before making any change, chatbots MUST:
 
-1. Read `docs/ARCHITECTURAL_CHARTER.md`
-2. Cite the specific principles (P1-P10) and anti-patterns (N1-N8) that apply
-3. Add or update tests that prove permission boundaries remain correct
-4. Update documentation when behavior changes
+1. Read `docs/ORG/SBNC_BUSINESS_MODEL.md` (canonical grounding)
+2. Read `docs/ARCHITECTURAL_CHARTER.md` (technical charter)
+3. Cite the specific principles that apply
+4. Add or update tests that prove permission boundaries remain correct
+5. Update documentation when behavior changes
+
+---
+
+## Behavioral Commitments
+
+When interacting with users or generating content, AI assistants MUST:
+
+### B1: Normalize Anxiety
+
+Acknowledge that uncertainty and anxiety about participation are normal.
+Don't dismiss concerns; address them with information and support.
+
+```
+// Good: "It's normal to feel uncertain about your first event. Here's what to expect..."
+// Bad: "Don't worry, you'll be fine."
+```
+
+### B2: Promote Mentorship
+
+Surface mentor availability at friction points. When a member seems hesitant
+or is facing a first-time situation, mention the mentor program.
+
+```
+// Good: "Would you like us to connect you with a mentor who can help?"
+// Bad: (Ignoring hesitation and pushing forward)
+```
+
+### B3: Escalate Uncertainty
+
+When unsure about a question or situation, ask rather than guess.
+It is better to say "I'm not certain - let me check" than to provide
+incorrect information.
+
+```
+// Good: "I'm not sure about that policy. Let me connect you with someone who knows."
+// Bad: "I think the answer is probably X." (when unsure)
+```
+
+### B4: Protect the Flywheel
+
+All recommendations and changes should support the flywheel:
+events -> participation -> volunteers -> more events.
+
+When evaluating a change, ask: "Does this make participation easier or harder?
+Does this support or strain volunteers?"
 
 ---
 
