@@ -88,21 +88,18 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  // Check auth if provided - enforce members:history capability
-  const authHeader = req.headers.get("Authorization");
-  if (authHeader) {
-    const auth = await requireAuth(req);
-    if (!auth.ok) return auth.response;
+  // Charter P1/P2/P9: Require authenticated identity with members:history capability
+  // Production auth: Always require authentication - no permissive mode
+  const auth = await requireAuth(req);
+  if (!auth.ok) return auth.response;
 
-    // If authenticated, check capability
-    if (!hasCapability(auth.context.globalRole, "members:history")) {
-      return NextResponse.json(
-        { error: "Forbidden", message: "Required capability: members:history" },
-        { status: 403 }
-      );
-    }
+  // Check capability
+  if (!hasCapability(auth.context.globalRole, "members:history")) {
+    return NextResponse.json(
+      { error: "Forbidden", message: "Required capability: members:history" },
+      { status: 403 }
+    );
   }
-  // In v0 permissive mode (no auth header), allow access for browser requests
 
   const { id } = await params;
 

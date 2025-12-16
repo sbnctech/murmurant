@@ -1,5 +1,10 @@
+// Copyright (c) Santa Barbara Newcomers Club
+// Admin global search API - requires members:view capability
+// Charter: P1 (identity provable), P2 (default deny), P9 (fail closed)
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireCapability } from "@/lib/auth";
 
 type MemberResult = {
   id: string;
@@ -35,6 +40,11 @@ type SearchResults = {
 };
 
 export async function GET(req: NextRequest) {
+  // Charter P1/P2: Require authenticated identity with members:view capability
+  // This search includes member data, so require members:view
+  const auth = await requireCapability(req, "members:view");
+  if (!auth.ok) return auth.response;
+
   const { searchParams } = new URL(req.url);
   const query = (searchParams.get("q") ?? "").trim();
 

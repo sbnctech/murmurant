@@ -1,5 +1,10 @@
+// Copyright (c) Santa Barbara Newcomers Club
+// Admin registration detail API - requires registrations:view capability
+// Charter: P1 (identity provable), P2 (default deny), P9 (fail closed)
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireCapability } from "@/lib/auth";
 
 type RegistrationDetailResponse = {
   registration: {
@@ -17,6 +22,10 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Charter P1/P2: Require authenticated identity with registrations:view capability
+  const auth = await requireCapability(req, "registrations:view");
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
 
   let registration;
