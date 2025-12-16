@@ -1,0 +1,30 @@
+# ClubOS Netlify Configuration
+# Next.js app with automatic Netlify runtime support
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+# Production branch (main)
+[context.production]
+  command = "npm run build"
+  environment = { NODE_ENV = "production" }
+
+# Sandbox/staging branch
+[context.sandbox]
+  command = "npm run build"
+  environment = { NODE_ENV = "production" }
+
+# PR preview deploys
+[context.deploy-preview]
+  command = "npm run build"
+  environment = { NODE_ENV = "production" }
+
+# Branch deploys (any other branch)
+[context.branch-deploy]
+  command = "npm run build"
+  environment = { NODE_ENV = "production" }
+
+# Netlify Next.js plugin (auto-detected but explicit is better)
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
