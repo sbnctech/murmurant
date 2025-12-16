@@ -107,6 +107,11 @@ model Member {
   deliveryLogs     DeliveryLog[]
   auditLogs        AuditLog[]
 
+  // Mentor system relations
+  mentorAssignments    MentorAssignment[] @relation("MentorAssignments")
+  newbieAssignments    MentorAssignment[] @relation("NewbieAssignments")
+  assignmentsMade      MentorAssignment[] @relation("AssignmentsMade")
+
   @@index([membershipStatusId])
 }
 
@@ -768,4 +773,72 @@ model JobRun {
   @@index([status])
   @@index([scheduledFor])
   @@index([createdAt])
+}
+
+// ============================================================================
+// MENTOR SYSTEM
+// Charter P7: Observability is a product feature
+// Makes mentor activity visible without surveillance
+// ============================================================================
+
+// Types of mentor engagement signals
+enum MentorSignalType {
+  MENTOR_ASSIGNED           // Mentor assigned to newbie
+  REGISTERED_SAME_EVENT     // Mentor and newbie registered for same event
+  ATTENDED_SAME_EVENT       // Mentor and newbie both attended same event
+  FIRST_CONTACT             // First recorded interaction
+  MENTOR_UNASSIGNED         // Mentor assignment ended
+}
+
+// MentorAssignment - Tracks mentor-newbie relationships
+// One mentor can have multiple newbies, one newbie has one mentor
+model MentorAssignment {
+  id          String    @id @default(uuid()) @db.Uuid
+  mentorId    String    @db.Uuid
+  newbieId    String    @db.Uuid
+  assignedAt  DateTime  @default(now())
+  assignedBy  String?   @db.Uuid // Who made the assignment (admin/system)
+  endedAt     DateTime? // When the assignment ended (graduation, reassignment, etc.)
+  endedReason String?   // Why the assignment ended
+  notes       String?   // Private notes about the pairing
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  mentor  Member  @relation("MentorAssignments", fields: [mentorId], references: [id])
+  newbie  Member  @relation("NewbieAssignments", fields: [newbieId], references: [id])
+  assigner Member? @relation("AssignmentsMade", fields: [assignedBy], references: [id])
+  signals MentorSignal[]
+
+  // A newbie can only have one active mentor at a time
+  @@unique([newbieId, endedAt])
+  @@index([mentorId])
+  @@index([newbieId])
+  @@index([assignedAt])
+  @@index([endedAt])
+}
+
+// MentorSignal - Records mentor engagement events for flywheel diagnostics
+// Enables leadership to answer: "Is mentorship actually working?"
+model MentorSignal {
+  id                   String           @id @default(uuid()) @db.Uuid
+  mentorAssignmentId   String           @db.Uuid
+  signalType           MentorSignalType
+  eventId              String?          @db.Uuid // For event-related signals
+  // Human-readable summary (no sensitive content)
+  summary              String           // e.g., "Jane registered for Coffee Chat with mentee Bob"
+  // Aggregatable metrics
+  weekNumber           Int              // ISO week number for weekly aggregation
+  yearNumber           Int              // Year for aggregation
+  metadata             Json?            // Additional context (event title, etc.)
+  createdAt            DateTime         @default(now())
+
+  mentorAssignment MentorAssignment @relation(fields: [mentorAssignmentId], references: [id], onDelete: Cascade)
+
+  // Prevent duplicate signals for same assignment+event+type
+  @@unique([mentorAssignmentId, signalType, eventId])
+  @@index([signalType])
+  @@index([eventId])
+  @@index([createdAt])
+  @@index([weekNumber, yearNumber])
+  @@index([mentorAssignmentId])
 }
