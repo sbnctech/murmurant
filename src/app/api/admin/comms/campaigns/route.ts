@@ -1,9 +1,10 @@
 // Copyright (c) Santa Barbara Newcomers Club
 // Message campaign management API - List and Create
+// Charter: N2 compliance - capability checks, not role checks
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireCapability } from "@/lib/auth";
+import { requireCapability, hasCapability } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 
 type CampaignListItem = {
@@ -83,9 +84,11 @@ export async function POST(req: NextRequest) {
   const auth = await requireCapability(req, "comms:manage");
   if (!auth.ok) return auth.response;
 
-  if (auth.context.globalRole !== "admin") {
+  // Charter N2: Use capability check instead of inline role check
+  // Campaign creation requires comms:send capability (admin has it, webmaster doesn't)
+  if (!hasCapability(auth.context.globalRole, "comms:send")) {
     return NextResponse.json(
-      { error: "Forbidden", message: "Only administrators can create campaigns" },
+      { error: "Forbidden", message: "Required capability: comms:send" },
       { status: 403 }
     );
   }

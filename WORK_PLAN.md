@@ -380,6 +380,57 @@ Each task is complete when:
 
 ---
 
+## Phase 2.x: Capability Normalization and Scope Hardening
+
+### Task 2.x.1: Normalize requireAdmin to Capability-Based
+
+**Status**: COMPLETED
+**Charter Violations Addressed**: N2
+**PR**: feat/capability-scope-hardening
+
+**Changes made**:
+- `requireAdmin()` in auth.ts now uses `hasCapability(role, "admin:full")` instead of `role !== "admin"`
+- `requireAdminOnly()` and `requireVPOrAdmin()` in eventAuth.ts normalized to use capabilities
+- `hasVPAccess()` and `canDelete()` in eventAuth.ts use `hasCapability()` instead of role strings
+- Inline role checks in `/api/admin/transitions/summary` and `/api/v1/admin/transitions/widget` replaced with capability checks
+
+### Task 2.x.2: Add Object Scope to High-Risk Endpoints
+
+**Status**: COMPLETED (explicit scopes) / DEFERRED (full ownership validation)
+
+**Endpoints with explicit scopes**:
+| Endpoint | Capability | Scope |
+|----------|------------|-------|
+| `/api/v1/admin/members/[id]` GET/PATCH | members:view | `{ memberId: id }` |
+| `/api/v1/admin/members/[id]/history` GET | members:history | `{ memberId: id }` |
+| `/api/v1/admin/members/[id]/status` PATCH | members:view | `{ memberId: id }` |
+| `/api/v1/admin/registrations/[id]` GET/DELETE | registrations:view | `{ registrationId: id }` |
+
+**New auth functions added**:
+- `requireCapabilityWithScope()` - Requires capability with explicit object scope parameter
+- `canAccessMember()` - Helper to check member-scoped access (self or admin)
+- `ObjectScope` type - Union type for scoped authorizations
+
+**Deferred** (full ownership validation):
+- Database queries to validate scope ownership are left as TODOs in route handlers
+- Rationale: Requires event/registration/member lookup which depends on business logic
+- Pattern is established; full validation can be added when routes are wired
+
+### Task 2.x.3: Deny-Path Tests
+
+**Status**: COMPLETED
+**File**: `tests/api/capability-deny-paths.spec.ts`
+
+**Test coverage**:
+- Member endpoints: member role → 403, webmaster → 403, admin → 200/404
+- Registration endpoints: unauthorized roles → 403
+- Transition endpoints: webmaster/event-chair → 403, president/admin → allowed
+- Unauthenticated access → 401 for all protected endpoints
+- N2 compliance: Verifies requireAdmin uses capability, not role string
+- P6 compliance: Verifies error message says "Access denied" not "Forbidden"
+
+---
+
 ## Tracking
 
 | Task | Assigned | Status | PR | Notes |
@@ -388,11 +439,14 @@ Each task is complete when:
 | 1.2 | - | Not Started | - | - |
 | 1.3 | - | Not Started | - | - |
 | 1.4 | - | Not Started | - | - |
-| 2.1 | - | Not Started | - | - |
+| 2.1 | - | Completed | feat/capability-scope-hardening | Merged with 2.x |
 | 2.2 | - | Not Started | - | - |
+| 2.x.1 | AI | Completed | feat/capability-scope-hardening | requireAdmin normalized |
+| 2.x.2 | AI | Completed | feat/capability-scope-hardening | Explicit scopes added |
+| 2.x.3 | AI | Completed | feat/capability-scope-hardening | Deny-path tests added |
 | 3.1 | - | Not Started | - | - |
 | 3.2 | - | Not Started | - | - |
-| 4.1 | - | Not Started | - | - |
+| 4.1 | - | Partial | feat/capability-scope-hardening | Deny-path tests added |
 | 5.1 | - | Not Started | - | - |
 | 5.2 | - | Not Started | - | - |
 

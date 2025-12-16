@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAuth } from "@/lib/auth";
+import { requireAuth, hasCapability } from "@/lib/auth";
 import { errors } from "@/lib/api";
 import {
   getTransitionWidgetDataWithContext,
@@ -25,9 +25,9 @@ export async function GET(req: NextRequest) {
   const auth = await requireAuth(req);
   if (!auth.ok) return auth.response;
 
-  // Webmaster and event-chair cannot see transition widget
-  if (auth.context.globalRole === "webmaster" || auth.context.globalRole === "event-chair") {
-    return errors.forbidden("president, past-president, vp-activities, or admin", auth.context.globalRole);
+  // Charter N2: Use capability check - require transitions:view capability
+  if (!hasCapability(auth.context.globalRole, "transitions:view")) {
+    return errors.forbidden("transitions:view", auth.context.globalRole);
   }
 
   try {
@@ -38,8 +38,9 @@ export async function GET(req: NextRequest) {
     const hasValidMemberId = uuidRegex.test(memberId);
 
     // For admin users with invalid memberIds (test tokens), return widget data without context
+    // Charter N2: Use capability check instead of role string
     if (!hasValidMemberId) {
-      if (auth.context.globalRole === "admin") {
+      if (hasCapability(auth.context.globalRole, "admin:full")) {
         // Admin can view widget for oversight - return basic widget data
         const { getTransitionWidgetLeadDays } = await import("@/lib/config");
         const { getNextTransitionDate, calculateDaysRemaining, getTermNameForTransition, isWidgetVisible } = await import("@/lib/serviceHistory");
@@ -71,9 +72,9 @@ export async function GET(req: NextRequest) {
     // Check if user has widget access via board position
     const context = await getTransitionWidgetContext(memberId);
 
-    // If user is not President or Past President, check if they have admin role
-    // Admin can always view for oversight purposes
-    if (!context && auth.context.globalRole !== "admin") {
+    // If user is not President or Past President, check if they have admin:full capability
+    // Charter N2: Use capability check instead of role string
+    if (!context && !hasCapability(auth.context.globalRole, "admin:full")) {
       return errors.forbidden("president or past-president", auth.context.globalRole);
     }
 

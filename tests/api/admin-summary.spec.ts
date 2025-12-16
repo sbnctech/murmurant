@@ -1,8 +1,29 @@
+/**
+ * Admin Summary API Tests
+ *
+ * Charter Principles:
+ * - P1: Identity and authorization must be provable
+ * - P2: Default deny, least privilege
+ */
+
 import { test, expect } from "@playwright/test";
 import { SEED_COUNTS } from "../fixtures/seed-data";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
+
+// Charter P1/P2: Auth enforcement tests
+test("GET /api/admin/summary returns 401 without auth", async ({ request }) => {
+  const response = await request.get(`${BASE}/api/admin/summary`);
+  expect(response.status()).toBe(401);
+});
+
+test("GET /api/admin/summary returns 403 for member role", async ({ request }) => {
+  const response = await request.get(`${BASE}/api/admin/summary`, {
+    headers: { Authorization: "Bearer test-member-token" },
+  });
+  expect(response.status()).toBe(403);
+});
 
 test("GET /api/admin/summary returns expected counts", async ({ request }) => {
   const response = await request.get(`${BASE}/api/admin/summary`, {

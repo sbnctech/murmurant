@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation";
 import MemberHistoryPanel from "./MemberHistoryPanel";
 
-const adminHeaders = process.env.ADMIN_E2E_TOKEN ? { "x-admin-test-token": process.env.ADMIN_E2E_TOKEN } : undefined;
+// Server-to-server auth for API calls (only in dev mode, with default fallback)
+const adminHeaders =
+  process.env.NODE_ENV !== "production"
+    ? { "x-admin-test-token": process.env.ADMIN_E2E_TOKEN ?? "dev-admin-token" }
+    : undefined;
 
 function getBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_BASE_URL) {

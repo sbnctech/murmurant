@@ -287,11 +287,13 @@ test.describe("Admin Member History", () => {
       expect(historyResponse.status()).toBe(403);
     });
 
-    test("Unauthenticated request returns 200 in v0 permissive mode", async ({ request }) => {
-      // In v0 permissive mode, unauthenticated requests are allowed
-      // This test will need to be updated when v1 auth hardening is implemented
+    test("Unauthenticated request returns 401 (production auth enforcement)", async ({ request }) => {
+      // Production auth enforcement: unauthenticated requests get 401
+      // Charter P1/P2: Identity must be provable, default deny
       // Get a real member ID first
-      const listResponse = await request.get(`${BASE}/api/admin/members`);
+      const listResponse = await request.get(`${BASE}/api/admin/members`, {
+        headers: { Authorization: "Bearer test-admin-token" },
+      });
       const listData = await listResponse.json();
       const memberId = listData.items?.[0]?.id || listData.members?.[0]?.id;
 
@@ -304,8 +306,8 @@ test.describe("Admin Member History", () => {
         `${BASE}/api/admin/members/${memberId}/history`
       );
 
-      // In v0, unauthenticated requests are allowed
-      expect(historyResponse.status()).toBe(200);
+      // Production auth enforcement: unauthenticated requests get 401
+      expect(historyResponse.status()).toBe(401);
     });
   });
 });

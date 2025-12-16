@@ -32,10 +32,6 @@ type TransitionSummary = {
   };
 };
 
-type Props = {
-  adminToken?: string;
-};
-
 /**
  * Transition countdown widget for President and Past President dashboards.
  *
@@ -45,8 +41,11 @@ type Props = {
  * - Status summary of transition plans
  *
  * Only visible to users with president or past-president board position.
+ *
+ * Authentication is handled via HttpOnly session cookies - no tokens are
+ * passed from parent components (Charter P1, P7).
  */
-export default function TransitionWidget({ adminToken }: Props) {
+export default function TransitionWidget() {
   const [widgetData, setWidgetData] = useState<TransitionWidgetData | null>(null);
   const [summary, setSummary] = useState<TransitionSummary | null>(null);
   const [loading, setLoading] = useState(true);
@@ -55,14 +54,10 @@ export default function TransitionWidget({ adminToken }: Props) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const headers: HeadersInit = {};
-        if (adminToken) {
-          headers["x-admin-test-token"] = adminToken;
-        }
-
         // Fetch widget visibility and data
+        // credentials: 'include' sends HttpOnly session cookies
         const widgetRes = await fetch("/api/v1/admin/transitions/widget", {
-          headers,
+          credentials: "include",
           cache: "no-store",
         });
 
@@ -83,7 +78,7 @@ export default function TransitionWidget({ adminToken }: Props) {
         // Only fetch summary if widget is visible
         if (widgetJson.widget?.visible) {
           const summaryRes = await fetch("/api/admin/transitions/summary?term=next", {
-            headers,
+            credentials: "include",
             cache: "no-store",
           });
 
@@ -101,7 +96,7 @@ export default function TransitionWidget({ adminToken }: Props) {
     }
 
     fetchData();
-  }, [adminToken]);
+  }, []);
 
   // Don't render anything if loading, error, or not visible
   if (loading) {

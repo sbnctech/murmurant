@@ -231,57 +231,110 @@ export type AuthResult =
   | { ok: true; context: AuthContext }
   | { ok: false; response: NextResponse };
 
+// Session cookie names for cookie-based authentication
+export const SESSION_COOKIE_NAME = "clubos_session";
+const DEV_SESSION_COOKIE_NAME = "clubos_dev_session";
+
 /**
- * Validates the request has a valid authentication token.
- * Returns 401 if missing/invalid token.
+ * Check if we're running in production mode.
  */
-export async function requireAuth(req: NextRequest): Promise<AuthResult> {
-    const e2eToken = process.env.ADMIN_E2E_TOKEN ?? "dev-admin-token";
-  const headerToken = req.headers.get("x-admin-test-token");
-  if (process.env.NODE_ENV !== "production" && headerToken && headerToken === e2eToken) {
-    return {
-      ok: true,
-      context: {
-        memberId: "e2e-admin",
-        email: "alice@example.com",
-        globalRole: "admin",
-      },
-    };
-  }
-
-const authHeader = req.headers.get("Authorization");
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return {
-      ok: false,
-      response: NextResponse.json(
-        { error: "Unauthorized", message: "Missing or invalid authorization header" },
-        { status: 401 }
-      ),
-    };
-  }
-
-  const token = authHeader.slice(7); // Remove "Bearer " prefix
-
-  // For development/testing, accept specific test tokens
-  // In production, this would validate JWT or session
-  const context = parseTestToken(token);
-  if (!context) {
-    return {
-      ok: false,
-      response: NextResponse.json(
-        { error: "Unauthorized", message: "Invalid or expired token" },
-        { status: 401 }
-      ),
-    };
-  }
-
-  return { ok: true, context };
+export function isProduction(): boolean {
+  return process.env.NODE_ENV === "production";
 }
 
 /**
- * Validates the authenticated user has admin role.
- * Returns 403 if not an admin.
+ * Read session token from HttpOnly cookies.
+ * In production: reads clubos_session
+ * In development: also checks clubos_dev_session as fallback
+ *
+ * Charter P1: Provable identity - sessions are server-validated.
+ * Charter P9: Fail closed - missing cookie = no auth.
+ */
+function getSessionTokenFromCookies(req: NextRequest): string | null {
+  // Check production session cookie
+  const sessionCookie = req.cookies.get(SESSION_COOKIE_NAME);
+  if (sessionCookie?.value) {
+    return sessionCookie.value;
+  }
+
+  // In development, also check dev session cookie (set by middleware)
+  if (!isProduction()) {
+    const devSessionCookie = req.cookies.get(DEV_SESSION_COOKIE_NAME);
+    if (devSessionCookie?.value) {
+      return devSessionCookie.value;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Validates the request has a valid authentication token.
+ * Returns 401 if missing/invalid token.
+ *
+ * Authentication priority (highest to lowest):
+ * 1. HttpOnly session cookies (production-grade)
+ * 2. Authorization Bearer header (for API clients)
+ * 3. x-admin-test-token header (E2E tests, dev-only)
+ *
+ * Charter P1: Provable identity - all auth is server-validated.
+ * Charter P2: Default deny - no token = 401.
+ * Charter P9: Fail closed - invalid token = 401.
+ */
+export async function requireAuth(req: NextRequest): Promise<AuthResult> {
+  // 1. Check session cookies first (preferred for browser clients)
+  const sessionToken = getSessionTokenFromCookies(req);
+  if (sessionToken) {
+    const context = parseTestToken(sessionToken);
+    if (context) {
+      return { ok: true, context };
+    }
+    // Invalid session cookie - fall through to other methods
+  }
+
+  // 2. Check Authorization header (for API clients)
+  const authHeader = req.headers.get("Authorization");
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.slice(7);
+    const context = parseTestToken(token);
+    if (context) {
+      return { ok: true, context };
+    }
+    // Invalid bearer token - fall through
+  }
+
+  // 3. E2E test bypass header (development only)
+  if (!isProduction()) {
+    const e2eToken = process.env.ADMIN_E2E_TOKEN ?? "dev-admin-token";
+    const headerToken = req.headers.get("x-admin-test-token");
+    if (headerToken && headerToken === e2eToken) {
+      return {
+        ok: true,
+        context: {
+          memberId: "e2e-admin",
+          email: "alice@example.com",
+          globalRole: "admin",
+        },
+      };
+    }
+  }
+
+  // No valid authentication found
+  return {
+    ok: false,
+    response: NextResponse.json(
+      { error: "Unauthorized", message: "Missing or invalid authentication" },
+      { status: 401 }
+    ),
+  };
+}
+
+/**
+ * Validates the authenticated user has full admin capability.
+ * Returns 403 if they lack admin:full capability.
+ *
+ * Charter P2/N2: Uses capability check, not role string comparison.
+ * This is equivalent to requireCapability(req, "admin:full").
  */
 export async function requireAdmin(req: NextRequest): Promise<AuthResult> {
   const authResult = await requireAuth(req);
@@ -289,11 +342,12 @@ export async function requireAdmin(req: NextRequest): Promise<AuthResult> {
     return authResult;
   }
 
-  if (authResult.context.globalRole !== "admin") {
+  // Charter N2: Use capability check, not role string
+  if (!hasCapability(authResult.context.globalRole, "admin:full")) {
     return {
       ok: false,
       response: NextResponse.json(
-        { error: "Forbidden", message: "Admin access required" },
+        { error: "Access denied", message: "Administrator privileges required" },
         { status: 403 }
       ),
     };
@@ -344,13 +398,90 @@ export async function requireCapability(
     return {
       ok: false,
       response: NextResponse.json(
-        { error: "Forbidden", message: `Required capability: ${capability}` },
+        { error: "Access denied", message: `Required capability: ${capability}` },
         { status: 403 }
       ),
     };
   }
 
   return authResult;
+}
+
+/**
+ * Object scope types for scoped capability checks.
+ * Charter P2: Authorization must be object-aware.
+ */
+export type ObjectScope =
+  | { memberId: string }
+  | { eventId: string }
+  | { registrationId: string }
+  | { campaignId: string }
+  | { pageId: string };
+
+/**
+ * Scoped authorization result that includes the validated scope.
+ */
+export type ScopedAuthResult =
+  | { ok: true; context: AuthContext; scope: ObjectScope }
+  | { ok: false; response: NextResponse };
+
+/**
+ * Validates the authenticated user has the required capability and scope.
+ *
+ * Charter P2: Authorization must be object-aware (event, committee, member, campaign).
+ * Charter N2: Uses capability check, not role string comparison.
+ *
+ * The scope parameter makes the object-scoping explicit in the code.
+ * Ownership/access validation for the scope must be done separately by the caller.
+ *
+ * Usage:
+ * ```typescript
+ * const auth = await requireCapabilityWithScope(req, "members:view", { memberId });
+ * if (!auth.ok) return auth.response;
+ *
+ * // Caller must validate scope ownership:
+ * // - admin:full can access any object
+ * // - others may need object-specific checks (e.g., own memberId)
+ * ```
+ */
+export async function requireCapabilityWithScope(
+  req: NextRequest,
+  capability: Capability,
+  scope: ObjectScope
+): Promise<ScopedAuthResult> {
+  const authResult = await requireAuth(req);
+  if (!authResult.ok) {
+    return authResult;
+  }
+
+  if (!hasCapability(authResult.context.globalRole, capability)) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { error: "Access denied", message: `Required capability: ${capability}` },
+        { status: 403 }
+      ),
+    };
+  }
+
+  return { ok: true, context: authResult.context, scope };
+}
+
+/**
+ * Check if authenticated user can access a specific member's data.
+ * Returns true if:
+ * - User has admin:full capability (can access any member)
+ * - User's memberId matches the target memberId (self-access)
+ *
+ * Charter P2: Object-scoped authorization.
+ */
+export function canAccessMember(context: AuthContext, targetMemberId: string): boolean {
+  // Admin can access any member
+  if (hasCapability(context.globalRole, "admin:full")) {
+    return true;
+  }
+  // Users can access their own data
+  return context.memberId === targetMemberId;
 }
 
 /**

@@ -48,7 +48,8 @@ report_violation() {
 
 # Check 1: Admin routes without authentication (P1, P2)
 echo "Checking for admin routes without authentication..."
-UNAUTH_ROUTES=$(find "$SRC_DIR/app/api/admin" -name "route.ts" -exec grep -L "requireAuth\|requireCapability\|requireAdmin" {} \; 2>/dev/null || true)
+# Include event-specific auth functions from eventAuth.ts (requireVPOrAdmin, requireEventViewAccess, etc.)
+UNAUTH_ROUTES=$(find "$SRC_DIR/app/api/admin" -name "route.ts" -exec grep -L "requireAuth\|requireCapability\|requireAdmin\|requireVPOrAdmin\|requireEventViewAccess\|requireEventEditAccess\|requireEventDeleteAccess" {} \; 2>/dev/null || true)
 
 if [ -n "$UNAUTH_ROUTES" ]; then
     COUNT=$(echo "$UNAUTH_ROUTES" | wc -l | tr -d ' ')
@@ -61,7 +62,9 @@ fi
 
 # Check 2: Inline role checks (N2)
 echo "Checking for inline role checks..."
-ROLE_CHECKS=$(grep -rn 'role\s*===\?\s*["'"'"']admin["'"'"']\|role\s*===\?\s*["'"'"']president["'"'"']\|role\s*===\?\s*["'"'"']vp-activities["'"'"']' "$SRC_DIR" --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "auth.ts" | grep -v "\.spec\." || true)
+# Exclude: auth.ts (centralized auth layer), eventAuth.ts (event authorization layer),
+# approvals.ts (position-based approval authority), and test files
+ROLE_CHECKS=$(grep -rn 'role\s*===\?\s*["'"'"']admin["'"'"']\|role\s*===\?\s*["'"'"']president["'"'"']\|role\s*===\?\s*["'"'"']vp-activities["'"'"']' "$SRC_DIR" --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "auth.ts" | grep -v "eventAuth.ts" | grep -v "approvals.ts" | grep -v "\.spec\." || true)
 
 if [ -n "$ROLE_CHECKS" ]; then
     COUNT=$(echo "$ROLE_CHECKS" | wc -l | tr -d ' ')

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, AuthContext, AuthResult, GlobalRole } from "@/lib/auth";
+import { requireAuth, AuthContext, AuthResult, GlobalRole, hasCapability } from "@/lib/auth";
 
 /**
  * Event Authorization Utilities
@@ -30,16 +30,22 @@ export type EventAuthResult =
 
 /**
  * Check if role has VP-level access (can view/edit all events).
+ *
+ * Charter N2: Uses capability check, not role string comparison.
+ * VP-level access means having events:edit capability (which implies events:view).
  */
 function hasVPAccess(role: GlobalRole): boolean {
-  return role === "admin" || role === "vp-activities";
+  return hasCapability(role, "events:edit");
 }
 
 /**
  * Check if role can delete events (admin only).
+ *
+ * Charter N2: Uses capability check, not role string comparison.
+ * Only roles with events:delete capability can delete.
  */
 function canDelete(role: GlobalRole): boolean {
-  return role === "admin";
+  return hasCapability(role, "events:delete");
 }
 
 /**
@@ -275,6 +281,8 @@ export async function getChairedEventIds(memberId: string): Promise<string[]> {
  * - Viewing all members
  * - Exporting data
  * - System configuration
+ *
+ * Charter N2: Uses capability check, not role string comparison.
  */
 export async function requireAdminOnly(req: NextRequest): Promise<AuthResult> {
   const authResult = await requireAuth(req);
@@ -282,12 +290,13 @@ export async function requireAdminOnly(req: NextRequest): Promise<AuthResult> {
     return authResult;
   }
 
-  if (authResult.context.globalRole !== "admin") {
+  // Charter N2: Use capability check, not role string
+  if (!hasCapability(authResult.context.globalRole, "admin:full")) {
     return {
       ok: false,
       response: NextResponse.json(
         {
-          error: "Forbidden",
+          error: "Access denied",
           message: "This action requires administrator privileges",
         },
         { status: 403 }
@@ -301,6 +310,8 @@ export async function requireAdminOnly(req: NextRequest): Promise<AuthResult> {
 /**
  * Require VP-level or higher access (VP of Activities or Admin).
  * Use this for operations that VPs can perform but Event Chairs cannot.
+ *
+ * Charter N2: Uses capability check via hasVPAccess (which uses events:edit capability).
  */
 export async function requireVPOrAdmin(req: NextRequest): Promise<AuthResult> {
   const authResult = await requireAuth(req);
@@ -308,12 +319,13 @@ export async function requireVPOrAdmin(req: NextRequest): Promise<AuthResult> {
     return authResult;
   }
 
+  // Charter N2: hasVPAccess uses capability check internally
   if (!hasVPAccess(authResult.context.globalRole)) {
     return {
       ok: false,
       response: NextResponse.json(
         {
-          error: "Forbidden",
+          error: "Access denied",
           message: "This action requires VP of Activities or administrator privileges",
         },
         { status: 403 }

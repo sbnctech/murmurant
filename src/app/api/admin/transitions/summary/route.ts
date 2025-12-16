@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
+import { requireAuth, hasCapability } from "@/lib/auth";
 import { errors } from "@/lib/api";
 import { TransitionStatus } from "@prisma/client";
 import { getTermBoundaries } from "@/lib/serviceHistory";
@@ -23,8 +23,8 @@ export async function GET(req: NextRequest) {
   const auth = await requireAuth(req);
   if (!auth.ok) return auth.response;
 
-  // Webmaster cannot see transitions
-  if (auth.context.globalRole === "webmaster") {
+  // Charter N2: Use capability check - require transitions:view capability
+  if (!hasCapability(auth.context.globalRole, "transitions:view")) {
     return errors.forbidden("transitions:view", auth.context.globalRole);
   }
 
