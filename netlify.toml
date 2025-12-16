@@ -1,30 +1,37 @@
-# ClubOS Netlify Configuration
-# Next.js app with automatic Netlify runtime support
+# Netlify configuration for ClubOS
+# https://docs.netlify.com/configure-builds/file-based-configuration/
 
 [build]
   command = "npm run build"
   publish = ".next"
 
-# Production branch (main)
-[context.production]
-  command = "npm run build"
-  environment = { NODE_ENV = "production" }
-
-# Sandbox/staging branch
-[context.sandbox]
-  command = "npm run build"
-  environment = { NODE_ENV = "production" }
-
-# PR preview deploys
-[context.deploy-preview]
-  command = "npm run build"
-  environment = { NODE_ENV = "production" }
-
-# Branch deploys (any other branch)
-[context.branch-deploy]
-  command = "npm run build"
-  environment = { NODE_ENV = "production" }
-
-# Netlify Next.js plugin (auto-detected but explicit is better)
+# Use the Next.js runtime for proper SSR/ISR support
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Branch deploy settings
+# Netlify will deploy all branches listed here (in addition to production)
+# Configure in UI: Site settings > Build & deploy > Branches and deploy contexts
+
+# Sandbox branch context - same build, can add env overrides if needed
+[context.sandbox]
+  command = "npm run build"
+
+# Sandbox-specific environment
+[context.sandbox.environment]
+  NEXT_PUBLIC_ENV = "sandbox"
+
+# Production branch context (main)
+[context.production]
+  command = "npm run build"
+
+[context.production.environment]
+  NEXT_PUBLIC_ENV = "production"
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
