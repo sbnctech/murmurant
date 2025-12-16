@@ -1,0 +1,54 @@
+{
+  "name": "sbnc",
+  "version": "1.0.0",
+  "description": "Santa Barbara Newcomers Club theme - Cherry blossom inspired warm coral palette",
+  "author": "ClubOS",
+  "license": "MIT",
+  "files": [
+    {
+      "source": "themes/sbnc.css",
+      "destination": "src/styles/themes/sbnc.css",
+      "type": "theme"
+    },
+    {
+      "source": "templates/member/MemberShell.tsx",
+      "destination": "src/templates/member/MemberShell.tsx",
+      "type": "template"
+    },
+    {
+      "source": "templates/member/MemberHomeTemplate.tsx",
+      "destination": "src/templates/member/MemberHomeTemplate.tsx",
+      "type": "template"
+    },
+    {
+      "source": "templates/member/MemberContentTemplate.tsx",
+      "destination": "src/templates/member/MemberContentTemplate.tsx",
+      "type": "template"
+    },
+    {
+      "source": "templates/admin/AdminShell.tsx",
+      "destination": "src/templates/admin/AdminShell.tsx",
+      "type": "template"
+    },
+    {
+      "source": "templates/admin/AdminListTemplate.tsx",
+      "destination": "src/templates/admin/AdminListTemplate.tsx",
+      "type": "template"
+    },
+    {
+      "source": "templates/admin/AdminDetailTemplate.tsx",
+      "destination": "src/templates/admin/AdminDetailTemplate.tsx",
+      "type": "template"
+    }
+  ],
+  "themeId": "sbnc",
+  "apply": {
+    "steps": [
+      "Copy theme CSS to src/styles/themes/",
+      "Copy template components to src/templates/",
+      "Update src/styles/themes/index.css to import the theme",
+      "Update src/templates/index.ts to export templates"
+    ],
+    "postInstall": "Ensure globals.css imports the theme system via @import '../styles/themes/index.css'"
+  }
+}

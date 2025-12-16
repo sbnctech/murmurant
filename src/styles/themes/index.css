@@ -1,0 +1,24 @@
+/**
+ * ClubOS Theme System - Main Entry Point
+ *
+ * This file imports all available themes and the token system.
+ * Import this file in your globals.css to enable theming.
+ *
+ * Usage:
+ * 1. Import this file in globals.css
+ * 2. Set data-theme="themename" on <html> or <body>
+ * 3. Use var(--token-*) in your styles
+ *
+ * Available themes:
+ * - base: Neutral professional theme (default)
+ * - sbnc: Santa Barbara Newcomers Club theme
+ */
+
+/* Token system - defines the variable names */
+@import '../tokens/tokens.css';
+
+/* Base theme - provides default values */
+@import './base.css';
+
+/* SBNC theme - cherry blossom inspired */
+@import './sbnc.css';
