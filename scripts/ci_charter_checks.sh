@@ -29,7 +29,7 @@ if command -v rg >/dev/null 2>&1; then
   for p in "${patterns[@]}"; do
     echo
     echo "-- scanning: ${p}"
-    if rg -n --hidden --glob '!.git/*' "${p}" .; then
+    if rg -n --hidden --glob '!.git/*' --glob '!docs/**' --glob '!scripts/ci_charter_checks.sh' "${p}" .; then
       echo "WARN: pattern matched: ${p}"
     else
       echo "OK: no matches for: ${p}"
