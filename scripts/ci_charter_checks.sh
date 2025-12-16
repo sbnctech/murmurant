@@ -40,8 +40,21 @@ else
 fi
 
 echo
+
+# == Migration Safety Check (P2, P7, P9) ==
+echo "== Migration Safety Check =="
+if [[ -x "scripts/ci/check-migration-safety.sh" ]]; then
+  if ! bash scripts/ci/check-migration-safety.sh; then
+    echo "FAIL: Migration safety check failed"
+    fail=1
+  fi
+else
+  echo "WARN: scripts/ci/check-migration-safety.sh not found or not executable; skipping"
+fi
+
+echo
 if [[ "${fail}" -ne 0 ]]; then
-  echo "RESULT: FAIL (missing required governance files)"
+  echo "RESULT: FAIL (one or more checks failed)"
   exit 1
 fi
 
