@@ -59,7 +59,26 @@ export type Capability =
   | "transitions:approve"   // Approve transition plans
   | "users:manage"          // Create/update user roles and entitlements
   | "admin:full"            // Full admin access (implies all capabilities)
-  | "debug:readonly";       // Debug read-only access (for support, default OFF)
+  | "debug:readonly"
+  // Officer/Governance capabilities (stubs - awaiting Prisma models)
+  | "meetings:read"
+  | "meetings:motions:read"
+  | "meetings:motions:annotate"
+  | "meetings:minutes:draft:create"
+  | "meetings:minutes:draft:submit"
+  | "meetings:minutes:draft:edit"
+  | "meetings:minutes:read_all"
+  | "meetings:minutes:revise"
+  | "meetings:minutes:finalize"
+  | "board_records:read"
+  | "board_records:draft:edit"
+  | "board_records:draft:create"
+  | "board_records:draft:submit"
+  | "governance:flags:create"
+  | "governance:flags:resolve"
+  | "governance:rules:manage"
+  | "content:board:request_publish"
+  | "content:board:publish";       // Debug read-only access (for support, default OFF)
 
 /**
  * Map of which capabilities each role has.
