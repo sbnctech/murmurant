@@ -1,53 +1,323 @@
 # Template and Theme Model
 
-Version: 0.1.0
-Status: Draft
-Date: 2025-12-15
+This document details the template and theme system for ClubOS publishing.
+It covers block types, theme tokens, CSS variable generation, and template
+structure.
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Block System](#block-system)
+- [Theme Tokens](#theme-tokens)
+- [CSS Variable Generation](#css-variable-generation)
+- [Template Structure](#template-structure)
+- [Security](#security)
+- [API Reference](#api-reference)
 
 ---
 
 ## Overview
 
-This document describes the template and theme system for ClubOS publishing. The goal is to provide flexible, token-based styling that avoids WildApricot-era rigidity while maintaining brand consistency.
+The ClubOS publishing system uses three interconnected models:
 
+- **Blocks** - Content building units (hero, text, cards, etc.)
+- **Templates** - Reusable page structures with preset blocks
+- **Themes** - Visual styling via CSS custom properties (tokens)
+
+### Hierarchy
+
+```
+Theme (site-wide styling)
+    |
+    v
+Template (page structure blueprint)
+    |
+    v
+Page (specific content instance)
+    |
+    v
+Blocks (individual content units)
+```
 
 ---
 
-## 1. Theme System
+## Block System
 
-### What is a Theme?
+### Available Block Types
 
-A theme defines the visual appearance of pages through CSS custom properties (design tokens). Themes control:
+| Type | Category | Description |
+|------|----------|-------------|
+| hero | content | Full-width header with background, title, CTA |
+| text | content | Rich text (HTML) content |
+| image | media | Single image with caption and optional link |
+| cards | content | Grid of content cards (2-4 columns) |
+| event-list | interactive | Dynamic list of upcoming events |
+| gallery | media | Image gallery grid with lightbox |
+| faq | content | Accordion-style Q&A section |
+| contact | interactive | Contact form with email submission |
+| cta | interactive | Call-to-action button |
+| divider | layout | Horizontal separator line |
+| spacer | layout | Vertical whitespace |
 
-- Colors (brand palette)
-- Typography (fonts, sizes)
-- Spacing (padding, margins)
-- Border radius
-- Shadows
+### Block Structure
 
-### Theme Token Structure
+All blocks share a base structure:
+
+```typescript
+type BaseBlock = {
+  id: string;       // UUID, auto-generated
+  type: BlockType;  // One of the block types above
+  order: number;    // Position in page (0-indexed)
+};
+```
+
+Each block type adds a `data` field with type-specific properties.
+
+### Hero Block
+
+Full-width header section with optional background image and CTA.
+
+```typescript
+type HeroBlock = BaseBlock & {
+  type: "hero";
+  data: {
+    title: string;
+    subtitle?: string;
+    backgroundImage?: string;      // URL
+    backgroundOverlay?: string;    // rgba color
+    textColor?: string;            // CSS color
+    alignment?: "left" | "center" | "right";
+    ctaText?: string;
+    ctaLink?: string;
+    ctaStyle?: "primary" | "secondary" | "outline";
+  };
+};
+```
+
+### Text Block
+
+Rich text content rendered as HTML.
+
+```typescript
+type TextBlock = BaseBlock & {
+  type: "text";
+  data: {
+    content: string;  // HTML content (sanitized)
+    alignment?: "left" | "center" | "right";
+  };
+};
+```
+
+### Image Block
+
+Single image with optional caption and link.
+
+```typescript
+type ImageBlock = BaseBlock & {
+  type: "image";
+  data: {
+    src: string;       // Image URL
+    alt: string;       // Alt text (required for a11y)
+    caption?: string;
+    width?: string;    // CSS width (e.g., "100%", "500px")
+    alignment?: "left" | "center" | "right";
+    linkUrl?: string;  // Optional click target
+  };
+};
+```
+
+### Cards Block
+
+Grid of content cards for feature highlights.
+
+```typescript
+type CardsBlock = BaseBlock & {
+  type: "cards";
+  data: {
+    columns?: 2 | 3 | 4;  // Default: 3
+    cards: Array<{
+      title: string;
+      description?: string;
+      image?: string;      // Card image URL
+      linkUrl?: string;
+      linkText?: string;
+    }>;
+  };
+};
+```
+
+### Event List Block
+
+Dynamic display of events from the database.
+
+```typescript
+type EventListBlock = BaseBlock & {
+  type: "event-list";
+  data: {
+    title?: string;                    // Section heading
+    limit?: number;                    // Max events (default: 5)
+    categories?: string[];             // Filter by category
+    showPastEvents?: boolean;          // Default: false
+    layout?: "list" | "cards" | "calendar";
+  };
+};
+```
+
+### Gallery Block
+
+Image gallery with optional lightbox.
+
+```typescript
+type GalleryBlock = BaseBlock & {
+  type: "gallery";
+  data: {
+    images: Array<{
+      src: string;
+      alt: string;
+      caption?: string;
+    }>;
+    columns?: 2 | 3 | 4;
+    enableLightbox?: boolean;  // Default: true
+  };
+};
+```
+
+### FAQ Block
+
+Accordion-style frequently asked questions.
+
+```typescript
+type FaqBlock = BaseBlock & {
+  type: "faq";
+  data: {
+    title?: string;
+    items: Array<{
+      question: string;
+      answer: string;  // HTML content
+    }>;
+  };
+};
+```
+
+### Contact Block
+
+Contact form with configurable fields.
+
+```typescript
+type ContactBlock = BaseBlock & {
+  type: "contact";
+  data: {
+    title?: string;
+    description?: string;
+    recipientEmail: string;
+    fields?: Array<{
+      name: string;
+      label: string;
+      type: "text" | "email" | "textarea" | "select";
+      required?: boolean;
+      options?: string[];  // For select fields
+    }>;
+    submitText?: string;  // Default: "Send Message"
+  };
+};
+```
+
+### CTA Block
+
+Call-to-action button.
+
+```typescript
+type CtaBlock = BaseBlock & {
+  type: "cta";
+  data: {
+    text: string;
+    link: string;
+    style?: "primary" | "secondary" | "outline";
+    size?: "small" | "medium" | "large";
+    alignment?: "left" | "center" | "right";
+  };
+};
+```
+
+### Divider Block
+
+Horizontal separator line.
+
+```typescript
+type DividerBlock = BaseBlock & {
+  type: "divider";
+  data: {
+    style?: "solid" | "dashed" | "dotted";
+    width?: "full" | "half" | "quarter";
+  };
+};
+```
+
+### Spacer Block
+
+Vertical whitespace for layout control.
+
+```typescript
+type SpacerBlock = BaseBlock & {
+  type: "spacer";
+  data: {
+    height?: "small" | "medium" | "large";
+  };
+};
+```
+
+### Page Content Structure
+
+Page content is stored as JSON:
+
+```typescript
+type PageContent = {
+  schemaVersion: number;  // Currently: 1
+  blocks: Block[];        // Array of blocks, ordered by 'order' field
+};
+```
+
+---
+
+## Theme Tokens
+
+Themes define design tokens that generate CSS custom properties.
+
+### Token Categories
+
+| Category | Purpose | Example Variables |
+|----------|---------|-------------------|
+| colors | Color palette | --color-primary, --color-text |
+| typography | Fonts and sizes | --font-family, --font-size-h1 |
+| spacing | Margins and padding | --spacing-md, --spacing-xl |
+| borderRadius | Corner rounding | --border-radius-md |
+| shadows | Box shadows | --shadow-md, --shadow-lg |
+
+### ThemeTokens Type
 
 ```typescript
 type ThemeTokens = {
   colors?: {
-    primary?: string;       // Main brand color
-    primaryHover?: string;  // Hover state
+    primary?: string;       // Brand primary color
+    primaryHover?: string;  // Primary hover state
     secondary?: string;     // Accent color
     background?: string;    // Page background
-    backgroundAlt?: string; // Alternate sections
-    text?: string;          // Main text
+    backgroundAlt?: string; // Alternate background (cards, etc.)
+    text?: string;          // Main text color
     textMuted?: string;     // Secondary text
-    border?: string;        // Borders
-    error?: string;         // Error states
-    success?: string;       // Success states
-    warning?: string;       // Warning states
-    link?: string;          // Link text
-    linkHover?: string;     // Link hover
+    border?: string;        // Border color
+    error?: string;         // Error state
+    success?: string;       // Success state
+    warning?: string;       // Warning state
+    link?: string;          // Link color
+    linkHover?: string;     // Link hover color
   };
   typography?: {
-    fontFamily?: string;        // Body font
-    fontFamilyHeading?: string; // Heading font
-    fontSizeBase?: string;      // Base size (16px)
+    fontFamily?: string;        // Body font stack
+    fontFamilyHeading?: string; // Heading font stack
+    fontSizeBase?: string;      // Base size (e.g., "16px")
     fontSizeSmall?: string;     // Small text
     fontSizeLarge?: string;     // Large text
     fontSizeH1?: string;        // H1 size
@@ -57,37 +327,37 @@ type ThemeTokens = {
     headingLineHeight?: string; // Heading line height
   };
   spacing?: {
-    xs?: string;  // 4px
-    sm?: string;  // 8px
-    md?: string;  // 16px
-    lg?: string;  // 24px
-    xl?: string;  // 32px
-    xxl?: string; // 48px
+    xs?: string;   // 4px
+    sm?: string;   // 8px
+    md?: string;   // 16px
+    lg?: string;   // 24px
+    xl?: string;   // 32px
+    xxl?: string;  // 48px
   };
   borderRadius?: {
     sm?: string;   // 4px
     md?: string;   // 8px
     lg?: string;   // 16px
-    full?: string; // 9999px (pill)
+    full?: string; // 9999px (pill shape)
   };
   shadows?: {
-    sm?: string; // Subtle shadow
-    md?: string; // Medium shadow
-    lg?: string; // Prominent shadow
+    sm?: string;   // Subtle shadow
+    md?: string;   // Medium shadow
+    lg?: string;   // Large shadow
   };
 };
 ```
 
 ### Default Theme Tokens
 
-The system provides sensible defaults that work out of the box:
+The default theme uses Santa Barbara Newcomers Club brand colors:
 
 ```typescript
 const DEFAULT_THEME_TOKENS: ThemeTokens = {
   colors: {
-    primary: "#1a5f7a",      // SBNC blue
+    primary: "#1a5f7a",      // Ocean blue
     primaryHover: "#134a5e",
-    secondary: "#f5a623",    // Accent gold
+    secondary: "#f5a623",    // Sunset gold
     background: "#ffffff",
     backgroundAlt: "#f8f9fa",
     text: "#333333",
@@ -133,9 +403,25 @@ const DEFAULT_THEME_TOKENS: ThemeTokens = {
 };
 ```
 
-### CSS Variable Generation
+---
 
-Tokens are converted to CSS custom properties:
+## CSS Variable Generation
+
+### Token to Variable Mapping
+
+Tokens are converted to CSS custom properties using kebab-case naming:
+
+| Token Path | CSS Variable |
+|------------|--------------|
+| colors.primary | --color-primary |
+| colors.primaryHover | --color-primary-hover |
+| typography.fontFamily | --font-family |
+| typography.fontSizeH1 | --font-size-h1 |
+| spacing.md | --spacing-md |
+| borderRadius.lg | --border-radius-lg |
+| shadows.md | --shadow-md |
+
+### Generated CSS Example
 
 ```css
 :root {
@@ -187,472 +473,232 @@ Tokens are converted to CSS custom properties:
 }
 ```
 
+### Using Variables in Components
 
----
-
-## 2. Theme Customization
-
-### Token Overrides
-
-Themes can override any token. Unspecified tokens inherit from defaults.
-
-Example: Holiday theme with festive colors:
-
-```json
-{
-  "colors": {
-    "primary": "#c41e3a",
-    "secondary": "#228b22",
-    "backgroundAlt": "#fef6e4"
-  }
-}
-```
-
-Only the specified tokens change; all others use defaults.
-
-### Custom CSS
-
-Themes can include additional CSS for advanced styling:
+Block components use CSS variables with fallbacks:
 
 ```css
-/* Custom CSS for holiday theme */
 .hero-block {
-  background-image: url('/assets/snowflakes.svg');
-  background-repeat: repeat;
+  background-color: var(--color-primary, #1a5f7a);
+  color: var(--color-background, #ffffff);
+  padding: var(--spacing-xxl, 48px);
+  border-radius: var(--border-radius-lg, 16px);
 }
 
-.cta-block button {
-  border: 2px solid var(--color-secondary);
+.card {
+  background: var(--color-background-alt, #f8f9fa);
+  border: 1px solid var(--color-border, #e0e0e0);
+  box-shadow: var(--shadow-md);
 }
 ```
 
-Custom CSS is:
+### Theme Inheritance
 
-- Appended after token CSS
-- Sanitized to remove script vectors
-- Limited to 50KB
-
-### CSS Sanitization
-
-The following are removed from custom CSS:
-
-- `<script>` tags
-- `javascript:` URLs
-- `expression()` (IE-specific JS execution)
-- `behavior:` property (IE-specific)
-- `-moz-binding:` property (Firefox-specific)
-- `data:` URLs containing "script"
-
+1. **Hardcoded fallbacks** - Built into CSS (always available)
+2. **Default theme tokens** - Applied to :root if no theme set
+3. **Custom theme tokens** - Override defaults when theme selected
+4. **Per-page CSS** - Optional overrides scoped to page
 
 ---
 
-## 3. Template System
+## Template Structure
 
-### What is a Template?
-
-A template defines a reusable page structure with predefined blocks and configuration. Templates help maintain consistency across similar pages.
+Templates provide reusable page blueprints.
 
 ### Template Types
 
-| Type | Use Case |
-|------|----------|
-| `PAGE` | Standard content pages |
-| `LANDING` | Marketing/landing pages |
-| `EMAIL` | Email message layouts |
+| Type | Purpose |
+|------|---------|
+| PAGE | Standard content page template |
+| EMAIL | Email message template |
 
-### Template Schema
-
-Templates define which blocks are included and their default data:
+### Template Model
 
 ```typescript
-type TemplateContent = {
-  schemaVersion: number;
-  blocks: Array<{
-    id: string;
-    type: BlockType;
-    order: number;
-    data: Record<string, unknown>;
-    locked?: boolean;      // Cannot be removed
-    configurable?: boolean; // Can be edited (default: true)
-  }>;
+type Template = {
+  id: string;
+  name: string;
+  slug: string;           // Unique identifier
+  type: "PAGE" | "EMAIL";
+  description?: string;
+  content: PageContent;   // Default blocks
+  themeId?: string;       // Default theme
+  isActive: boolean;
 };
 ```
 
-### Example: Standard Page Template
+### Example Templates
+
+**Basic Page Template**
 
 ```json
 {
-  "schemaVersion": 1,
-  "blocks": [
-    {
-      "id": "header",
-      "type": "hero",
-      "order": 0,
-      "data": {
-        "title": "Page Title",
-        "alignment": "center"
+  "name": "Basic Page",
+  "slug": "basic-page",
+  "type": "PAGE",
+  "content": {
+    "schemaVersion": 1,
+    "blocks": [
+      {
+        "id": "hero-1",
+        "type": "hero",
+        "order": 0,
+        "data": {
+          "title": "Page Title",
+          "alignment": "center"
+        }
       },
-      "locked": false,
-      "configurable": true
-    },
-    {
-      "id": "content",
-      "type": "text",
-      "order": 1,
-      "data": {
-        "content": "<p>Enter your content here...</p>"
-      },
-      "locked": false,
-      "configurable": true
-    }
-  ]
+      {
+        "id": "text-1",
+        "type": "text",
+        "order": 1,
+        "data": {
+          "content": "<p>Enter your content here...</p>"
+        }
+      }
+    ]
+  }
 }
 ```
 
-### Example: Contact Page Template
+**Landing Page Template**
 
 ```json
 {
-  "schemaVersion": 1,
-  "blocks": [
-    {
-      "id": "header",
-      "type": "hero",
-      "order": 0,
-      "data": {
-        "title": "Contact Us",
-        "subtitle": "We'd love to hear from you",
-        "alignment": "center"
-      }
-    },
-    {
-      "id": "intro",
-      "type": "text",
-      "order": 1,
-      "data": {
-        "content": "<p>Fill out the form below and we'll get back to you soon.</p>",
-        "alignment": "center"
-      }
-    },
-    {
-      "id": "form",
-      "type": "contact",
-      "order": 2,
-      "data": {
-        "recipientEmail": "info@sbnewcomers.org",
-        "fields": [
-          { "name": "name", "label": "Your Name", "type": "text", "required": true },
-          { "name": "email", "label": "Email", "type": "email", "required": true },
-          { "name": "message", "label": "Message", "type": "textarea", "required": true }
-        ],
-        "submitText": "Send Message"
+  "name": "Landing Page",
+  "slug": "landing-page",
+  "type": "PAGE",
+  "content": {
+    "schemaVersion": 1,
+    "blocks": [
+      {
+        "id": "hero-1",
+        "type": "hero",
+        "order": 0,
+        "data": {
+          "title": "Welcome",
+          "subtitle": "Discover our community",
+          "ctaText": "Join Now",
+          "ctaLink": "/join",
+          "alignment": "center"
+        }
       },
-      "locked": true
-    }
-  ]
-}
-```
-
-
----
-
-## 4. Inheritance Model
-
-### CSS Cascade
-
-The styling cascade from lowest to highest priority:
-
-1. **Browser defaults** - Base HTML styles
-2. **Default tokens** - System fallbacks
-3. **Theme tokens** - Active theme CSS variables
-4. **Theme custom CSS** - Additional theme styles
-5. **Page custom CSS** - Page-specific overrides
-6. **Block inline styles** - Direct block styling
-
-### Token Merging
-
-When rendering a page:
-
-```
-DEFAULT_THEME_TOKENS
-    |
-    v
-+--------------------+
-| Theme.tokens       |  <-- Merge (theme overrides defaults)
-+--------------------+
-    |
-    v
-generateCssVariables()
-    |
-    v
-+--------------------+
-| Theme.cssText      |  <-- Append (custom CSS)
-+--------------------+
-    |
-    v
-+--------------------+
-| Page.customCss     |  <-- Append (page CSS, scoped)
-+--------------------+
-    |
-    v
-Final CSS output
-```
-
-
----
-
-## 5. Per-Page Overrides
-
-### When to Use
-
-Use per-page CSS for:
-
-- Unique landing pages with special layouts
-- Event-specific styling
-- Seasonal or promotional pages
-
-### Scoping
-
-Page CSS is scoped to prevent style bleed:
-
-```css
-/* Input */
-.hero-block { background: red; }
-
-/* Output (scoped) */
-.page-about .hero-block { background: red; }
-```
-
-### Example: Event Landing Page
-
-```css
-/* Page: annual-gala */
-.page-annual-gala {
-  --color-primary: #8b0000;
-  --color-secondary: #ffd700;
-}
-
-.page-annual-gala .hero-block {
-  min-height: 80vh;
-  background-size: cover;
-}
-
-.page-annual-gala .cta-block button {
-  font-size: 1.25em;
-  padding: var(--spacing-lg);
-}
-```
-
-
----
-
-## 6. Block Styling
-
-### Base Block Styles
-
-All blocks share common base styles from the theme:
-
-```css
-.block {
-  padding: var(--spacing-lg) var(--spacing-md);
-  margin: 0 auto;
-  max-width: 1200px;
-}
-
-.block h1 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-h1);
-  line-height: var(--heading-line-height);
-  color: var(--color-text);
-}
-
-.block p {
-  font-family: var(--font-family);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height);
-  color: var(--color-text);
-}
-
-.block a {
-  color: var(--color-link);
-}
-
-.block a:hover {
-  color: var(--color-link-hover);
-}
-```
-
-### Block-Specific Styles
-
-Each block type has its own styles:
-
-```css
-/* Hero Block */
-.hero-block {
-  text-align: center;
-  padding: var(--spacing-xxl) var(--spacing-md);
-  background-color: var(--color-background-alt);
-}
-
-.hero-block h1 {
-  margin-bottom: var(--spacing-md);
-}
-
-.hero-block .cta-button {
-  display: inline-block;
-  padding: var(--spacing-md) var(--spacing-xl);
-  background-color: var(--color-primary);
-  color: white;
-  border-radius: var(--border-radius-md);
-  text-decoration: none;
-}
-
-/* Cards Block */
-.cards-block {
-  display: grid;
-  gap: var(--spacing-lg);
-}
-
-.cards-block.columns-3 {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.cards-block .card {
-  background: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-sm);
-}
-
-/* FAQ Block */
-.faq-block details {
-  border-bottom: 1px solid var(--color-border);
-  padding: var(--spacing-md) 0;
-}
-
-.faq-block summary {
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.faq-block summary:hover {
-  color: var(--color-primary);
-}
-```
-
-
----
-
-## 7. Responsive Design
-
-### Breakpoints
-
-Standard breakpoints (not tokens, hardcoded):
-
-```css
-/* Mobile first */
-@media (min-width: 640px) { /* sm */ }
-@media (min-width: 768px) { /* md */ }
-@media (min-width: 1024px) { /* lg */ }
-@media (min-width: 1280px) { /* xl */ }
-```
-
-### Responsive Blocks
-
-Blocks adapt to screen size:
-
-```css
-/* Cards responsive */
-.cards-block {
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 640px) {
-  .cards-block.columns-3 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .cards-block.columns-3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* Hero responsive */
-.hero-block h1 {
-  font-size: calc(var(--font-size-h1) * 0.75);
-}
-
-@media (min-width: 768px) {
-  .hero-block h1 {
-    font-size: var(--font-size-h1);
+      {
+        "id": "cards-1",
+        "type": "cards",
+        "order": 1,
+        "data": {
+          "columns": 3,
+          "cards": []
+        }
+      },
+      {
+        "id": "cta-1",
+        "type": "cta",
+        "order": 2,
+        "data": {
+          "text": "Get Started",
+          "link": "/contact",
+          "style": "primary",
+          "alignment": "center"
+        }
+      }
+    ]
   }
 }
 ```
 
+---
+
+## Security
+
+### CSS Sanitization
+
+Custom CSS is sanitized to prevent XSS attacks.
+
+**Blocked Patterns:**
+
+- `<script>` tags
+- `javascript:` URLs
+- `expression()` - IE CSS expressions
+- `behavior:` - IE behaviors
+- `-moz-binding:` - Firefox bindings
+- `url(data:...script...)` - Script in data URLs
+
+**Implementation:**
+
+```typescript
+function sanitizeCss(css: string): string {
+  let sanitized = css;
+  sanitized = sanitized.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "");
+  sanitized = sanitized.replace(/javascript:/gi, "");
+  sanitized = sanitized.replace(/expression\s*\(/gi, "");
+  sanitized = sanitized.replace(/behavior\s*:/gi, "");
+  sanitized = sanitized.replace(/-moz-binding\s*:/gi, "");
+  sanitized = sanitized.replace(
+    /url\s*\(\s*["']?\s*data:[^)]*script[^)]*\)/gi,
+    ""
+  );
+  return sanitized;
+}
+```
+
+### HTML Sanitization
+
+Text block content is sanitized on render to prevent XSS:
+
+- Script tags removed
+- Event handlers stripped
+- Allowed tags: p, h1-h6, a, strong, em, ul, ol, li, blockquote
+- href attributes validated
+
+### Token Validation
+
+Theme tokens are validated before save:
+
+- Must be an object (not array)
+- Nested properties must be objects
+- String values only (no executable code)
 
 ---
 
-## 8. Theme Management
+## API Reference
 
-### Creating a Theme
+### Theme Functions
 
-1. Navigate to Admin > Content > Themes
-2. Click "Create Theme"
-3. Enter name, slug, description
-4. Edit token values using the visual editor
-5. Optionally add custom CSS
-6. Save as Draft or set as Active
+| Function | Description |
+|----------|-------------|
+| `generateCssVariables(tokens)` | Generate CSS from tokens |
+| `mergeTokensWithDefaults(tokens)` | Merge custom tokens with defaults |
+| `getActiveThemeCss()` | Get CSS for active default theme |
+| `getThemeById(id)` | Load theme with generated CSS |
+| `sanitizeCss(css)` | Remove malicious CSS |
+| `validateThemeTokens(tokens)` | Validate token structure |
+| `ensureDefaultTheme()` | Create default theme if none exists |
 
-### Theme States
+### Block Functions
 
-| Status | Description |
-|--------|-------------|
-| `DRAFT` | Work in progress, not available for pages |
-| `ACTIVE` | Available for pages to use |
-| `ARCHIVED` | Hidden, preserved for history |
-
-### Default Theme
-
-One theme can be marked as default. New pages use the default theme unless overridden. The site uses the default active theme for public rendering.
-
-
----
-
-## 9. Migration Notes
-
-### From WildApricot
-
-WildApricot themes cannot be directly imported due to different architecture. Migration approach:
-
-1. Extract color palette from WA theme
-2. Create new ClubOS theme with matching colors
-3. Recreate custom styles as token overrides or custom CSS
-4. Test with sample pages
-
-
-### Avoiding WA Rigidity
-
-Key differences from WildApricot:
-
-| WildApricot | ClubOS |
-|-------------|--------|
-| Fixed templates | Flexible block composition |
-| Global CSS only | Per-page overrides allowed |
-| Opaque styling | Token-based customization |
-| Complex widget system | Simple block types |
-
+| Function | Description |
+|----------|-------------|
+| `createEmptyBlock(type, order)` | Create new block with defaults |
+| `validatePageContent(content)` | Validate page content structure |
+| `createDefaultPageContent()` | Create default hero + text layout |
+| `BLOCK_METADATA` | Block metadata for editor UI |
 
 ---
 
-## Appendix: Code Locations
+## File Locations
 
-| File | Purpose |
-|------|---------|
-| `src/lib/publishing/theme.ts` | Theme token types and CSS generation |
-| `src/lib/publishing/blocks.ts` | Block type definitions |
-| `src/app/api/admin/content/themes/` | Theme CRUD API |
-| `src/app/api/admin/content/templates/` | Template CRUD API |
-| `prisma/schema.prisma` | Theme and Template models |
+| File | Description |
+|------|-------------|
+| `src/lib/publishing/theme.ts` | Theme system implementation |
+| `src/lib/publishing/blocks.ts` | Block types and utilities |
+| `src/components/publishing/BlockRenderer.tsx` | Block rendering component |
+| `prisma/schema.prisma` | Database models |
+
+---
+
+## Related Documents
+
+- [Publishing System Plan](./PUBLISHING_SYSTEM_PLAN.md)
+- [Auth and RBAC](../rbac/AUTH_AND_RBAC.md)
