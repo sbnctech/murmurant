@@ -16,6 +16,7 @@
     "test-api:stable": "playwright test tests/api --grep-invert @quarantine --workers=2",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:check-migrations": "bash scripts/ci/check-migration-safety.sh",
     "db:seed": "npx tsx prisma/seed.ts",
     "postinstall": "prisma generate",
     "test:unit": "vitest run",
