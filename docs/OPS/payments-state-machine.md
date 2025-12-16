@@ -294,3 +294,29 @@ export function getPaymentProvider(): PaymentProvider {
   }
 }
 ```
+
+---
+
+## Environment Variables
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `PAYMENTS_PROVIDER` | No | `"fake"` | Payment provider to use (`fake`, `stripe`) |
+| `PAYMENTS_FAKE_ENABLED` | No | `undefined` | Set to `"true"` to enable fake provider in production |
+| `PAYMENTS_FAKE_WEBHOOK_SECRET` | No | - | Secret for verifying fake webhook signatures (future) |
+
+### Production Safety
+
+The fake payment provider is **disabled in production by default** (Charter P9: Fail Closed).
+
+To enable fake payments in a staging/testing environment that runs in production mode:
+
+```bash
+PAYMENTS_FAKE_ENABLED=true
+```
+
+**Warning**: Only enable this for testing environments. Never enable fake payments in a real production environment with real users.
+
+### Why 404 Instead of 403?
+
+Fake payment endpoints return 404 (Not Found) instead of 403 (Forbidden) in production when disabled. This reduces information disclosure - attackers scanning for endpoints won't know whether the route exists but is forbidden, or doesn't exist at all.

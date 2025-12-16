@@ -22,10 +22,18 @@ import {
 } from "./types";
 
 /**
- * Check if we're in production environment
+ * Check if fake provider is enabled
+ * Charter P9: Disabled in production unless explicitly enabled
  */
-function isProduction(): boolean {
-  return process.env.NODE_ENV === "production";
+function isFakeProviderEnabled(): boolean {
+  const isProduction = process.env.NODE_ENV === "production";
+  const explicitlyEnabled = process.env.PAYMENTS_FAKE_ENABLED === "true";
+
+  // In production, only available if explicitly enabled
+  if (isProduction && !explicitlyEnabled) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -42,10 +50,10 @@ export class FakePaymentProvider implements PaymentProvider {
 
   /**
    * Check if fake provider is available
-   * Charter P9: Fake provider is DISABLED in production
+   * Charter P9: Fake provider is DISABLED in production unless PAYMENTS_FAKE_ENABLED=true
    */
   isAvailable(): boolean {
-    if (isProduction()) {
+    if (!isFakeProviderEnabled()) {
       console.warn("[FakePaymentProvider] Fake provider is disabled in production");
       return false;
     }

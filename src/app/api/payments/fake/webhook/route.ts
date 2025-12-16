@@ -3,7 +3,7 @@
  *
  * POST /api/payments/fake/webhook - Receive simulated webhook events
  *
- * Charter P9: DISABLED in production
+ * Charter P9: DISABLED in production unless PAYMENTS_FAKE_ENABLED=true
  * Charter N5: Idempotent (duplicate webhooks are ignored)
  */
 
@@ -11,17 +11,26 @@ import { NextRequest, NextResponse } from "next/server";
 import { getFakePaymentProvider } from "@/lib/payments";
 import { PaymentWebhookEvent } from "@/lib/payments/types";
 
-function isProduction(): boolean {
-  return process.env.NODE_ENV === "production";
+/**
+ * Check if fake provider is enabled
+ * Charter P9: Disabled in production unless explicitly enabled
+ */
+function isFakeProviderEnabled(): boolean {
+  const isProduction = process.env.NODE_ENV === "production";
+  const explicitlyEnabled = process.env.PAYMENTS_FAKE_ENABLED === "true";
+
+  // In production, only available if explicitly enabled
+  if (isProduction && !explicitlyEnabled) {
+    return false;
+  }
+  return true;
 }
 
 export async function POST(req: NextRequest) {
-  // Charter P9: Disabled in production
-  if (isProduction()) {
-    return NextResponse.json(
-      { error: "Fake webhook is disabled in production" },
-      { status: 403 }
-    );
+  // Charter P9: Disabled in production unless PAYMENTS_FAKE_ENABLED=true
+  // Return 404 (not 403) to reduce discovery
+  if (!isFakeProviderEnabled()) {
+    return new NextResponse(null, { status: 404 });
   }
 
   try {
@@ -59,6 +68,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: result.error },
         { status: 400 }
+      );
+    }
+
+    // Return 409 for duplicate webhooks (replay protection)
+    if (result.isDuplicate) {
+      return NextResponse.json(
+        {
+          success: true,
+          intentId: result.intentId,
+          isDuplicate: true,
+          message: "Webhook already processed",
+        },
+        { status: 409 }
       );
     }
 

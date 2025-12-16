@@ -3,23 +3,32 @@
  *
  * GET /api/payments/fake/checkout?ref=xxx - Simulates checkout page
  *
- * Charter P9: DISABLED in production
+ * Charter P9: DISABLED in production unless PAYMENTS_FAKE_ENABLED=true
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-function isProduction(): boolean {
-  return process.env.NODE_ENV === "production";
+/**
+ * Check if fake provider is enabled
+ * Charter P9: Disabled in production unless explicitly enabled
+ */
+function isFakeProviderEnabled(): boolean {
+  const isProduction = process.env.NODE_ENV === "production";
+  const explicitlyEnabled = process.env.PAYMENTS_FAKE_ENABLED === "true";
+
+  // In production, only available if explicitly enabled
+  if (isProduction && !explicitlyEnabled) {
+    return false;
+  }
+  return true;
 }
 
 export async function GET(req: NextRequest) {
-  // Charter P9: Disabled in production
-  if (isProduction()) {
-    return NextResponse.json(
-      { error: "Fake checkout is disabled in production" },
-      { status: 403 }
-    );
+  // Charter P9: Disabled in production unless PAYMENTS_FAKE_ENABLED=true
+  // Return 404 (not 403) to reduce discovery
+  if (!isFakeProviderEnabled()) {
+    return new NextResponse(null, { status: 404 });
   }
 
   const ref = req.nextUrl.searchParams.get("ref");
