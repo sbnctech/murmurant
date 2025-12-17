@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireCapability } from "@/lib/auth";
 import { auditMutation } from "@/lib/audit";
 import { createMeeting, listMeetings, getMeetingsNeedingMinutes } from "@/lib/meetings/meetings";
-import type { MeetingType } from "@prisma/client";
+import type { MeetingType } from "@/lib/governance/types";
 
 /**
  * GET /api/v1/officer/meetings

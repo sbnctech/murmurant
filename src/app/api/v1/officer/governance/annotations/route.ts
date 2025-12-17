@@ -12,7 +12,7 @@ import {
   listAnnotations,
   getAnnotationCounts,
 } from "@/lib/governance/annotations";
-import type { AnnotationSeverity } from "@prisma/client";
+import type { AnnotationSeverity } from "@/lib/governance/types";
 
 /**
  * GET /api/v1/officer/governance/annotations

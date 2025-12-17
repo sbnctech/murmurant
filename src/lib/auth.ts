@@ -59,7 +59,29 @@ export type Capability =
   | "transitions:approve"   // Approve transition plans
   | "users:manage"          // Create/update user roles and entitlements
   | "admin:full"            // Full admin access (implies all capabilities)
-  | "debug:readonly";       // Debug read-only access (for support, default OFF)
+  | "debug:readonly"        // Debug read-only access (for support, default OFF)
+  // Officer portal: Meetings
+  | "meetings:read"                     // View meetings list and details
+  | "meetings:motions:read"             // View motions within meetings
+  | "meetings:motions:annotate"         // Add annotations to motions
+  | "meetings:minutes:draft:create"     // Create draft minutes
+  | "meetings:minutes:draft:edit"       // Edit draft minutes
+  | "meetings:minutes:draft:submit"     // Submit draft for review
+  | "meetings:minutes:read_all"         // View all minutes including drafts
+  | "meetings:minutes:revise"           // Revise minutes after submission
+  | "meetings:minutes:finalize"         // Finalize minutes
+  // Officer portal: Board Records
+  | "board_records:read"                // View board records
+  | "board_records:draft:create"        // Create draft board records
+  | "board_records:draft:edit"          // Edit draft board records
+  | "board_records:draft:submit"        // Submit draft for review
+  // Officer portal: Governance
+  | "governance:flags:create"           // Create governance flags
+  | "governance:flags:resolve"          // Resolve governance flags
+  | "governance:rules:manage"           // Manage rules guidance
+  // Content publishing
+  | "content:board:publish"             // Publish board content
+  | "content:board:request_publish";    // Request board content publication
 
 /**
  * Map of which capabilities each role has.

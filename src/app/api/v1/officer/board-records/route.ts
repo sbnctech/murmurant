@@ -12,7 +12,7 @@ import {
   createBoardRecord,
   listBoardRecords,
 } from "@/lib/governance/boardRecords";
-import type { BoardRecordStatus } from "@prisma/client";
+import type { BoardRecordStatus } from "@/lib/governance/types";
 
 /**
  * GET /api/v1/officer/board-records

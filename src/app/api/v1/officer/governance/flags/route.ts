@@ -12,7 +12,7 @@ import {
   createGovernanceFlag,
   listGovernanceFlags,
 } from "@/lib/governance/flags";
-import type { GovernanceFlagType, GovernanceFlagStatus } from "@prisma/client";
+import type { GovernanceFlagType, GovernanceFlagStatus } from "@/lib/governance/types";
 
 /**
  * GET /api/v1/officer/governance/flags
