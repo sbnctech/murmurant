@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "@/lib/auth/session";
+import { getSessionCookieName } from "@/lib/auth/cookies";
 
 /**
  * Authentication and authorization utilities for API routes.
@@ -35,6 +37,8 @@ export type GlobalRole =
   | "vp-activities"
   | "event-chair"
   | "webmaster"
+  | "secretary"
+  | "parliamentarian"
   | "member";
 
 // ============================================================================
@@ -76,12 +80,31 @@ export type Capability =
   | "board_records:draft:edit"          // Edit draft board records
   | "board_records:draft:submit"        // Submit draft for review
   // Officer portal: Governance
-  | "governance:flags:create"           // Create governance flags
+  | "governance:flags:read"             // View governance flags
+  | "governance:flags:write"            // Create/edit governance flags
+  | "governance:flags:create"           // Create governance flags (legacy)
   | "governance:flags:resolve"          // Resolve governance flags
   | "governance:rules:manage"           // Manage rules guidance
+  | "governance:annotations:read"       // View governance annotations
+  | "governance:annotations:write"      // Create/edit governance annotations
+  | "governance:annotations:publish"    // Publish/unpublish annotations
+  // Governance: Interpretations (Parliamentarian)
+  | "governance:interpretations:create"   // Create interpretation log entries
+  | "governance:interpretations:edit"     // Edit interpretation log entries
+  | "governance:interpretations:publish"  // Publish interpretation entries
+  // Governance: Policy annotations (Parliamentarian)
+  | "governance:policies:annotate"        // Add annotations to policies/bylaws
+  | "governance:policies:propose_change"  // Propose changes to policies
+  // Governance: Internal documents (Secretary, Parliamentarian)
+  | "governance:docs:read"                // Read internal governance documents
+  | "governance:docs:write"               // Write internal governance documents
   // Content publishing
   | "content:board:publish"             // Publish board content
-  | "content:board:request_publish";    // Request board content publication
+  | "content:board:request_publish"     // Request board content publication
+  // File storage
+  | "files:upload"                      // Upload files
+  | "files:manage"                      // Manage all files (admin)
+  | "files:view_all";                   // View all files regardless of access
 
 /**
  * Map of which capabilities each role has.
@@ -117,6 +140,9 @@ const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
     "transitions:view",
     "transitions:approve",
     "users:manage",
+    "files:upload",
+    "files:manage",
+    "files:view_all",
   ],
   president: [
     "members:view",
@@ -128,6 +154,10 @@ const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
     "finance:view",
     "transitions:view",
     "transitions:approve",
+    // Governance oversight
+    "governance:flags:read",
+    "governance:flags:resolve",
+    "governance:annotations:read",
     // President can view but not directly manage finances
     // NO finance:manage - treasurer handles that
     // NO users:manage - handled through transitions
@@ -178,6 +208,62 @@ const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
     // NO finance:view/manage
     // NO users:manage
     // NO transitions:view/approve
+  ],
+  secretary: [
+    // Minutes workflow: draft, edit, submit for review
+    "meetings:read",
+    "meetings:minutes:draft:create",
+    "meetings:minutes:draft:edit",
+    "meetings:minutes:draft:submit",
+    "meetings:minutes:read_all",
+    // Internal governance documents
+    "governance:docs:read",
+    // Governance annotations and flags (view and create)
+    "governance:annotations:read",
+    "governance:annotations:write",
+    "governance:flags:read",
+    "governance:flags:write",
+    "governance:flags:create",
+    // File management for governance documents
+    "files:upload",
+    // NO meetings:minutes:finalize - President approves final minutes
+    // NO governance:annotations:publish - Parliamentarian controls publishing
+    // NO governance:flags:resolve - Parliamentarian resolves flags
+    // NO finance:view/manage
+    // NO members:history
+    // NO publishing:manage
+  ],
+  parliamentarian: [
+    // Meetings access for procedural oversight
+    "meetings:read",
+    "meetings:motions:read",
+    "meetings:motions:annotate",
+    // Rules and governance management
+    "governance:rules:manage",
+    "governance:flags:read",
+    "governance:flags:write",
+    "governance:flags:create",
+    "governance:flags:resolve",
+    // Governance annotations (full control including publish)
+    "governance:annotations:read",
+    "governance:annotations:write",
+    "governance:annotations:publish",
+    // Interpretations log (bylaws/policy interpretations)
+    "governance:interpretations:create",
+    "governance:interpretations:edit",
+    "governance:interpretations:publish",
+    // Policy annotations and change proposals
+    "governance:policies:annotate",
+    "governance:policies:propose_change",
+    // Internal governance documents
+    "governance:docs:read",
+    "governance:docs:write",
+    // File management for governance documents
+    "files:upload",
+    // NO content:board:publish - cannot publish member-facing content
+    // NO finance:view/manage
+    // NO members:history
+    // NO publishing:manage
   ],
   member: [],
 };
@@ -254,7 +340,8 @@ export type AuthResult =
   | { ok: false; response: NextResponse };
 
 // Session cookie names for cookie-based authentication
-export const SESSION_COOKIE_NAME = "clubos_session";
+// Uses __Host- prefix in production for additional security
+export const SESSION_COOKIE_NAME = getSessionCookieName();
 const DEV_SESSION_COOKIE_NAME = "clubos_dev_session";
 
 /**
@@ -307,9 +394,30 @@ export async function requireAuth(req: NextRequest): Promise<AuthResult> {
   // 1. Check session cookies first (preferred for browser clients)
   const sessionToken = getSessionTokenFromCookies(req);
   if (sessionToken) {
-    const context = parseTestToken(sessionToken);
-    if (context) {
-      return { ok: true, context };
+    // First try test tokens (for development)
+    const testContext = parseTestToken(sessionToken);
+    if (testContext) {
+      return { ok: true, context: testContext };
+    }
+
+    // Then try real DB-backed sessions
+    const session = await getSession(sessionToken);
+    if (session) {
+      // Get memberId from user account
+      const { prisma } = await import("@/lib/prisma");
+      const userAccount = await prisma.userAccount.findUnique({
+        where: { id: session.userAccountId },
+        select: { memberId: true },
+      });
+
+      return {
+        ok: true,
+        context: {
+          memberId: userAccount?.memberId ?? session.userAccountId,
+          email: session.email,
+          globalRole: session.globalRole as GlobalRole,
+        },
+      };
     }
     // Invalid session cookie - fall through to other methods
   }
@@ -604,6 +712,26 @@ function parseTestToken(token: string): AuthContext | null {
     };
   }
 
+  // Test Secretary token
+  if (token.startsWith("test-secretary-")) {
+    const memberId = token.slice(15) || "test-secretary-id";
+    return {
+      memberId,
+      email: "secretary@test.com",
+      globalRole: "secretary",
+    };
+  }
+
+  // Test Parliamentarian token
+  if (token.startsWith("test-parliamentarian-")) {
+    const memberId = token.slice(21) || "test-parliamentarian-id";
+    return {
+      memberId,
+      email: "parliamentarian@test.com",
+      globalRole: "parliamentarian",
+    };
+  }
+
   // Test member token
   if (token.startsWith("test-member-")) {
     const memberId = token.slice(12) || "test-member-id";
@@ -668,6 +796,22 @@ function parseTestToken(token: string): AuthContext | null {
       memberId: "test-past-president-id",
       email: "past-president@test.com",
       globalRole: "past-president",
+    };
+  }
+
+  if (token === "secretary-token" || token === "test-secretary") {
+    return {
+      memberId: "test-secretary-id",
+      email: "secretary@test.com",
+      globalRole: "secretary",
+    };
+  }
+
+  if (token === "parliamentarian-token" || token === "test-parliamentarian") {
+    return {
+      memberId: "test-parliamentarian-id",
+      email: "parliamentarian@test.com",
+      globalRole: "parliamentarian",
     };
   }
 

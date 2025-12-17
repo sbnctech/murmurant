@@ -1,7 +1,7 @@
 /**
- * Logout API (v1)
+ * Logout API
  *
- * POST /api/v1/auth/logout
+ * POST /api/auth/logout
  *
  * Revokes the current session and clears the session cookie.
  *
@@ -13,7 +13,6 @@
  * Charter Compliance:
  * - P3: Explicit state change (session revoked)
  * - P7: All logout events are audited
- * - P9: Fails closed - errors don't leak info
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -56,17 +55,15 @@ export async function POST(req: NextRequest) {
     // Revoke session and clear cookie
     await logoutUser();
 
-    // Return 204 No Content as documented
-    return new NextResponse(null, { status: 204 });
+    return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("[AUTH] Error in v1 logout:", error);
+    console.error("[AUTH] Error in logout:", error);
     // Still try to clear the cookie even if there's an error
     try {
       await logoutUser();
     } catch {
       // Ignore secondary errors
     }
-    // Return 204 even on error - don't leak information
-    return new NextResponse(null, { status: 204 });
+    return NextResponse.json({ ok: true });
   }
 }
