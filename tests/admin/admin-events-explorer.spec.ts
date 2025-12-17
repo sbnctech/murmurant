@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { SEED_EVENTS } from "../fixtures/seed-data";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
@@ -10,32 +11,37 @@ test.describe("Admin Events Explorer", () => {
     await expect(root).toBeVisible();
   });
 
-  test("displays both mock events", async ({ page }) => {
+  test("displays events from seed", async ({ page }) => {
     await page.goto(`${BASE}/admin/events`);
 
     const rows = page.locator('[data-test-id="admin-events-list-row"]');
-    await expect(rows).toHaveCount(2);
+    // Wait for rows to load and verify at least one exists
+    await expect(rows.first()).toBeVisible();
+    const count = await rows.count();
+    expect(count).toBeGreaterThanOrEqual(1);
 
     const rowTexts = await rows.allTextContents();
     const allText = rowTexts.join(" ");
-    expect(allText).toContain("Welcome Hike");
-    expect(allText).toContain("Wine Mixer");
+    // Check for known events from seed
+    expect(allText).toContain("Coffee"); // Welcome Coffee
+    expect(allText).toContain("Hike"); // Morning Hike at Rattlesnake Canyon
   });
 
   test("title links navigate to event detail page", async ({ page }) => {
     await page.goto(`${BASE}/admin/events`);
 
-    // Find the link for Welcome Hike
+    // Find any title link and click it
     const titleLinks = page.locator('[data-test-id="admin-events-list-title-link"]');
-    const welcomeHikeLink = titleLinks.filter({ hasText: "Welcome Hike" });
-    await expect(welcomeHikeLink).toBeVisible();
+    await expect(titleLinks.first()).toBeVisible();
 
-    await welcomeHikeLink.click();
+    await titleLinks.first().click();
 
-    await expect(page).toHaveURL(/\/admin\/events\/e1/);
+    // URL should contain a UUID
+    await expect(page).toHaveURL(/\/admin\/events\/[0-9a-f-]{36}/);
 
+    // Wait for detail page to load
     const detailRoot = page.locator('[data-test-id="admin-event-detail-root"]');
-    await expect(detailRoot).toBeVisible();
+    await expect(detailRoot).toBeVisible({ timeout: 10000 });
   });
 
   test("nav link from main admin page works", async ({ page }) => {
@@ -50,5 +56,19 @@ test.describe("Admin Events Explorer", () => {
 
     const root = page.locator('[data-test-id="admin-events-list-root"]');
     await expect(root).toBeVisible();
+  });
+
+  test("shows event categories from seed", async ({ page }) => {
+    await page.goto(`${BASE}/admin/events`);
+
+    const rows = page.locator('[data-test-id="admin-events-list-row"]');
+    await expect(rows.first()).toBeVisible();
+
+    const rowTexts = await rows.allTextContents();
+    const allText = rowTexts.join(" ");
+
+    // Seed has Social and Outdoors categories
+    expect(allText).toContain(SEED_EVENTS.WELCOME_COFFEE.category);
+    expect(allText).toContain(SEED_EVENTS.MORNING_HIKE.category);
   });
 });

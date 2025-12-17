@@ -1,0 +1,133 @@
+/**
+ * ClubOS Design Tokens
+ *
+ * This file defines the CSS custom property names used throughout the application.
+ * Actual values are provided by theme files (base.css, sbnc.css, etc.).
+ *
+ * Token naming convention:
+ * --token-{category}-{name}
+ *
+ * Categories:
+ * - color: All color values
+ * - font: Font families
+ * - text: Font sizes
+ * - leading: Line heights
+ * - weight: Font weights
+ * - space: Spacing values
+ * - radius: Border radii
+ * - shadow: Box shadows
+ * - layout: Layout dimensions
+ * - control: Control/input dimensions
+ */
+
+:root {
+  /* ========================================
+     COLORS
+     ======================================== */
+
+  /* Primary brand color - used for main CTAs, links, key UI elements */
+  --token-color-primary: var(--theme-color-primary);
+  --token-color-primary-hover: var(--theme-color-primary-hover);
+  --token-color-primary-text: var(--theme-color-primary-text);
+
+  /* Secondary color - used for secondary actions */
+  --token-color-secondary: var(--theme-color-secondary);
+  --token-color-secondary-hover: var(--theme-color-secondary-hover);
+
+  /* Accent color - used for highlights, badges */
+  --token-color-accent: var(--theme-color-accent);
+
+  /* Backgrounds */
+  --token-color-background: var(--theme-color-background);
+  --token-color-surface: var(--theme-color-surface);
+  --token-color-surface-2: var(--theme-color-surface-2);
+
+  /* Text */
+  --token-color-text: var(--theme-color-text);
+  --token-color-text-muted: var(--theme-color-text-muted);
+  --token-color-text-inverse: var(--theme-color-text-inverse);
+
+  /* Borders */
+  --token-color-border: var(--theme-color-border);
+  --token-color-border-focus: var(--theme-color-border-focus);
+
+  /* Semantic colors */
+  --token-color-danger: var(--theme-color-danger);
+  --token-color-danger-hover: var(--theme-color-danger-hover);
+  --token-color-success: var(--theme-color-success);
+  --token-color-warning: var(--theme-color-warning);
+  --token-color-info: var(--theme-color-info);
+
+  /* ========================================
+     TYPOGRAPHY
+     ======================================== */
+
+  /* Font families */
+  --token-font-sans: var(--theme-font-sans);
+  --token-font-serif: var(--theme-font-serif);
+  --token-font-mono: var(--theme-font-mono);
+
+  /* Font sizes */
+  --token-text-xs: var(--theme-text-xs);
+  --token-text-sm: var(--theme-text-sm);
+  --token-text-base: var(--theme-text-base);
+  --token-text-lg: var(--theme-text-lg);
+  --token-text-xl: var(--theme-text-xl);
+  --token-text-2xl: var(--theme-text-2xl);
+  --token-text-3xl: var(--theme-text-3xl);
+
+  /* Line heights */
+  --token-leading-tight: var(--theme-leading-tight);
+  --token-leading-normal: var(--theme-leading-normal);
+  --token-leading-relaxed: var(--theme-leading-relaxed);
+
+  /* Font weights */
+  --token-weight-normal: var(--theme-weight-normal);
+  --token-weight-medium: var(--theme-weight-medium);
+  --token-weight-semibold: var(--theme-weight-semibold);
+  --token-weight-bold: var(--theme-weight-bold);
+
+  /* ========================================
+     SPACING
+     ======================================== */
+
+  --token-space-xs: var(--theme-space-xs);
+  --token-space-sm: var(--theme-space-sm);
+  --token-space-md: var(--theme-space-md);
+  --token-space-lg: var(--theme-space-lg);
+  --token-space-xl: var(--theme-space-xl);
+  --token-space-2xl: var(--theme-space-2xl);
+
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+
+  --token-radius-sm: var(--theme-radius-sm);
+  --token-radius-md: var(--theme-radius-md);
+  --token-radius-lg: var(--theme-radius-lg);
+  --token-radius-full: var(--theme-radius-full);
+
+  /* ========================================
+     SHADOWS
+     ======================================== */
+
+  --token-shadow-sm: var(--theme-shadow-sm);
+  --token-shadow-md: var(--theme-shadow-md);
+  --token-shadow-lg: var(--theme-shadow-lg);
+
+  /* ========================================
+     LAYOUT
+     ======================================== */
+
+  --token-layout-page-max-width: var(--theme-layout-page-max-width);
+  --token-layout-content-max-width: var(--theme-layout-content-max-width);
+  --token-layout-nav-height: var(--theme-layout-nav-height);
+  --token-layout-sidebar-width: var(--theme-layout-sidebar-width);
+
+  /* ========================================
+     CONTROLS
+     ======================================== */
+
+  --token-control-button-height: var(--theme-control-button-height);
+  --token-control-input-height: var(--theme-control-input-height);
+}

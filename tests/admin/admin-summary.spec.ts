@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { SEED_COUNTS } from "../fixtures/seed-data";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
@@ -9,17 +10,17 @@ test.describe("Admin Dashboard Summary", () => {
     const section = page.locator('[data-test-id="admin-summary-section"]');
     await expect(section).toBeVisible();
 
-    // Check that each tile is visible and contains expected mock data counts
+    // Check that each tile is visible
     await expect(page.locator('[data-test-id="admin-summary-members"]')).toBeVisible();
     await expect(page.locator('[data-test-id="admin-summary-events"]')).toBeVisible();
     await expect(page.locator('[data-test-id="admin-summary-registrations"]')).toBeVisible();
     await expect(page.locator('[data-test-id="admin-summary-waitlisted"]')).toBeVisible();
 
-    // Verify counts match mock data (2 active members, 2 events, 2 registrations, 1 waitlisted)
-    await expect(page.locator('[data-test-id="admin-summary-members"]')).toContainText("2");
-    await expect(page.locator('[data-test-id="admin-summary-events"]')).toContainText("2");
-    await expect(page.locator('[data-test-id="admin-summary-registrations"]')).toContainText("2");
-    await expect(page.locator('[data-test-id="admin-summary-waitlisted"]')).toContainText("1");
+    // Verify counts match seed data
+    await expect(page.locator('[data-test-id="admin-summary-members"]')).toContainText(String(SEED_COUNTS.members));
+    await expect(page.locator('[data-test-id="admin-summary-events"]')).toContainText(String(SEED_COUNTS.publishedEvents));
+    await expect(page.locator('[data-test-id="admin-summary-registrations"]')).toContainText(String(SEED_COUNTS.registrations));
+    await expect(page.locator('[data-test-id="admin-summary-waitlisted"]')).toContainText(String(SEED_COUNTS.waitlistedRegistrations));
   });
 
   test("Dashboard summary heading is visible", async ({ page }) => {

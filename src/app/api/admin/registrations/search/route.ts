@@ -1,6 +1,11 @@
+// Copyright (c) Santa Barbara Newcomers Club
+// Admin registration search API - requires registrations:view capability
+// Charter: P1 (identity provable), P2 (default deny), P9 (fail closed)
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { RegistrationStatus } from "@prisma/client";
+import { requireCapability } from "@/lib/auth";
 
 type EnrichedRegistration = {
   id: string;
@@ -13,6 +18,10 @@ type EnrichedRegistration = {
 };
 
 export async function GET(req: NextRequest) {
+  // Charter P1/P2: Require authenticated identity with registrations:view capability
+  const auth = await requireCapability(req, "registrations:view");
+  if (!auth.ok) return auth.response;
+
   const { searchParams } = new URL(req.url);
   const memberIdFilter = searchParams.get("memberId");
   const eventIdFilter = searchParams.get("eventId");

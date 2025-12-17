@@ -3,6 +3,13 @@ import { listMockEmails, MockEmailEntry } from "@/lib/email";
 import SystemCommsPanel from "./SystemCommsPanel";
 import AdminSectionNav from "./AdminSectionNav";
 import AdminSearchPanel from "./AdminSearchPanel";
+import TransitionWidget from "./TransitionWidget";
+
+// Use default dev token if ADMIN_E2E_TOKEN not set (matches auth.ts logic)
+const adminHeaders =
+  process.env.NODE_ENV !== "production"
+    ? { "x-admin-test-token": process.env.ADMIN_E2E_TOKEN ?? "dev-admin-token" }
+    : undefined;
 
 type Member = {
   id: string;
@@ -90,7 +97,7 @@ async function getRegistrations(): Promise<Registration[]> {
 async function getAdminSummary(): Promise<AdminSummary | null> {
   const base = getBaseUrl();
   try {
-    const res = await fetch(`${base}/api/admin/summary`, { cache: "no-store" });
+    const res = await fetch(`${base}/api/admin/summary`, { headers: adminHeaders, cache: "no-store" });
     if (!res.ok) return null;
     const data = await res.json();
     return data.summary ?? null;
@@ -102,7 +109,7 @@ async function getAdminSummary(): Promise<AdminSummary | null> {
 async function getActivity(): Promise<ActivityItem[]> {
   const base = getBaseUrl();
   try {
-    const res = await fetch(`${base}/api/admin/activity`, { cache: "no-store" });
+    const res = await fetch(`${base}/api/admin/activity`, { headers: adminHeaders, cache: "no-store" });
     if (!res.ok) return [];
     const data = await res.json();
     return data.activity ?? [];
@@ -171,6 +178,10 @@ export default async function AdminPage() {
       </header>
 
       <AdminSectionNav />
+
+      {/* Transition Widget - visible only to President and Past President */}
+      {/* Auth is handled via HttpOnly session cookies, not props (Charter P1, P7) */}
+      <TransitionWidget />
 
       <section
         id="admin-search-section"

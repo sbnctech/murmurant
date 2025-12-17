@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import Link from "next/link";
 
 /**
  * MemberLayout - Shared layout wrapper for all member-facing pages.
@@ -61,7 +62,7 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
           }}
         >
           {/* Logo / Brand - links back to member home */}
-          <a
+          <Link
             href="/member"
             data-test-id="member-nav-logo"
             style={{
@@ -72,7 +73,7 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
             }}
           >
             ClubOS
-          </a>
+          </Link>
 
           {/* Primary navigation links */}
           <ul

@@ -1,11 +1,9 @@
 /**
  * Admin summary aggregation for dashboard stats.
- * Uses in-memory mock data until database layer is stable.
+ * Uses Prisma to query actual database counts.
  */
 
-import { getActiveMembers } from "./mockMembers";
-import { listEvents } from "./mockEvents";
-import { listRegistrations, countByStatus } from "./mockRegistrations";
+import { prisma } from "./prisma";
 
 export type AdminSummary = {
   totalActiveMembers: number;
@@ -14,16 +12,41 @@ export type AdminSummary = {
   totalWaitlistedRegistrations: number;
 };
 
-export function getAdminSummary(): AdminSummary {
-  const activeMembers = getActiveMembers();
-  const events = listEvents();
-  const registrations = listRegistrations();
-  const waitlistedCount = countByStatus("WAITLISTED");
+export async function getAdminSummary(): Promise<AdminSummary> {
+  const [
+    totalActiveMembers,
+    totalEvents,
+    totalRegistrations,
+    totalWaitlistedRegistrations,
+  ] = await Promise.all([
+    // Count members with active membership status
+    prisma.member.count({
+      where: {
+        membershipStatus: {
+          isActive: true,
+        },
+      },
+    }),
+    // Count only published events
+    prisma.event.count({
+      where: {
+        isPublished: true,
+      },
+    }),
+    // Count all registrations
+    prisma.eventRegistration.count(),
+    // Count waitlisted registrations
+    prisma.eventRegistration.count({
+      where: {
+        status: "WAITLISTED",
+      },
+    }),
+  ]);
 
   return {
-    totalActiveMembers: activeMembers.length,
-    totalEvents: events.length,
-    totalRegistrations: registrations.length,
-    totalWaitlistedRegistrations: waitlistedCount,
+    totalActiveMembers,
+    totalEvents,
+    totalRegistrations,
+    totalWaitlistedRegistrations,
   };
 }

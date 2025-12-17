@@ -1,13 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireCapability } from "@/lib/auth";
 
 /**
  * GET /api/admin/export/members
  *
  * Export all members as CSV.
  * Returns members ordered by lastName, firstName for deterministic output.
+ * Requires exports:access capability (webmaster does NOT have this).
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const auth = await requireCapability(req, "exports:access");
+  if (!auth.ok) return auth.response;
   const members = await prisma.member.findMany({
     include: {
       membershipStatus: true,

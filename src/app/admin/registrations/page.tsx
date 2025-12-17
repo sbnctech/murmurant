@@ -12,8 +12,9 @@ export default function AdminRegistrationsListPage() {
         data-test-id="admin-registrations-export"
         style={{ marginBottom: "16px" }}
       >
-        <a
+<a
           href="/api/admin/export/registrations"
+          download
           data-test-id="admin-registrations-export-button"
           style={{
             display: "inline-block",

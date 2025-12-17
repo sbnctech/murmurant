@@ -325,6 +325,251 @@ async function seedEventRegistrations(
   console.log(`  Created ${registrations.length} event registrations`);
 }
 
+async function seedCommitteesAndRoles(): Promise<void> {
+  console.log("Seeding committees and roles...");
+
+  // Define committees
+  const committees = [
+    {
+      name: "Board of Directors",
+      slug: "board",
+      description: "The governing body responsible for overall club leadership, policy decisions, and strategic direction.",
+    },
+    {
+      name: "Activities Committee",
+      slug: "activities",
+      description: "Plans and coordinates social events, outings, interest groups, and recreational activities for members.",
+    },
+    {
+      name: "Membership Committee",
+      slug: "membership",
+      description: "Manages member recruitment, orientation, retention, and maintains the membership database.",
+    },
+    {
+      name: "Communications Committee",
+      slug: "communications",
+      description: "Handles newsletter publication, website maintenance, social media, and public relations.",
+    },
+    {
+      name: "Finance Committee",
+      slug: "finance",
+      description: "Oversees budget planning, financial reporting, dues collection, and fiscal responsibility.",
+    },
+  ];
+
+  const committeeMap = new Map<string, string>();
+
+  for (const committee of committees) {
+    const created = await prisma.committee.upsert({
+      where: { slug: committee.slug },
+      update: committee,
+      create: committee,
+    });
+    committeeMap.set(committee.slug, created.id);
+  }
+
+  console.log(`  Created ${committees.length} committees`);
+
+  // Define roles for each committee
+  const boardId = committeeMap.get("board")!;
+  const activitiesId = committeeMap.get("activities")!;
+  const membershipId = committeeMap.get("membership")!;
+  const communicationsId = committeeMap.get("communications")!;
+  const financeId = committeeMap.get("finance")!;
+
+  const roles = [
+    // Board of Directors roles
+    {
+      committeeId: boardId,
+      name: "President",
+      slug: "president",
+      sortOrder: 1,
+      description: "Presides over all Board and general membership meetings. Serves as the official representative of the club. Coordinates activities of all officers and committees. Appoints committee chairs with Board approval. Signs contracts and official documents on behalf of the club. Ensures the club operates in accordance with its bylaws and policies.",
+    },
+    {
+      committeeId: boardId,
+      name: "Vice President",
+      slug: "vice-president",
+      sortOrder: 2,
+      description: "Assumes the duties of the President in their absence. Assists the President in coordinating club activities. Oversees special projects as assigned by the President. Serves as liaison between the Board and committee chairs. Coordinates the annual planning process and goal setting. Succeeds to the Presidency at the end of the term.",
+    },
+    {
+      committeeId: boardId,
+      name: "Secretary",
+      slug: "secretary",
+      sortOrder: 3,
+      description: "Records and maintains minutes of all Board and general membership meetings. Handles official club correspondence. Maintains club records, bylaws, and historical documents. Sends meeting notices and agendas to Board members. Manages the club calendar and scheduling. Ensures proper documentation of all official club actions.",
+    },
+    {
+      committeeId: boardId,
+      name: "Treasurer",
+      slug: "treasurer",
+      sortOrder: 4,
+      description: "Manages all club financial accounts and transactions. Prepares and presents monthly financial reports to the Board. Develops the annual budget in coordination with the Finance Committee. Collects dues and processes payments. Files required tax documents and maintains financial records. Ensures compliance with financial policies and procedures.",
+    },
+    {
+      committeeId: boardId,
+      name: "Parliamentarian",
+      slug: "parliamentarian",
+      sortOrder: 5,
+      description: "Advises the President and Board on parliamentary procedure. Ensures meetings are conducted according to Roberts Rules of Order. Reviews proposed bylaw amendments for proper form and consistency. Maintains current copies of bylaws and standing rules. Assists in resolving procedural disputes. Provides training on meeting procedures as needed.",
+    },
+    {
+      committeeId: boardId,
+      name: "Past President",
+      slug: "past-president",
+      sortOrder: 6,
+      description: "Provides continuity and institutional knowledge to the Board. Mentors the current President and new Board members. Chairs the Nominating Committee. Serves as an advisor on policy and procedural matters. Assists with leadership transition and training. May represent the club at external functions as requested.",
+    },
+
+    // Activities Committee roles
+    {
+      committeeId: activitiesId,
+      name: "Activities Chair",
+      slug: "chair",
+      sortOrder: 1,
+      description: "Leads the Activities Committee and coordinates all club events. Recruits and supports event hosts. Maintains the master calendar of activities. Reports to the Board on event participation and trends. Develops new activity offerings based on member interests. Ensures events are inclusive and accessible to all members.",
+    },
+    {
+      committeeId: activitiesId,
+      name: "Activities Vice Chair",
+      slug: "vice-chair",
+      sortOrder: 2,
+      description: "Assists the Chair in coordinating committee activities. Assumes Chair duties when the Chair is unavailable. Helps recruit and train new event hosts. Coordinates special event series and themed activities. Maintains event hosting guidelines and resources. Supports event hosts with logistics and problem-solving.",
+    },
+    {
+      committeeId: activitiesId,
+      name: "Interest Groups Coordinator",
+      slug: "interest-groups",
+      sortOrder: 3,
+      description: "Oversees all special interest groups within the club. Helps establish new interest groups based on member demand. Supports interest group leaders with resources and guidance. Ensures interest groups align with club policies. Promotes interest group activities to the general membership. Maintains directory of active interest groups and contacts.",
+    },
+
+    // Membership Committee roles
+    {
+      committeeId: membershipId,
+      name: "Membership Chair",
+      slug: "chair",
+      sortOrder: 1,
+      description: "Leads the Membership Committee and oversees all membership functions. Develops and implements member recruitment strategies. Coordinates new member orientation sessions. Monitors membership trends and retention rates. Reports membership statistics to the Board. Ensures accurate maintenance of the membership database.",
+    },
+    {
+      committeeId: membershipId,
+      name: "Orientation Coordinator",
+      slug: "orientation",
+      sortOrder: 2,
+      description: "Plans and conducts new member orientation sessions. Creates welcoming experience for prospective and new members. Develops orientation materials and presentations. Coordinates mentor assignments for new members. Follows up with new members during their first months. Gathers feedback to improve the orientation process.",
+    },
+    {
+      committeeId: membershipId,
+      name: "Database Administrator",
+      slug: "database-admin",
+      sortOrder: 3,
+      description: "Maintains the accuracy and integrity of the membership database. Processes new member applications and renewals. Updates member contact information and preferences. Generates membership reports and mailing lists. Ensures data privacy and security compliance. Provides database training to authorized users.",
+    },
+
+    // Communications Committee roles
+    {
+      committeeId: communicationsId,
+      name: "Communications Chair",
+      slug: "chair",
+      sortOrder: 1,
+      description: "Leads the Communications Committee and oversees all club communications. Develops the communications strategy and editorial calendar. Coordinates messaging across all channels. Ensures brand consistency in club materials. Reports to the Board on communications activities. Manages relationships with media and external partners.",
+    },
+    {
+      committeeId: communicationsId,
+      name: "Newsletter Editor",
+      slug: "newsletter",
+      sortOrder: 2,
+      description: "Produces the monthly club newsletter. Solicits and edits articles from members and committees. Maintains editorial standards and publication schedule. Coordinates with graphic designer and printer. Manages newsletter distribution list. Archives past issues and maintains content library.",
+    },
+    {
+      committeeId: communicationsId,
+      name: "Webmaster",
+      slug: "webmaster",
+      sortOrder: 3,
+      description: "Maintains and updates the club website. Ensures website content is current and accurate. Manages online event registration and calendars. Implements website improvements and new features. Monitors website analytics and user experience. Provides technical support for website users.",
+    },
+    {
+      committeeId: communicationsId,
+      name: "Social Media Coordinator",
+      slug: "social-media",
+      sortOrder: 4,
+      description: "Manages the clubs social media presence. Creates and schedules engaging social media content. Monitors and responds to social media interactions. Grows the clubs following and engagement. Coordinates social media coverage of events. Reports on social media metrics and trends.",
+    },
+
+    // Finance Committee roles
+    {
+      committeeId: financeId,
+      name: "Finance Chair",
+      slug: "chair",
+      sortOrder: 1,
+      description: "Leads the Finance Committee and oversees financial planning. Works with Treasurer on budget development. Reviews financial policies and recommends updates. Coordinates the annual financial review or audit. Advises the Board on financial matters. Ensures long-term financial sustainability of the club.",
+    },
+    {
+      committeeId: financeId,
+      name: "Audit Coordinator",
+      slug: "audit",
+      sortOrder: 2,
+      description: "Coordinates the annual review of club financial records. Ensures proper internal controls are in place. Reviews expense reports and reimbursement requests. Verifies accuracy of financial transactions. Reports findings to the Finance Committee and Board. Recommends improvements to financial procedures.",
+    },
+  ];
+
+  let roleCount = 0;
+  for (const role of roles) {
+    await prisma.committeeRole.upsert({
+      where: {
+        committeeId_slug: {
+          committeeId: role.committeeId,
+          slug: role.slug,
+        },
+      },
+      update: role,
+      create: role,
+    });
+    roleCount++;
+  }
+
+  console.log(`  Created ${roleCount} committee roles with job descriptions`);
+}
+
+async function seedTerms(): Promise<Map<string, string>> {
+  console.log("Seeding terms...");
+
+  const terms = [
+    {
+      name: "Winter 2025",
+      startDate: new Date("2025-02-01T08:00:00Z"),
+      endDate: new Date("2025-07-31T07:59:59Z"),
+      isCurrent: true,
+    },
+    {
+      name: "Summer 2025",
+      startDate: new Date("2025-08-01T07:00:00Z"),
+      endDate: new Date("2026-01-31T08:59:59Z"),
+      isCurrent: false,
+    },
+    {
+      name: "Winter 2024",
+      startDate: new Date("2024-02-01T08:00:00Z"),
+      endDate: new Date("2024-07-31T07:59:59Z"),
+      isCurrent: false,
+    },
+  ];
+
+  const termMap = new Map<string, string>();
+
+  for (const term of terms) {
+    const created = await prisma.term.create({
+      data: term,
+    });
+    termMap.set(term.name, created.id);
+  }
+
+  console.log(`  Created ${terms.length} terms`);
+  return termMap;
+}
+
 async function main(): Promise<void> {
   console.log("=== ClubOS Seed Script ===\n");
 
@@ -336,6 +581,8 @@ async function main(): Promise<void> {
     const statusMap = await seedMembershipStatuses();
     const memberMap = await seedMembers(statusMap);
     await seedUserAccounts(memberMap);
+    await seedCommitteesAndRoles();
+    await seedTerms();
     const eventMap = await seedEvents(memberMap);
     await seedEventRegistrations(eventMap, memberMap);
 
@@ -344,6 +591,8 @@ async function main(): Promise<void> {
     console.log("  - 5 membership statuses");
     console.log("  - 2 members (Alice Chen, Carol Johnson)");
     console.log("  - 1 admin user account (alice@example.com)");
+    console.log("  - 5 committees with 18 committee roles");
+    console.log("  - 3 terms (Winter 2024, Winter 2025, Summer 2025)");
     console.log("  - 4 events (3 published, 1 draft)");
     console.log("  - 4 event registrations (3 confirmed, 1 waitlisted)");
   } catch (error) {

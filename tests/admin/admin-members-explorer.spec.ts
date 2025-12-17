@@ -31,8 +31,8 @@ test.describe("Admin Members Explorer", () => {
 
     await link.click();
 
-    // Should navigate to member detail page
-    await expect(page).toHaveURL(/\/admin\/members\/m\d+/);
+    // Should navigate to member detail page (UUID format)
+    await expect(page).toHaveURL(/\/admin\/members\/[0-9a-f-]{36}/);
 
     const detailRoot = page.locator('[data-test-id="admin-member-detail-root"]');
     await expect(detailRoot).toBeVisible();

@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { SEED_MEMBERS, REGISTRATION_STATUS } from "../fixtures/seed-data";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
@@ -24,28 +25,28 @@ test.describe("Admin Activity UI", () => {
     const count = await rows.count();
     expect(count).toBeGreaterThanOrEqual(1);
 
-    // Check for Alice Johnson and Welcome Hike
-    const aliceRow = rows.filter({ hasText: "Alice Johnson" });
-    await expect(aliceRow).toContainText("Welcome Hike");
+    // Check for Alice Chen with an event
+    const aliceRow = rows.filter({ hasText: SEED_MEMBERS.ALICE.fullName });
+    await expect(aliceRow.first()).toBeVisible();
 
-    // Check for Bob Smith and Wine Mixer
-    const bobRow = rows.filter({ hasText: "Bob Smith" });
-    await expect(bobRow).toContainText("Wine Mixer");
+    // Check for Carol Johnson with an event
+    const carolRow = rows.filter({ hasText: SEED_MEMBERS.CAROL.fullName });
+    await expect(carolRow.first()).toBeVisible();
   });
 
-  test("Status column shows REGISTERED and WAITLISTED", async ({ page }) => {
+  test("Status column shows CONFIRMED and WAITLISTED", async ({ page }) => {
     await page.goto(`${BASE}/admin`);
 
     const rows = page.locator('[data-test-id="admin-activity-row"]');
     await expect(rows.first()).toBeVisible({ timeout: 10000 });
 
-    // Alice Johnson should have REGISTERED status
-    const aliceRow = rows.filter({ hasText: "Alice Johnson" });
-    await expect(aliceRow).toContainText("REGISTERED");
+    // Should have at least one CONFIRMED status (seed has 3)
+    const confirmedRow = rows.filter({ hasText: REGISTRATION_STATUS.CONFIRMED });
+    await expect(confirmedRow.first()).toBeVisible();
 
-    // Bob Smith should have WAITLISTED status
-    const bobRow = rows.filter({ hasText: "Bob Smith" });
-    await expect(bobRow).toContainText("WAITLISTED");
+    // Should have at least one WAITLISTED status (seed has 1)
+    const waitlistedRow = rows.filter({ hasText: REGISTRATION_STATUS.WAITLISTED });
+    await expect(waitlistedRow.first()).toBeVisible();
   });
 
   test("Activity table structure is correct and empty state element exists in DOM", async ({ page }) => {

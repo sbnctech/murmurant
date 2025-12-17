@@ -13,6 +13,32 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  // Timezone guardrails: ban direct date formatting outside timezone.ts
+  {
+    files: ["src/**/*.ts", "src/**/*.tsx"],
+    ignores: ["src/lib/timezone.ts"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "CallExpression[callee.property.name='toLocaleString']",
+          message: "Use src/lib/timezone.ts helpers instead of toLocaleString().",
+        },
+        {
+          selector: "CallExpression[callee.property.name='toLocaleDateString']",
+          message: "Use src/lib/timezone.ts helpers instead of toLocaleDateString().",
+        },
+        {
+          selector: "CallExpression[callee.property.name='toLocaleTimeString']",
+          message: "Use src/lib/timezone.ts helpers instead of toLocaleTimeString().",
+        },
+        {
+          selector: "CallExpression[callee.object.name='Intl'][callee.property.name='DateTimeFormat']",
+          message: "Use src/lib/timezone.ts helpers instead of Intl.DateTimeFormat().",
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

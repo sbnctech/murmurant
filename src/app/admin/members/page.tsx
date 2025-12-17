@@ -12,8 +12,9 @@ export default function AdminMembersListPage() {
         data-test-id="admin-members-export"
         style={{ marginBottom: "16px" }}
       >
-        <a
+<a
           href="/api/admin/export/members"
+          download
           data-test-id="admin-members-export-button"
           style={{
             display: "inline-block",

@@ -1,15 +1,23 @@
 node_modules
 # Keep environment variables out of version control
 .env
+.env.local
+.env.*.local
 
 /src/generated/prisma
 
-# ClubOS extras
-.next
-playwright-report
-test-results
-tmp/mock-email-log.json
+# Next.js
 .next/
+out/
+
+# Playwright test artifacts
+playwright-report/
 test-results/
+playwright/.cache/
+
+# Misc
+tmp/mock-email-log.json
 tsconfig.tsbuildinfo
 .vercel/
+*.log
+.netlify/

@@ -1,5 +1,10 @@
+// Copyright (c) Santa Barbara Newcomers Club
+// Admin members list API v1 - requires members:view capability
+// Charter: P1 (identity provable), P2 (default deny), P9 (fail closed)
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireCapability } from "@/lib/auth";
 
 type AdminMemberListItem = {
   id: string;
@@ -22,6 +27,10 @@ type AdminMemberListItem = {
  * Response: Paginated list of members with registration counts
  */
 export async function GET(request: NextRequest) {
+  // Charter P1/P2: Require authenticated identity with members:view capability
+  const auth = await requireCapability(request, "members:view");
+  if (!auth.ok) return auth.response;
+
   const { searchParams } = new URL(request.url);
 
   // Parse pagination params with defaults

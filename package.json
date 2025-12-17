@@ -10,10 +10,18 @@
     "typecheck": "tsc --noEmit",
     "test": "playwright test",
     "test-admin": "playwright test tests/admin",
+    "test-admin:stable": "playwright test tests/admin --grep-invert @quarantine --workers=2",
+    "test-publish:e2e": "playwright test tests/admin/admin-content-*.spec.ts tests/admin/admin-comms-*.spec.ts tests/api/api-content-*.spec.ts tests/api/api-comms.spec.ts --grep-invert @quarantine",
+    "test-api": "playwright test tests/api",
+    "test-api:stable": "playwright test tests/api --grep-invert @quarantine --workers=2",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:check-migrations": "bash scripts/ci/check-migration-safety.sh",
     "db:seed": "npx tsx prisma/seed.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "test:unit": "vitest run",
+    "test:unit:coverage": "vitest run --coverage",
+    "green": "npm run typecheck && npm run lint && npm run test:unit && npm run db:seed && npm run test-admin:stable && npm run test-api:stable"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -33,6 +41,7 @@
     "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "^4.0.15",
     "babel-plugin-react-compiler": "1.0.0",
     "dotenv": "^17.2.3",
     "eslint": "^9",
@@ -40,6 +49,7 @@
     "prisma": "^7.1.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "^4.0.15"
   }
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { errors } from "@/lib/api";
+import { requireCapabilityWithScope } from "@/lib/auth";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -29,18 +30,21 @@ type MemberDetailResponse = {
  *
  * Admin endpoint to retrieve full member details.
  *
+ * Charter P1/P2: Require members:view capability with explicit object scope.
  * Response: Member details with registration history
  */
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
+
+  // Charter P2: Object-scoped authorization with explicit memberId scope
+  const auth = await requireCapabilityWithScope(request, "members:view", { memberId: id });
+  if (!auth.ok) return auth.response;
 
   // Validate UUID format to avoid Prisma errors
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if (!uuidRegex.test(id)) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
-
-  void request; // Suppress unused variable warning
 
   const member = await prisma.member.findUnique({
     where: { id },
@@ -92,19 +96,22 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
  *
  * Admin endpoint to update member information.
  *
+ * Charter P1/P2: Require members:view capability with explicit object scope.
  * Request body: Partial member fields
  * Response: Updated MemberDetail
  */
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
 
+  // Charter P2: Object-scoped authorization with explicit memberId scope
+  const auth = await requireCapabilityWithScope(request, "members:view", { memberId: id });
+  if (!auth.ok) return auth.response;
+
   // TODO: Wire - Implement member update
-  // 1. Validate access token and require globalRole === 'admin'
+  // 1. Access validated above via requireCapabilityWithScope
   // 2. Parse and validate request body
   // 3. Update member record
   // 4. Return updated member
-
-  void request; // Suppress unused variable warning
 
   return errors.internal(`PATCH /api/v1/admin/members/${id} not implemented`);
 }

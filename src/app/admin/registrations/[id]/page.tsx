@@ -1,5 +1,11 @@
 import { notFound } from "next/navigation";
 
+// Server-to-server auth for API calls (only in dev mode, with default fallback)
+const adminHeaders =
+  process.env.NODE_ENV !== "production"
+    ? { "x-admin-test-token": process.env.ADMIN_E2E_TOKEN ?? "dev-admin-token" }
+    : undefined;
+
 function getBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_BASE_URL) {
     return process.env.NEXT_PUBLIC_BASE_URL;
@@ -27,8 +33,7 @@ type PageProps = {
 export default async function RegistrationDetailPage({ params }: PageProps) {
   const { id } = await params;
   const base = getBaseUrl();
-  const res = await fetch(`${base}/api/admin/registrations/${id}`, {
-    cache: "no-store",
+  const res = await fetch(`${base}/api/admin/registrations/${id}`, { headers: adminHeaders, cache: "no-store",
   });
 
   if (res.status === 404) {

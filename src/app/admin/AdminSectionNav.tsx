@@ -4,6 +4,8 @@ const navItems = [
   { label: "Members Explorer", href: "/admin/members", testId: "admin-nav-members-explorer" },
   { label: "Events Explorer", href: "/admin/events", testId: "admin-nav-events-explorer" },
   { label: "Registrations Explorer", href: "/admin/registrations", testId: "admin-nav-registrations-explorer" },
+  { label: "Service History", href: "/admin/service-history", testId: "admin-nav-service-history" },
+  { label: "Transitions", href: "/admin/transitions", testId: "admin-nav-transitions" },
   { label: "Members", href: "#admin-members-section", testId: "admin-nav-members" },
   { label: "Events", href: "#admin-events-section", testId: "admin-nav-events" },
   { label: "Registrations", href: "#admin-registrations-section", testId: "admin-nav-registrations" },

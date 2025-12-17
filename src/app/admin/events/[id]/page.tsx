@@ -1,5 +1,11 @@
 import { notFound } from "next/navigation";
 
+// Use default dev token if ADMIN_E2E_TOKEN not set (matches auth.ts logic)
+const adminHeaders =
+  process.env.NODE_ENV !== "production"
+    ? { "x-admin-test-token": process.env.ADMIN_E2E_TOKEN ?? "dev-admin-token" }
+    : undefined;
+
 function getBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_BASE_URL) {
     return process.env.NEXT_PUBLIC_BASE_URL;
@@ -32,8 +38,7 @@ type PageProps = {
 export default async function EventDetailPage({ params }: PageProps) {
   const { id } = await params;
   const base = getBaseUrl();
-  const res = await fetch(`${base}/api/admin/events/${id}`, {
-    cache: "no-store",
+  const res = await fetch(`${base}/api/admin/events/${id}`, { headers: adminHeaders, cache: "no-store",
   });
 
   if (res.status === 404) {
@@ -51,7 +56,7 @@ export default async function EventDetailPage({ params }: PageProps) {
 
   const data = await res.json();
   const event: Event = data.event;
-  const registrations: Registration[] = data.registrations ?? [];
+  const registrations: Registration[] = data.event?.registrations ?? [];
 
   return (
     <div data-test-id="admin-event-detail-root" style={{ padding: "20px" }}>

@@ -1,10 +1,36 @@
+/**
+ * Admin Search API Tests
+ *
+ * Charter Principles:
+ * - P1: Identity and authorization must be provable
+ * - P2: Default deny, least privilege
+ */
+
 import { test, expect } from "@playwright/test";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
+// Auth header helper - requires members:view capability
+const authHeaders = { Authorization: "Bearer test-admin-token" };
+
 test.describe("GET /api/admin/search", () => {
-  test("returns response with correct structure", async ({ request }) => {
+  // Charter P1/P2: Verify auth enforcement
+  test("returns 401 without authentication", async ({ request }) => {
     const response = await request.get(`${BASE}/api/admin/search?q=test`);
+    expect(response.status()).toBe(401);
+  });
+
+  test("returns 403 for member role (lacks members:view)", async ({ request }) => {
+    const response = await request.get(`${BASE}/api/admin/search?q=test`, {
+      headers: { Authorization: "Bearer test-member-token" },
+    });
+    expect(response.status()).toBe(403);
+  });
+
+  test("returns response with correct structure", async ({ request }) => {
+    const response = await request.get(`${BASE}/api/admin/search?q=test`, {
+      headers: authHeaders,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -17,7 +43,9 @@ test.describe("GET /api/admin/search", () => {
 
   test("returns members when query matches email", async ({ request }) => {
     // Use alice which exists in seed data
-    const response = await request.get(`${BASE}/api/admin/search?q=alice`);
+    const response = await request.get(`${BASE}/api/admin/search?q=alice`, {
+      headers: authHeaders,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -31,7 +59,9 @@ test.describe("GET /api/admin/search", () => {
 
   test("returns events when query matches a title", async ({ request }) => {
     // Use "hike" which exists in seed data ("Morning Hike at Rattlesnake Canyon")
-    const response = await request.get(`${BASE}/api/admin/search?q=hike`);
+    const response = await request.get(`${BASE}/api/admin/search?q=hike`, {
+      headers: authHeaders,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -45,7 +75,9 @@ test.describe("GET /api/admin/search", () => {
     request,
   }) => {
     // Search for something likely to have registrations
-    const response = await request.get(`${BASE}/api/admin/search?q=hike`);
+    const response = await request.get(`${BASE}/api/admin/search?q=hike`, {
+      headers: authHeaders,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -65,7 +97,8 @@ test.describe("GET /api/admin/search", () => {
 
   test("returns empty arrays when no match", async ({ request }) => {
     const response = await request.get(
-      `${BASE}/api/admin/search?q=zzzznotfound`
+      `${BASE}/api/admin/search?q=zzzznotfound`,
+      { headers: authHeaders }
     );
 
     expect(response.status()).toBe(200);
@@ -77,7 +110,9 @@ test.describe("GET /api/admin/search", () => {
   });
 
   test("returns empty arrays when query is empty", async ({ request }) => {
-    const response = await request.get(`${BASE}/api/admin/search?q=`);
+    const response = await request.get(`${BASE}/api/admin/search?q=`, {
+      headers: authHeaders,
+    });
 
     expect(response.status()).toBe(200);
 
@@ -89,10 +124,12 @@ test.describe("GET /api/admin/search", () => {
 
   test("search is case-insensitive", async ({ request }) => {
     const lowerResponse = await request.get(
-      `${BASE}/api/admin/search?q=alice`
+      `${BASE}/api/admin/search?q=alice`,
+      { headers: authHeaders }
     );
     const upperResponse = await request.get(
-      `${BASE}/api/admin/search?q=ALICE`
+      `${BASE}/api/admin/search?q=ALICE`,
+      { headers: authHeaders }
     );
 
     expect(lowerResponse.status()).toBe(200);

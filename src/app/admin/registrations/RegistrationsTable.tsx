@@ -12,7 +12,7 @@ type AdminRegistrationListItem = {
   registeredAt: string;
 };
 
-type FilterValue = "ALL" | "REGISTERED" | "WAITLISTED";
+type FilterValue = "ALL" | "CONFIRMED" | "WAITLISTED";
 
 type PaginatedResponse = {
   items: AdminRegistrationListItem[];
@@ -79,7 +79,7 @@ export default function RegistrationsTable() {
           }}
         >
           <option value="ALL">All statuses</option>
-          <option value="REGISTERED">Registered only</option>
+          <option value="CONFIRMED">Confirmed only</option>
           <option value="WAITLISTED">Waitlisted only</option>
         </select>
       </div>

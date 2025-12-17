@@ -1,3 +1,17 @@
+
+async function getWithRetry(request: APIRequestContext, url: string, attempts = 3) {
+  let lastErr: unknown = undefined;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await request["get"](url);
+    } catch (err) {
+      lastErr = err;
+      await new Promise((r) => setTimeout(r, 200 * (i + 1)));
+    }
+  }
+  throw lastErr;
+}
+
 import type { APIRequestContext } from "@playwright/test";
 
 /** Shape of member items returned by /api/admin/members */
@@ -28,7 +42,7 @@ function extractItems<T>(data: ListResponse<T> | T[]): T[] {
 }
 
 export async function lookupMemberIdByEmail(request: APIRequestContext, email: string): Promise<string> {
-  const res = await request.get(`/api/admin/members?query=${encodeURIComponent(email)}`);
+  const res = await getWithRetry(request, `/api/admin/members?query=${encodeURIComponent(email)}`);
   if (!res.ok()) throw new Error(`lookupMemberIdByEmail: API failed ${res.status()}`);
   const data: ListResponse<MemberItem> | MemberItem[] = await res.json();
   const items = extractItems(data);
@@ -38,7 +52,7 @@ export async function lookupMemberIdByEmail(request: APIRequestContext, email: s
 }
 
 export async function lookupEventIdByTitle(request: APIRequestContext, title: string): Promise<string> {
-  const res = await request.get(`/api/admin/events?query=${encodeURIComponent(title)}`);
+  const res = await getWithRetry(request, `/api/admin/events?query=${encodeURIComponent(title)}`);
   if (!res.ok()) throw new Error(`lookupEventIdByTitle: API failed ${res.status()}`);
   const data: ListResponse<EventItem> | EventItem[] = await res.json();
   const items = extractItems(data);
@@ -52,7 +66,7 @@ export async function lookupRegistrationId(request: APIRequestContext, opts: { m
   if (opts.memberEmail) qParts.push(opts.memberEmail);
   if (opts.eventTitle) qParts.push(opts.eventTitle);
   const q = qParts.join(" ").trim();
-  const res = await request.get(`/api/admin/registrations?query=${encodeURIComponent(q)}`);
+  const res = await getWithRetry(request, `/api/admin/registrations?query=${encodeURIComponent(q)}`);
   if (!res.ok()) throw new Error(`lookupRegistrationId: API failed ${res.status()}`);
   const data: ListResponse<RegistrationItem> | RegistrationItem[] = await res.json();
   const items = extractItems(data);

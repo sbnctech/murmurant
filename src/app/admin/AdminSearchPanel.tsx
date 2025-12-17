@@ -65,7 +65,10 @@ export default function AdminSearchPanel() {
     setSearching(true);
     setSelectedMember(null);
     try {
-      const res = await fetch(`/api/admin/search?q=${encodeURIComponent(trimmed)}`);
+      // credentials: 'include' sends HttpOnly session cookies
+      const res = await fetch(`/api/admin/search?q=${encodeURIComponent(trimmed)}`, {
+        credentials: "include",
+      });
       if (res.ok) {
         const data = await res.json();
         setResults(data.results);
@@ -82,7 +85,10 @@ export default function AdminSearchPanel() {
   async function handleMemberClick(memberId: string) {
     setLoadingMember(true);
     try {
-      const res = await fetch(`/api/admin/members/${memberId}`);
+      // credentials: 'include' sends HttpOnly session cookies
+      const res = await fetch(`/api/admin/members/${memberId}`, {
+        credentials: "include",
+      });
       if (res.ok) {
         const data = await res.json();
         setSelectedMember(data);

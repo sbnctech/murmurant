@@ -13,11 +13,19 @@ npm run dev
 ### Testing
 See docs/INDEX.md for full testing instructions.
 
+**Run all gates before pushing:**
+```
+npm run green
+```
+
+Other test commands:
 - make test-api
 - make test-admin
 - make test-changed
 - make smoke
-- make preflight
+
+### Releasing
+See [docs/release/RELEASE_CHECKLIST.md](docs/release/RELEASE_CHECKLIST.md) for the release process.
 
 ### Documentation
 
@@ -47,14 +55,14 @@ Quick links:
 ### Tooling
 
 #### Development Scripts (scripts/dev)
-- doctor.sh
-- smoke.sh
-- preflight.sh
-- install-git-hooks.sh
-- collect-diagnostics.sh
-- test-changed.sh
-- playwright-clean.sh
-- playwright-report.sh
+- green.sh - Run all gates (typecheck, lint, unit, seed, admin, api)
+- doctor.sh - Check environment prerequisites
+- smoke.sh - Quick sanity checks
+- install-git-hooks.sh - Install pre-push hook
+- collect-diagnostics.sh - Environment diagnostics
+- test-changed.sh - Run tests for changed files
+- playwright-clean.sh - Clean test artifacts
+- playwright-report.sh - Open test report
 
 All scripts are ASCII-only, zsh-based, and autodetect the project root.
 

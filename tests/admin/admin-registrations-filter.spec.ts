@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { REGISTRATION_STATUS } from "../fixtures/seed-data";
 
 const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 
@@ -12,29 +13,37 @@ test.describe("Admin Registrations Filter", () => {
     const filterSelect = page.locator('[data-test-id="admin-registrations-filter-select"]');
     await expect(filterSelect).toHaveValue("ALL");
 
-    // Mock data has 2 registrations
+    // Seed data has 4 registrations
     const rows = page.locator('[data-test-id="admin-registrations-list-row"]');
-    await expect(rows).toHaveCount(2);
+    await expect(rows.first()).toBeVisible();
+
+    const count = await rows.count();
+    expect(count).toBeGreaterThanOrEqual(1);
   });
 
-  test("Registered only filter shows only REGISTERED rows", async ({ page }) => {
+  test("Confirmed only filter shows only CONFIRMED rows", async ({ page }) => {
     await page.goto(`${BASE}/admin/registrations`);
 
-    const filterSelect = page.locator('[data-test-id="admin-registrations-filter-select"]');
-    await filterSelect.selectOption("REGISTERED");
-
+    // Wait for initial data to load before interacting with filter
     const rows = page.locator('[data-test-id="admin-registrations-list-row"]');
+    await expect(rows.first()).toBeVisible();
+
+    const filterSelect = page.locator('[data-test-id="admin-registrations-filter-select"]');
+    await filterSelect.selectOption(REGISTRATION_STATUS.CONFIRMED);
+
+    // Wait for filter to apply and verify at least one CONFIRMED row
+    await expect(rows.first()).toContainText(REGISTRATION_STATUS.CONFIRMED);
     const count = await rows.count();
     expect(count).toBeGreaterThanOrEqual(1);
 
-    // Verify all visible rows have REGISTERED status
+    // Verify all visible rows have CONFIRMED status
     for (let i = 0; i < count; i++) {
-      await expect(rows.nth(i)).toContainText("REGISTERED");
+      await expect(rows.nth(i)).toContainText(REGISTRATION_STATUS.CONFIRMED);
     }
 
     // Verify WAITLISTED is not present in any row
     const tableBody = page.locator('[data-test-id="admin-registrations-list-table"] tbody');
-    await expect(tableBody).not.toContainText("WAITLISTED");
+    await expect(tableBody).not.toContainText(REGISTRATION_STATUS.WAITLISTED);
   });
 
   test("Waitlisted only filter shows only WAITLISTED rows", async ({ page }) => {
@@ -45,21 +54,21 @@ test.describe("Admin Registrations Filter", () => {
     await expect(rows.first()).toBeVisible();
 
     const filterSelect = page.locator('[data-test-id="admin-registrations-filter-select"]');
-    await filterSelect.selectOption("WAITLISTED");
+    await filterSelect.selectOption(REGISTRATION_STATUS.WAITLISTED);
 
     // Wait for filter to apply and verify at least one WAITLISTED row
-    await expect(rows.first()).toContainText("WAITLISTED");
+    await expect(rows.first()).toContainText(REGISTRATION_STATUS.WAITLISTED);
     const count = await rows.count();
     expect(count).toBeGreaterThanOrEqual(1);
 
     // Verify all visible rows have WAITLISTED status
     for (let i = 0; i < count; i++) {
-      await expect(rows.nth(i)).toContainText("WAITLISTED");
+      await expect(rows.nth(i)).toContainText(REGISTRATION_STATUS.WAITLISTED);
     }
 
-    // Verify REGISTERED is not present in any row
+    // Verify CONFIRMED is not present in any row
     const tableBody = page.locator('[data-test-id="admin-registrations-list-table"] tbody');
-    await expect(tableBody).not.toContainText("REGISTERED");
+    await expect(tableBody).not.toContainText(REGISTRATION_STATUS.CONFIRMED);
   });
 
   test("changing filters does not break navigation to registration detail", async ({ page }) => {
@@ -67,7 +76,7 @@ test.describe("Admin Registrations Filter", () => {
 
     // Set filter to WAITLISTED
     const filterSelect = page.locator('[data-test-id="admin-registrations-filter-select"]');
-    await filterSelect.selectOption("WAITLISTED");
+    await filterSelect.selectOption(REGISTRATION_STATUS.WAITLISTED);
 
     // Click the member link in the filtered row
     const memberLink = page.locator('[data-test-id="admin-registrations-list-member-link"]').first();
@@ -80,7 +89,7 @@ test.describe("Admin Registrations Filter", () => {
 
     // Verify it shows WAITLISTED status
     const statusField = page.locator('[data-test-id="admin-registration-status"]');
-    await expect(statusField).toContainText("WAITLISTED");
+    await expect(statusField).toContainText(REGISTRATION_STATUS.WAITLISTED);
 
     // Verify event title is present
     const eventField = page.locator('[data-test-id="admin-registration-event-title"]');

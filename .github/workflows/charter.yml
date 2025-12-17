@@ -1,0 +1,28 @@
+name: Charter and Governance Checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  charter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install ripgrep
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ripgrep
+
+      - name: Charter checks
+        run: |
+          bash scripts/ci_charter_checks.sh
