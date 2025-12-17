@@ -1,6 +1,20 @@
 # ClubOS Non-Negotiable Architectural Charter
 Copyright (c) Santa Barbara Newcomers Club
 
+## Normative Reference Documents
+
+The following documents are authoritative inputs to ClubOS design decisions.
+They define expected operating norms, red flags, and sustainability constraints
+that the system must support, surface, or enforce.
+
+- docs/WHAT_IS_NORMAL.md
+  Defines normal vs abnormal operating patterns for members, volunteers, and leaders.
+  Used to guide UX affordances, guardrails, and alerting.
+
+- docs/ORG/SBNC_Business_Model_and_Sustainability.md
+  Defines the canonical business model, sustainability flywheel, and failure modes.
+  Used to evaluate feature priority, governance design, and operational risk.
+
 ## Purpose
 ClubOS is a club operating system designed for non-technical users and maintained primarily by chatbots. This charter defines the invariants that must hold across all code, schemas, APIs, UI workflows, and documentation.
 
