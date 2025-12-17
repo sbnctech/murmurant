@@ -1,0 +1,74 @@
+name: Prisma and Build CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ci-prisma-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      prisma_build: ${{ steps.filter.outputs.prisma_build }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for relevant changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            prisma_build:
+              - 'prisma/schema.prisma'
+              - 'prisma/migrations/**'
+              - 'src/lib/prisma/**'
+              - 'src/app/api/**'
+              - 'src/lib/email/**'
+              - 'package.json'
+              - 'package-lock.json'
+
+  prisma_build:
+    needs: changes
+    if: needs.changes.outputs.prisma_build == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate Prisma schema
+        env:
+          DATABASE_URL: "postgresql://user:pass@localhost:5432/db?schema=public"
+        run: npx prisma validate
+
+      - name: Generate Prisma client
+        env:
+          DATABASE_URL: "postgresql://user:pass@localhost:5432/db?schema=public"
+        run: npx prisma generate
+
+      - name: Build Next.js
+        env:
+          DATABASE_URL: "postgresql://user:pass@localhost:5432/db?schema=public"
+        run: npm run build
+
+  prisma_build_skipped:
+    needs: changes
+    if: needs.changes.outputs.prisma_build != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip message
+        run: echo "Prisma/build checks skipped - no relevant file changes detected"
