@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
 
   // Check 3: Query last cron execution (from audit log if available)
   let lastCronRun: Date | null = null;
-  let lastCronResult: string | null = null;
+  const lastCronResult: string | null = null;
 
   try {
     // Look for recent system-cron audit entries

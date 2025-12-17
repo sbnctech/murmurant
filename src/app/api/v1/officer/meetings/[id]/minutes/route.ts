@@ -30,9 +30,7 @@ type RouteParams = {
 export async function GET(req: NextRequest, { params }: RouteParams) {
   const auth = await requireCapability(req, "meetings:read");
   if (!auth.ok) return auth.response;
-
   const { id: meetingId } = await params;
-
   try {
     const minutes = await getMinutesByMeeting(meetingId);
 
@@ -77,17 +75,15 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
  * - publish: Publish (Publisher role)
  */
 export async function POST(req: NextRequest, { params }: RouteParams) {
-  const { id: meetingId } = await params;
-
   try {
     const body = await req.json();
+    const { id: meetingId } = await params;
     const { action = "create", ...data } = body;
 
     switch (action) {
       case "create": {
         const auth = await requireCapability(req, "meetings:minutes:draft:create");
         if (!auth.ok) return auth.response;
-
         if (!data.content) {
           return NextResponse.json(
             { error: "Bad Request", message: "content is required" },
@@ -108,7 +104,6 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       case "submit": {
         const auth = await requireCapability(req, "meetings:minutes:draft:submit");
         if (!auth.ok) return auth.response;
-
         if (!data.minutesId || !data.submittedToId) {
           return NextResponse.json(
             { error: "Bad Request", message: "minutesId and submittedToId are required" },
@@ -129,7 +124,6 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
         // President reviews - need to check they're the submittedTo
         const auth = await requireCapability(req, "meetings:minutes:read_all");
         if (!auth.ok) return auth.response;
-
         if (!data.minutesId) {
           return NextResponse.json(
             { error: "Bad Request", message: "minutesId is required" },
@@ -149,7 +143,6 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       case "revise": {
         const auth = await requireCapability(req, "meetings:minutes:revise");
         if (!auth.ok) return auth.response;
-
         if (!data.minutesId || !data.content) {
           return NextResponse.json(
             { error: "Bad Request", message: "minutesId and content are required" },
@@ -170,7 +163,6 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       case "finalize": {
         const auth = await requireCapability(req, "meetings:minutes:finalize");
         if (!auth.ok) return auth.response;
-
         if (!data.minutesId) {
           return NextResponse.json(
             { error: "Bad Request", message: "minutesId is required" },
@@ -186,7 +178,6 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       case "request_publish": {
         const auth = await requireCapability(req, "content:board:request_publish");
         if (!auth.ok) return auth.response;
-
         if (!data.minutesId) {
           return NextResponse.json(
             { error: "Bad Request", message: "minutesId is required" },
@@ -202,7 +193,6 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       case "publish": {
         const auth = await requireCapability(req, "content:board:publish");
         if (!auth.ok) return auth.response;
-
         if (!data.minutesId) {
           return NextResponse.json(
             { error: "Bad Request", message: "minutesId is required" },
@@ -251,12 +241,11 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
  * PATCH /api/v1/officer/meetings/:id/minutes
  * Update minutes content
  */
-export async function PATCH(req: NextRequest, { params }: RouteParams) {
+export async function PATCH(req: NextRequest, { params }: RouteParams) {  
+  
   const auth = await requireCapability(req, "meetings:minutes:draft:edit");
   if (!auth.ok) return auth.response;
-
-  const { id: meetingId } = await params;
-
+  await params;
   try {
     const body = await req.json();
     const { minutesId, content, summary } = body;

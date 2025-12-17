@@ -13,8 +13,11 @@ export * from "./types";
 export * from "./fake-provider";
 
 import { PaymentProvider } from "./types";
-import { getFakePaymentProvider, FakePaymentProvider } from "./fake-provider";
+import { FakePaymentProvider } from "./fake-provider";
 
+function getFakePaymentProvider() {
+  return new FakePaymentProvider();
+}
 /**
  * Get the configured payment provider.
  *

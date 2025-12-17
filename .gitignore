@@ -20,3 +20,4 @@ tmp/mock-email-log.json
 tsconfig.tsbuildinfo
 .vercel/
 *.log
+.netlify/

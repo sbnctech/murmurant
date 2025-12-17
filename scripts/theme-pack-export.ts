@@ -16,7 +16,7 @@
  */
 
 import { execSync } from "child_process";
-import { existsSync, mkdirSync, readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { join, resolve } from "path";
 
 const args = process.argv.slice(2);

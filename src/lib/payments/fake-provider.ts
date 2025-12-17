@@ -163,8 +163,8 @@ export class FakePaymentProvider implements PaymentProvider {
    */
   async handleWebhook(
     payload: unknown,
-    _signature?: string
-  ): Promise<WebhookProcessResult> {
+    _signature?: string): Promise<WebhookProcessResult> {
+    void _signature;
     // Charter P9: Fail closed in production
     if (!this.isAvailable()) {
       return {
