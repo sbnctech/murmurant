@@ -4,19 +4,19 @@
  * GET /api/v1/officer/governance/flags/:id - Get flag
  * PATCH /api/v1/officer/governance/flags/:id - Update flag
  * DELETE /api/v1/officer/governance/flags/:id - Delete flag
- * POST /api/v1/officer/governance/flags/:id - Perform action (start_review, resolve, dismiss)
+ * POST /api/v1/officer/governance/flags/:id - Perform action (start, resolve, dismiss, reopen)
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { requireCapability } from "@/lib/auth";
 import { auditMutation } from "@/lib/audit";
 import {
-  getGovernanceFlag,
-  updateGovernanceFlag,
-  deleteGovernanceFlag,
-  startFlagReview,
-  resolveGovernanceFlag,
-  dismissGovernanceFlag,
+  getFlagById,
+  updateFlag,
+  deleteFlag,
+  startFlag,
+  resolveFlag,
+  reopenFlag,
 } from "@/lib/governance/flags";
 
 type RouteParams = {
@@ -27,13 +27,13 @@ type RouteParams = {
  * GET /api/v1/officer/governance/flags/:id
  */
 export async function GET(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireCapability(req, "meetings:motions:read");
+  const auth = await requireCapability(req, "governance:flags:read");
   if (!auth.ok) return auth.response;
 
   const { id } = await params;
 
   try {
-    const flag = await getGovernanceFlag(id);
+    const flag = await getFlagById(id);
 
     if (!flag) {
       return NextResponse.json(
@@ -56,41 +56,36 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
  * PATCH /api/v1/officer/governance/flags/:id
  */
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireCapability(req, "governance:flags:create");
+  const auth = await requireCapability(req, "governance:flags:write");
   if (!auth.ok) return auth.response;
 
   const { id } = await params;
 
   try {
     const body = await req.json();
-    const { title, description, flagType } = body;
+    const { title, notes, dueDate, status } = body;
 
-    const flag = await updateGovernanceFlag(id, {
+    const flag = await updateFlag(id, {
       title,
-      description,
-      flagType,
+      notes,
+      dueDate,
+      status,
     });
 
     await auditMutation(req, auth.context, {
       action: "UPDATE",
-      capability: "governance:flags:create",
-      objectType: "GovernanceFlag",
+      capability: "governance:flags:write",
+      objectType: "GovernanceReviewFlag",
       objectId: id,
     });
 
     return NextResponse.json({ flag });
   } catch (error) {
     const message = (error as Error).message;
-    if (message.includes("not found")) {
+    if (message.includes("not found") || message.includes("Record to update not found")) {
       return NextResponse.json(
         { error: "Not Found", message: "Governance flag not found" },
         { status: 404 }
-      );
-    }
-    if (message.includes("Cannot edit")) {
-      return NextResponse.json(
-        { error: "Forbidden", message },
-        { status: 403 }
       );
     }
     console.error("Error updating governance flag:", error);
@@ -105,31 +100,31 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
  * DELETE /api/v1/officer/governance/flags/:id
  */
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireCapability(req, "governance:flags:create");
+  const auth = await requireCapability(req, "governance:flags:write");
   if (!auth.ok) return auth.response;
 
   const { id } = await params;
 
   try {
-    await deleteGovernanceFlag(id);
+    await deleteFlag(id);
 
     await auditMutation(req, auth.context, {
       action: "DELETE",
-      capability: "governance:flags:create",
-      objectType: "GovernanceFlag",
+      capability: "governance:flags:write",
+      objectType: "GovernanceReviewFlag",
       objectId: id,
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
     const message = (error as Error).message;
-    if (message.includes("not found")) {
+    if (message.includes("not found") || message.includes("Record to delete does not exist")) {
       return NextResponse.json(
         { error: "Not Found", message: "Governance flag not found" },
         { status: 404 }
       );
     }
-    if (message.includes("Only open")) {
+    if (message.includes("Cannot delete")) {
       return NextResponse.json(
         { error: "Forbidden", message },
         { status: 403 }
@@ -148,9 +143,10 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
  * Perform action on governance flag
  *
  * Actions:
- * - start_review: Mark as in review
- * - resolve: Resolve the flag
- * - dismiss: Dismiss the flag
+ * - start: Mark as in progress (OPEN -> IN_PROGRESS)
+ * - resolve: Resolve the flag (requires resolution)
+ * - dismiss: Dismiss the flag (requires resolution)
+ * - reopen: Reopen a resolved/dismissed flag
  */
 export async function POST(req: NextRequest, { params }: RouteParams) {
   const { id } = await params;
@@ -160,18 +156,18 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     const { action, resolution } = body;
 
     switch (action) {
-      case "start_review": {
+      case "start": {
         const auth = await requireCapability(req, "governance:flags:resolve");
         if (!auth.ok) return auth.response;
 
-        const flag = await startFlagReview(id, auth.context.memberId);
+        const flag = await startFlag(id);
 
         await auditMutation(req, auth.context, {
           action: "UPDATE",
           capability: "governance:flags:resolve",
-          objectType: "GovernanceFlag",
+          objectType: "GovernanceReviewFlag",
           objectId: id,
-          metadata: { action: "start_review", newStatus: flag.status },
+          metadata: { action: "start", newStatus: flag.status },
         });
 
         return NextResponse.json({ flag });
@@ -188,12 +184,15 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
           );
         }
 
-        const flag = await resolveGovernanceFlag(id, resolution, auth.context.memberId);
+        const flag = await resolveFlag(
+          { flagId: id, resolution, status: "RESOLVED" },
+          auth.context.memberId
+        );
 
         await auditMutation(req, auth.context, {
           action: "UPDATE",
           capability: "governance:flags:resolve",
-          objectType: "GovernanceFlag",
+          objectType: "GovernanceReviewFlag",
           objectId: id,
           metadata: { action: "resolve", newStatus: flag.status },
         });
@@ -212,12 +211,15 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
           );
         }
 
-        const flag = await dismissGovernanceFlag(id, resolution, auth.context.memberId);
+        const flag = await resolveFlag(
+          { flagId: id, resolution, status: "DISMISSED" },
+          auth.context.memberId
+        );
 
         await auditMutation(req, auth.context, {
           action: "UPDATE",
           capability: "governance:flags:resolve",
-          objectType: "GovernanceFlag",
+          objectType: "GovernanceReviewFlag",
           objectId: id,
           metadata: { action: "dismiss", newStatus: flag.status },
         });
@@ -225,21 +227,38 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
         return NextResponse.json({ flag });
       }
 
+      case "reopen": {
+        const auth = await requireCapability(req, "governance:flags:resolve");
+        if (!auth.ok) return auth.response;
+
+        const flag = await reopenFlag(id);
+
+        await auditMutation(req, auth.context, {
+          action: "UPDATE",
+          capability: "governance:flags:resolve",
+          objectType: "GovernanceReviewFlag",
+          objectId: id,
+          metadata: { action: "reopen", newStatus: flag.status },
+        });
+
+        return NextResponse.json({ flag });
+      }
+
       default:
         return NextResponse.json(
-          { error: "Bad Request", message: `Unknown action: ${action}` },
+          { error: "Bad Request", message: `Unknown action: ${action}. Valid actions: start, resolve, dismiss, reopen` },
           { status: 400 }
         );
     }
   } catch (error) {
     const message = (error as Error).message;
-    if (message.includes("not found")) {
+    if (message.includes("not found") || message.includes("Flag not found")) {
       return NextResponse.json(
         { error: "Not Found", message: "Governance flag not found" },
         { status: 404 }
       );
     }
-    if (message.includes("Only") || message.includes("already")) {
+    if (message.includes("Cannot") || message.includes("already")) {
       return NextResponse.json(
         { error: "Bad Request", message },
         { status: 400 }
