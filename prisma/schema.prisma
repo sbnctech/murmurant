@@ -8,18 +8,66 @@ datasource db {
 
 // Enums
 
+// ============================================================================
+// GOVERNANCE SYSTEM ENUMS
+// Minutes workflow state machine (Charter P3, P5)
+// ============================================================================
+
+enum GovernanceMeetingType {
+  BOARD
+  EXECUTIVE
+  SPECIAL
+  ANNUAL
+}
+
+// Minutes status state machine:
+// DRAFT -> SUBMITTED -> (REVISED | APPROVED) -> PUBLISHED -> ARCHIVED
+// Secretary edits DRAFT, submits to President
+// President can return for REVISED or mark APPROVED
+// Secretary publishes only if APPROVED
+enum MinutesStatus {
+  DRAFT // Secretary is editing
+  SUBMITTED // Awaiting President review
+  REVISED // President returned for changes
+  APPROVED // President approved, ready to publish
+  PUBLISHED // Published to board/members
+  ARCHIVED // Historical record
+}
+
+enum MotionResult {
+  PASSED
+  FAILED
+  TABLED
+  WITHDRAWN
+}
+
+enum ReviewFlagType {
+  INSURANCE_REVIEW
+  LEGAL_REVIEW
+  POLICY_REVIEW
+  COMPLIANCE_CHECK
+  GENERAL
+}
+
+enum ReviewFlagStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  DISMISSED
+}
+
 // Registration lifecycle state machine (Charter P3)
 // DRAFT -> PENDING_PAYMENT -> CONFIRMED -> (CANCELLED | REFUNDED | NO_SHOW)
 enum RegistrationStatus {
-  DRAFT            // User started registration, no payment attempted
-  PENDING_PAYMENT  // Payment intent created, awaiting completion
-  PENDING          // Legacy: confirmed without payment (free events)
-  CONFIRMED        // Payment completed or free event confirmed
-  WAITLISTED       // On waitlist
-  CANCELLED        // User or admin cancelled
-  REFUND_PENDING   // Refund requested
-  REFUNDED         // Refund completed
-  NO_SHOW          // Did not attend
+  DRAFT // User started registration, no payment attempted
+  PENDING_PAYMENT // Payment intent created, awaiting completion
+  PENDING // Legacy: confirmed without payment (free events)
+  CONFIRMED // Payment completed or free event confirmed
+  WAITLISTED // On waitlist
+  CANCELLED // User or admin cancelled
+  REFUND_PENDING // Refund requested
+  REFUNDED // Refund completed
+  NO_SHOW // Did not attend
 }
 
 // Payment intent status (mirrors common payment processor states)
@@ -106,6 +154,30 @@ model Member {
   campaignsCreated MessageCampaign[]
   deliveryLogs     DeliveryLog[]
   auditLogs        AuditLog[]
+
+  // Governance system relations
+  meetingsCreated     GovernanceMeeting[]    @relation("MeetingCreatedBy")
+  minutesCreated      GovernanceMinutes[]    @relation("MinutesCreatedBy")
+  minutesLastEdited   GovernanceMinutes[]    @relation("MinutesLastEditedBy")
+  minutesSubmitted    GovernanceMinutes[]    @relation("MinutesSubmittedBy")
+  minutesReviewed     GovernanceMinutes[]    @relation("MinutesReviewedBy")
+  minutesApproved     GovernanceMinutes[]    @relation("MinutesApprovedBy")
+  minutesPublished    GovernanceMinutes[]    @relation("MinutesPublishedBy")
+  motionsMoved        GovernanceMotion[]     @relation("MotionMovedBy")
+  motionsSeconded     GovernanceMotion[]     @relation("MotionSecondedBy")
+  motionsCreated      GovernanceMotion[]     @relation("MotionCreatedBy")
+  annotationsCreated  GovernanceAnnotation[] @relation("AnnotationCreatedBy")
+  reviewFlagsCreated  GovernanceReviewFlag[] @relation("FlagCreatedBy")
+  reviewFlagsResolved GovernanceReviewFlag[] @relation("FlagResolvedBy")
+
+  // Passkey administration relations
+  passkeysRevoked PasskeyCredential[] @relation("PasskeyRevokedBy")
+  // Session administration relations
+  sessionsRevoked Session[]           @relation("SessionRevokedBy")
+
+  // File system relations
+  filesUploaded   FileObject[]   @relation("FileUploadedBy")
+  fileAccessGrants FileAccess[]  @relation("FileAccessGrantedBy")
 
   @@index([membershipStatusId])
 }
@@ -269,17 +341,17 @@ model TransitionPlan {
 
 // Transition Assignment - Individual role changes in a plan
 model TransitionAssignment {
-  id               String      @id @default(uuid()) @db.Uuid
-  transitionPlanId String      @db.Uuid
-  memberId         String      @db.Uuid
-  serviceType      ServiceType
-  roleTitle        String
-  committeeId      String?     @db.Uuid
-  isOutgoing       Boolean     @default(false)
-  existingServiceId String?    @db.Uuid
-  notes            String?
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
+  id                String      @id @default(uuid()) @db.Uuid
+  transitionPlanId  String      @db.Uuid
+  memberId          String      @db.Uuid
+  serviceType       ServiceType
+  roleTitle         String
+  committeeId       String?     @db.Uuid
+  isOutgoing        Boolean     @default(false)
+  existingServiceId String?     @db.Uuid
+  notes             String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 
   transitionPlan  TransitionPlan        @relation(fields: [transitionPlanId], references: [id], onDelete: Cascade)
   member          Member                @relation(fields: [memberId], references: [id])
@@ -301,7 +373,128 @@ model UserAccount {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  member Member @relation(fields: [memberId], references: [id])
+  member   Member              @relation(fields: [memberId], references: [id])
+  passkeys PasskeyCredential[]
+  sessions Session[]
+}
+
+// PasskeyCredential - WebAuthn/FIDO2 credentials for passwordless login
+// Charter P1: Identity must be provable (each passkey is cryptographically bound)
+// Charter P3: Explicit state via isRevoked flag
+model PasskeyCredential {
+  id            String    @id @default(uuid()) @db.Uuid
+  userAccountId String    @db.Uuid
+  // WebAuthn credential ID (base64url encoded, unique per authenticator)
+  credentialId  String    @unique
+  // COSE public key (base64url encoded)
+  publicKey     String
+  // Signature counter for replay protection
+  counter       BigInt    @default(0)
+  // Optional transports hint (e.g., ["usb", "nfc", "ble", "internal"])
+  transports    String[]
+  // User-friendly device name (e.g., "iPhone 15", "YubiKey 5")
+  deviceName    String?
+  // AAGUID of the authenticator (for device type identification)
+  aaguid        String?
+  // Revocation and lifecycle tracking
+  isRevoked     Boolean   @default(false)
+  revokedAt     DateTime?
+  revokedById   String?   @db.Uuid
+  revokedReason String?
+  lastUsedAt    DateTime?
+  createdAt     DateTime  @default(now())
+
+  userAccount UserAccount @relation(fields: [userAccountId], references: [id], onDelete: Cascade)
+  revokedBy   Member?     @relation("PasskeyRevokedBy", fields: [revokedById], references: [id], onDelete: SetNull)
+
+  @@index([userAccountId])
+  @@index([credentialId])
+  @@index([isRevoked])
+}
+
+// AuthChallenge - Short-lived WebAuthn challenges
+// These are used during registration and authentication ceremonies
+// Charter N5: Challenges expire to prevent replay attacks
+model AuthChallenge {
+  id            String   @id @default(uuid()) @db.Uuid
+  // The random challenge bytes (base64url encoded)
+  challenge     String   @unique
+  // Type: "registration" or "authentication"
+  type          String
+  // Associated user (null for unauthenticated login attempts)
+  userAccountId String?  @db.Uuid
+  // Associated email for login attempts (for rate limiting)
+  email         String?
+  // Client IP for rate limiting
+  ipAddress     String?
+  // Expiration (typically 5 minutes)
+  expiresAt     DateTime
+  // Whether this challenge has been used (prevent reuse)
+  usedAt        DateTime?
+  createdAt     DateTime @default(now())
+
+  @@index([challenge])
+  @@index([userAccountId])
+  @@index([email])
+  @@index([expiresAt])
+}
+
+// EmailMagicLink - Secure fallback authentication via email
+// Charter: Ensures users can always regain access even if passkeys are lost
+model EmailMagicLink {
+  id            String    @id @default(uuid()) @db.Uuid
+  // The secure token sent in the email (hashed for storage)
+  tokenHash     String    @unique
+  email         String
+  // Associated user account (if exists)
+  userAccountId String?   @db.Uuid
+  // Purpose: "login" or "verify" (for email verification)
+  purpose       String    @default("login")
+  // Client IP that requested the link
+  ipAddress     String?
+  // Expiration (typically 15 minutes)
+  expiresAt     DateTime
+  // Usage tracking
+  usedAt        DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@index([tokenHash])
+  @@index([email])
+  @@index([expiresAt])
+}
+
+// Session - DB-backed server-side sessions for authentication
+// Charter P1: Identity provable via server-validated session tokens
+// Charter P3: Explicit state via revokedAt for session invalidation
+model Session {
+  id            String    @id @default(uuid()) @db.Uuid
+  // Token hash stored (never store raw tokens)
+  // Format: "salt:hash" where salt is per-token and hash is scrypt output
+  tokenHash     String    @unique
+  // Associated user account
+  userAccountId String    @db.Uuid
+  // Session metadata for security tracking
+  email         String
+  globalRole    String
+  // Client info for security audit
+  ipAddress     String?
+  userAgent     String?
+  // Session lifecycle
+  expiresAt     DateTime
+  lastActivityAt DateTime @default(now())
+  createdAt     DateTime  @default(now())
+  // Revocation support (P3: explicit state machine)
+  revokedAt     DateTime?
+  revokedById   String?   @db.Uuid
+  revokedReason String?
+
+  userAccount UserAccount @relation(fields: [userAccountId], references: [id], onDelete: Cascade)
+  revokedBy   Member?     @relation("SessionRevokedBy", fields: [revokedById], references: [id], onDelete: SetNull)
+
+  @@index([tokenHash])
+  @@index([userAccountId])
+  @@index([expiresAt])
+  @@index([revokedAt])
 }
 
 model Event {
@@ -319,8 +512,8 @@ model Event {
 
   registrations  EventRegistration[]
   photoAlbum     PhotoAlbum?
-  eventChairId   String?              @db.Uuid
-  eventChair     Member?              @relation(fields: [eventChairId], references: [id], onDelete: SetNull)
+  eventChairId   String?                @db.Uuid
+  eventChair     Member?                @relation(fields: [eventChairId], references: [id], onDelete: SetNull)
   serviceHistory MemberServiceHistory[]
 
   @@index([eventChairId])
@@ -336,7 +529,7 @@ model EventRegistration {
   waitlistPosition Int?
   registeredAt     DateTime
   cancelledAt      DateTime?
-  confirmedAt      DateTime?          // When payment completed or free event confirmed
+  confirmedAt      DateTime? // When payment completed or free event confirmed
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
 
@@ -358,15 +551,15 @@ model PaymentIntent {
   id                String              @id @default(uuid()) @db.Uuid
   registrationId    String              @db.Uuid
   idempotencyKey    String              @unique // Client-provided key to prevent duplicates
-  providerRef       String?             // External payment provider reference
+  providerRef       String? // External payment provider reference
   provider          String              @default("fake") // "fake", "stripe", etc.
   status            PaymentIntentStatus @default(CREATED)
-  amountCents       Int                 // Amount in cents
+  amountCents       Int // Amount in cents
   currency          String              @default("USD")
   description       String?
   metadata          Json?
-  checkoutUrl       String?             // Redirect URL for hosted checkout
-  webhookReceivedAt DateTime?           // When we received completion webhook
+  checkoutUrl       String? // Redirect URL for hosted checkout
+  webhookReceivedAt DateTime? // When we received completion webhook
   failureReason     String?
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
@@ -491,6 +684,17 @@ enum AuditAction {
   EMAIL_BOUNCED
   EMAIL_COMPLAINED
   EMAIL_UNSUBSCRIBED
+  // Passkey/WebAuthn security events
+  PASSKEY_REGISTERED
+  PASSKEY_USED
+  PASSKEY_REVOKED
+  PASSKEY_LOGIN_FAILED
+  EMAIL_LINK_SENT
+  EMAIL_LINK_USED
+  // Magic link / session auth events
+  LOGIN
+  LOGOUT
+  SESSION_REVOKED
 }
 
 // Theme - Visual styling tokens and CSS
@@ -718,7 +922,7 @@ model DeliveryLog {
   sentAt         DateTime?
   deliveredAt    DateTime?
   bouncedAt      DateTime?
-  bounceType     String?        // hard, soft, undetermined
+  bounceType     String? // hard, soft, undetermined
   bounceReason   String?
   complainedAt   DateTime?
   unsubscribedAt DateTime?
@@ -787,13 +991,13 @@ model JobRun {
 // Privacy-conscious: open/click tracking OFF by default (Charter P6)
 model EmailTrackingConfig {
   id                     String   @id @default(uuid()) @db.Uuid
-  trackOpens             Boolean  @default(false)  // Disabled by default for privacy
-  trackClicks            Boolean  @default(false)  // Disabled by default for privacy
-  trackBounces           Boolean  @default(true)   // Essential for deliverability
-  trackComplaints        Boolean  @default(true)   // Essential for compliance
-  autoSuppressHardBounce Boolean  @default(true)   // Auto-suppress hard bounced addresses
-  autoSuppressComplaint  Boolean  @default(true)   // Auto-suppress complaint addresses
-  retentionDays          Int      @default(90)     // Days to keep delivery logs
+  trackOpens             Boolean  @default(false) // Disabled by default for privacy
+  trackClicks            Boolean  @default(false) // Disabled by default for privacy
+  trackBounces           Boolean  @default(true) // Essential for deliverability
+  trackComplaints        Boolean  @default(true) // Essential for compliance
+  autoSuppressHardBounce Boolean  @default(true) // Auto-suppress hard bounced addresses
+  autoSuppressComplaint  Boolean  @default(true) // Auto-suppress complaint addresses
+  retentionDays          Int      @default(90) // Days to keep delivery logs
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
 }
@@ -803,8 +1007,8 @@ model EmailTrackingConfig {
 model EmailSuppressionList {
   id          String    @id @default(uuid()) @db.Uuid
   email       String    @unique
-  reason      String    // hard_bounce, complaint, manual, unsubscribe
-  sourceLogId String?   @db.Uuid  // DeliveryLog that caused suppression
+  reason      String // hard_bounce, complaint, manual, unsubscribe
+  sourceLogId String?   @db.Uuid // DeliveryLog that caused suppression
   expiresAt   DateTime? // Optional expiration for temporary suppressions
   addedAt     DateTime  @default(now())
   createdAt   DateTime  @default(now())
@@ -812,4 +1016,247 @@ model EmailSuppressionList {
   @@index([email])
   @@index([reason])
   @@index([expiresAt])
+}
+
+// ============================================================================
+// SECURE FILE STORAGE SYSTEM
+// File metadata, access control, and tagging
+// Copyright (c) Santa Barbara Newcomers Club
+//
+// Charter Principles:
+// - P1: Identity provable (uploadedBy on all files)
+// - P2: Default deny, least privilege (FileAccess permissions)
+// - P7: Full audit trail
+// - P9: Fail closed (no access without explicit grant)
+// ============================================================================
+
+// Principal type for file access permissions
+// User = individual member, Role = global role, Group = custom group
+enum FilePrincipalType {
+  USER
+  ROLE
+  GROUP
+}
+
+// Permission level for file access
+enum FilePermission {
+  READ // Can view/download file
+  WRITE // Can update metadata
+  ADMIN // Can manage permissions, delete file
+}
+
+// FileObject - Metadata for stored files
+model FileObject {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String // Original filename
+  mimeType    String // MIME type (e.g., "application/pdf")
+  size        Int // File size in bytes
+  checksum    String // SHA-256 hash for integrity verification
+  storageKey  String   @unique // Key/path in storage backend
+  description String? // Optional description
+  isPublic    Boolean  @default(false) // If true, accessible without auth
+  uploadedById String  @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  uploadedBy Member       @relation("FileUploadedBy", fields: [uploadedById], references: [id])
+  accessList FileAccess[]
+  tags       FileTag[]
+
+  @@index([uploadedById])
+  @@index([mimeType])
+  @@index([createdAt])
+  @@index([isPublic])
+}
+
+// FileAccess - Access control entries for files
+// Charter P2: Each permission is an explicit grant
+model FileAccess {
+  id            String            @id @default(uuid()) @db.Uuid
+  fileId        String            @db.Uuid
+  principalType FilePrincipalType
+  principalId   String // Member UUID (User), role slug (Role), or group ID (Group)
+  permission    FilePermission
+  grantedById   String?           @db.Uuid
+  expiresAt     DateTime? // Optional expiration
+  createdAt     DateTime          @default(now())
+
+  file      FileObject @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  grantedBy Member?    @relation("FileAccessGrantedBy", fields: [grantedById], references: [id])
+
+  @@unique([fileId, principalType, principalId, permission])
+  @@index([fileId])
+  @@index([principalType, principalId])
+  @@index([expiresAt])
+}
+
+// FileTag - Categorization tags for files
+model FileTag {
+  id        String   @id @default(uuid()) @db.Uuid
+  fileId    String   @db.Uuid
+  tag       String // Tag name (e.g., "governance", "minutes", "policy")
+  createdAt DateTime @default(now())
+
+  file FileObject @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@unique([fileId, tag])
+  @@index([tag])
+  @@index([fileId])
+}
+
+// ============================================================================
+// GOVERNANCE SYSTEM
+// Board meetings, minutes, motions, annotations, and review flags
+// Copyright (c) Santa Barbara Newcomers Club
+//
+// Charter Principles:
+// - P1: Identity provable (createdBy on all records)
+// - P3: Explicit state machine for minutes workflow
+// - P5: Published minutes immutable (versioning)
+// - P7: Full audit trail
+// ============================================================================
+
+// GovernanceMeeting - Board/Executive meeting records
+model GovernanceMeeting {
+  id              String                @id @default(uuid()) @db.Uuid
+  date            DateTime              @db.Date
+  type            GovernanceMeetingType
+  title           String? // Optional descriptive title
+  location        String? // Meeting location or "Virtual"
+  attendanceCount Int? // Number of attendees
+  quorumMet       Boolean               @default(true)
+  createdById     String?               @db.Uuid
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  createdBy Member?             @relation("MeetingCreatedBy", fields: [createdById], references: [id])
+  minutes   GovernanceMinutes[]
+  motions   GovernanceMotion[]
+
+  @@unique([date, type])
+  @@index([date])
+  @@index([type])
+  @@index([createdById])
+}
+
+// GovernanceMinutes - Meeting minutes with version control
+// Immutability: Once PUBLISHED, content is immutable. New versions create new rows.
+model GovernanceMinutes {
+  id             String        @id @default(uuid()) @db.Uuid
+  meetingId      String        @db.Uuid
+  status         MinutesStatus @default(DRAFT)
+  version        Int           @default(1)
+  content        Json // Structured content (markdown or block-based)
+  summary        String?       @db.Text // Executive summary
+  // Workflow tracking
+  submittedAt    DateTime? // When Secretary submitted for review
+  submittedById  String?       @db.Uuid
+  reviewedAt     DateTime? // When President reviewed
+  reviewedById   String?       @db.Uuid
+  reviewNotes    String? // President's notes on revision request
+  approvedAt     DateTime? // When President approved
+  approvedById   String?       @db.Uuid
+  publishedAt    DateTime? // When Secretary published
+  publishedById  String?       @db.Uuid
+  // Standard timestamps
+  createdById    String?       @db.Uuid
+  lastEditedById String?       @db.Uuid
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  meeting      GovernanceMeeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  createdBy    Member?           @relation("MinutesCreatedBy", fields: [createdById], references: [id])
+  lastEditedBy Member?           @relation("MinutesLastEditedBy", fields: [lastEditedById], references: [id])
+  submittedBy  Member?           @relation("MinutesSubmittedBy", fields: [submittedById], references: [id])
+  reviewedBy   Member?           @relation("MinutesReviewedBy", fields: [reviewedById], references: [id])
+  approvedBy   Member?           @relation("MinutesApprovedBy", fields: [approvedById], references: [id])
+  publishedBy  Member?           @relation("MinutesPublishedBy", fields: [publishedById], references: [id])
+
+  @@unique([meetingId, version])
+  @@index([meetingId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// GovernanceMotion - Motions and voting records
+model GovernanceMotion {
+  id           String        @id @default(uuid()) @db.Uuid
+  meetingId    String        @db.Uuid
+  motionNumber Int // Sequential number within meeting (e.g., Motion 1, Motion 2)
+  motionText   String        @db.Text
+  movedById    String?       @db.Uuid
+  secondedById String?       @db.Uuid
+  // Vote tallies
+  votesYes     Int           @default(0)
+  votesNo      Int           @default(0)
+  votesAbstain Int           @default(0)
+  result       MotionResult?
+  resultNotes  String? // Notes about the result (e.g., "Tabled for further review")
+  // Timestamps
+  createdById  String?       @db.Uuid
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  meeting     GovernanceMeeting      @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  movedBy     Member?                @relation("MotionMovedBy", fields: [movedById], references: [id])
+  secondedBy  Member?                @relation("MotionSecondedBy", fields: [secondedById], references: [id])
+  createdBy   Member?                @relation("MotionCreatedBy", fields: [createdById], references: [id])
+  annotations GovernanceAnnotation[]
+
+  @@unique([meetingId, motionNumber])
+  @@index([meetingId])
+  @@index([result])
+}
+
+// GovernanceAnnotation - Annotations on governance documents
+// Can annotate: motions, bylaws sections, policy docs, pages
+model GovernanceAnnotation {
+  id          String   @id @default(uuid()) @db.Uuid
+  targetType  String // "motion", "bylaw", "policy", "page", "file"
+  targetId    String   @db.Uuid // ID of the target resource
+  motionId    String?  @db.Uuid // Direct relation if targeting a motion
+  anchor      String? // Anchor/location within the target (e.g., section ID, paragraph)
+  body        String   @db.Text // Annotation content (markdown)
+  isPublished Boolean  @default(false) // Whether visible to non-governance users
+  createdById String?  @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  motion    GovernanceMotion? @relation(fields: [motionId], references: [id], onDelete: Cascade)
+  createdBy Member?           @relation("AnnotationCreatedBy", fields: [createdById], references: [id])
+
+  @@index([targetType, targetId])
+  @@index([motionId])
+  @@index([createdById])
+  @@index([isPublished])
+}
+
+// GovernanceReviewFlag - Flags for review (e.g., "Review for Insurance")
+// Can flag: pages, files, policies, events
+model GovernanceReviewFlag {
+  id           String           @id @default(uuid()) @db.Uuid
+  targetType   String // "page", "file", "policy", "event", "bylaw"
+  targetId     String           @db.Uuid // ID of the target resource
+  flagType     ReviewFlagType
+  status       ReviewFlagStatus @default(OPEN)
+  title        String // Brief description of concern
+  notes        String?          @db.Text // Detailed notes
+  dueDate      DateTime? // Optional deadline for resolution
+  // Resolution tracking
+  resolvedAt   DateTime?
+  resolvedById String?          @db.Uuid
+  resolution   String?          @db.Text // How it was resolved
+  // Standard timestamps
+  createdById  String?          @db.Uuid
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  createdBy  Member? @relation("FlagCreatedBy", fields: [createdById], references: [id])
+  resolvedBy Member? @relation("FlagResolvedBy", fields: [resolvedById], references: [id])
+
+  @@index([targetType, targetId])
+  @@index([flagType])
+  @@index([status])
+  @@index([dueDate])
+  @@index([createdById])
 }
