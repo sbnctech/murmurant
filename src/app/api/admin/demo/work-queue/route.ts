@@ -103,11 +103,13 @@ export async function GET(req: NextRequest) {
   // 2. Draft minutes awaiting action
   const draftMinutes = await prisma.governanceMinutes.findMany({
     where: {
-      status: { in: ["DRAFT", "SUBMITTED", "REVISION_REQUESTED"] },
+      status: { in: ["DRAFT", "SUBMITTED", "REVISED"] },
     },
     orderBy: { createdAt: "desc" },
     take: 5,
-    include: {
+    select: {
+      id: true,
+      status: true,
       meeting: {
         select: {
           date: true,
