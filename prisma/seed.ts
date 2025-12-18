@@ -210,6 +210,143 @@ async function seedUserAccounts(
   console.log("  Created 1 admin user account (alice@example.com)");
 }
 
+// ============================================================================
+// Demo Users for Role-Based Testing
+// ============================================================================
+
+interface DemoUser {
+  email: string;
+  firstName: string;
+  lastName: string;
+  roleSlug?: string; // Committee role slug to assign
+}
+
+const DEMO_USERS: DemoUser[] = [
+  { email: "president@demo.clubos.test", firstName: "Pat", lastName: "President", roleSlug: "president" },
+  { email: "secretary@demo.clubos.test", firstName: "Sam", lastName: "Secretary", roleSlug: "secretary" },
+  { email: "parliamentarian@demo.clubos.test", firstName: "Parker", lastName: "Parliamentarian", roleSlug: "parliamentarian" },
+  { email: "eventchair@demo.clubos.test", firstName: "Evelyn", lastName: "EventChair", roleSlug: "chair" }, // Activities chair
+  { email: "member@demo.clubos.test", firstName: "Morgan", lastName: "Member" }, // No special role
+];
+
+async function seedDemoUsers(
+  statusMap: Map<string, string>
+): Promise<Map<string, string>> {
+  console.log("Seeding demo users for role-based testing...");
+
+  const extendedId = statusMap.get("EXTENDED")!;
+  const demoPasswordHash = "$2b$10$demohashdemohashdemohashdemohashdemohashdemoha";
+
+  // Get the current term for role assignments
+  const currentTerm = await prisma.term.findFirst({
+    where: { isCurrent: true },
+  });
+
+  if (!currentTerm) {
+    console.log("  WARNING: No current term found, skipping role assignments");
+  }
+
+  // Get committees and roles for assignment
+  const boardCommittee = await prisma.committee.findUnique({
+    where: { slug: "board" },
+    include: { committeeRoles: true },
+  });
+
+  const activitiesCommittee = await prisma.committee.findUnique({
+    where: { slug: "activities" },
+    include: { committeeRoles: true },
+  });
+
+  const demoMemberMap = new Map<string, string>();
+
+  for (const demoUser of DEMO_USERS) {
+    // Create or update member
+    const member = await prisma.member.upsert({
+      where: { email: demoUser.email },
+      update: {
+        firstName: demoUser.firstName,
+        lastName: demoUser.lastName,
+        membershipStatusId: extendedId,
+      },
+      create: {
+        firstName: demoUser.firstName,
+        lastName: demoUser.lastName,
+        email: demoUser.email,
+        membershipStatusId: extendedId,
+        joinedAt: new Date("2023-01-01"),
+      },
+    });
+
+    demoMemberMap.set(demoUser.email, member.id);
+
+    // Create user account
+    await prisma.userAccount.upsert({
+      where: { email: demoUser.email },
+      update: {
+        memberId: member.id,
+        passwordHash: demoPasswordHash,
+        isActive: true,
+      },
+      create: {
+        memberId: member.id,
+        email: demoUser.email,
+        passwordHash: demoPasswordHash,
+        isActive: true,
+      },
+    });
+
+    // Assign role if specified
+    if (demoUser.roleSlug && currentTerm) {
+      // Find the committee role
+      let committee = boardCommittee;
+      let role = boardCommittee?.committeeRoles.find(
+        (r) => r.slug === demoUser.roleSlug
+      );
+
+      // If not found in board, check activities (for event chair)
+      if (!role && activitiesCommittee) {
+        role = activitiesCommittee.committeeRoles.find(
+          (r) => r.slug === demoUser.roleSlug
+        );
+        if (role) {
+          committee = activitiesCommittee;
+        }
+      }
+
+      if (role && committee) {
+        // Delete any existing role assignment for this combo
+        await prisma.roleAssignment.deleteMany({
+          where: {
+            memberId: member.id,
+            committeeRoleId: role.id,
+            termId: currentTerm.id,
+          },
+        });
+
+        // Create role assignment
+        await prisma.roleAssignment.create({
+          data: {
+            memberId: member.id,
+            committeeId: committee.id,
+            committeeRoleId: role.id,
+            termId: currentTerm.id,
+            startDate: currentTerm.startDate,
+            endDate: currentTerm.endDate,
+          },
+        });
+      }
+    }
+  }
+
+  console.log(`  Created ${DEMO_USERS.length} demo users with accounts:`);
+  for (const user of DEMO_USERS) {
+    const role = user.roleSlug || "member";
+    console.log(`    - ${user.email} (${role})`);
+  }
+
+  return demoMemberMap;
+}
+
 async function seedEvents(
   memberMap: Map<string, string>
 ): Promise<Map<string, string>> {
@@ -583,6 +720,10 @@ async function main(): Promise<void> {
     await seedUserAccounts(memberMap);
     await seedCommitteesAndRoles();
     await seedTerms();
+
+    // Seed demo users AFTER terms and committees are created
+    await seedDemoUsers(statusMap);
+
     const eventMap = await seedEvents(memberMap);
     await seedEventRegistrations(eventMap, memberMap);
 
@@ -595,6 +736,17 @@ async function main(): Promise<void> {
     console.log("  - 3 terms (Winter 2024, Winter 2025, Summer 2025)");
     console.log("  - 4 events (3 published, 1 draft)");
     console.log("  - 4 event registrations (3 confirmed, 1 waitlisted)");
+    console.log("  - 5 demo users with role-based access:");
+    console.log("    - president@demo.clubos.test (President)");
+    console.log("    - secretary@demo.clubos.test (Secretary)");
+    console.log("    - parliamentarian@demo.clubos.test (Parliamentarian)");
+    console.log("    - eventchair@demo.clubos.test (Event Chair)");
+    console.log("    - member@demo.clubos.test (Member)");
+    console.log("\nDemo Login Instructions:");
+    console.log("  1. Go to /login");
+    console.log("  2. Enter demo email (e.g., president@demo.clubos.test)");
+    console.log("  3. Click 'Send sign-in link'");
+    console.log("  4. Check console for magic link (in dev mode)");
   } catch (error) {
     console.error("Seed failed:", error);
     throw error;

@@ -234,6 +234,166 @@ describe("Auth Capabilities", () => {
       });
     });
 
+    describe("secretary role", () => {
+      const role: GlobalRole = "secretary";
+
+      it("does NOT have admin:full capability", () => {
+        expect(hasCapability(role, "admin:full")).toBe(false);
+      });
+
+      // Secretary HAS these capabilities
+      it("has meetings:read capability", () => {
+        expect(hasCapability(role, "meetings:read")).toBe(true);
+      });
+
+      it("has meetings:minutes:draft:create capability", () => {
+        expect(hasCapability(role, "meetings:minutes:draft:create")).toBe(true);
+      });
+
+      it("has meetings:minutes:draft:edit capability", () => {
+        expect(hasCapability(role, "meetings:minutes:draft:edit")).toBe(true);
+      });
+
+      it("has meetings:minutes:draft:submit capability", () => {
+        expect(hasCapability(role, "meetings:minutes:draft:submit")).toBe(true);
+      });
+
+      it("has meetings:minutes:read_all capability", () => {
+        expect(hasCapability(role, "meetings:minutes:read_all")).toBe(true);
+      });
+
+      it("has governance:docs:read capability", () => {
+        expect(hasCapability(role, "governance:docs:read")).toBe(true);
+      });
+
+      // Secretary does NOT have these capabilities (no escalation)
+      it("does NOT have meetings:minutes:finalize capability", () => {
+        // President approves final minutes
+        expect(hasCapability(role, "meetings:minutes:finalize")).toBe(false);
+      });
+
+      it("does NOT have finance:view capability", () => {
+        expect(hasCapability(role, "finance:view")).toBe(false);
+      });
+
+      it("does NOT have finance:manage capability", () => {
+        expect(hasCapability(role, "finance:manage")).toBe(false);
+      });
+
+      it("does NOT have members:history capability", () => {
+        expect(hasCapability(role, "members:history")).toBe(false);
+      });
+
+      it("does NOT have publishing:manage capability", () => {
+        expect(hasCapability(role, "publishing:manage")).toBe(false);
+      });
+
+      it("does NOT have users:manage capability", () => {
+        expect(hasCapability(role, "users:manage")).toBe(false);
+      });
+
+      it("does NOT have exports:access capability", () => {
+        expect(hasCapability(role, "exports:access")).toBe(false);
+      });
+
+      it("does NOT have governance:docs:write capability", () => {
+        // Secretary reads but does not write governance docs
+        expect(hasCapability(role, "governance:docs:write")).toBe(false);
+      });
+    });
+
+    describe("parliamentarian role", () => {
+      const role: GlobalRole = "parliamentarian";
+
+      it("does NOT have admin:full capability", () => {
+        expect(hasCapability(role, "admin:full")).toBe(false);
+      });
+
+      // Parliamentarian HAS these capabilities
+      it("has meetings:read capability", () => {
+        expect(hasCapability(role, "meetings:read")).toBe(true);
+      });
+
+      it("has meetings:motions:read capability", () => {
+        expect(hasCapability(role, "meetings:motions:read")).toBe(true);
+      });
+
+      it("has meetings:motions:annotate capability", () => {
+        expect(hasCapability(role, "meetings:motions:annotate")).toBe(true);
+      });
+
+      it("has governance:rules:manage capability", () => {
+        expect(hasCapability(role, "governance:rules:manage")).toBe(true);
+      });
+
+      it("has governance:flags:create capability", () => {
+        expect(hasCapability(role, "governance:flags:create")).toBe(true);
+      });
+
+      it("has governance:interpretations:create capability", () => {
+        expect(hasCapability(role, "governance:interpretations:create")).toBe(true);
+      });
+
+      it("has governance:interpretations:edit capability", () => {
+        expect(hasCapability(role, "governance:interpretations:edit")).toBe(true);
+      });
+
+      it("has governance:interpretations:publish capability", () => {
+        expect(hasCapability(role, "governance:interpretations:publish")).toBe(true);
+      });
+
+      it("has governance:policies:annotate capability", () => {
+        expect(hasCapability(role, "governance:policies:annotate")).toBe(true);
+      });
+
+      it("has governance:policies:propose_change capability", () => {
+        expect(hasCapability(role, "governance:policies:propose_change")).toBe(true);
+      });
+
+      it("has governance:docs:read capability", () => {
+        expect(hasCapability(role, "governance:docs:read")).toBe(true);
+      });
+
+      it("has governance:docs:write capability", () => {
+        expect(hasCapability(role, "governance:docs:write")).toBe(true);
+      });
+
+      // Parliamentarian does NOT have these capabilities (no escalation)
+      it("does NOT have content:board:publish capability", () => {
+        // Cannot publish member-facing content
+        expect(hasCapability(role, "content:board:publish")).toBe(false);
+      });
+
+      it("does NOT have finance:view capability", () => {
+        expect(hasCapability(role, "finance:view")).toBe(false);
+      });
+
+      it("does NOT have finance:manage capability", () => {
+        expect(hasCapability(role, "finance:manage")).toBe(false);
+      });
+
+      it("does NOT have members:history capability", () => {
+        expect(hasCapability(role, "members:history")).toBe(false);
+      });
+
+      it("does NOT have publishing:manage capability", () => {
+        expect(hasCapability(role, "publishing:manage")).toBe(false);
+      });
+
+      it("does NOT have users:manage capability", () => {
+        expect(hasCapability(role, "users:manage")).toBe(false);
+      });
+
+      it("does NOT have exports:access capability", () => {
+        expect(hasCapability(role, "exports:access")).toBe(false);
+      });
+
+      it("does NOT have meetings:minutes:draft:create capability", () => {
+        // Secretary creates minutes, not parliamentarian
+        expect(hasCapability(role, "meetings:minutes:draft:create")).toBe(false);
+      });
+    });
+
     describe("member role", () => {
       const role: GlobalRole = "member";
 
