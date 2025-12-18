@@ -310,7 +310,8 @@ describe("Secretary Dashboard", () => {
       const canPublish = true;
       const status: MinutesStatus = "DRAFT";
 
-      const canPerformPublish = canPublish && status === "APPROVED";
+      // Cast to string to avoid TypeScript literal type narrowing
+      const canPerformPublish = canPublish && (status as string) === "APPROVED";
 
       expect(canPerformPublish).toBe(false);
     });
