@@ -15,6 +15,7 @@ import {
   MyNextThingsCard,
   MyRolesCard,
   MembershipStatusCard,
+  MyProfileCard,
   PhotoStreamCard,
   ClubNewsCard,
   OfficerGadgetSelector,
@@ -37,6 +38,7 @@ export function MySBNCContent({ effectiveRole }: MySBNCContentProps) {
       left={
         <>
           {/* Utility Column - Dense, actionable content */}
+          <MyProfileCard />
           <MyNextThingsCard />
           <MembershipStatusCard />
 
