@@ -20,6 +20,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCapability, hasCapability, type AuthContext } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { formatClubDate } from "@/lib/timezone";
 import { ReviewFlagType, ReviewFlagStatus } from "@prisma/client";
 
 export type ParliamentarianDashboardData = {
@@ -74,11 +75,7 @@ type AnnotationSummary = {
  * Format date for display (e.g., "Dec 17, 2025")
  */
 function formatDate(date: Date): string {
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  return formatClubDate(date);
 }
 
 /**

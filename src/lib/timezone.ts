@@ -102,6 +102,15 @@ export function formatClubDateLong(dateUtc: Date, locale = "en-US"): string {
   }).format(dateUtc);
 }
 
+export function formatClubDateShort(dateUtc: Date, locale = "en-US"): string {
+  return new Intl.DateTimeFormat(locale, {
+    timeZone: CLUB_TIMEZONE,
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  }).format(dateUtc);
+}
+
 export function formatClubTime(dateUtc: Date, locale = "en-US"): string {
   return new Intl.DateTimeFormat(locale, {
     timeZone: CLUB_TIMEZONE,
@@ -117,4 +126,17 @@ export function formatClubMonthYear(dateUtc: Date, locale = "en-US"): string {
     month: "short",
     year: "numeric",
   }).format(dateUtc);
+}
+
+/**
+ * Get the current hour (0-23) in club timezone.
+ * Useful for time-of-day logic like greetings.
+ */
+export function getClubHour(dateUtc: Date = new Date()): number {
+  const hourStr = new Intl.DateTimeFormat("en-US", {
+    timeZone: CLUB_TIMEZONE,
+    hour: "numeric",
+    hour12: false,
+  }).format(dateUtc);
+  return parseInt(hourStr, 10);
 }

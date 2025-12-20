@@ -16,8 +16,31 @@ import Link from "next/link";
 import { Stripe } from "@/components/stripes";
 import { ViewAsControl } from "@/components/view-as";
 import { getViewContext } from "@/lib/view-context";
+import { getCurrentSession } from "@/lib/passkey";
+import { prisma } from "@/lib/prisma";
+import { getClubHour } from "@/lib/timezone";
 import type { GlobalRole } from "@/lib/auth";
 import { MySBNCContent } from "./MySBNCContent";
+
+// ============================================================================
+// Helpers
+// ============================================================================
+
+/**
+ * Get a time-of-day appropriate greeting.
+ * Uses club timezone (Santa Barbara / Pacific).
+ */
+function getGreeting(): string {
+  const hour = getClubHour();
+
+  if (hour >= 5 && hour < 12) {
+    return "Good morning";
+  } else if (hour >= 12 && hour < 17) {
+    return "Good afternoon";
+  } else {
+    return "Good evening";
+  }
+}
 
 // ============================================================================
 // My SBNC Page (Server Component)
@@ -34,6 +57,19 @@ export default async function MySBNCPage() {
   if (viewContext.mode === "public") {
     return <PublicViewMessage />;
   }
+
+  // Get member's first name for personalized greeting
+  let firstName: string | null = null;
+  const session = await getCurrentSession();
+  if (session) {
+    const member = await prisma.member.findUnique({
+      where: { id: session.memberId },
+      select: { firstName: true },
+    });
+    firstName = member?.firstName || null;
+  }
+
+  const greeting = getGreeting();
 
   return (
     <div data-test-id="my-sbnc-page">
@@ -99,11 +135,12 @@ export default async function MySBNCPage() {
         </nav>
       </header>
 
-      {/* Page Title */}
+      {/* Page Title with Personalized Greeting */}
       <Stripe padding="md" testId="my-sbnc-header">
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
             <h1
+              data-test-id="my-sbnc-greeting"
               style={{
                 fontSize: "var(--token-text-2xl)",
                 fontWeight: "var(--token-weight-bold)",
@@ -111,17 +148,16 @@ export default async function MySBNCPage() {
                 margin: 0,
               }}
             >
-              My SBNC
+              {firstName ? `${greeting}, ${firstName}` : greeting}
             </h1>
             <p
               style={{
-                fontSize: "var(--token-text-base)",
+                fontSize: "var(--token-text-sm)",
                 color: "var(--token-color-text-muted)",
-                marginTop: "var(--token-space-xs)",
-                marginBottom: 0,
+                margin: "var(--token-space-xs) 0 0 0",
               }}
             >
-              Welcome back! Here is what is happening in your club.
+              Welcome to your member dashboard
             </p>
           </div>
           {/* Quick action for officers */}

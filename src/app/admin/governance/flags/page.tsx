@@ -12,6 +12,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { formatClubDate } from "@/lib/timezone";
 
 type ReviewFlagType =
   | "INSURANCE_REVIEW"
@@ -133,11 +134,7 @@ export default function GovernanceFlagsPage() {
   };
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
+    return formatClubDate(new Date(dateStr));
   };
 
   const isOverdue = (flag: Flag) => {

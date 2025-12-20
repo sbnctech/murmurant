@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { formatClubDateTime } from "@/lib/timezone";
 
 /**
  * Types for Annotation data
@@ -281,13 +282,7 @@ export default function AnnotationPanel({
    * Format date for display
    */
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    });
+    return formatClubDateTime(new Date(dateStr));
   };
 
   if (loading) {

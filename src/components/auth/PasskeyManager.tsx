@@ -16,6 +16,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { startRegistration } from "@simplewebauthn/browser";
+import { formatClubDateTime } from "@/lib/timezone";
 
 interface Passkey {
   id: string;
@@ -149,14 +150,7 @@ export default function PasskeyManager({ initialPasskeys = [] }: PasskeyManagerP
 
   const formatDate = (isoString: string | null) => {
     if (!isoString) return "Never";
-    const date = new Date(isoString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    return formatClubDateTime(new Date(isoString));
   };
 
   const activePasskeys = passkeys.filter((p) => !p.isRevoked);

@@ -9,7 +9,10 @@
  */
 
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import { formatClubDateTime } from "@/lib/timezone";
 import Link from "next/link";
+import DemoScenarioCards from "./DemoScenarioCards";
+import ViewAsMemberSection from "./ViewAsMemberSection";
 
 // Use default dev token if ADMIN_E2E_TOKEN not set (matches auth.ts logic)
 const adminHeaders =
@@ -79,6 +82,21 @@ type GovernanceMotion = {
   meetingDate: string;
 };
 
+type LifecycleDemoMember = {
+  id: string;
+  name: string;
+  email: string;
+  status: string;
+  statusLabel: string;
+  tier: string | null;
+  tierName: string | null;
+  joinedAt: string;
+  daysSinceJoin: number;
+  expectedLifecycleState: string;
+  stateLabel: string;
+  description: string;
+};
+
 type WorkQueue = {
   timestamp: string;
   upcomingEvents: WorkQueueEvent[];
@@ -118,14 +136,23 @@ async function getWorkQueue(): Promise<WorkQueue | null> {
   }
 }
 
+async function getLifecycleDemoMembers(): Promise<LifecycleDemoMember[] | null> {
+  const base = getBaseUrl();
+  try {
+    const res = await fetch(`${base}/api/admin/demo/lifecycle-members`, {
+      headers: adminHeaders,
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.members;
+  } catch {
+    return null;
+  }
+}
+
 function formatDate(isoString: string): string {
-  const date = new Date(isoString);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
+  return formatClubDateTime(new Date(isoString));
 }
 
 function StatusBadge({ ok, label }: { ok: boolean; label: string }) {
@@ -147,9 +174,10 @@ function StatusBadge({ ok, label }: { ok: boolean; label: string }) {
 }
 
 export default async function DemoPage() {
-  const [status, workQueue] = await Promise.all([
+  const [status, workQueue, lifecycleMembers] = await Promise.all([
     getSystemStatus(),
     getWorkQueue(),
+    getLifecycleDemoMembers(),
   ]);
 
   return (
@@ -168,6 +196,37 @@ export default async function DemoPage() {
           Live demo guidance - shows what to demonstrate and system health
         </p>
       </header>
+
+      {/* Quick Links */}
+      <section
+        data-test-id="demo-quick-links"
+        style={{
+          marginBottom: "24px",
+          padding: "12px 16px",
+          backgroundColor: "#e7f3ff",
+          borderRadius: "8px",
+          display: "flex",
+          gap: "24px",
+          flexWrap: "wrap",
+        }}
+      >
+        <span style={{ fontWeight: 500, color: "#0066cc" }}>Quick Links:</span>
+        <Link href="/admin/demo/members" style={{ color: "#0066cc" }}>
+          Member List with Lifecycle Hints
+        </Link>
+        <Link href="#lifecycle-demo" style={{ color: "#0066cc" }}>
+          Lifecycle State Demo
+        </Link>
+        <Link href="/admin/members" style={{ color: "#0066cc" }}>
+          Full Member Admin
+        </Link>
+        <Link href="/admin/events" style={{ color: "#0066cc" }}>
+          Events Admin
+        </Link>
+      </section>
+
+      {/* View as Member - Impersonation Tool */}
+      <ViewAsMemberSection />
 
       {/* System Status Section */}
       <section
@@ -241,6 +300,114 @@ export default async function DemoPage() {
           <p style={{ color: "#666", fontStyle: "italic" }}>
             Unable to fetch system status
           </p>
+        )}
+      </section>
+
+      {/* Demo Scenario Cards - Officers, Lifecycle, Events */}
+      <DemoScenarioCards />
+
+      {/* Lifecycle State Demo Section */}
+      <section
+        id="lifecycle-demo"
+        data-test-id="demo-lifecycle-section"
+        style={{
+          marginBottom: "32px",
+          padding: "16px",
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          backgroundColor: "#fff8e6",
+        }}
+      >
+        <h2 style={{ fontSize: "18px", marginBottom: "8px" }}>Lifecycle State Demo (Table View)</h2>
+        <p style={{ color: "#666", fontSize: "14px", marginBottom: "16px" }}>
+          Alternative table view showing demo members by lifecycle state.
+        </p>
+
+        {lifecycleMembers && lifecycleMembers.length > 0 ? (
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: "left", padding: "8px", borderBottom: "1px solid #ddd" }}>
+                  Member
+                </th>
+                <th style={{ textAlign: "left", padding: "8px", borderBottom: "1px solid #ddd" }}>
+                  Status / Tier
+                </th>
+                <th style={{ textAlign: "center", padding: "8px", borderBottom: "1px solid #ddd" }}>
+                  Days
+                </th>
+                <th style={{ textAlign: "left", padding: "8px", borderBottom: "1px solid #ddd" }}>
+                  Lifecycle State
+                </th>
+                <th style={{ textAlign: "left", padding: "8px", borderBottom: "1px solid #ddd" }}>
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {lifecycleMembers.map((member) => (
+                <tr key={member.id}>
+                  <td style={{ padding: "8px", borderBottom: "1px solid #eee" }}>
+                    <Link
+                      href={`/admin/members/${member.id}#lifecycle`}
+                      style={{ color: "#0066cc", fontWeight: 500 }}
+                    >
+                      {member.name}
+                    </Link>
+                    <div style={{ fontSize: "12px", color: "#888" }}>
+                      {member.email}
+                    </div>
+                  </td>
+                  <td style={{ padding: "8px", borderBottom: "1px solid #eee" }}>
+                    <StatusBadge
+                      ok={member.status === "active"}
+                      label={member.statusLabel}
+                    />
+                    {member.tierName && (
+                      <div style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>
+                        {member.tierName}
+                      </div>
+                    )}
+                  </td>
+                  <td style={{ padding: "8px", borderBottom: "1px solid #eee", textAlign: "center" }}>
+                    {member.daysSinceJoin}
+                  </td>
+                  <td style={{ padding: "8px", borderBottom: "1px solid #eee" }}>
+                    <code style={{
+                      backgroundColor: "#f0f0f0",
+                      padding: "2px 6px",
+                      borderRadius: "4px",
+                      fontSize: "13px",
+                    }}>
+                      {member.expectedLifecycleState}
+                    </code>
+                  </td>
+                  <td style={{ padding: "8px", borderBottom: "1px solid #eee", fontSize: "13px", color: "#555" }}>
+                    {member.description}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : lifecycleMembers === null ? (
+          <p style={{ color: "#666", fontStyle: "italic" }}>
+            Unable to fetch lifecycle demo members
+          </p>
+        ) : (
+          <div>
+            <p style={{ color: "#666", fontStyle: "italic", marginBottom: "12px" }}>
+              No demo members found. Run the seed script to create them:
+            </p>
+            <code style={{
+              display: "block",
+              backgroundColor: "#f0f0f0",
+              padding: "8px 12px",
+              borderRadius: "4px",
+              fontSize: "13px",
+            }}>
+              npx tsx scripts/demo/seed_demo_scenarios.ts
+            </code>
+          </div>
         )}
       </section>
 

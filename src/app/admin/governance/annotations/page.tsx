@@ -9,6 +9,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { formatClubDate } from "@/lib/timezone";
 
 type AnnotationTargetType = "motion" | "bylaw" | "policy" | "page" | "file" | "minutes";
 
@@ -115,11 +116,7 @@ export default function GovernanceAnnotationsPage() {
   };
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
+    return formatClubDate(new Date(dateStr));
   };
 
   const truncateBody = (body: string, maxLength: number = 100) => {
