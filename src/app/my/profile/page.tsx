@@ -9,8 +9,10 @@
  * Features:
  * - View current profile data
  * - Edit allowed fields (firstName, lastName, phone)
- * - Clear save state feedback
- * - Last updated display
+ * - Profile completeness indicator
+ * - Inline validation with friendly messages
+ * - Save confirmation with visual feedback
+ * - Preview link ("View how others see this")
  *
  * Charter Compliance:
  * - P1: Identity via session (API enforces)
@@ -21,7 +23,7 @@
 
 "use client";
 
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useMemo } from "react";
 import Link from "next/link";
 import { Stripe } from "@/components/stripes";
 import { ViewAsControl } from "@/components/view-as";
@@ -40,6 +42,66 @@ interface FormData {
   phone: string;
 }
 
+interface FieldValidation {
+  isValid: boolean;
+  message: string;
+}
+
+interface CompletenessItem {
+  label: string;
+  complete: boolean;
+  required?: boolean;
+}
+
+// ============================================================================
+// Validation Functions
+// ============================================================================
+
+function validateFirstName(value: string): FieldValidation {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return { isValid: false, message: "Please enter your first name" };
+  }
+  if (trimmed.length < 2) {
+    return { isValid: false, message: "First name should be at least 2 characters" };
+  }
+  if (trimmed.length > 100) {
+    return { isValid: false, message: "First name is too long" };
+  }
+  return { isValid: true, message: "" };
+}
+
+function validateLastName(value: string): FieldValidation {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return { isValid: false, message: "Please enter your last name" };
+  }
+  if (trimmed.length < 2) {
+    return { isValid: false, message: "Last name should be at least 2 characters" };
+  }
+  if (trimmed.length > 100) {
+    return { isValid: false, message: "Last name is too long" };
+  }
+  return { isValid: true, message: "" };
+}
+
+function validatePhone(value: string): FieldValidation {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    // Phone is optional
+    return { isValid: true, message: "" };
+  }
+  if (trimmed.length > 20) {
+    return { isValid: false, message: "Phone number is too long" };
+  }
+  // Allow digits, spaces, dashes, parens, plus
+  const phonePattern = /^[\d\s\-()+ ]+$/;
+  if (!phonePattern.test(trimmed)) {
+    return { isValid: false, message: "Please use only numbers, spaces, and dashes" };
+  }
+  return { isValid: true, message: "" };
+}
+
 // ============================================================================
 // Profile Page Component
 // ============================================================================
@@ -54,6 +116,48 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [hasChanges, setHasChanges] = useState(false);
+
+  // Compute validation state
+  const validation = useMemo(() => ({
+    firstName: validateFirstName(formData.firstName),
+    lastName: validateLastName(formData.lastName),
+    phone: validatePhone(formData.phone),
+  }), [formData]);
+
+  // Check if form is valid
+  const isFormValid = validation.firstName.isValid &&
+                      validation.lastName.isValid &&
+                      validation.phone.isValid;
+
+  // Compute profile completeness
+  const completeness = useMemo((): CompletenessItem[] => {
+    if (!profile) return [];
+    return [
+      { label: "First name", complete: !!formData.firstName.trim(), required: true },
+      { label: "Last name", complete: !!formData.lastName.trim(), required: true },
+      { label: "Email", complete: !!profile.email, required: true },
+      { label: "Phone number", complete: !!formData.phone.trim(), required: false },
+    ];
+  }, [profile, formData]);
+
+  const completenessPercent = useMemo(() => {
+    if (completeness.length === 0) return 0;
+    const completed = completeness.filter(item => item.complete).length;
+    return Math.round((completed / completeness.length) * 100);
+  }, [completeness]);
+
+  // Track changes from original profile
+  useEffect(() => {
+    if (profile) {
+      const changed =
+        formData.firstName !== profile.firstName ||
+        formData.lastName !== profile.lastName ||
+        (formData.phone || "") !== (profile.phone || "");
+      setHasChanges(changed);
+    }
+  }, [formData, profile]);
 
   // Fetch profile on mount
   useEffect(() => {
@@ -109,9 +213,11 @@ export default function ProfilePage() {
       const data = await res.json();
       setProfile(data.profile);
       setSaveState("success");
+      setTouched({});
+      setHasChanges(false);
 
-      // Reset success state after 3 seconds
-      setTimeout(() => setSaveState("idle"), 3000);
+      // Reset success state after 4 seconds
+      setTimeout(() => setSaveState("idle"), 4000);
     } catch (err) {
       setSaveState("error");
       setErrorMessage(err instanceof Error ? err.message : "Failed to save profile");
@@ -303,6 +409,82 @@ export default function ProfilePage() {
             Back to My SBNC
           </Link>
         </div>
+
+        {/* Profile Completeness Indicator */}
+        <div
+          data-test-id="profile-completeness"
+          style={{
+            marginTop: "var(--token-space-md)",
+            padding: "var(--token-space-md)",
+            backgroundColor: "var(--token-color-surface)",
+            borderRadius: "var(--token-radius-lg)",
+            border: "1px solid var(--token-color-border)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--token-space-sm)" }}>
+            <span style={{ fontSize: "var(--token-text-sm)", fontWeight: 600, color: "var(--token-color-text)" }}>
+              Profile Completeness
+            </span>
+            <span
+              data-test-id="completeness-percent"
+              style={{
+                fontSize: "var(--token-text-sm)",
+                fontWeight: 600,
+                color: completenessPercent === 100 ? "var(--token-color-success)" : "var(--token-color-primary)",
+              }}
+            >
+              {completenessPercent}%
+            </span>
+          </div>
+
+          {/* Progress Bar */}
+          <div
+            style={{
+              height: "8px",
+              backgroundColor: "var(--token-color-surface-2)",
+              borderRadius: "var(--token-radius-lg)",
+              overflow: "hidden",
+              marginBottom: "var(--token-space-sm)",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${completenessPercent}%`,
+                backgroundColor: completenessPercent === 100 ? "var(--token-color-success)" : "var(--token-color-primary)",
+                borderRadius: "var(--token-radius-lg)",
+                transition: "width 0.3s ease",
+              }}
+            />
+          </div>
+
+          {/* Checklist */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--token-space-sm)" }}>
+            {completeness.map((item) => (
+              <div
+                key={item.label}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "var(--token-space-xs)",
+                  fontSize: "var(--token-text-sm)",
+                  color: item.complete ? "var(--token-color-success)" : "var(--token-color-text-muted)",
+                }}
+              >
+                {item.complete ? (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="20,6 9,17 4,12" />
+                  </svg>
+                ) : (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" />
+                  </svg>
+                )}
+                <span>{item.label}{item.required ? "" : " (optional)"}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </Stripe>
 
       {/* Profile Form */}
@@ -374,7 +556,7 @@ export default function ProfilePage() {
                         marginBottom: "var(--token-space-xs)",
                       }}
                     >
-                      First Name *
+                      First Name <span style={{ color: "var(--token-color-danger)" }}>*</span>
                     </label>
                     <input
                       id="firstName"
@@ -382,19 +564,34 @@ export default function ProfilePage() {
                       data-test-id="profile-firstName"
                       value={formData.firstName}
                       onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                      onBlur={() => setTouched({ ...touched, firstName: true })}
                       required
                       maxLength={100}
                       style={{
                         width: "100%",
                         padding: "var(--token-space-sm) var(--token-space-md)",
                         fontSize: "var(--token-text-base)",
-                        border: "1px solid var(--token-color-border)",
+                        border: `1px solid ${touched.firstName && !validation.firstName.isValid ? "var(--token-color-danger)" : "var(--token-color-border)"}`,
                         borderRadius: "var(--token-radius-lg)",
                         backgroundColor: "var(--token-color-surface)",
                         color: "var(--token-color-text)",
                         boxSizing: "border-box",
+                        outline: "none",
+                        transition: "border-color 0.2s",
                       }}
                     />
+                    {touched.firstName && !validation.firstName.isValid && (
+                      <p
+                        style={{
+                          fontSize: "var(--token-text-sm)",
+                          color: "var(--token-color-danger)",
+                          marginTop: "var(--token-space-xs)",
+                          marginBottom: 0,
+                        }}
+                      >
+                        {validation.firstName.message}
+                      </p>
+                    )}
                   </div>
 
                   {/* Last Name */}
@@ -409,7 +606,7 @@ export default function ProfilePage() {
                         marginBottom: "var(--token-space-xs)",
                       }}
                     >
-                      Last Name *
+                      Last Name <span style={{ color: "var(--token-color-danger)" }}>*</span>
                     </label>
                     <input
                       id="lastName"
@@ -417,19 +614,34 @@ export default function ProfilePage() {
                       data-test-id="profile-lastName"
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                      onBlur={() => setTouched({ ...touched, lastName: true })}
                       required
                       maxLength={100}
                       style={{
                         width: "100%",
                         padding: "var(--token-space-sm) var(--token-space-md)",
                         fontSize: "var(--token-text-base)",
-                        border: "1px solid var(--token-color-border)",
+                        border: `1px solid ${touched.lastName && !validation.lastName.isValid ? "var(--token-color-danger)" : "var(--token-color-border)"}`,
                         borderRadius: "var(--token-radius-lg)",
                         backgroundColor: "var(--token-color-surface)",
                         color: "var(--token-color-text)",
                         boxSizing: "border-box",
+                        outline: "none",
+                        transition: "border-color 0.2s",
                       }}
                     />
+                    {touched.lastName && !validation.lastName.isValid && (
+                      <p
+                        style={{
+                          fontSize: "var(--token-text-sm)",
+                          color: "var(--token-color-danger)",
+                          marginTop: "var(--token-space-xs)",
+                          marginBottom: 0,
+                        }}
+                      >
+                        {validation.lastName.message}
+                      </p>
+                    )}
                   </div>
 
                   {/* Email (read-only) */}
@@ -487,7 +699,7 @@ export default function ProfilePage() {
                         marginBottom: "var(--token-space-xs)",
                       }}
                     >
-                      Phone
+                      Phone <span style={{ color: "var(--token-color-text-muted)", fontWeight: 400 }}>(optional)</span>
                     </label>
                     <input
                       id="phone"
@@ -495,19 +707,44 @@ export default function ProfilePage() {
                       data-test-id="profile-phone"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      onBlur={() => setTouched({ ...touched, phone: true })}
                       maxLength={20}
                       placeholder="(555) 123-4567"
                       style={{
                         width: "100%",
                         padding: "var(--token-space-sm) var(--token-space-md)",
                         fontSize: "var(--token-text-base)",
-                        border: "1px solid var(--token-color-border)",
+                        border: `1px solid ${touched.phone && !validation.phone.isValid ? "var(--token-color-danger)" : "var(--token-color-border)"}`,
                         borderRadius: "var(--token-radius-lg)",
                         backgroundColor: "var(--token-color-surface)",
                         color: "var(--token-color-text)",
                         boxSizing: "border-box",
+                        outline: "none",
+                        transition: "border-color 0.2s",
                       }}
                     />
+                    {touched.phone && !validation.phone.isValid && (
+                      <p
+                        style={{
+                          fontSize: "var(--token-text-sm)",
+                          color: "var(--token-color-danger)",
+                          marginTop: "var(--token-space-xs)",
+                          marginBottom: 0,
+                        }}
+                      >
+                        {validation.phone.message}
+                      </p>
+                    )}
+                    <p
+                      style={{
+                        fontSize: "var(--token-text-sm)",
+                        color: "var(--token-color-text-muted)",
+                        marginTop: "var(--token-space-xs)",
+                        marginBottom: 0,
+                      }}
+                    >
+                      Your phone number is only visible to club administrators
+                    </p>
                   </div>
 
                   {/* Membership Info (read-only) */}
@@ -604,14 +841,20 @@ export default function ProfilePage() {
                     data-test-id="profile-success"
                     style={{
                       marginTop: "var(--token-space-md)",
-                      padding: "var(--token-space-sm) var(--token-space-md)",
+                      padding: "var(--token-space-md)",
                       backgroundColor: "#dcfce7",
                       color: "var(--token-color-success)",
                       borderRadius: "var(--token-radius-lg)",
-                      fontSize: "var(--token-text-sm)",
+                      fontSize: "var(--token-text-base)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "var(--token-space-sm)",
                     }}
                   >
-                    Profile updated successfully!
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polyline points="20,6 9,17 4,12" />
+                    </svg>
+                    <span>Your profile was updated</span>
                   </div>
                 )}
 
@@ -620,24 +863,77 @@ export default function ProfilePage() {
                   <button
                     type="submit"
                     data-test-id="profile-save-button"
-                    disabled={saveState === "saving"}
+                    disabled={saveState === "saving" || !isFormValid || !hasChanges}
                     style={{
                       width: "100%",
                       padding: "var(--token-space-sm) var(--token-space-md)",
                       fontSize: "var(--token-text-base)",
                       fontWeight: 600,
                       backgroundColor:
-                        saveState === "saving"
+                        saveState === "saving" || !isFormValid || !hasChanges
                           ? "var(--token-color-text-muted)"
                           : "var(--token-color-primary)",
                       color: "#fff",
                       border: "none",
                       borderRadius: "var(--token-radius-lg)",
-                      cursor: saveState === "saving" ? "not-allowed" : "pointer",
+                      cursor: saveState === "saving" || !isFormValid || !hasChanges ? "not-allowed" : "pointer",
+                      transition: "background-color 0.2s",
                     }}
                   >
-                    {saveState === "saving" ? "Saving..." : "Save Changes"}
+                    {saveState === "saving" ? (
+                      <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "var(--token-space-sm)" }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: "spin 1s linear infinite" }}>
+                          <circle cx="12" cy="12" r="10" strokeDasharray="50 20" />
+                        </svg>
+                        Saving...
+                      </span>
+                    ) : hasChanges ? (
+                      "Save Changes"
+                    ) : (
+                      "No changes to save"
+                    )}
                   </button>
+                </div>
+
+                {/* Preview Public Profile Link */}
+                <div
+                  style={{
+                    marginTop: "var(--token-space-lg)",
+                    padding: "var(--token-space-md)",
+                    backgroundColor: "var(--token-color-surface-2)",
+                    borderRadius: "var(--token-radius-lg)",
+                    textAlign: "center",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: "var(--token-text-sm)",
+                      color: "var(--token-color-text-muted)",
+                      margin: 0,
+                      marginBottom: "var(--token-space-sm)",
+                    }}
+                  >
+                    Want to see how your profile looks to other members?
+                  </p>
+                  <Link
+                    href={`/member/directory/${profile.id}`}
+                    data-test-id="view-public-profile-link"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "var(--token-space-xs)",
+                      fontSize: "var(--token-text-sm)",
+                      fontWeight: 500,
+                      color: "var(--token-color-primary)",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    Preview as others see it
+                  </Link>
                 </div>
               </div>
             </div>
