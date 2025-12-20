@@ -112,7 +112,7 @@ export default async function MySBNCPage() {
             My SBNC
           </Link>
           <Link
-            href="/member/events"
+            href="/events"
             style={{
               fontSize: "var(--token-text-sm)",
               color: "var(--token-color-text-muted)",
