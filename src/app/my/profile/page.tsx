@@ -118,20 +118,105 @@ export default function ProfilePage() {
     }
   }
 
-  // Loading state
+  // Loading state with skeleton form
   if (loading) {
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "var(--token-color-surface-2)" }}>
         <ProfileHeader />
-        <Stripe padding="md">
-          <div
-            style={{
-              textAlign: "center",
-              padding: "var(--token-space-xl)",
-              color: "var(--token-color-text-muted)",
-            }}
-          >
-            Loading profile...
+        <Stripe padding="md" testId="profile-header">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div>
+              <div
+                style={{
+                  width: "150px",
+                  height: "32px",
+                  backgroundColor: "var(--token-color-surface)",
+                  borderRadius: "var(--token-radius-lg)",
+                  animation: "pulse 1.5s ease-in-out infinite",
+                }}
+              />
+              <div
+                style={{
+                  width: "250px",
+                  height: "18px",
+                  marginTop: "var(--token-space-sm)",
+                  backgroundColor: "var(--token-color-surface)",
+                  borderRadius: "var(--token-radius-lg)",
+                  animation: "pulse 1.5s ease-in-out infinite",
+                }}
+              />
+            </div>
+          </div>
+        </Stripe>
+        <Stripe padding="md" background="muted">
+          <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+            <div
+              style={{
+                backgroundColor: "var(--token-color-surface)",
+                borderRadius: "var(--token-radius-lg)",
+                border: "1px solid var(--token-color-border)",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  padding: "var(--token-space-md)",
+                  borderBottom: "1px solid var(--token-color-border)",
+                }}
+              >
+                <div
+                  style={{
+                    width: "180px",
+                    height: "24px",
+                    backgroundColor: "var(--token-color-surface-2)",
+                    borderRadius: "var(--token-radius-lg)",
+                    animation: "pulse 1.5s ease-in-out infinite",
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  padding: "var(--token-space-md)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "var(--token-space-md)",
+                }}
+              >
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i}>
+                    <div
+                      style={{
+                        width: "80px",
+                        height: "14px",
+                        backgroundColor: "var(--token-color-surface-2)",
+                        borderRadius: "var(--token-radius-lg)",
+                        marginBottom: "var(--token-space-xs)",
+                        animation: "pulse 1.5s ease-in-out infinite",
+                      }}
+                    />
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "44px",
+                        backgroundColor: "var(--token-color-surface-2)",
+                        borderRadius: "var(--token-radius-lg)",
+                        animation: "pulse 1.5s ease-in-out infinite",
+                      }}
+                    />
+                  </div>
+                ))}
+                <div
+                  style={{
+                    width: "100%",
+                    height: "44px",
+                    marginTop: "var(--token-space-md)",
+                    backgroundColor: "var(--token-color-surface-2)",
+                    borderRadius: "var(--token-radius-lg)",
+                    animation: "pulse 1.5s ease-in-out infinite",
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </Stripe>
       </div>
@@ -475,6 +560,24 @@ export default function ProfilePage() {
                         {profile.memberSince}
                       </span>
                     </div>
+                    {profile.membershipTier && (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontSize: "var(--token-text-sm)",
+                          marginTop: "var(--token-space-xs)",
+                        }}
+                      >
+                        <span style={{ color: "var(--token-color-text-muted)" }}>Tier</span>
+                        <span
+                          data-test-id="profile-membership-tier"
+                          style={{ fontWeight: 500, color: "var(--token-color-text)" }}
+                        >
+                          {profile.membershipTier.name}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
