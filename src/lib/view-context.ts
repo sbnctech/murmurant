@@ -25,6 +25,15 @@ const getNextCookies = () => {
   return getNextCookies();
 };
 
+function cookieGet(store: unknown, name: string): string | undefined {
+  const anyStore = store as any;
+  const v = anyStore?.get?.(name);
+  if (typeof v === "string") return v;
+  if (v && typeof v.value === "string") return v.value;
+  return undefined;
+}
+
+
 
 export type ViewMode =
   | "public"
@@ -137,8 +146,8 @@ export async function getViewContext(): Promise<ViewContext> {
   }
 
   const cookieStore = await getNextCookies();
-  const viewAsCookie = cookieStore.get(VIEW_AS_COOKIE_NAME);
-  const mode = (viewAsCookie?.value as ViewMode) || "actual";
+  const viewAsCookie = cookieGet(cookieStore, VIEW_AS_COOKIE_NAME);
+  const mode = (viewAsCookie as ViewMode) || "actual";
 
   // Validate mode
   if (!VIEW_MODE_CONFIG[mode]) {
