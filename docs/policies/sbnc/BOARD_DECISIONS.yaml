@@ -1,0 +1,46 @@
+meta:
+  description: >
+    Authoritative register of SBNC Board decisions affecting bylaws,
+    policies, eligibility, visibility, and enforcement.
+  maintained_by: Board of Directors
+  last_reviewed: null
+
+decisions:
+
+  bylaws_version:
+    title: Bylaws Version in Force
+    decision: pending
+    options:
+      - id: bylaws_2021_06_01
+        description: Bylaws adopted June 1, 2021
+      - id: bylaws_2024_07_29
+        description: Bylaws adopted July 29, 2024
+    decided_on: null
+
+  policy_visibility:
+    title: Policy Visibility Rules
+    decision: pending
+    policies:
+      privacy_policy: pending
+      social_media_policy: pending
+
+  guest_access:
+    title: Guest Eligibility for Events
+    decision: pending
+    options:
+      - members_only
+      - guests_allowed
+
+  membership_terms:
+    title: Membership Term Rules
+    decision: pending
+    options:
+      - fixed_term
+      - rolling_term
+
+  registration_eligibility:
+    title: Registration Eligibility Enforcement
+    decision: pending
+    options:
+      - strict_enforcement
+      - permissive_with_logging
