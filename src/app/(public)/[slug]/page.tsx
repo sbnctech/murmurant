@@ -4,8 +4,9 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { generateCssVariables, mergeTokensWithDefaults, ThemeTokens } from "@/lib/publishing/theme";
-import { PageContent } from "@/lib/publishing/blocks";
+import { PageContent, PageBreadcrumbItem } from "@/lib/publishing/blocks";
 import BlockRenderer from "@/components/publishing/BlockRenderer";
+import { Breadcrumbs, BreadcrumbItem } from "@/components/publishing/Breadcrumbs";
 
 type RouteParams = {
   params: Promise<{ slug: string }>;
@@ -76,8 +77,20 @@ export default async function PublicPage({ params }: RouteParams) {
 
   const content = page.content as PageContent;
 
+  // Convert page breadcrumbs to component format
+  // For public pages, all breadcrumbs are visible (no audience filtering needed)
+  // page.breadcrumb is Json? in Prisma: null=off, []=enabled but empty, [{label,link?},...]=items
+  const rawBreadcrumbs = page.breadcrumb as PageBreadcrumbItem[] | null;
+  const breadcrumbItems: BreadcrumbItem[] | undefined = rawBreadcrumbs?.map(
+    (item) => ({
+      label: item.label,
+      href: item.href,
+    })
+  );
+
   return (
     <main data-test-id="public-page" data-page-slug={slug}>
+      <Breadcrumbs items={breadcrumbItems} testId="page-breadcrumbs" />
       <BlockRenderer content={content} themeCss={themeCss} />
     </main>
   );

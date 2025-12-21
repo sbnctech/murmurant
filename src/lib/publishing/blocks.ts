@@ -180,6 +180,14 @@ export type PageContent = {
   blocks: Block[];
 };
 
+// Breadcrumb item for page navigation (stored in Page.breadcrumb JSON field)
+export type PageBreadcrumbItem = {
+  label: string;
+  href?: string;
+  /** Optional audience rules for visibility filtering */
+  audienceRuleId?: string;
+};
+
 // Block metadata for the editor
 export const BLOCK_METADATA: Record<
   BlockType,
