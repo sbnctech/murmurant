@@ -109,7 +109,10 @@ export type Capability =
   // File storage
   | "files:upload"                      // Upload files
   | "files:manage"                      // Manage all files (admin)
-  | "files:view_all";                   // View all files regardless of access
+  | "files:view_all"                    // View all files regardless of access
+  // Delegation and role assignment
+  | "roles:assign"                      // Authority to create role assignments (SD-3, DM-3)
+  | "roles:view";                       // Authority to view role assignments
 
 /**
  * Map of which capabilities each role has.
@@ -152,6 +155,8 @@ const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
     "files:upload",
     "files:manage",
     "files:view_all",
+    "roles:assign",     // SD-3, DM-3: Can assign roles to any committee
+    "roles:view",
   ],
   president: [
     "members:view",
@@ -167,6 +172,9 @@ const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
     "governance:flags:read",
     "governance:flags:resolve",
     "governance:annotations:read",
+    // Delegation authority
+    "roles:assign",     // SD-3, DM-3: Can assign roles to any committee
+    "roles:view",
     // President can view but not directly manage finances
     // NO finance:manage - treasurer handles that
     // NO users:manage - handled through transitions
@@ -194,6 +202,9 @@ const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
     "events:schedule:view",  // Can view event schedule for coordination
     "transitions:view",
     "transitions:approve",
+    // Delegation authority for activities domain
+    "roles:assign",          // SD-3, DM-3: Can assign event chair roles within domain
+    "roles:view",
     // VP Activities can edit all events (peer trust model)
     // NO events:delete - admin only
     // NO finance:view/manage
@@ -205,6 +216,9 @@ const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
     "events:enews:edit",     // Edit eNews blurb drafts
     "comms:manage",          // Manage email templates and campaigns
     "comms:send",            // Send newsletter campaigns
+    // Delegation authority for communications domain
+    "roles:assign",          // SD-3, DM-3: Can assign roles within domain
+    "roles:view",
     // VP Communications focuses on newsletter and member communication
     // NO events:edit - cannot modify event content (VP Activities handles that)
     // NO events:approve - cannot approve events

@@ -3,6 +3,11 @@ import { requireCapability } from "@/lib/auth";
 import { errors } from "@/lib/api";
 import { auditMutation } from "@/lib/audit";
 import { addAssignment, createAssignmentSchema } from "@/lib/serviceHistory";
+import {
+  canAssignRoles,
+  canAssignToCommittee,
+  createDelegationAuditMetadata,
+} from "@/lib/auth/delegation";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -37,6 +42,66 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       return errors.validation(
         parseResult.error.issues.map((e) => e.message).join(", ")
       );
+    }
+
+    // DM-3: Check if user has authority to assign roles at all
+    // Charter P2: Default deny, least privilege
+    if (!canAssignRoles(auth.context.globalRole)) {
+      await auditMutation(req, auth.context, {
+        action: "CREATE",
+        capability: "roles:assign",
+        objectType: "TransitionAssignment",
+        objectId: planId,
+        metadata: createDelegationAuditMetadata("ASSIGNMENT_DENIED_NO_AUTHORITY", {
+          assignerMemberId: auth.context.memberId,
+          assignerRole: auth.context.globalRole,
+          targetCommitteeId: parseResult.data.committeeId,
+          reason: "User lacks roles:assign capability",
+        }),
+      });
+      return NextResponse.json(
+        {
+          error: "Forbidden",
+          message: "You do not have authority to assign roles. Required capability: roles:assign",
+          code: "DELEGATION_DENIED_DM3",
+        },
+        { status: 403 }
+      );
+    }
+
+    // DM-4: Check if target committee is within user's delegation scope
+    // Charter P2: Object-scoped authorization
+    if (parseResult.data.committeeId) {
+      const scopeCheck = await canAssignToCommittee(
+        auth.context.memberId,
+        auth.context.globalRole,
+        parseResult.data.committeeId
+      );
+
+      if (!scopeCheck.allowed) {
+        await auditMutation(req, auth.context, {
+          action: "CREATE",
+          capability: "roles:assign",
+          objectType: "TransitionAssignment",
+          objectId: planId,
+          metadata: createDelegationAuditMetadata("CROSS_SCOPE_BLOCKED", {
+            assignerMemberId: auth.context.memberId,
+            assignerRole: auth.context.globalRole,
+            targetCommitteeId: parseResult.data.committeeId,
+            reason: scopeCheck.reason,
+          }),
+        });
+        return NextResponse.json(
+          {
+            error: "Forbidden",
+            message: scopeCheck.reason || "Cannot assign roles outside your committee scope",
+            code: "DELEGATION_DENIED_DM4",
+            assignerCommittees: scopeCheck.assignerCommittees,
+            targetCommittee: scopeCheck.targetCommitteeId,
+          },
+          { status: 403 }
+        );
+      }
     }
 
     const assignment = await addAssignment(planId, parseResult.data);
