@@ -19,6 +19,8 @@
 import { useState, useEffect, FormEvent } from "react";
 import Link from "next/link";
 import { Stripe } from "@/components/sections";
+import {  } from "@/lib/timezone";
+import { formatDateLocale } from "@/lib/timezone";
 
 // ============================================================================
 // Types
@@ -142,7 +144,7 @@ export default function PaymentMethodsPage() {
   // Format date
   function formatDate(isoDate: string): string {
     const date = new Date(isoDate);
-    return date.toLocaleDateString("en-US", {
+    return formatDateLocale(date, {
       month: "short",
       day: "numeric",
       year: "numeric",

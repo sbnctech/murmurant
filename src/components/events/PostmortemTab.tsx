@@ -16,6 +16,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import {  } from "@/lib/timezone";
+import { formatDateLocaleDefault } from "@/lib/timezone";
 
 interface Postmortem {
   id: string;
@@ -440,7 +442,7 @@ export default function PostmortemTab({
           }}
         >
           Approved by {postmortem.approver.name} on{" "}
-          {new Date(postmortem.approvedAt!).toLocaleDateString()}
+          {formatDateLocaleDefault(new Date(postmortem.approvedAt!))}
         </div>
       )}
 
@@ -488,7 +490,7 @@ export default function PostmortemTab({
             )}
             {postmortem.submittedAt && (
               <div style={{ marginTop: "4px", fontSize: "12px", color: "#64748b" }}>
-                Submitted on {new Date(postmortem.submittedAt).toLocaleDateString()}
+                Submitted on {formatDateLocaleDefault(new Date(postmortem.submittedAt))}
               </div>
             )}
           </div>
@@ -776,11 +778,11 @@ export default function PostmortemTab({
           {postmortem.createdBy && (
             <p style={{ margin: "0 0 4px 0" }}>
               Created by {postmortem.createdBy.name} on{" "}
-              {new Date(postmortem.createdAt).toLocaleDateString()}
+              {formatDateLocaleDefault(new Date(postmortem.createdAt))}
             </p>
           )}
           <p style={{ margin: 0 }}>
-            Last updated: {new Date(postmortem.updatedAt).toLocaleDateString()}
+            Last updated: {formatDateLocaleDefault(new Date(postmortem.updatedAt))}
           </p>
         </div>
       </div>

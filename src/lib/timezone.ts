@@ -140,3 +140,21 @@ export function getClubHour(dateUtc: Date = new Date()): number {
   }).format(dateUtc);
   return parseInt(hourStr, 10);
 }
+
+export function makeDateFormatter(locale: string, options: Intl.DateTimeFormatOptions) {
+  return new Intl.DateTimeFormat(locale, options);
+}
+
+export function formatDateLocale(
+  date: Date | string | number,
+  options: Intl.DateTimeFormatOptions,
+  locale: string = "en-US",
+) {
+  const d = date instanceof Date ? date : new Date(date);
+  return makeDateFormatter(locale, options).format(d);
+}
+
+export function formatDateLocaleDefault(date: Date | string | number, locale: string = "en-US") {
+  const d = date instanceof Date ? date : new Date(date);
+  return makeDateFormatter(locale, {}).format(d);
+}

@@ -1,3 +1,4 @@
+import { formatDateLocale } from "@/lib/timezone";
 /**
  * ClonedDraftBanner - Visual warning for cloned draft events
  *
@@ -34,11 +35,7 @@ export function ClonedDraftBanner({
   needsChairAssignment = false,
 }: ClonedDraftBannerProps) {
   const formattedDate = clonedAt
-    ? new Date(clonedAt).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
+    ? formatDateLocale(new Date(clonedAt), { year: "numeric", month: "short", day: "numeric" }, "en-US")
     : null;
 
   const actionItems: string[] = [];
