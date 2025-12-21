@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { requireCapability, isFullAdmin } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 import { validatePageContent, PageContent } from "@/lib/publishing/blocks";
+import { clearRevisions } from "@/lib/publishing/revisions";
 import {
   isValidTransition,
   hasDraftChanges,
@@ -263,6 +264,9 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       },
     });
 
+    // Clear revision history on publish (A7: no undo across publish boundaries)
+    await clearRevisions(id);
+
     await createAuditLog({
       action: "PUBLISH",
       resourceType: "page",
@@ -328,6 +332,9 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
         updatedById: memberId,
       },
     });
+
+    // Clear revision history on discard (A7: no undo across publish boundaries)
+    await clearRevisions(id);
 
     await createAuditLog({
       action: "DISCARD_DRAFT",

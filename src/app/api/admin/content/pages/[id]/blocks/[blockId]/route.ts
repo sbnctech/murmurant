@@ -10,6 +10,7 @@ import {
   type Block,
   type PageContent,
 } from "@/lib/publishing/blocks";
+import { createRevision, getActionSummary, getRevisionState } from "@/lib/publishing/revisions";
 import { z } from "zod";
 
 type RouteParams = {
@@ -157,6 +158,17 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
     blocks: updatedBlocks,
   };
 
+  // Create revision before applying change (A7)
+  if (content) {
+    await createRevision({
+      pageId: id,
+      content,
+      action: "edit_block",
+      actionSummary: getActionSummary("edit_block", existingBlock.type),
+      memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+    });
+  }
+
   // Validate new content
   const validation = validatePageContent(newContent);
   if (!validation.valid) {
@@ -186,10 +198,14 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
     metadata: { operation: "update_block" },
   });
 
+  // Get updated revision state (A7)
+  const revisionState = await getRevisionState(id);
+
   return NextResponse.json({
     page: updatedPage,
     block: updatedBlock,
     message: "Block updated",
+    revisionState,
   });
 }
 
@@ -238,6 +254,17 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
     blocks: updatedBlocks,
   };
 
+  // Create revision before applying change (A7)
+  if (content) {
+    await createRevision({
+      pageId: id,
+      content,
+      action: "remove_block",
+      actionSummary: getActionSummary("remove_block", deletedBlock.type),
+      memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+    });
+  }
+
   // Validate new content (should always pass after delete)
   const validation = validatePageContent(newContent);
   if (!validation.valid) {
@@ -266,9 +293,13 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
     metadata: { operation: "delete_block" },
   });
 
+  // Get updated revision state (A7)
+  const revisionState = await getRevisionState(id);
+
   return NextResponse.json({
     page: updatedPage,
     deletedBlockId: blockId,
     message: "Block deleted",
+    revisionState,
   });
 }

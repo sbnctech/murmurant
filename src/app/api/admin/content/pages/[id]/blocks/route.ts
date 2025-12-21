@@ -12,6 +12,7 @@ import {
   type Block,
   type PageContent,
 } from "@/lib/publishing/blocks";
+import { createRevision, getActionSummary, getRevisionState } from "@/lib/publishing/revisions";
 import { validateBlockData, isEditableBlockType } from "@/lib/publishing/blockSchemas";
 import { z } from "zod";
 
@@ -126,6 +127,17 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       blocks: reorderedBlocks,
     };
 
+    // Create revision before applying change (A7)
+    if (content) {
+      await createRevision({
+        pageId: id,
+        content,
+        action: "reorder",
+        actionSummary: getActionSummary("reorder"),
+        memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+      });
+    }
+
     // Validate new content
     const validation = validatePageContent(newContent);
     if (!validation.valid) {
@@ -155,10 +167,14 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       metadata: { operation: "reorder_blocks" },
     });
 
+    // Get updated revision state (A7)
+    const revisionState = await getRevisionState(id);
+
     return NextResponse.json({
       page: updatedPage,
       blocks: reorderedBlocks,
       message: "Blocks reordered",
+      revisionState,
     });
   }
 
@@ -215,6 +231,17 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       blocks: updatedBlocks,
     };
 
+    // Create revision before applying change (A7)
+    if (content) {
+      await createRevision({
+        pageId: id,
+        content,
+        action: "edit_block",
+        actionSummary: getActionSummary("edit_block", blockType),
+        memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+      });
+    }
+
     // Validate overall page content structure
     const validation = validatePageContent(newContent);
     if (!validation.valid) {
@@ -244,10 +271,14 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       metadata: { operation: "update_block" },
     });
 
+    // Get updated revision state (A7)
+    const revisionState = await getRevisionState(id);
+
     return NextResponse.json({
       page: updatedPage,
       block: updatedBlock,
       message: "Block updated",
+      revisionState,
     });
   }
 
@@ -297,6 +328,17 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     blocks: updatedBlocks,
   };
 
+  // Create revision before applying change (A7)
+  if (content) {
+    await createRevision({
+      pageId: id,
+      content,
+      action: "add_block",
+      actionSummary: getActionSummary("add_block", type),
+      memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+    });
+  }
+
   // Validate new content
   const validation = validatePageContent(newContent);
   if (!validation.valid) {
@@ -325,11 +367,15 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     metadata: { operation: "add_block" },
   });
 
+  // Get updated revision state (A7)
+  const revisionState = await getRevisionState(id);
+
   return NextResponse.json(
     {
       page: updatedPage,
       block: newBlock,
       message: "Block added",
+      revisionState,
     },
     { status: 201 }
   );
