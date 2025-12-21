@@ -17,6 +17,16 @@ import {
 import { PageLifecycleState, LifecycleAction } from "@/lib/publishing/pageLifecycle";
 import { formatDateLocale, formatClubDate } from "@/lib/timezone";
 
+// A7: Revision state for undo/redo
+type RevisionState = {
+  canUndo: boolean;
+  canRedo: boolean;
+  undoCount: number;
+  redoCount: number;
+  currentPosition: number;
+  totalRevisions: number;
+};
+
 type Props = {
   pageId: string;
   initialBlocks: Block[];
@@ -34,6 +44,124 @@ export default function PageEditorClient({ pageId, initialBlocks, lifecycle: ini
   const [confirmAction, setConfirmAction] = useState<LifecycleAction | null>(null);
   const [lifecycleLoading, setLifecycleLoading] = useState(false);
 
+  // A7: Undo/redo state
+  const [revisionState, setRevisionState] = useState<RevisionState>({
+    canUndo: false,
+    canRedo: false,
+    undoCount: 0,
+    redoCount: 0,
+    currentPosition: 0,
+    totalRevisions: 0,
+  });
+  const [undoRedoLoading, setUndoRedoLoading] = useState(false);
+
+  // A7: Fetch revision state on mount
+  useEffect(() => {
+    async function fetchRevisionState() {
+      try {
+        const res = await fetch(`/api/admin/content/pages/${pageId}/revisions`);
+        if (res.ok) {
+          const data = await res.json();
+          setRevisionState(data);
+        }
+      } catch {
+        // Silently fail - undo/redo will just be disabled
+      }
+    }
+    fetchRevisionState();
+  }, [pageId]);
+
+  // A7: Keyboard shortcuts for undo/redo
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      // Cmd+Z or Ctrl+Z for undo
+      if ((e.metaKey || e.ctrlKey) && e.key === "z" && !e.shiftKey) {
+        if (revisionState.canUndo && !undoRedoLoading && !saving) {
+          e.preventDefault();
+          handleUndo();
+        }
+      }
+      // Cmd+Shift+Z or Ctrl+Shift+Z for redo
+      if ((e.metaKey || e.ctrlKey) && e.key === "z" && e.shiftKey) {
+        if (revisionState.canRedo && !undoRedoLoading && !saving) {
+          e.preventDefault();
+          handleRedo();
+        }
+      }
+      // Cmd+Y or Ctrl+Y for redo (Windows style)
+      if ((e.metaKey || e.ctrlKey) && e.key === "y") {
+        if (revisionState.canRedo && !undoRedoLoading && !saving) {
+          e.preventDefault();
+          handleRedo();
+        }
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [revisionState, undoRedoLoading, saving]);
+
+  // A7: Undo API call
+  async function handleUndo() {
+    if (!revisionState.canUndo || undoRedoLoading || saving) return;
+    setUndoRedoLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/content/pages/${pageId}/undo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        setError(errorData.message || "Failed to undo. Please try again.");
+        return;
+      }
+
+      const data = await res.json();
+      if (data.success && data.content) {
+        setBlocks(data.content.blocks || []);
+        if (data.revisionState) {
+          setRevisionState(data.revisionState);
+        }
+      }
+    } catch {
+      setError("Failed to undo. Please try again.");
+    } finally {
+      setUndoRedoLoading(false);
+    }
+  }
+
+  // A7: Redo API call
+  async function handleRedo() {
+    if (!revisionState.canRedo || undoRedoLoading || saving) return;
+    setUndoRedoLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/content/pages/${pageId}/redo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        setError(errorData.message || "Failed to redo. Please try again.");
+        return;
+      }
+
+      const data = await res.json();
+      if (data.success && data.content) {
+        setBlocks(data.content.blocks || []);
+        if (data.revisionState) {
+          setRevisionState(data.revisionState);
+        }
+      }
+    } catch {
+      setError("Failed to redo. Please try again.");
+    } finally {
+      setUndoRedoLoading(false);
+    }
+  }
+
   // Reorder API call
   async function saveBlockOrder(newBlocks: Block[], previousBlocks: Block[]) {
     setSaving(true);
@@ -49,6 +177,12 @@ export default function PageEditorClient({ pageId, initialBlocks, lifecycle: ini
       if (!res.ok) {
         setBlocks(previousBlocks);
         setError("Failed to save block order. Please try again.");
+      } else {
+        // A7: Update revision state from response
+        const data = await res.json();
+        if (data.revisionState) {
+          setRevisionState(data.revisionState);
+        }
       }
     } catch {
       setBlocks(previousBlocks);
@@ -74,6 +208,12 @@ export default function PageEditorClient({ pageId, initialBlocks, lifecycle: ini
         setBlocks(previousBlocks);
         setError(errorData.message || "Failed to save block. Please try again.");
         return false;
+      }
+
+      // A7: Update revision state from response
+      const responseData = await res.json();
+      if (responseData.revisionState) {
+        setRevisionState(responseData.revisionState);
       }
       return true;
     } catch {
@@ -437,11 +577,70 @@ export default function PageEditorClient({ pageId, initialBlocks, lifecycle: ini
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
         <h2 style={{ fontSize: "18px", margin: 0 }}>Blocks ({blocks.length})</h2>
-        {saving && (
-          <span data-test-id="page-editor-saving" style={{ fontSize: "13px", color: "#666" }}>
-            Saving...
-          </span>
-        )}
+
+        {/* A7: Undo/Redo controls */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div
+            data-test-id="undo-redo-controls"
+            style={{ display: "flex", gap: "4px", alignItems: "center" }}
+          >
+            <button
+              type="button"
+              data-test-id="undo-btn"
+              onClick={handleUndo}
+              disabled={!revisionState.canUndo || undoRedoLoading || saving}
+              title={`Undo (Cmd+Z)${revisionState.canUndo ? "" : " - Nothing to undo"}`}
+              aria-label="Undo"
+              style={{
+                padding: "6px 10px",
+                fontSize: "13px",
+                cursor: !revisionState.canUndo || undoRedoLoading || saving ? "not-allowed" : "pointer",
+                opacity: !revisionState.canUndo || undoRedoLoading || saving ? 0.4 : 1,
+                border: "1px solid #ccc",
+                borderRadius: "4px 0 0 4px",
+                backgroundColor: "#fff",
+              }}
+            >
+              Undo
+            </button>
+            <button
+              type="button"
+              data-test-id="redo-btn"
+              onClick={handleRedo}
+              disabled={!revisionState.canRedo || undoRedoLoading || saving}
+              title={`Redo (Cmd+Shift+Z)${revisionState.canRedo ? "" : " - Nothing to redo"}`}
+              aria-label="Redo"
+              style={{
+                padding: "6px 10px",
+                fontSize: "13px",
+                cursor: !revisionState.canRedo || undoRedoLoading || saving ? "not-allowed" : "pointer",
+                opacity: !revisionState.canRedo || undoRedoLoading || saving ? 0.4 : 1,
+                border: "1px solid #ccc",
+                borderLeft: "none",
+                borderRadius: "0 4px 4px 0",
+                backgroundColor: "#fff",
+              }}
+            >
+              Redo
+            </button>
+          </div>
+
+          {/* Revision indicator */}
+          {revisionState.totalRevisions > 0 && (
+            <span
+              data-test-id="revision-indicator"
+              style={{ fontSize: "12px", color: "#666" }}
+            >
+              {revisionState.undoCount} undo{revisionState.undoCount !== 1 ? "s" : ""} available
+            </span>
+          )}
+
+          {(saving || undoRedoLoading) && (
+            <span data-test-id="page-editor-saving" style={{ fontSize: "13px", color: "#666" }}>
+              {undoRedoLoading ? (revisionState.canRedo ? "Redoing..." : "Undoing...") : "Saving..."}
+            </span>
+          )}
+        </div>
       </div>
 
       {error && (
@@ -745,6 +944,10 @@ function AuditLogPanel({ pageId }: { pageId: string }) {
         return "#dc3545";
       case "DELETE":
         return "#dc3545";
+      case "UNDO":
+        return "#9c27b0"; // Purple for undo
+      case "REDO":
+        return "#673ab7"; // Deep purple for redo
       default:
         return "#6c757d";
     }

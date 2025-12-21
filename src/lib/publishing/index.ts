@@ -7,3 +7,4 @@ export * from "./theme";
 export * from "./blocks";
 export * from "./email";
 export * from "./blockOrdering";
+export * from "./revisions";

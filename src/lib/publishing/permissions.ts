@@ -306,7 +306,7 @@ export function evaluateAudienceRule(
  * Create an audit log entry
  */
 export async function createAuditLog(params: {
-  action: "CREATE" | "UPDATE" | "DELETE" | "PUBLISH" | "UNPUBLISH" | "SEND" | "ARCHIVE" | "DISCARD_DRAFT";
+  action: "CREATE" | "UPDATE" | "DELETE" | "PUBLISH" | "UNPUBLISH" | "SEND" | "ARCHIVE" | "DISCARD_DRAFT" | "UNDO" | "REDO";
   resourceType: string;
   resourceId: string;
   memberId?: string | null;
