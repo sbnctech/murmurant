@@ -15,10 +15,12 @@ type Props = {
 export default function PageEditorClient({ pageId, initialBlocks }: Props) {
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Reorder API call
-  async function saveBlockOrder(newBlocks: Block[]) {
+  async function saveBlockOrder(newBlocks: Block[], previousBlocks: Block[]) {
     setSaving(true);
+    setError(null);
     try {
       const blockIds = newBlocks.map((b) => b.id);
       const res = await fetch(`/api/admin/content/pages/${pageId}/blocks?action=reorder`, {
@@ -29,13 +31,13 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
 
       if (!res.ok) {
         // Revert to previous state on failure
-        setBlocks(blocks);
-        console.error("Failed to save block order");
+        setBlocks(previousBlocks);
+        setError("Failed to save block order. Please try again.");
       }
-    } catch (err) {
+    } catch {
       // Revert on error
-      setBlocks(blocks);
-      console.error("Failed to save block order", err);
+      setBlocks(previousBlocks);
+      setError("Failed to save block order. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -45,6 +47,7 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
   function handleMoveUp(index: number) {
     if (index <= 0 || saving) return;
 
+    const previousBlocks = blocks;
     const newBlocks = [...blocks];
     // Swap adjacent blocks
     [newBlocks[index - 1], newBlocks[index]] = [newBlocks[index], newBlocks[index - 1]];
@@ -52,13 +55,14 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
     const reordered = newBlocks.map((b, i) => ({ ...b, order: i }));
 
     setBlocks(reordered);
-    saveBlockOrder(reordered);
+    saveBlockOrder(reordered, previousBlocks);
   }
 
   // Move block down (swap with next)
   function handleMoveDown(index: number) {
     if (index >= blocks.length - 1 || saving) return;
 
+    const previousBlocks = blocks;
     const newBlocks = [...blocks];
     // Swap adjacent blocks
     [newBlocks[index], newBlocks[index + 1]] = [newBlocks[index + 1], newBlocks[index]];
@@ -66,7 +70,7 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
     const reordered = newBlocks.map((b, i) => ({ ...b, order: i }));
 
     setBlocks(reordered);
-    saveBlockOrder(reordered);
+    saveBlockOrder(reordered, previousBlocks);
   }
 
   return (
@@ -79,6 +83,23 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
           </span>
         )}
       </div>
+
+      {error && (
+        <div
+          data-test-id="page-editor-error"
+          style={{
+            padding: "8px 12px",
+            marginBottom: "12px",
+            backgroundColor: "#fee",
+            border: "1px solid #c00",
+            borderRadius: "4px",
+            color: "#900",
+            fontSize: "13px",
+          }}
+        >
+          {error}
+        </div>
+      )}
 
       {blocks.length === 0 ? (
         <p data-test-id="page-editor-empty" style={{ color: "#666", fontStyle: "italic" }}>

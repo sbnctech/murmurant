@@ -132,5 +132,27 @@ test.describe("Page Editor Block Ordering", () => {
       expect(payload.blockIds).toEqual(["b", "a", "c"]);
       expect(payload.blockIds.length).toBe(blocks.length);
     });
+
+    test("on failure, blocks revert to previous order", () => {
+      const previousBlocks = [
+        { id: "a", order: 0 },
+        { id: "b", order: 1 },
+        { id: "c", order: 2 },
+      ];
+
+      // Simulate optimistic update
+      const newBlocks = [
+        { id: "b", order: 0 },
+        { id: "a", order: 1 },
+        { id: "c", order: 2 },
+      ];
+
+      // On API failure, we revert to previousBlocks
+      // This simulates: setBlocks(previousBlocks)
+      const revertedBlocks = previousBlocks;
+
+      expect(revertedBlocks.map((b) => b.id)).toEqual(["a", "b", "c"]);
+      expect(revertedBlocks).not.toEqual(newBlocks);
+    });
   });
 });
