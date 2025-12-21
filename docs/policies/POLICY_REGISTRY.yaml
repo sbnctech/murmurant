@@ -1,0 +1,307 @@
+# ClubOS Policy Registry
+# Copyright (c) Santa Barbara Newcomers Club
+#
+# This is the canonical source of truth for all club policies enforced by ClubOS.
+# Each policy has a unique ID (POL-XXX) that can be referenced in code using requirePolicy().
+#
+# Policy IDs must be unique and follow the format: POL-{CATEGORY}-{NUMBER}
+# Categories:
+#   EVT - Events
+#   MBR - Membership
+#   PRI - Privacy
+#   COM - Communications
+#   FIN - Finance
+#   GOV - Governance
+
+version: "1.0"
+lastUpdated: "2024-12-20"
+maintainer: "ClubOS Development Team"
+
+policies:
+  # ===========================================================================
+  # EVENT POLICIES
+  # ===========================================================================
+  - id: POL-EVT-001
+    title: Event Publishing Schedule
+    shortTitle: Publishing Schedule
+    category: Events
+    status: active
+    effectiveDate: "2024-01-01"
+    summary: |
+      Events requiring registration must be published on Sundays (eNews day)
+      with registration opening on Tuesday at 8:00 AM Pacific.
+    description: |
+      ## Purpose
+
+      This policy ensures all members have equal opportunity to learn about events
+      before registration opens, preventing a "first-come-first-served rush" when
+      events are announced.
+
+      ## Schedule
+
+      1. **Sunday (eNews Day)**: Event is announced in the weekly newsletter
+         - Event becomes visible to members on the website
+         - Registration is NOT yet open
+         - Button shows "Registration opens Tuesday at 8:00 AM"
+
+      2. **Tuesday at 8:00 AM Pacific**: Registration opens
+         - Members can now register for the event
+         - Standard registration flow applies
+
+      ## Exceptions
+
+      Events that do NOT require registration are published immediately when approved.
+
+      ## Enforcement
+
+      ClubOS automatically calculates and enforces the 48-hour announcement window.
+    enforcementLevel: automatic
+    enforcementPoints:
+      - src/lib/events/scheduling.ts
+      - src/app/api/v1/events/[id]/publish/route.ts
+    relatedDocs:
+      - docs/events/POSTING_AND_REGISTRATION_SCHEDULE.md
+      - docs/events/EVENT_LIFECYCLE_DESIGN.md
+    approvedBy: Board of Directors
+    approvalDate: "2024-01-01"
+    reviewSchedule: annually
+    nextReviewDate: "2025-01-01"
+
+  - id: POL-EVT-002
+    title: eNews Inclusion Policy
+    shortTitle: eNews Inclusion
+    category: Events
+    status: active
+    effectiveDate: "2024-01-01"
+    summary: |
+      All published events are automatically included in the weekly eNews
+      digest sent to members on Sunday mornings.
+    description: |
+      ## Purpose
+
+      Ensure members are informed about all upcoming club activities through
+      the official weekly newsletter.
+
+      ## Requirements
+
+      1. **Event Blurb**: Each event should have a short blurb (2-3 sentences)
+         suitable for newsletter inclusion.
+
+      2. **Timing**: Events published by Saturday 5:00 PM Pacific are included
+         in that Sunday's eNews.
+
+      3. **Categories**: Events are grouped by category in the newsletter:
+         - Social Events
+         - Interest Groups
+         - Volunteer Opportunities
+         - Club Meetings
+
+      ## Opt-Out
+
+      Event chairs may mark events as "internal only" to exclude them from eNews.
+      This is rarely used and requires VP Activities approval.
+
+      ## Enforcement
+
+      ClubOS automatically generates the eNews event listing from published events.
+    enforcementLevel: automatic
+    enforcementPoints:
+      - src/lib/communications/enews-generator.ts
+    relatedDocs:
+      - docs/events/POSTING_AND_REGISTRATION_SCHEDULE.md
+    approvedBy: Board of Directors
+    approvalDate: "2024-01-01"
+    reviewSchedule: annually
+    nextReviewDate: "2025-01-01"
+
+  # ===========================================================================
+  # MEMBERSHIP POLICIES
+  # ===========================================================================
+  - id: POL-MBR-001
+    title: Membership Ending This Month Classification
+    shortTitle: Ending This Month
+    category: Membership
+    status: active
+    effectiveDate: "2024-01-01"
+    summary: |
+      Members whose membership expires within the current calendar month are
+      classified as "Ending This Month" for renewal outreach purposes.
+    description: |
+      ## Purpose
+
+      Proactively identify members who need renewal reminders to maintain
+      membership continuity.
+
+      ## Classification Rules
+
+      A member is classified as "Ending This Month" when:
+
+      1. Their membership expiration date falls within the current calendar month
+      2. They have not yet renewed for the next period
+      3. Their account is in good standing (not suspended)
+
+      ## Outreach Sequence
+
+      1. **15 days before**: First reminder email
+      2. **7 days before**: Second reminder email
+      3. **Day of expiration**: Final notice email
+      4. **1 day after**: Status changes to "Lapsed"
+
+      ## Grace Period
+
+      Members have a 30-day grace period after expiration during which they
+      can renew at the standard rate. After 30 days, they must reapply.
+
+      ## Enforcement
+
+      ClubOS membership status engine automatically calculates classifications
+      and triggers outreach based on expiration dates.
+    enforcementLevel: automatic
+    enforcementPoints:
+      - src/lib/membership/status-engine.ts
+      - src/lib/membership/renewal-outreach.ts
+    relatedDocs:
+      - docs/membership/MEMBERSHIP_LIFECYCLE_STATE_MACHINE.md
+      - docs/membership/MEMBERSHIP_MODEL_TRUTH_TABLE.md
+    approvedBy: Board of Directors
+    approvalDate: "2024-01-01"
+    reviewSchedule: annually
+    nextReviewDate: "2025-01-01"
+
+  # ===========================================================================
+  # PRIVACY POLICIES
+  # ===========================================================================
+  - id: POL-PRI-001
+    title: Member Name and Location Display
+    shortTitle: Name & Location Privacy
+    category: Privacy
+    status: active
+    effectiveDate: "2024-01-01"
+    summary: |
+      Member names and city/neighborhood may be displayed to other authenticated
+      members. Full addresses are never displayed publicly.
+    description: |
+      ## Purpose
+
+      Balance community connection with member privacy by providing appropriate
+      levels of information visibility.
+
+      ## Display Rules
+
+      ### Public (No Authentication)
+      - No member names or locations are displayed
+      - Only aggregate statistics (e.g., "150+ active members")
+
+      ### Authenticated Members
+      - First and last name
+      - City/neighborhood (if member opts in)
+      - Profile photo (if uploaded)
+      - Membership tenure
+      - Committee participation (current roles only)
+
+      ### Never Displayed
+      - Street address
+      - Phone number (unless explicitly shared)
+      - Email address (unless explicitly shared)
+      - Payment information
+
+      ## Opt-Out
+
+      Members may request profile privacy settings:
+      - Hide from member directory
+      - Hide city/neighborhood
+      - Hide committee roles
+
+      ## Enforcement
+
+      ClubOS enforces these rules at the API layer. Directory endpoints filter
+      based on member privacy preferences.
+    enforcementLevel: automatic
+    enforcementPoints:
+      - src/app/api/v1/members/directory/route.ts
+      - src/app/api/v1/members/[id]/public/route.ts
+      - src/lib/privacy/member-visibility.ts
+    relatedDocs:
+      - docs/rbac/AUTH_AND_RBAC.md
+    approvedBy: Board of Directors
+    approvalDate: "2024-01-01"
+    reviewSchedule: annually
+    nextReviewDate: "2025-01-01"
+
+  # ===========================================================================
+  # COMMUNICATIONS POLICIES
+  # ===========================================================================
+  - id: POL-COM-001
+    title: Email Sender Identity and DNS Policy
+    shortTitle: Email Identity
+    category: Communications
+    status: active
+    effectiveDate: "2024-01-01"
+    summary: |
+      All club emails must be sent from authenticated club domains with proper
+      SPF, DKIM, and DMARC records to ensure deliverability.
+    description: |
+      ## Purpose
+
+      Ensure club communications are properly authenticated and delivered to
+      member inboxes, not spam folders.
+
+      ## Sender Requirements
+
+      1. **From Address**: All emails must use @sbnewcomers.org domain
+      2. **Reply-To**: May use officer's personal email for direct replies
+      3. **Display Name**: Must clearly identify the club and role
+         - Example: "Santa Barbara Newcomers - VP Activities"
+
+      ## DNS Requirements
+
+      The following records MUST be configured:
+
+      1. **SPF**: Authorize sending IPs
+         ```
+         v=spf1 include:_spf.google.com include:sendgrid.net -all
+         ```
+
+      2. **DKIM**: Sign outgoing emails
+         - Selector: `clubos._domainkey.sbnewcomers.org`
+
+      3. **DMARC**: Policy for handling failures
+         ```
+         v=DMARC1; p=quarantine; rua=mailto:dmarc@sbnewcomers.org
+         ```
+
+      ## Email Categories
+
+      - **Transactional**: Registration confirmations, password resets
+      - **Newsletters**: Weekly eNews
+      - **Announcements**: Special club communications
+
+      Each category must be separately authenticated.
+
+      ## Enforcement
+
+      ClubOS email sending module validates domain configuration before
+      allowing email campaigns to be sent.
+    enforcementLevel: automatic
+    enforcementPoints:
+      - src/lib/email/sender.ts
+      - src/lib/email/dns-validation.ts
+    relatedDocs:
+      - docs/deployment/EMAIL_SETUP.md
+    approvedBy: Board of Directors
+    approvalDate: "2024-01-01"
+    reviewSchedule: annually
+    nextReviewDate: "2025-01-01"
+
+# Metadata for registry management
+metadata:
+  totalPolicies: 5
+  byCategory:
+    Events: 2
+    Membership: 1
+    Privacy: 1
+    Communications: 1
+  byStatus:
+    active: 5
+    draft: 0
+    deprecated: 0

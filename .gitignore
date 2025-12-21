@@ -21,3 +21,7 @@ tsconfig.tsbuildinfo
 .vercel/
 *.log
 .netlify/
+
+# --- ClubOS: ignore harvested WA/SBNC policy PDFs (local source artifacts) ---
+docs/policies/**/sources/**/*.pdf
+# --- end ClubOS harvested PDFs ---
