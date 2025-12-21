@@ -88,7 +88,7 @@ export default async function PublicHomePage() {
         subtitle="Santa Barbara Newcomers Club"
         title="Making Connections, Building Community"
         description="Join a vibrant community of newcomers and long-time residents exploring all that Santa Barbara has to offer. Activities, friendships, and memories await."
-        background="primary"
+        background="primary-gradient"
         actions={
           <>
             <Link

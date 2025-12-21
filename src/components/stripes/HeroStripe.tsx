@@ -20,7 +20,7 @@ interface HeroStripeProps {
   /** CTA buttons or other content */
   actions?: ReactNode;
   /** Background variant */
-  background?: "default" | "muted" | "primary" | "dark";
+  background?: "default" | "muted" | "primary" | "primary-gradient" | "dark" | "dark-gradient";
   /** Text alignment */
   align?: "left" | "center";
   /** Test ID */

@@ -1,4 +1,5 @@
 import GadgetHost from "@/components/gadgets/GadgetHost";
+import MemberWelcomeCard from "@/components/member/MemberWelcomeCard";
 
 /**
  * MyClubPage - The member dashboard home page.
@@ -6,52 +7,39 @@ import GadgetHost from "@/components/gadgets/GadgetHost";
  * URL: /member
  *
  * This page serves as the main landing page for authenticated club members.
- * It displays gadgets that show personalized information about upcoming
- * events and the member's current registrations.
+ * Features:
+ * - Personalized welcome card with member's name and status
+ * - Upcoming events gadget
+ * - My registrations gadget
  *
- * LAYOUT STRUCTURE:
- * -----------------
- * The page uses a responsive two-column grid:
- *
- *   - On wide screens (600px+): Two columns side by side
- *   - On narrow screens: Single column, stacked vertically
- *
- * Column 1 (Left/Top):
- *   - upcoming-events: Events the member can register for
- *
- * Column 2 (Right/Bottom):
- *   - my-registrations: Events the member has signed up for
- *
- * Future gadgets can be added to either column as needed.
+ * Layout:
+ * - Full-width welcome card at top
+ * - Responsive two-column grid for gadgets below
  */
 
 export default function MyClubPage() {
   return (
     <div data-test-id="myclub-page">
       {/* ========================================
-          PAGE HEADER
-          Welcome message for the member.
+          PERSONALIZED WELCOME CARD
+          Shows greeting, membership status, and tenure
           ======================================== */}
-      <h1
+      <MemberWelcomeCard />
+
+      {/* ========================================
+          SECTION HEADER
+          ======================================== */}
+      <h2
         style={{
-          fontSize: "28px",
+          fontSize: "20px",
           fontWeight: 600,
           marginTop: 0,
-          marginBottom: "8px",
-          color: "#1f2937",
+          marginBottom: "16px",
+          color: "#374151",
         }}
       >
-        My Club
-      </h1>
-      <p
-        style={{
-          fontSize: "16px",
-          color: "#6b7280",
-          marginBottom: "24px",
-        }}
-      >
-        Welcome back! Here is what is happening in your club.
-      </p>
+        Your Dashboard
+      </h2>
 
       {/* ========================================
           GADGET GRID
@@ -63,8 +51,8 @@ export default function MyClubPage() {
         data-test-id="myclub-gadget-grid"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "20px",
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gap: "24px",
         }}
       >
         {/* Column 1: Upcoming Events */}

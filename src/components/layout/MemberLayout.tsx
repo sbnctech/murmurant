@@ -5,14 +5,15 @@ import Link from "next/link";
  * MemberLayout - Shared layout wrapper for all member-facing pages.
  *
  * This component provides:
- *   - A consistent top navigation bar
+ *   - A modern, clean top navigation bar
  *   - A centered, readable content area
- *   - Simple, accessible styling for older users
+ *   - Accessible styling with large tap targets
  *
  * Design notes:
  *   - Large tap targets (min 44px) for touch devices
  *   - High contrast text for readability
  *   - Simple navigation with max 3-4 top-level items
+ *   - Modern gradient accents
  */
 
 type MemberLayoutProps = {
@@ -22,9 +23,9 @@ type MemberLayoutProps = {
 // Navigation items for the member-facing top nav.
 // Keep this list short and focused on primary member actions.
 const navItems = [
-  { label: "My Club", href: "/member", testId: "member-nav-home" },
-  { label: "Events", href: "/member/events", testId: "member-nav-events" },
-  { label: "Account", href: "/member/account", testId: "member-nav-account" },
+  { label: "Dashboard", href: "/my", testId: "member-nav-home" },
+  { label: "Events", href: "/events", testId: "member-nav-events" },
+  { label: "Profile", href: "/my/profile", testId: "member-nav-profile" },
 ];
 
 export default function MemberLayout({ children }: MemberLayoutProps) {
@@ -33,22 +34,24 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
       data-test-id="member-layout"
       style={{
         minHeight: "100vh",
-        backgroundColor: "#f9fafb",
-        fontFamily: "system-ui, -apple-system, sans-serif",
+        backgroundColor: "#f8fafc",
+        fontFamily:
+          'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
     >
       {/* ========================================
           TOP NAVIGATION BAR
+          Modern design with subtle shadow
           ======================================== */}
       <header
         data-test-id="member-header"
         style={{
-          backgroundColor: "#ffffff",
-          borderBottom: "1px solid #e5e7eb",
-          padding: "12px 20px",
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          padding: "0 20px",
           position: "sticky",
           top: 0,
           zIndex: 100,
+          boxShadow: "0 4px 20px rgba(102, 126, 234, 0.25)",
         }}
       >
         <nav
@@ -57,19 +60,21 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            maxWidth: "1000px",
+            maxWidth: "1100px",
             margin: "0 auto",
+            height: "64px",
           }}
         >
           {/* Logo / Brand - links back to member home */}
           <Link
-            href="/member"
+            href="/my"
             data-test-id="member-nav-logo"
             style={{
-              fontSize: "22px",
+              fontSize: "24px",
               fontWeight: 700,
-              color: "#1f2937",
+              color: "#ffffff",
               textDecoration: "none",
+              letterSpacing: "-0.02em",
             }}
           >
             ClubOS
@@ -92,15 +97,17 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
                   data-test-id={item.testId}
                   style={{
                     display: "inline-block",
-                    padding: "12px 16px",
-                    fontSize: "16px",
+                    padding: "10px 18px",
+                    fontSize: "15px",
                     fontWeight: 500,
-                    color: "#2563eb",
+                    color: "rgba(255, 255, 255, 0.9)",
                     textDecoration: "none",
-                    borderRadius: "6px",
+                    borderRadius: "8px",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    transition: "background-color 0.2s",
                     // Ensures minimum tap target of 44px
                     minHeight: "44px",
-                    lineHeight: "20px",
+                    lineHeight: "24px",
                   }}
                 >
                   {item.label}
@@ -117,9 +124,9 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
       <main
         data-test-id="member-main"
         style={{
-          maxWidth: "1000px",
+          maxWidth: "1100px",
           margin: "0 auto",
-          padding: "24px 20px",
+          padding: "32px 24px",
           // Ensures content is readable on wide screens
           lineHeight: 1.6,
         }}
@@ -129,20 +136,24 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
 
       {/* ========================================
           FOOTER
-          Simple footer with copyright. Can be expanded later.
+          Clean, minimal footer
           ======================================== */}
       <footer
         data-test-id="member-footer"
         style={{
-          borderTop: "1px solid #e5e7eb",
-          padding: "20px",
+          borderTop: "1px solid #e2e8f0",
+          padding: "24px 20px",
           textAlign: "center",
           fontSize: "14px",
-          color: "#6b7280",
+          color: "#94a3b8",
           marginTop: "40px",
+          backgroundColor: "#ffffff",
         }}
       >
-        ClubOS
+        <div style={{ fontWeight: 500, color: "#64748b" }}>ClubOS</div>
+        <div style={{ marginTop: "4px", fontSize: "13px" }}>
+          Powered by modern club management
+        </div>
       </footer>
     </div>
   );
