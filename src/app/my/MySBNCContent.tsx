@@ -17,7 +17,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Stripe } from "@/components/stripes";
+import { Section } from "@/components/sections";
 import { OfficerGadgetSelector } from "@/components/home";
 import { formatClubDate } from "@/lib/timezone";
 import type { GlobalRole } from "@/lib/auth";
@@ -36,7 +36,7 @@ export function MySBNCContent({ effectiveRole }: MySBNCContentProps) {
   return (
     <>
       {/* Main Content: Side-by-Side Panels */}
-      <Stripe padding="md" testId="main-content-stripe">
+      <Section padding="md" testId="main-content-stripe">
         <div
           style={{
             display: "grid",
@@ -59,7 +59,7 @@ export function MySBNCContent({ effectiveRole }: MySBNCContentProps) {
             <CommitteesPanel />
           </div>
         </div>
-      </Stripe>
+      </Section>
 
       {/* Responsive styles */}
       <style>{`
@@ -72,7 +72,7 @@ export function MySBNCContent({ effectiveRole }: MySBNCContentProps) {
 
       {/* Officer Section (if applicable) */}
       {showOfficerGadgets && (
-        <Stripe padding="md" background="muted" testId="officer-section">
+        <Section padding="md" background="muted" testId="officer-section">
           <div style={{ maxWidth: "800px" }}>
             <h2
               style={{
@@ -87,7 +87,7 @@ export function MySBNCContent({ effectiveRole }: MySBNCContentProps) {
             </h2>
             <OfficerGadgetSelector role={effectiveRole} />
           </div>
-        </Stripe>
+        </Section>
       )}
     </>
   );

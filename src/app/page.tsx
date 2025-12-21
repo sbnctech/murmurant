@@ -15,7 +15,7 @@
  */
 
 import Link from "next/link";
-import { HeroStripe, ContentStripe, Stripe } from "@/components/stripes";
+import { HeroSection, ContentSection, Section } from "@/components/sections";
 import { ViewAsControl } from "@/components/view-as";
 import { getViewContext } from "@/lib/view-context";
 
@@ -83,7 +83,7 @@ export default async function PublicHomePage() {
       </header>
 
       {/* Hero Section */}
-      <HeroStripe
+      <HeroSection
         testId="hero-stripe"
         subtitle="Santa Barbara Newcomers Club"
         title="Making Connections, Building Community"
@@ -124,7 +124,7 @@ export default async function PublicHomePage() {
       />
 
       {/* Gift Certificate CTA */}
-      <Stripe background="muted" padding="md" testId="gift-certificate-stripe">
+      <Section background="muted" padding="md" testId="gift-certificate-stripe">
         <div
           style={{
             display: "flex",
@@ -172,10 +172,10 @@ export default async function PublicHomePage() {
             Gift Certificate
           </Link>
         </div>
-      </Stripe>
+      </Section>
 
       {/* Upcoming Events */}
-      <ContentStripe
+      <ContentSection
         testId="upcoming-events-stripe"
         title="Upcoming Events"
         subtitle="Open to members and guests"
@@ -223,10 +223,10 @@ export default async function PublicHomePage() {
             View All Events
           </Link>
         </div>
-      </ContentStripe>
+      </ContentSection>
 
       {/* Photo Highlights */}
-      <ContentStripe
+      <ContentSection
         testId="photo-highlights-stripe"
         title="Club Highlights"
         subtitle="Memories from recent events"
@@ -271,10 +271,10 @@ export default async function PublicHomePage() {
             }
           }
         `}</style>
-      </ContentStripe>
+      </ContentSection>
 
       {/* About / Join CTA */}
-      <HeroStripe
+      <HeroSection
         testId="about-cta-stripe"
         title="Ready to Make New Friends?"
         description="SBNC welcomes newcomers to Santa Barbara and those who want to expand their social circle. Join a community that celebrates connection, exploration, and the best of the Central Coast."
