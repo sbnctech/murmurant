@@ -12,6 +12,7 @@ import {
   type Block,
   type PageContent,
 } from "@/lib/publishing/blocks";
+import { validateBlockData, isEditableBlockType } from "@/lib/publishing/blockSchemas";
 import { z } from "zod";
 
 type RouteParams = {
@@ -183,11 +184,26 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     }
 
     const originalBlock = currentBlocks[blockIndex];
+    const blockType = originalBlock.type;
+
+    // Validate data against block type schema
+    // For editable block types, strict validation is enforced
+    // For read-only block types, validation is permissive (passthrough)
+    const schemaValidation = validateBlockData(blockType, data);
+    if (!schemaValidation.ok) {
+      return NextResponse.json(
+        { error: "Bad Request", message: schemaValidation.error },
+        { status: 400 }
+      );
+    }
+
+    // Use validated/cleaned data (schema may strip unknown keys for simple types)
+    const validatedData = schemaValidation.data as Record<string, unknown>;
+
     // Type assertion needed because Block is a discriminated union
-    // The data structure is validated by validatePageContent below
     const updatedBlock = {
       ...originalBlock,
-      data: data as typeof originalBlock.data,
+      data: validatedData as typeof originalBlock.data,
     } as Block;
 
     // Build updated blocks array
@@ -199,7 +215,7 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       blocks: updatedBlocks,
     };
 
-    // Validate new content
+    // Validate overall page content structure
     const validation = validatePageContent(newContent);
     if (!validation.valid) {
       return NextResponse.json(
@@ -224,7 +240,7 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       resourceId: page.id,
       memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
       before: { blockId, blockType: originalBlock.type, data: originalBlock.data },
-      after: { blockId, blockType: updatedBlock.type, data: updatedBlock.data },
+      after: { blockId, blockType: updatedBlock.type, data: validatedData },
       metadata: { operation: "update_block" },
     });
 

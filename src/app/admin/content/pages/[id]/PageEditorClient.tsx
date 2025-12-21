@@ -1,22 +1,23 @@
 // Copyright (c) Santa Barbara Newcomers Club
 // Page editor client component - block list with ordering and editing controls
+// A3: Schema-driven validation and improved editors
 
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Block, BlockType } from "@/lib/publishing/blocks";
 import { BLOCK_METADATA } from "@/lib/publishing/blocks";
+import {
+  validateBlockData,
+  getBlockFieldMetadata,
+  EDITABLE_BLOCK_TYPES,
+  READONLY_BLOCK_TYPES,
+} from "@/lib/publishing/blockSchemas";
 
 type Props = {
   pageId: string;
   initialBlocks: Block[];
 };
-
-// Block types that have full form editing support
-const EDITABLE_BLOCK_TYPES: BlockType[] = ["hero", "text", "image", "cta", "divider", "spacer"];
-
-// Block types that only show read-only view (complex/nested data)
-const COMPLEX_BLOCK_TYPES: BlockType[] = ["cards", "event-list", "gallery", "faq", "contact"];
 
 export default function PageEditorClient({ pageId, initialBlocks }: Props) {
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
@@ -24,6 +25,7 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [editingBlockId, setEditingBlockId] = useState<string | null>(null);
   const [editingData, setEditingData] = useState<Record<string, unknown> | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   // Reorder API call
   async function saveBlockOrder(newBlocks: Block[], previousBlocks: Block[]) {
@@ -38,12 +40,10 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
       });
 
       if (!res.ok) {
-        // Revert to previous state on failure
         setBlocks(previousBlocks);
         setError("Failed to save block order. Please try again.");
       }
     } catch {
-      // Revert on error
       setBlocks(previousBlocks);
       setError("Failed to save block order. Please try again.");
     } finally {
@@ -63,14 +63,13 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
       });
 
       if (!res.ok) {
-        // Revert to previous state on failure
+        const errorData = await res.json().catch(() => ({}));
         setBlocks(previousBlocks);
-        setError("Failed to save block. Please try again.");
+        setError(errorData.message || "Failed to save block. Please try again.");
         return false;
       }
       return true;
     } catch {
-      // Revert on error
       setBlocks(previousBlocks);
       setError("Failed to save block. Please try again.");
       return false;
@@ -85,9 +84,7 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
 
     const previousBlocks = blocks;
     const newBlocks = [...blocks];
-    // Swap adjacent blocks
     [newBlocks[index - 1], newBlocks[index]] = [newBlocks[index], newBlocks[index - 1]];
-    // Update order fields
     const reordered = newBlocks.map((b, i) => ({ ...b, order: i }));
 
     setBlocks(reordered);
@@ -100,9 +97,7 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
 
     const previousBlocks = blocks;
     const newBlocks = [...blocks];
-    // Swap adjacent blocks
     [newBlocks[index], newBlocks[index + 1]] = [newBlocks[index + 1], newBlocks[index]];
-    // Update order fields
     const reordered = newBlocks.map((b, i) => ({ ...b, order: i }));
 
     setBlocks(reordered);
@@ -115,30 +110,43 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
     setEditingBlockId(block.id);
     setEditingData({ ...block.data });
     setError(null);
+    setValidationError(null);
   }
 
   // Cancel editing
   function handleCancelEdit() {
     setEditingBlockId(null);
     setEditingData(null);
+    setValidationError(null);
   }
 
-  // Save edited block
+  // Save edited block with client-side validation
   async function handleSaveEdit() {
     if (!editingBlockId || !editingData || saving) return;
 
+    // Find the block type
+    const block = blocks.find((b) => b.id === editingBlockId);
+    if (!block) return;
+
+    // Client-side validation using schema
+    const validation = validateBlockData(block.type, editingData);
+    if (!validation.ok) {
+      setValidationError(validation.error);
+      return;
+    }
+
+    setValidationError(null);
     const previousBlocks = blocks;
 
-    // Optimistic update
-    // Type assertion needed because Block is a discriminated union
+    // Optimistic update with validated data
     const newBlocks = blocks.map((b) =>
       b.id === editingBlockId
-        ? ({ ...b, data: editingData as typeof b.data } as Block)
+        ? ({ ...b, data: validation.data as typeof b.data } as Block)
         : b
     );
     setBlocks(newBlocks);
 
-    const success = await saveBlockData(editingBlockId, editingData, previousBlocks);
+    const success = await saveBlockData(editingBlockId, validation.data as Record<string, unknown>, previousBlocks);
     if (success) {
       setEditingBlockId(null);
       setEditingData(null);
@@ -146,10 +154,10 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
   }
 
   // Update a field in the editing data
-  function updateField(field: string, value: unknown) {
-    if (!editingData) return;
-    setEditingData({ ...editingData, [field]: value });
-  }
+  const updateField = useCallback((field: string, value: unknown) => {
+    setEditingData((prev) => (prev ? { ...prev, [field]: value } : null));
+    setValidationError(null); // Clear validation error on change
+  }, []);
 
   return (
     <div data-test-id="page-editor-blocks">
@@ -194,7 +202,7 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
             const isLast = index === blocks.length - 1;
             const isEditing = editingBlockId === block.id;
             const isEditable = EDITABLE_BLOCK_TYPES.includes(block.type);
-            const isComplex = COMPLEX_BLOCK_TYPES.includes(block.type);
+            const isReadonly = READONLY_BLOCK_TYPES.includes(block.type);
 
             return (
               <li
@@ -262,6 +270,20 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 500, fontSize: "14px" }}>
                       {meta?.label || block.type}
+                      {isReadonly && (
+                        <span
+                          style={{
+                            marginLeft: "8px",
+                            fontSize: "11px",
+                            padding: "2px 6px",
+                            backgroundColor: "#e0e0e0",
+                            borderRadius: "3px",
+                            color: "#666",
+                          }}
+                        >
+                          Read-only
+                        </span>
+                      )}
                     </div>
                     <div style={{ fontSize: "12px", color: "#666" }}>
                       {meta?.description || `Block type: ${block.type}`}
@@ -285,7 +307,7 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
                       color: isEditing ? "#fff" : "#0066cc",
                     }}
                   >
-                    {isEditing ? "Cancel" : "Edit"}
+                    {isEditing ? "Cancel" : isReadonly ? "View" : "Edit"}
                   </button>
 
                   {/* Order indicator */}
@@ -307,15 +329,28 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
                       backgroundColor: "#fff",
                     }}
                   >
-                    {isComplex ? (
-                      <div data-test-id="block-editor-complex" style={{ color: "#666", fontStyle: "italic" }}>
-                        Advanced editing for {meta?.label || block.type} blocks coming soon.
-                        <pre style={{ marginTop: "8px", fontSize: "11px", overflow: "auto" }}>
-                          {JSON.stringify(block.data, null, 2)}
-                        </pre>
+                    {/* Validation error */}
+                    {validationError && (
+                      <div
+                        data-test-id="block-editor-validation-error"
+                        style={{
+                          padding: "8px 12px",
+                          marginBottom: "12px",
+                          backgroundColor: "#fff3cd",
+                          border: "1px solid #ffc107",
+                          borderRadius: "4px",
+                          color: "#856404",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {validationError}
                       </div>
+                    )}
+
+                    {isReadonly ? (
+                      <ReadOnlyBlockViewer data={block.data} blockType={block.type} />
                     ) : (
-                      <BlockEditorForm
+                      <SchemaBlockEditor
                         blockType={block.type}
                         data={editingData || {}}
                         onChange={updateField}
@@ -323,7 +358,7 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
                       />
                     )}
 
-                    {/* Save/Cancel buttons */}
+                    {/* Save/Cancel buttons for editable blocks */}
                     {isEditable && (
                       <div style={{ marginTop: "16px", display: "flex", gap: "8px" }}>
                         <button
@@ -375,15 +410,115 @@ export default function PageEditorClient({ pageId, initialBlocks }: Props) {
   );
 }
 
-// Block editor form for different block types
-type BlockEditorFormProps = {
+// ============================================================================
+// Read-only block viewer for complex types
+// ============================================================================
+
+type ReadOnlyBlockViewerProps = {
+  data: unknown;
+  blockType: BlockType;
+};
+
+function ReadOnlyBlockViewer({ data, blockType }: ReadOnlyBlockViewerProps) {
+  const [expanded, setExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const jsonString = JSON.stringify(data, null, 2);
+  const lines = jsonString.split("\n");
+  const isLong = lines.length > 10;
+  const displayText = expanded || !isLong ? jsonString : lines.slice(0, 10).join("\n") + "\n...";
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(jsonString);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API not available
+    }
+  };
+
+  return (
+    <div data-test-id="block-editor-readonly">
+      <div style={{ marginBottom: "8px", color: "#666", fontSize: "13px" }}>
+        This block type ({blockType}) requires advanced editing. Full editing support coming soon.
+      </div>
+      <div
+        style={{
+          position: "relative",
+          backgroundColor: "#f5f5f5",
+          border: "1px solid #e0e0e0",
+          borderRadius: "4px",
+          padding: "12px",
+        }}
+      >
+        <pre
+          data-test-id="block-editor-json"
+          style={{
+            margin: 0,
+            fontSize: "12px",
+            fontFamily: "monospace",
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+            maxHeight: expanded ? "none" : "300px",
+            overflow: "auto",
+          }}
+        >
+          {displayText}
+        </pre>
+        <div style={{ marginTop: "8px", display: "flex", gap: "8px" }}>
+          {isLong && (
+            <button
+              type="button"
+              data-test-id="block-editor-toggle-expand"
+              onClick={() => setExpanded(!expanded)}
+              style={{
+                padding: "4px 8px",
+                fontSize: "12px",
+                border: "1px solid #ccc",
+                borderRadius: "3px",
+                backgroundColor: "#fff",
+                cursor: "pointer",
+              }}
+            >
+              {expanded ? "Show less" : "Show more"}
+            </button>
+          )}
+          <button
+            type="button"
+            data-test-id="block-editor-copy"
+            onClick={handleCopy}
+            style={{
+              padding: "4px 8px",
+              fontSize: "12px",
+              border: "1px solid #ccc",
+              borderRadius: "3px",
+              backgroundColor: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            {copied ? "Copied!" : "Copy JSON"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Schema-driven block editor
+// ============================================================================
+
+type SchemaBlockEditorProps = {
   blockType: BlockType;
   data: Record<string, unknown>;
   onChange: (field: string, value: unknown) => void;
   disabled: boolean;
 };
 
-function BlockEditorForm({ blockType, data, onChange, disabled }: BlockEditorFormProps) {
+function SchemaBlockEditor({ blockType, data, onChange, disabled }: SchemaBlockEditorProps) {
+  const fields = getBlockFieldMetadata(blockType);
+
   const inputStyle = {
     width: "100%",
     padding: "8px",
@@ -404,293 +539,54 @@ function BlockEditorForm({ blockType, data, onChange, disabled }: BlockEditorFor
     color: "#333",
   };
 
-  switch (blockType) {
-    case "hero":
-      return (
-        <div data-test-id="block-editor-hero">
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Title *</span>
-            <input
-              type="text"
-              value={(data.title as string) || ""}
-              onChange={(e) => onChange("title", e.target.value)}
-              disabled={disabled}
-              required
-              style={inputStyle}
-            />
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Subtitle</span>
-            <input
-              type="text"
-              value={(data.subtitle as string) || ""}
-              onChange={(e) => onChange("subtitle", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            />
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Alignment</span>
-            <select
-              value={(data.alignment as string) || "center"}
-              onChange={(e) => onChange("alignment", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            >
-              <option value="left">Left</option>
-              <option value="center">Center</option>
-              <option value="right">Right</option>
-            </select>
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>CTA Text</span>
-            <input
-              type="text"
-              value={(data.ctaText as string) || ""}
-              onChange={(e) => onChange("ctaText", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            />
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>CTA Link</span>
-            <input
-              type="text"
-              value={(data.ctaLink as string) || ""}
-              onChange={(e) => onChange("ctaLink", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            />
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>CTA Style</span>
-            <select
-              value={(data.ctaStyle as string) || "primary"}
-              onChange={(e) => onChange("ctaStyle", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            >
-              <option value="primary">Primary</option>
-              <option value="secondary">Secondary</option>
-              <option value="outline">Outline</option>
-            </select>
-          </label>
-        </div>
-      );
+  if (fields.length === 0) {
+    return (
+      <div style={{ color: "#666", fontStyle: "italic" }}>
+        No editor available for {blockType} blocks.
+      </div>
+    );
+  }
 
-    case "text":
-      return (
-        <div data-test-id="block-editor-text">
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Content (HTML)</span>
+  return (
+    <div data-test-id={`block-editor-${blockType}`}>
+      {fields.map((field) => (
+        <label key={field.name} style={labelStyle}>
+          <span style={labelTextStyle}>
+            {field.label}
+            {field.required && " *"}
+          </span>
+          {field.type === "textarea" ? (
             <textarea
-              value={(data.content as string) || ""}
-              onChange={(e) => onChange("content", e.target.value)}
+              value={(data[field.name] as string) || ""}
+              onChange={(e) => onChange(field.name, e.target.value)}
               disabled={disabled}
               rows={6}
               style={{ ...inputStyle, resize: "vertical" as const }}
             />
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Alignment</span>
+          ) : field.type === "select" && field.options ? (
             <select
-              value={(data.alignment as string) || "left"}
-              onChange={(e) => onChange("alignment", e.target.value)}
+              value={(data[field.name] as string) || field.options[0] || ""}
+              onChange={(e) => onChange(field.name, e.target.value)}
               disabled={disabled}
               style={inputStyle}
             >
-              <option value="left">Left</option>
-              <option value="center">Center</option>
-              <option value="right">Right</option>
+              {field.options.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt.charAt(0).toUpperCase() + opt.slice(1)}
+                </option>
+              ))}
             </select>
-          </label>
-        </div>
-      );
-
-    case "image":
-      return (
-        <div data-test-id="block-editor-image">
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Image URL *</span>
+          ) : (
             <input
-              type="text"
-              value={(data.src as string) || ""}
-              onChange={(e) => onChange("src", e.target.value)}
-              disabled={disabled}
-              required
-              style={inputStyle}
-            />
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Alt Text *</span>
-            <input
-              type="text"
-              value={(data.alt as string) || ""}
-              onChange={(e) => onChange("alt", e.target.value)}
-              disabled={disabled}
-              required
-              style={inputStyle}
-            />
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Caption</span>
-            <input
-              type="text"
-              value={(data.caption as string) || ""}
-              onChange={(e) => onChange("caption", e.target.value)}
+              type={field.type === "url" ? "url" : "text"}
+              value={(data[field.name] as string) || ""}
+              onChange={(e) => onChange(field.name, e.target.value)}
               disabled={disabled}
               style={inputStyle}
             />
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Alignment</span>
-            <select
-              value={(data.alignment as string) || "center"}
-              onChange={(e) => onChange("alignment", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            >
-              <option value="left">Left</option>
-              <option value="center">Center</option>
-              <option value="right">Right</option>
-            </select>
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Link URL</span>
-            <input
-              type="text"
-              value={(data.linkUrl as string) || ""}
-              onChange={(e) => onChange("linkUrl", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            />
-          </label>
-        </div>
-      );
-
-    case "cta":
-      return (
-        <div data-test-id="block-editor-cta">
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Button Text *</span>
-            <input
-              type="text"
-              value={(data.text as string) || ""}
-              onChange={(e) => onChange("text", e.target.value)}
-              disabled={disabled}
-              required
-              style={inputStyle}
-            />
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Link *</span>
-            <input
-              type="text"
-              value={(data.link as string) || ""}
-              onChange={(e) => onChange("link", e.target.value)}
-              disabled={disabled}
-              required
-              style={inputStyle}
-            />
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Style</span>
-            <select
-              value={(data.style as string) || "primary"}
-              onChange={(e) => onChange("style", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            >
-              <option value="primary">Primary</option>
-              <option value="secondary">Secondary</option>
-              <option value="outline">Outline</option>
-            </select>
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Size</span>
-            <select
-              value={(data.size as string) || "medium"}
-              onChange={(e) => onChange("size", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            >
-              <option value="small">Small</option>
-              <option value="medium">Medium</option>
-              <option value="large">Large</option>
-            </select>
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Alignment</span>
-            <select
-              value={(data.alignment as string) || "center"}
-              onChange={(e) => onChange("alignment", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            >
-              <option value="left">Left</option>
-              <option value="center">Center</option>
-              <option value="right">Right</option>
-            </select>
-          </label>
-        </div>
-      );
-
-    case "divider":
-      return (
-        <div data-test-id="block-editor-divider">
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Style</span>
-            <select
-              value={(data.style as string) || "solid"}
-              onChange={(e) => onChange("style", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            >
-              <option value="solid">Solid</option>
-              <option value="dashed">Dashed</option>
-              <option value="dotted">Dotted</option>
-            </select>
-          </label>
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Width</span>
-            <select
-              value={(data.width as string) || "full"}
-              onChange={(e) => onChange("width", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            >
-              <option value="full">Full</option>
-              <option value="half">Half</option>
-              <option value="quarter">Quarter</option>
-            </select>
-          </label>
-        </div>
-      );
-
-    case "spacer":
-      return (
-        <div data-test-id="block-editor-spacer">
-          <label style={labelStyle}>
-            <span style={labelTextStyle}>Height</span>
-            <select
-              value={(data.height as string) || "medium"}
-              onChange={(e) => onChange("height", e.target.value)}
-              disabled={disabled}
-              style={inputStyle}
-            >
-              <option value="small">Small</option>
-              <option value="medium">Medium</option>
-              <option value="large">Large</option>
-            </select>
-          </label>
-        </div>
-      );
-
-    default:
-      return (
-        <div style={{ color: "#666", fontStyle: "italic" }}>
-          No editor available for {blockType} blocks.
-        </div>
-      );
-  }
+          )}
+        </label>
+      ))}
+    </div>
+  );
 }

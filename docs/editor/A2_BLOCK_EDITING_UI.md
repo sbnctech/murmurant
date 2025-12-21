@@ -149,13 +149,18 @@ PageEditorClient
 
 ## Work checklist
 
-- [ ] Add `?action=update` handler to blocks API route
-- [ ] Add Edit button to each block in PageEditorClient
-- [ ] Add editing state: `editingBlockId: string | null`
-- [ ] Create BlockEditorPanel component
-- [ ] Create form components for simple block types (hero, text, image, cta, divider, spacer)
-- [ ] Add placeholder for complex block types (cards, event-list, gallery, faq, contact)
-- [ ] Wire save/cancel to API and state
-- [ ] Add API tests for update action
-- [ ] Add component tests for editor panel
-- [ ] Run typecheck and unit tests
+- [x] Add `?action=update` handler to blocks API route
+- [x] Add Edit button to each block in PageEditorClient
+- [x] Add editing state: `editingBlockId: string | null`
+- [x] Create BlockEditorPanel component
+- [x] Create form components for simple block types (hero, text, image, cta, divider, spacer)
+- [x] Add placeholder for complex block types (cards, event-list, gallery, faq, contact)
+- [x] Wire save/cancel to API and state
+- [x] Add API tests for update action
+- [x] Add component tests for editor panel
+- [x] Run typecheck and unit tests
+
+## Related Documents
+
+- [A1 Block Ordering UI Wiring](./A1_BLOCK_ORDERING_UI_WIRING.md) - Block ordering with Move Up/Down controls
+- [A3 Block Schemas and Editors](./A3_BLOCK_SCHEMAS_AND_EDITORS.md) - Schema validation and improved editors
