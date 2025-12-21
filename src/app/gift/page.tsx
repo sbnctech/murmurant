@@ -10,7 +10,7 @@
  */
 
 import Link from "next/link";
-import { HeroStripe, ContentStripe } from "@/components/stripes";
+import { HeroStripe, ContentStripe } from "@/components/sections";
 
 export default function GiftCertificatePage() {
   return (

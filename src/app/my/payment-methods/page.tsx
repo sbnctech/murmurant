@@ -18,7 +18,7 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import Link from "next/link";
-import { Stripe } from "@/components/stripes";
+import { Stripe } from "@/components/sections";
 
 // ============================================================================
 // Types

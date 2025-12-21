@@ -25,7 +25,7 @@
 
 import { useState, useEffect, FormEvent, useMemo } from "react";
 import Link from "next/link";
-import { Stripe } from "@/components/stripes";
+import { Stripe } from "@/components/sections";
 import { ViewAsControl } from "@/components/view-as";
 import { formatClubDate } from "@/lib/timezone";
 import type { ProfileResponse } from "@/lib/profile";

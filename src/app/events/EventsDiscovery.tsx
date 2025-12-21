@@ -11,7 +11,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { ContentStripe } from "@/components/stripes";
+import { ContentStripe } from "@/components/sections";
 import { formatClubDate, formatClubTime } from "@/lib/timezone";
 
 interface EventSummary {

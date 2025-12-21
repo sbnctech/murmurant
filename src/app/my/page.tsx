@@ -13,7 +13,7 @@
  */
 
 import Link from "next/link";
-import { Stripe } from "@/components/stripes";
+import { Stripe } from "@/components/sections";
 import { ViewAsControl } from "@/components/view-as";
 import { getViewContext } from "@/lib/view-context";
 import { getCurrentSession } from "@/lib/passkey";

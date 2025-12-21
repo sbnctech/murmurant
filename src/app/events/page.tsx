@@ -11,7 +11,7 @@
  */
 
 import Link from "next/link";
-import { HeroStripe } from "@/components/stripes";
+import { HeroStripe } from "@/components/sections";
 import { getCurrentSession } from "@/lib/passkey";
 import { GIFT_CERTIFICATE_URL } from "@/lib/config/externalLinks";
 import EventsDiscovery from "./EventsDiscovery";
