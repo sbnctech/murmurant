@@ -68,3 +68,8 @@ Command:
 - Stop and fix before merge.
 - Do not quarantine tests to make green unless the test is truly flaky and has an issue filed.
 - If quarantining is required, add @quarantine with a short reason and a followup issue reference.
+
+## Related Documentation
+
+- [Release Channels](../reliability/RELEASE_CHANNELS.md) - Channel definitions and promotion rules
+- [Release Process](../deployment/RELEASE_PROCESS.md) - Full deployment guide

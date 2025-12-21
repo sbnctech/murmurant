@@ -254,3 +254,4 @@ After deploying to production:
 - [DEPLOYMENT_OVERVIEW.md](./DEPLOYMENT_OVERVIEW.md) - Architecture overview
 - [NETLIFY.md](./NETLIFY.md) - Netlify configuration
 - [NEON.md](./NEON.md) - Database configuration
+- [Release Channels](../reliability/RELEASE_CHANNELS.md) - Channel definitions and promotion rules
