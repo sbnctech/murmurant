@@ -40,6 +40,11 @@ const reorderSchema = z.object({
   blockIds: z.array(z.string().uuid()).min(1),
 });
 
+const updateBlockSchema = z.object({
+  blockId: z.string().uuid(),
+  data: z.record(z.string(), z.unknown()),
+});
+
 /**
  * POST /api/admin/content/pages/[id]/blocks
  * Add a new block to the page or reorder blocks
@@ -153,6 +158,80 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       page: updatedPage,
       blocks: reorderedBlocks,
       message: "Blocks reordered",
+    });
+  }
+
+  // Handle update block action
+  if (action === "update") {
+    const parsed = updateBlockSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Bad Request", message: "Invalid request", errors: parsed.error.issues },
+        { status: 400 }
+      );
+    }
+
+    const { blockId, data } = parsed.data;
+
+    // Find the block to update
+    const blockIndex = currentBlocks.findIndex((b) => b.id === blockId);
+    if (blockIndex === -1) {
+      return NextResponse.json(
+        { error: "Bad Request", message: `Block not found: ${blockId}` },
+        { status: 400 }
+      );
+    }
+
+    const originalBlock = currentBlocks[blockIndex];
+    // Type assertion needed because Block is a discriminated union
+    // The data structure is validated by validatePageContent below
+    const updatedBlock = {
+      ...originalBlock,
+      data: data as typeof originalBlock.data,
+    } as Block;
+
+    // Build updated blocks array
+    const updatedBlocks: Block[] = [...currentBlocks];
+    updatedBlocks[blockIndex] = updatedBlock;
+
+    const newContent: PageContent = {
+      schemaVersion: content?.schemaVersion || 1,
+      blocks: updatedBlocks,
+    };
+
+    // Validate new content
+    const validation = validatePageContent(newContent);
+    if (!validation.valid) {
+      return NextResponse.json(
+        { error: "Bad Request", message: "Invalid content", errors: validation.errors },
+        { status: 400 }
+      );
+    }
+
+    // Update page
+    const updatedPage = await prisma.page.update({
+      where: { id },
+      data: {
+        content: newContent as object,
+        updatedById: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+      },
+    });
+
+    // Audit log
+    await createAuditLog({
+      action: "UPDATE",
+      resourceType: "page",
+      resourceId: page.id,
+      memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+      before: { blockId, blockType: originalBlock.type, data: originalBlock.data },
+      after: { blockId, blockType: updatedBlock.type, data: updatedBlock.data },
+      metadata: { operation: "update_block" },
+    });
+
+    return NextResponse.json({
+      page: updatedPage,
+      block: updatedBlock,
+      message: "Block updated",
     });
   }
 
