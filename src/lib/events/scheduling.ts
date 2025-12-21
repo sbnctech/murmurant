@@ -18,7 +18,7 @@
  */
 
 import { EventStatus } from "@prisma/client";
-
+import { makeDateFormatter } from "@/lib/timezone";
 // ============================================================================
 // CONSTANTS
 // ============================================================================
@@ -114,7 +114,7 @@ export interface EventForStatus {
  */
 export function getNextSunday(fromDate: Date = new Date()): Date {
   // Get day of week in Pacific timezone
-  const dayOfWeekPart = new Intl.DateTimeFormat("en-US", {
+  const dayOfWeekPart = makeDateFormatter("en-US", {
     timeZone: SBNC_TIMEZONE,
     weekday: "short",
   }).formatToParts(fromDate).find(p => p.type === "weekday");
@@ -146,7 +146,7 @@ export function getNextSunday(fromDate: Date = new Date()): Date {
  * Helper to get timezone offset in milliseconds for Pacific time.
  */
 function getTimezoneOffsetMs(date: Date): number {
-  const tzPart = new Intl.DateTimeFormat("en-US", {
+  const tzPart = makeDateFormatter("en-US", {
     timeZone: SBNC_TIMEZONE,
     timeZoneName: "shortOffset",
   }).formatToParts(date).find(p => p.type === "timeZoneName");
@@ -174,7 +174,7 @@ export function getFollowingTuesday(sunday: Date): Date {
  */
 export function getThisWeekSunday(fromDate: Date = new Date()): Date {
   // Get day of week in Pacific timezone
-  const dayOfWeekPart = new Intl.DateTimeFormat("en-US", {
+  const dayOfWeekPart = makeDateFormatter("en-US", {
     timeZone: SBNC_TIMEZONE,
     weekday: "short",
   }).formatToParts(fromDate).find(p => p.type === "weekday");
@@ -233,7 +233,7 @@ export function computeDefaultSchedule(input: ScheduleDefaultsInput): ScheduleDe
   const openTuesday = getFollowingTuesday(announceSunday);
 
   // Format dates for explanation using Intl.DateTimeFormat
-  const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  const dateFormatter = makeDateFormatter("en-US", {
     weekday: "long",
     month: "long",
     day: "numeric",
@@ -479,20 +479,20 @@ export function formatRegistrationOpensMessage(event: EventForStatus): string | 
     return null;
   }
 
-  const dayFormatter = new Intl.DateTimeFormat("en-US", {
+  const dayFormatter = makeDateFormatter("en-US", {
     weekday: "long",
     timeZone: SBNC_TIMEZONE,
   });
   const dayName = dayFormatter.format(event.registrationOpensAt);
 
-  const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  const dateFormatter = makeDateFormatter("en-US", {
     month: "long",
     day: "numeric",
     timeZone: SBNC_TIMEZONE,
   });
   const dateStr = dateFormatter.format(event.registrationOpensAt);
 
-  const timeFormatter = new Intl.DateTimeFormat("en-US", {
+  const timeFormatter = makeDateFormatter("en-US", {
     hour: "numeric",
     minute: "2-digit",
     timeZone: SBNC_TIMEZONE,

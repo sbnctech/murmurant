@@ -18,10 +18,10 @@
  *
  * Copyright (c) Santa Barbara Newcomers Club
  */
-
 import { NextRequest, NextResponse } from "next/server";
 import { requireCapability } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { makeDateFormatter } from "@/lib/timezone";
 import {
   getEnewsWeekRange,
   getEventOperationalStatus,
@@ -29,7 +29,6 @@ import {
   formatRegistrationOpensMessage,
   SBNC_TIMEZONE,
 } from "@/lib/events";
-
 interface EventSummary {
   id: string;
   title: string;
@@ -158,7 +157,7 @@ export async function GET(req: NextRequest) {
     });
 
     // Format week range for display using Intl.DateTimeFormat
-    const dateFormatter = new Intl.DateTimeFormat("en-US", {
+    const dateFormatter = makeDateFormatter("en-US", {
       weekday: "short",
       month: "short",
       day: "numeric",

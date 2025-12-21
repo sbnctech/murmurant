@@ -8,7 +8,6 @@
  */
 
 import type { GlobalRole } from "@/lib/auth";
-import { cookies } from "next/headers";
 
 // ============================================================================
 // Types
@@ -18,6 +17,15 @@ import { cookies } from "next/headers";
  * Available view modes for the demo.
  * "actual" means use the real authenticated user's context.
  */
+// NOTE: Do not import "next/headers" at module top-level.
+// Some builds include legacy pages/ routes; top-level next/headers import will fail.
+const getNextCookies = () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { cookies } = require("next/headers");
+  return getNextCookies();
+};
+
+
 export type ViewMode =
   | "public"
   | "member"
@@ -128,7 +136,7 @@ export async function getViewContext(): Promise<ViewContext> {
     return buildViewContext("actual");
   }
 
-  const cookieStore = await cookies();
+  const cookieStore = await getNextCookies();
   const viewAsCookie = cookieStore.get(VIEW_AS_COOKIE_NAME);
   const mode = (viewAsCookie?.value as ViewMode) || "actual";
 

@@ -19,6 +19,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import {  } from "@/lib/timezone";
+import { formatDateLocale } from "@/lib/timezone";
 
 // Dashboard data types (mirrors API response)
 type CommunicationsDashboardData = {
@@ -99,7 +101,7 @@ const LIFECYCLE_COLORS: Record<string, { bg: string; text: string; border: strin
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", {
+  return formatDateLocale(date, {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -108,7 +110,7 @@ function formatDate(dateStr: string): string {
 
 function formatDateTime(dateStr: string): string {
   const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", {
+  return formatDateLocale(date, {
     weekday: "short",
     month: "short",
     day: "numeric",

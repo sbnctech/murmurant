@@ -20,6 +20,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import {  } from "@/lib/timezone";
+import { makeDateFormatter } from "@/lib/timezone";
 
 // ============================================================================
 // Types
@@ -407,7 +409,7 @@ const tdStyle: React.CSSProperties = {
 function formatDate(isoString: string | null): string {
   if (!isoString) return "—";
   const date = new Date(isoString);
-  const formatter = new Intl.DateTimeFormat("en-US", {
+  const formatter = makeDateFormatter("en-US", {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -418,7 +420,7 @@ function formatDate(isoString: string | null): string {
 
 function formatTime(isoString: string): string {
   const date = new Date(isoString);
-  const formatter = new Intl.DateTimeFormat("en-US", {
+  const formatter = makeDateFormatter("en-US", {
     hour: "numeric",
     minute: "2-digit",
     timeZone: "America/Los_Angeles",
