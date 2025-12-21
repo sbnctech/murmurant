@@ -4,6 +4,7 @@
  * Tests for the demo dashboard API endpoints:
  * - GET /api/admin/demo/status
  * - GET /api/admin/demo/work-queue
+ * - GET /api/admin/demo/lifecycle-members
  *
  * Charter Principles:
  * - P1: Identity and authorization must be provable
@@ -141,6 +142,140 @@ test.describe("GET /api/admin/demo/work-queue", () => {
       expect(reg.eventTitle).toBeDefined();
       expect(reg.status).toBeDefined();
       expect(reg.registeredAt).toBeDefined();
+    }
+  });
+});
+
+// =============================================================================
+// GET /api/admin/demo/lifecycle-members - Lifecycle Demo Members
+// =============================================================================
+
+/**
+ * Expected demo member emails in order.
+ */
+const EXPECTED_DEMO_EMAILS = [
+  "demo.pending@sbnc.example",
+  "demo.newbie@sbnc.example",
+  "demo.member@sbnc.example",
+  "demo.offer_extended@sbnc.example",
+  "demo.extended@sbnc.example",
+  "demo.lapsed@sbnc.example",
+  "demo.suspended@sbnc.example",
+  "demo.unknown@sbnc.example",
+];
+
+/**
+ * Expected lifecycle states for each demo member.
+ */
+const EXPECTED_LIFECYCLE_STATES: Record<string, string> = {
+  "demo.pending@sbnc.example": "pending_new",
+  "demo.newbie@sbnc.example": "active_newbie",
+  "demo.member@sbnc.example": "active_member",
+  "demo.offer_extended@sbnc.example": "offer_extended",
+  "demo.extended@sbnc.example": "active_extended",
+  "demo.lapsed@sbnc.example": "lapsed",
+  "demo.suspended@sbnc.example": "suspended",
+  "demo.unknown@sbnc.example": "unknown",
+};
+
+test.describe("GET /api/admin/demo/lifecycle-members", () => {
+  test("returns 401 without auth", async ({ request }) => {
+    const response = await request.get(`${BASE}/api/admin/demo/lifecycle-members`);
+    expect(response.status()).toBe(401);
+  });
+
+  test("returns 403 for member role", async ({ request }) => {
+    const response = await request.get(`${BASE}/api/admin/demo/lifecycle-members`, {
+      headers: { Authorization: "Bearer test-member-token" },
+    });
+    expect(response.status()).toBe(403);
+  });
+
+  test("returns lifecycle members for admin", async ({ request }) => {
+    const response = await request.get(`${BASE}/api/admin/demo/lifecycle-members`, {
+      headers: ADMIN_HEADERS,
+    });
+
+    expect(response.status()).toBe(200);
+
+    const data = await response.json();
+
+    // Verify structure
+    expect(data.timestamp).toBeDefined();
+    expect(Array.isArray(data.members)).toBe(true);
+  });
+
+  test("returns properly structured member data", async ({ request }) => {
+    const response = await request.get(`${BASE}/api/admin/demo/lifecycle-members`, {
+      headers: ADMIN_HEADERS,
+    });
+
+    expect(response.status()).toBe(200);
+
+    const data = await response.json();
+
+    // If there are members, verify their structure
+    if (data.members.length > 0) {
+      const member = data.members[0];
+      expect(member.id).toBeDefined();
+      expect(member.name).toBeDefined();
+      expect(member.email).toBeDefined();
+      expect(member.status).toBeDefined();
+      expect(member.statusLabel).toBeDefined();
+      expect(member.joinedAt).toBeDefined();
+      expect(typeof member.daysSinceJoin).toBe("number");
+      expect(member.expectedLifecycleState).toBeDefined();
+      expect(member.stateLabel).toBeDefined();
+      expect(member.description).toBeDefined();
+    }
+  });
+
+  test("returns demo members in expected order", async ({ request }) => {
+    const response = await request.get(`${BASE}/api/admin/demo/lifecycle-members`, {
+      headers: ADMIN_HEADERS,
+    });
+
+    expect(response.status()).toBe(200);
+
+    const data = await response.json();
+
+    // Skip if no demo members seeded
+    if (data.members.length === 0) {
+      test.skip();
+      return;
+    }
+
+    // Get actual emails in order
+    const actualEmails = data.members.map((m: { email: string }) => m.email);
+
+    // Verify order matches expected (only for members that exist)
+    const existingExpected = EXPECTED_DEMO_EMAILS.filter((e) => actualEmails.includes(e));
+    const matchingActual = actualEmails.filter((e: string) => EXPECTED_DEMO_EMAILS.includes(e));
+
+    expect(matchingActual).toEqual(existingExpected);
+  });
+
+  test("lifecycle state matches inference for each fixture", async ({ request }) => {
+    const response = await request.get(`${BASE}/api/admin/demo/lifecycle-members`, {
+      headers: ADMIN_HEADERS,
+    });
+
+    expect(response.status()).toBe(200);
+
+    const data = await response.json();
+
+    // Skip if no demo members seeded
+    if (data.members.length === 0) {
+      test.skip();
+      return;
+    }
+
+    // Verify each member's lifecycle state matches expected
+    for (const member of data.members) {
+      const expected = EXPECTED_LIFECYCLE_STATES[member.email];
+      if (expected) {
+        expect(member.expectedLifecycleState).toBe(expected);
+      }
     }
   });
 });

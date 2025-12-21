@@ -17,6 +17,8 @@ describe("Audience Rule System", () => {
     lastName: "Member",
     phone: null,
     membershipStatusId: "ms1",
+    membershipTierId: null,
+    waMembershipLevelRaw: null,
     membershipStatus: {
       id: "ms1",
       code: "active",

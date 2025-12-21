@@ -27,6 +27,9 @@ export type {
   SyncResult,
   SyncStats,
   SyncError,
+  RegistrationDiagnostics,
+  SyncReport,
+  SyncWarning,
 } from "./types";
 
 // Transformers
@@ -51,5 +54,8 @@ export {
   detectStaleRecords,
   getStaleRecordCounts,
   cleanupStaleMappings,
+  probeEventRegistrations,
+  generateSyncReport,
+  writeSyncReport,
 } from "./importer";
-export type { PreflightResult, StaleRecord, StaleDetectionResult } from "./importer";
+export type { PreflightResult, StaleRecord, StaleDetectionResult, ProbeResult } from "./importer";

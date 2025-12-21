@@ -281,6 +281,23 @@ export interface SyncStats {
   errors: number;
 }
 
+/**
+ * Detailed registration diagnostics for debugging "0 registrations" issues.
+ */
+export interface RegistrationDiagnostics {
+  eventsProcessed: number;
+  eventsSkippedUnmapped: number;
+  registrationFetchCalls: number;
+  registrationsFetchedTotal: number;
+  registrationsTransformedOk: number;
+  registrationsSkippedMissingEvent: number;
+  registrationsSkippedMissingMember: number;
+  registrationsSkippedTransformError: number;
+  registrationsUpserted: number;
+  // Top N skip reasons with counts
+  skipReasons: Map<string, number>;
+}
+
 export interface SyncResult {
   success: boolean;
   mode: "full" | "incremental";
@@ -293,6 +310,8 @@ export interface SyncResult {
     registrations: SyncStats;
   };
   errors: SyncError[];
+  /** Detailed registration diagnostics for debugging */
+  registrationDiagnostics?: RegistrationDiagnostics;
 }
 
 export interface SyncError {
@@ -300,4 +319,82 @@ export interface SyncError {
   waId: number;
   message: string;
   details?: unknown;
+}
+
+// ============================================================================
+// Sync Report (JSON file output)
+// ============================================================================
+
+/**
+ * Full sync report written to JSON file for debugging and auditing.
+ * Includes all diagnostics needed to diagnose "0 registrations" issues.
+ */
+export interface SyncReport {
+  /** Report format version for future compatibility */
+  version: 1;
+
+  /** Unique identifier for this sync run */
+  runId: string;
+
+  /** When the sync started (ISO8601) */
+  startedAt: string;
+
+  /** When the sync finished (ISO8601) */
+  finishedAt: string;
+
+  /** Duration in milliseconds */
+  durationMs: number;
+
+  /** Whether the sync completed without fatal errors */
+  success: boolean;
+
+  /** Dry run mode (no writes) */
+  dryRun: boolean;
+
+  /** Entity counts from Wild Apricot */
+  fetched: {
+    contacts: number;
+    events: number;
+    registrations: number;
+  };
+
+  /** Suspicious count warnings */
+  warnings: SyncWarning[];
+
+  /** Entity statistics */
+  stats: {
+    members: SyncStats;
+    events: SyncStats;
+    registrations: SyncStats;
+  };
+
+  /** Detailed registration diagnostics */
+  registrationDiagnostics: {
+    eventsProcessed: number;
+    eventsSkippedUnmapped: number;
+    registrationFetchCalls: number;
+    registrationsFetchedTotal: number;
+    registrationsTransformedOk: number;
+    registrationsSkippedMissingEvent: number;
+    registrationsSkippedMissingMember: number;
+    registrationsSkippedTransformError: number;
+    registrationsUpserted: number;
+    /** Top skip reasons with counts */
+    topSkipReasons: Array<{ reason: string; count: number }>;
+  };
+
+  /** First N errors for debugging */
+  errors: SyncError[];
+
+  /** Error count (may be more than errors array length) */
+  totalErrorCount: number;
+}
+
+/**
+ * Warning generated during sync for suspicious conditions.
+ */
+export interface SyncWarning {
+  code: string;
+  message: string;
+  severity: "low" | "medium" | "high";
 }

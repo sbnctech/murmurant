@@ -56,6 +56,15 @@ enum ReviewFlagStatus {
   DISMISSED
 }
 
+// Event note types for chair notebook
+enum EventNoteType {
+  PLANNING   // Pre-event planning notes
+  VENUE      // Venue-specific info
+  WRAP_UP    // Post-event summary
+  LESSON     // Lessons learned for future
+  HANDOFF    // Notes for next chair when cloning
+}
+
 // Registration lifecycle state machine (Charter P3)
 // DRAFT -> PENDING_PAYMENT -> CONFIRMED -> (CANCELLED | REFUNDED | NO_SHOW)
 enum RegistrationStatus {
@@ -117,20 +126,83 @@ enum TransitionStatus {
   CANCELLED
 }
 
+// Event lifecycle state machine (Charter P3, P5)
+// DRAFT -> PENDING_APPROVAL -> (CHANGES_REQUESTED | APPROVED) -> PUBLISHED -> COMPLETED
+// CANCELED can be reached from any state except COMPLETED
+// COMPLETED is derived when endTime < now (not a stored transition)
+enum EventStatus {
+  DRAFT              // Event chair is editing, not visible to members
+  PENDING_APPROVAL   // Submitted for VP Activities review
+  CHANGES_REQUESTED  // VP returned for revisions
+  APPROVED           // VP approved, ready to publish
+  PUBLISHED          // Visible to members, registrations open
+  CANCELED           // Event cancelled (soft delete)
+  COMPLETED          // Past event (derived from endTime < now)
+}
+
+// ============================================================================
+// SUPPORT CASE SYSTEM ENUMS
+// Tech Lead support intake workflow (see docs/operations/TECH_LEAD_SUPPORT_GUIDE.md)
+// ============================================================================
+
+// Support case status state machine:
+// OPEN -> AWAITING_INFO -> OPEN -> IN_PROGRESS -> RESOLVED -> CLOSED
+// Cases can also go directly OPEN -> CLOSED for trivial issues
+enum SupportCaseStatus {
+  OPEN           // New case, awaiting triage
+  AWAITING_INFO  // Waiting for submitter to provide details
+  IN_PROGRESS    // Being actively worked on
+  ESCALATED      // Requires policy/governance decision
+  RESOLVED       // Fix deployed or answer provided
+  CLOSED         // Explicitly closed with rationale
+}
+
+// Issue category (initial guess, can be updated)
+enum SupportCaseCategory {
+  BUG                  // System behaving incorrectly
+  UX_GAP               // Works, but confusing
+  RULE_MISMATCH        // Policy vs implementation conflict
+  MISSING_CAPABILITY   // Feature request
+  EDUCATION            // Expectation mismatch, not a bug
+  UNKNOWN              // Not yet categorized
+}
+
+// How the request came in
+enum SupportCaseChannel {
+  EMAIL
+  TEXT
+  SLACK
+  IN_PERSON
+  PHONE
+  OTHER
+}
+
+// Resolution path chosen
+enum SupportCaseResolution {
+  RESPONSE_ONLY        // Education issue, low recurrence
+  RESPONSE_PLUS_DOCS   // Documentation update needed
+  RESPONSE_PLUS_FIX    // Code/rule change needed
+  ESCALATED            // Policy decision required
+  NO_ACTION_NEEDED     // Determined no action required
+}
+
 // Core Models
 
 model Member {
-  id                 String   @id @default(uuid()) @db.Uuid
-  firstName          String
-  lastName           String
-  email              String   @unique
-  phone              String?
-  joinedAt           DateTime
-  membershipStatusId String   @db.Uuid
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id                   String   @id @default(uuid()) @db.Uuid
+  firstName            String
+  lastName             String
+  email                String   @unique
+  phone                String?
+  joinedAt             DateTime
+  membershipStatusId   String   @db.Uuid
+  membershipTierId     String?  @db.Uuid
+  waMembershipLevelRaw String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 
   membershipStatus   MembershipStatus    @relation(fields: [membershipStatusId], references: [id])
+  membershipTier     MembershipTier?     @relation(fields: [membershipTierId], references: [id])
   roleAssignments    RoleAssignment[]
   eventRegistrations EventRegistration[]
   userAccount        UserAccount?
@@ -174,12 +246,37 @@ model Member {
   passkeysRevoked PasskeyCredential[] @relation("PasskeyRevokedBy")
   // Session administration relations
   sessionsRevoked Session[]           @relation("SessionRevokedBy")
+  // Impersonation relations (admin viewing as this member)
+  sessionsImpersonating Session[]     @relation("SessionImpersonating")
+
+  // Event approval workflow relations
+  eventsSubmitted        Event[] @relation("EventSubmittedBy")
+  eventsApproved         Event[] @relation("EventApprovedBy")
+  eventsPublished        Event[] @relation("EventPublishedBy")
+  eventsChangesRequested Event[] @relation("EventChangesRequestedBy")
+  eventsCanceled         Event[] @relation("EventCanceledBy")
+  eventNotes             EventNote[] @relation("EventNoteAuthor")
 
   // File system relations
   filesUploaded   FileObject[]   @relation("FileUploadedBy")
   fileAccessGrants FileAccess[]  @relation("FileAccessGrantedBy")
 
+  // Event postmortem relations (Chair Notebook)
+  postmortemsCreated  EventPostmortem[] @relation("PostmortemCreator")
+  postmortemsApproved EventPostmortem[] @relation("PostmortemApprover")
+
+  // Support case relations
+  supportCasesSubmitted SupportCase[]     @relation
+  supportCasesOwned     SupportCase[]     @relation("CaseOwner")
+  supportCasesRelated   SupportCase[]     @relation("RelatedCases")
+  supportCasesClosed    SupportCase[]     @relation("CaseCloser")
+  supportCaseNotes      SupportCaseNote[]
+
+  // Payment methods
+  paymentMethods PaymentMethod[]
+
   @@index([membershipStatusId])
+  @@index([membershipTierId])
 }
 
 model MembershipStatus {
@@ -197,6 +294,19 @@ model MembershipStatus {
   members Member[]
 }
 
+model MembershipTier {
+  id        String   @id @default(uuid()) @db.Uuid
+  code      String   @unique
+  name      String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members Member[]
+
+  @@index([sortOrder])
+}
+
 model Committee {
   id          String   @id @default(uuid()) @db.Uuid
   name        String
@@ -210,6 +320,7 @@ model Committee {
   committeeRoles        CommitteeRole[]
   serviceHistory        MemberServiceHistory[]
   transitionAssignments TransitionAssignment[]
+  events                Event[]
 
   @@index([isActive])
 }
@@ -488,8 +599,16 @@ model Session {
   revokedById   String?   @db.Uuid
   revokedReason String?
 
+  // Impersonation support (admin viewing as another member)
+  // When set, the admin is viewing the app as this member for support/debugging
+  // Charter P1: Both real admin and impersonated member tracked
+  // Charter P7: Audit log entries created for start/end
+  impersonatingMemberId String?   @db.Uuid
+  impersonatedAt        DateTime? // When impersonation started
+
   userAccount UserAccount @relation(fields: [userAccountId], references: [id], onDelete: Cascade)
   revokedBy   Member?     @relation("SessionRevokedBy", fields: [revokedById], references: [id], onDelete: SetNull)
+  impersonatingMember Member? @relation("SessionImpersonating", fields: [impersonatingMemberId], references: [id], onDelete: SetNull)
 
   @@index([tokenHash])
   @@index([userAccountId])
@@ -505,26 +624,198 @@ model Event {
   location    String?
   startTime   DateTime
   endTime     DateTime?
+  // DEPRECATED: Use ticketTiers for capacity. Kept for migration compatibility.
   capacity    Int?
-  isPublished Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  // DEPRECATED: Use status field. Kept for migration compatibility.
+  isPublished Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
+  // Event lifecycle (Charter P3: state machine over booleans)
+  status               EventStatus @default(DRAFT)
+  publishAt            DateTime?   // When to auto-publish (null = manual)
+  registrationDeadline DateTime?   // When registration closes (null = at startTime)
+
+  // Registration scheduling (SBNC policy: Sunday announce, Tuesday open)
+  requiresRegistration Boolean   @default(true) // Events with tickets/capacity require registration
+  registrationOpensAt  DateTime? // When registration UI becomes active (null = immediate when published)
+
+  // eNews integration for VP Communications
+  enewsBlurbDraft String? // Short blurb for weekly newsletter (VP Comms editable)
+
+  // Approval workflow
+  submittedAt    DateTime? // When submitted for review
+  submittedById  String?   @db.Uuid
+  approvedAt     DateTime? // When approved by VP Activities
+  approvedById   String?   @db.Uuid
+  approvalNotes  String?   // Notes from approver
+
+  // Publication tracking
+  publishedAt   DateTime? // When made visible to members
+  publishedById String?   @db.Uuid
+
+  // Changes requested tracking
+  changesRequestedAt   DateTime? // When VP returned for revisions
+  changesRequestedById String?   @db.Uuid
+  rejectionNotes       String?   // Reason for requesting changes
+
+  // Cancellation tracking
+  canceledAt     DateTime? // When event was canceled
+  canceledById   String?   @db.Uuid
+  canceledReason String?   // Reason for cancellation
+
+  // Committee ownership (for RBAC filtering)
+  committeeId String? @db.Uuid
+
+  ticketTiers    TicketTier[]
   registrations  EventRegistration[]
   photoAlbum     PhotoAlbum?
   eventChairId   String?                @db.Uuid
   eventChair     Member?                @relation(fields: [eventChairId], references: [id], onDelete: SetNull)
   serviceHistory MemberServiceHistory[]
+  postmortem     EventPostmortem?
+  notes          EventNote[]
+
+  // Approval workflow relations
+  submittedBy        Member? @relation("EventSubmittedBy", fields: [submittedById], references: [id], onDelete: SetNull)
+  approvedBy         Member? @relation("EventApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
+  publishedBy        Member? @relation("EventPublishedBy", fields: [publishedById], references: [id], onDelete: SetNull)
+  changesRequestedBy Member? @relation("EventChangesRequestedBy", fields: [changesRequestedById], references: [id], onDelete: SetNull)
+  canceledBy         Member? @relation("EventCanceledBy", fields: [canceledById], references: [id], onDelete: SetNull)
+  committee          Committee? @relation(fields: [committeeId], references: [id], onDelete: SetNull)
+
+  // Clone tracking - for safe event cloning workflow
+  // Charter P6: Cloned events start as drafts requiring explicit approval
+  // Charter P3: Explicit state - clonedFromId marks inherited structure vs original content
+  clonedFromId String?   @db.Uuid
+  clonedAt     DateTime?
+  clonedFrom   Event?    @relation("EventClones", fields: [clonedFromId], references: [id], onDelete: SetNull)
+  clones       Event[]   @relation("EventClones")
+
+  // Support case relations
+  supportCases SupportCase[]
 
   @@index([eventChairId])
   @@index([startTime])
   @@index([category])
+  @@index([clonedFromId])
+  @@index([status])
+  @@index([committeeId])
+  @@index([submittedById])
+  @@index([approvedById])
+  @@index([publishedById])
+  @@index([changesRequestedById])
+  @@index([canceledById])
+}
+
+// EventPostmortem - Chair Notebook for institutional knowledge
+// Charter P7: Audit logging - tracks who created/approved postmortems
+// Applied ONLY to completed or cancelled events
+model EventPostmortem {
+  id        String   @id @default(uuid()) @db.Uuid
+  eventId   String   @unique @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Preparation notes
+  setupNotes    String? // What had to be done before the event
+  contactsUsed  String? // Freeform list of vendors, contacts, etc.
+  timelineNotes String? // How the day/preparation unfolded
+
+  // Success ratings (1-5 scale, null = not rated)
+  attendanceRating   Int? // 1-5: How well attended?
+  logisticsRating    Int? // 1-5: How smooth was logistics?
+  satisfactionRating Int? // 1-5: Perceived member satisfaction
+
+  // Retrospective notes
+  whatWorked           String? // Things that went well
+  whatDidNot           String? // Things that didn't work
+  whatToChangeNextTime String? // Recommendations for future chairs
+
+  // Access control
+  internalOnly Boolean @default(true) // If true, only visible to officers/chairs
+
+  // Approval workflow
+  status     PostmortemStatus @default(DRAFT)
+  approvedAt DateTime?
+  approvedBy String?          @db.Uuid
+
+  // Relations
+  event    Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  approver Member? @relation("PostmortemApprover", fields: [approvedBy], references: [id], onDelete: SetNull)
+
+  // Who created the postmortem
+  createdById String? @db.Uuid
+  createdBy   Member? @relation("PostmortemCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  // Author contact snapshot (captured at submission for institutional memory)
+  submittedAt     DateTime? // When the postmortem was submitted for review
+  submittedByName String?   // Chair's full name at submission
+  submittedByEmail String?  // Chair's email at submission
+  submittedByPhone String?  // Chair's phone at submission
+
+  @@index([eventId])
+  @@index([status])
+  @@index([createdById])
+}
+
+enum PostmortemStatus {
+  DRAFT      // Being edited by chair
+  SUBMITTED  // Ready for VP review
+  APPROVED   // Locked, VP approved
+  UNLOCKED   // VP unlocked for further edits
+}
+
+// EventNote - Chair notebook entries for institutional memory
+// Charter P7: Audit logged via author tracking
+// Supports planning notes, venue info, lessons learned
+model EventNote {
+  id        String        @id @default(uuid()) @db.Uuid
+  eventId   String        @db.Uuid
+  authorId  String        @db.Uuid
+  noteType  EventNoteType
+  content   String        // Markdown supported
+  isPrivate Boolean       @default(false) // If true, only chair/admins can see
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  event  Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  author Member @relation("EventNoteAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@index([eventId, noteType])
+  @@index([authorId])
+}
+
+// TicketTier - Defines registration tiers with capacity and pricing
+// Charter P3: Explicit state for registration availability
+// Capacity is derived from sum of tier quantities, not a single field
+model TicketTier {
+  id           String   @id @default(uuid()) @db.Uuid
+  eventId      String   @db.Uuid
+  name         String // e.g., "Member", "Guest", "Early Bird"
+  description  String?
+  priceCents   Int      @default(0) // 0 = free tier
+  quantity     Int // Available spots for this tier
+  sortOrder    Int      @default(0) // Display order
+  isActive     Boolean  @default(true)
+  salesStartAt DateTime? // When this tier becomes available (null = immediately)
+  salesEndAt   DateTime? // When this tier closes (null = at event start)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  event         Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  registrations EventRegistration[]
+
+  @@index([eventId])
+  @@index([eventId, isActive])
 }
 
 model EventRegistration {
   id               String             @id @default(uuid()) @db.Uuid
   eventId          String             @db.Uuid
   memberId         String             @db.Uuid
+  ticketTierId     String?            @db.Uuid // Which tier they registered for (null for legacy)
   status           RegistrationStatus @default(DRAFT)
   waitlistPosition Int?
   registeredAt     DateTime
@@ -535,11 +826,13 @@ model EventRegistration {
 
   event          Event           @relation(fields: [eventId], references: [id])
   member         Member          @relation(fields: [memberId], references: [id])
+  ticketTier     TicketTier?     @relation(fields: [ticketTierId], references: [id])
   paymentIntents PaymentIntent[]
 
   @@unique([eventId, memberId])
   @@index([eventId])
   @@index([memberId])
+  @@index([ticketTierId])
   @@index([eventId, status, waitlistPosition])
   @@index([memberId, eventId])
 }
@@ -570,6 +863,44 @@ model PaymentIntent {
   @@index([providerRef])
   @@index([status])
   @@index([createdAt])
+}
+
+// ============================================================================
+// PAYMENT METHODS - Saved payment methods for members
+// Charter P3: Explicit state machine for payment method lifecycle
+// Charter P7: Audit logged via AuditLog
+// ============================================================================
+
+enum PaymentMethodType {
+  CARD // Credit/debit card (existing flow)
+  ACH  // Bank transfer (ACH)
+}
+
+enum PaymentMethodStatus {
+  ACTIVE  // Can be used for payments
+  REVOKED // No longer usable
+}
+
+// PaymentMethod - Saved payment method for a member
+// Does NOT store actual bank/card numbers - only tokens/display info
+model PaymentMethod {
+  id          String              @id @default(uuid()) @db.Uuid
+  memberId    String              @db.Uuid
+  type        PaymentMethodType
+  status      PaymentMethodStatus @default(ACTIVE)
+  displayName String              // e.g., "ACH ending in 1234" or "Visa ending in 4242"
+  provider    String              // e.g., "DEMO_ACH", "stripe"
+  providerRef String              // Opaque token from provider (NOT bank/card number)
+  isDefault   Boolean             @default(false)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  revokedAt   DateTime?
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([memberId])
+  @@index([memberId, status])
+  @@index([memberId, type, status])
 }
 
 model Photo {
@@ -695,6 +1026,16 @@ enum AuditAction {
   LOGIN
   LOGOUT
   SESSION_REVOKED
+  // Impersonation events
+  IMPERSONATION_START
+  IMPERSONATION_END
+  // Event registration events
+  EVENT_REGISTER
+  EVENT_WAITLIST_JOIN
+  EVENT_CANCEL_REGISTRATION
+  // Payment method events
+  PAYMENT_METHOD_ADDED
+  PAYMENT_METHOD_REVOKED
 }
 
 // Theme - Visual styling tokens and CSS
@@ -1298,4 +1639,92 @@ model WaSyncState {
   metadata        Json?     // Additional sync state
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+}
+
+// ============================================================================
+// SUPPORT CASE TRACKING
+// Tech Lead support intake workflow (see docs/operations/TECH_LEAD_SUPPORT_GUIDE.md)
+// Charter P7: Observability - track all support requests to closure
+// ============================================================================
+
+// SupportCase - Tracks support requests from intake to closure
+model SupportCase {
+  id                String                 @id @default(uuid()) @db.Uuid
+  caseNumber        Int                    @unique @default(autoincrement())
+
+  // Submitter info
+  submitterName     String                 // Name of person who reported
+  submitterEmail    String?                // Contact email if available
+  submitterId       String?                @db.Uuid // Link to Member if known
+  submitter         Member?                @relation(fields: [submitterId], references: [id])
+
+  // Request details
+  channel           SupportCaseChannel     // How request came in
+  receivedAt        DateTime               @default(now())
+  description       String                 // Verbatim original request
+  context           Json?                  // Additional structured context (page, role, device, etc.)
+
+  // Classification
+  status            SupportCaseStatus      @default(OPEN)
+  category          SupportCaseCategory    @default(UNKNOWN)
+  initialCategory   SupportCaseCategory?   // AI-suggested category at intake
+
+  // Owner
+  ownerId           String?                @db.Uuid
+  owner             Member?                @relation("CaseOwner", fields: [ownerId], references: [id])
+
+  // Resolution
+  resolution        SupportCaseResolution?
+  resolutionNotes   String?                // What was done
+  preventiveAction  String?                // System improvement made (if any)
+
+  // Linked artifacts
+  relatedEventId    String?                @db.Uuid // If related to specific event
+  relatedEvent      Event?                 @relation(fields: [relatedEventId], references: [id])
+  relatedMemberId   String?                @db.Uuid // If related to specific member
+  relatedMember     Member?                @relation("RelatedCases", fields: [relatedMemberId], references: [id])
+  linkedPR          String?                // GitHub PR if code fix
+  linkedDocs        String?                // Doc pages updated
+
+  // AI analysis
+  aiRootCause       String?                // AI-suggested root cause
+  aiProposedActions Json?                  // AI-suggested action proposals
+  aiRiskLevel       String?                // low, medium, high
+  aiEffortLevel     String?                // trivial, small, medium, large
+
+  // Timestamps
+  closedAt          DateTime?
+  closedById        String?                @db.Uuid
+  closedBy          Member?                @relation("CaseCloser", fields: [closedById], references: [id])
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+
+  // Notes/updates
+  notes             SupportCaseNote[]
+
+  @@index([status])
+  @@index([category])
+  @@index([submitterId])
+  @@index([ownerId])
+  @@index([receivedAt])
+  @@index([closedAt])
+}
+
+// SupportCaseNote - Timeline of updates on a case
+model SupportCaseNote {
+  id          String      @id @default(uuid()) @db.Uuid
+  caseId      String      @db.Uuid
+  case        SupportCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  authorId    String?     @db.Uuid
+  author      Member?     @relation(fields: [authorId], references: [id])
+
+  noteType    String      // "status_change", "clarification_sent", "response_sent", "internal", "ai_analysis"
+  content     String      // The note content
+  metadata    Json?       // Additional structured data (e.g., old/new status, email sent, etc.)
+
+  createdAt   DateTime    @default(now())
+
+  @@index([caseId])
+  @@index([createdAt])
 }
