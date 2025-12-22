@@ -117,6 +117,9 @@ export async function POST(req: NextRequest) {
     templateId?: string;
     themeId?: string;
     content?: unknown;
+    breadcrumb?: { label: string; link?: string }[] | null;
+    seoTitle?: string;
+    seoDescription?: string;
   };
 
   try {
@@ -185,6 +188,9 @@ export async function POST(req: NextRequest) {
       templateId: body.templateId || null,
       themeId: body.themeId || null,
       content: content as object,
+      breadcrumb: body.breadcrumb ?? Prisma.DbNull,
+      seoTitle: body.seoTitle || null,
+      seoDescription: body.seoDescription || null,
       createdById: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
       updatedById: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
     },

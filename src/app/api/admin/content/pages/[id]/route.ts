@@ -4,6 +4,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { requireCapability, isFullAdmin } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 import { validatePageContent, PageContent } from "@/lib/publishing/blocks";
@@ -74,6 +75,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     themeId?: string | null;
     audienceRuleId?: string | null;
     content?: unknown;
+    breadcrumb?: { label: string; link?: string }[] | null;
     seoTitle?: string | null;
     seoDescription?: string | null;
     seoImage?: string | null;
@@ -141,6 +143,9 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       themeId: body.themeId !== undefined ? body.themeId : existing.themeId,
       audienceRuleId: body.audienceRuleId !== undefined ? body.audienceRuleId : existing.audienceRuleId,
       content: body.content ? (body.content as object) : undefined,
+      breadcrumb: body.breadcrumb !== undefined
+        ? (body.breadcrumb === null ? Prisma.DbNull : body.breadcrumb)
+        : undefined,
       seoTitle: body.seoTitle !== undefined ? body.seoTitle : existing.seoTitle,
       seoDescription: body.seoDescription !== undefined ? body.seoDescription : existing.seoDescription,
       seoImage: body.seoImage !== undefined ? body.seoImage : existing.seoImage,

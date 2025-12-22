@@ -6,9 +6,10 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { generateCssVariables, mergeTokensWithDefaults, ThemeTokens } from "@/lib/publishing/theme";
-import { PageContent } from "@/lib/publishing/blocks";
+import { PageContent, PageBreadcrumbItem } from "@/lib/publishing/blocks";
 import { buildUserContext, canViewPage } from "@/lib/publishing/permissions";
 import BlockRenderer from "@/components/publishing/BlockRenderer";
+import { Breadcrumbs, BreadcrumbItem } from "@/components/publishing/Breadcrumbs";
 
 type RouteParams = {
   params: Promise<{ slug: string }>;
@@ -56,10 +57,18 @@ export default async function MemberPage({ params }: RouteParams) {
     redirect("/login?redirect=/member/" + slug);
   }
 
-  // Fetch the page with theme and audience rule
+  // Fetch the page with theme, audience rule, and breadcrumbs
   const page = await prisma.page.findUnique({
     where: { slug },
-    include: {
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      description: true,
+      status: true,
+      visibility: true,
+      content: true,
+      breadcrumb: true,
       theme: { select: { tokens: true, cssText: true } },
       audienceRule: { select: { rules: true } },
     },
@@ -77,7 +86,9 @@ export default async function MemberPage({ params }: RouteParams) {
 
   // Check if user can view this page
   const userContext = await buildUserContext(memberId);
-  const canView = await canViewPage(userContext, page as Parameters<typeof canViewPage>[1]);
+  // Type assertion needed: Prisma select returns partial type, but canViewPage only needs
+  // visibility and audienceRule fields which are included in the select
+  const canView = await canViewPage(userContext, page as unknown as Parameters<typeof canViewPage>[1]);
 
   if (!canView) {
     // User doesn't have permission to view this page
@@ -106,8 +117,19 @@ export default async function MemberPage({ params }: RouteParams) {
 
   const content = page.content as PageContent;
 
+  // Convert breadcrumb data to component format (null means disabled, array means enabled)
+  const breadcrumbItems: BreadcrumbItem[] | null = page.breadcrumb
+    ? (page.breadcrumb as PageBreadcrumbItem[]).map((item) => ({
+        label: item.label,
+        href: item.href,
+      }))
+    : null;
+
   return (
     <main data-test-id="member-page" data-page-slug={slug}>
+      {breadcrumbItems !== null && (
+        <Breadcrumbs items={breadcrumbItems} testId="page-breadcrumbs" />
+      )}
       <BlockRenderer content={content} themeCss={themeCss} />
     </main>
   );

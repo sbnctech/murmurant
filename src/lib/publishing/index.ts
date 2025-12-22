@@ -6,5 +6,4 @@ export * from "./audience";
 export * from "./theme";
 export * from "./blocks";
 export * from "./email";
-export * from "./blockOrdering";
-export * from "./revisions";
+export * from "./schemas";

@@ -243,6 +243,52 @@ export async function resolveMailingListRecipients(
 }
 
 /**
+ * Filter breadcrumb items by audience
+ *
+ * For server-side rendering, this filters out breadcrumb items whose
+ * audienceRuleId doesn't match the current viewer. Items without an
+ * audienceRuleId are visible to all.
+ *
+ * @param items - Breadcrumb items to filter
+ * @param audienceRules - Map of audienceRuleId to AudienceRules
+ * @param member - Current viewer (null for public/anonymous)
+ * @returns Filtered breadcrumb items
+ */
+export function filterBreadcrumbsByAudience<
+  T extends { audienceRuleId?: string }
+>(
+  items: T[],
+  audienceRules: Map<string, AudienceRules>,
+  member: MemberWithStatus | null
+): T[] {
+  return items.filter((item) => {
+    // No audience restriction - visible to all
+    if (!item.audienceRuleId) {
+      return true;
+    }
+
+    const rules = audienceRules.get(item.audienceRuleId);
+    if (!rules) {
+      // Rule not found - default to hidden for safety
+      return false;
+    }
+
+    // Public rules - visible to all
+    if (rules.isPublic) {
+      return true;
+    }
+
+    // Anonymous viewer can't see non-public items
+    if (!member) {
+      return false;
+    }
+
+    // Evaluate member against rules
+    return evaluateMemberAgainstRules(member, rules);
+  });
+}
+
+/**
  * Validate audience rules structure
  */
 export function validateAudienceRules(rules: unknown): {

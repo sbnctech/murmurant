@@ -1099,6 +1099,7 @@ model Page {
   seoTitle       String? // Override for SEO
   seoDescription String? // Override for SEO
   seoImage       String? // Social sharing image
+  breadcrumb     Json? // Manual breadcrumb trail: null=off, []=enabled but empty, [{label,link?},...]=items
   publishAt      DateTime? // Scheduled publish time
   publishedAt    DateTime? // When actually published
   audienceRuleId String?        @db.Uuid

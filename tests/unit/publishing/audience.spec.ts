@@ -5,6 +5,7 @@ import { describe, it, expect } from "vitest";
 import {
   evaluateMemberAgainstRules,
   validateAudienceRules,
+  filterBreadcrumbsByAudience,
   AudienceRules,
   MemberWithStatus,
 } from "@/lib/publishing/audience";
@@ -330,6 +331,132 @@ describe("Audience Rule System", () => {
 
       expect(result.valid).toBe(false);
       expect(result.errors.length).toBeGreaterThan(1);
+    });
+  });
+
+  describe("filterBreadcrumbsByAudience", () => {
+    type TestBreadcrumb = { label: string; href?: string; audienceRuleId?: string };
+
+    it("returns all items when no audience rules are set", () => {
+      const items: TestBreadcrumb[] = [
+        { label: "Home", href: "/" },
+        { label: "Events", href: "/events" },
+        { label: "Current Page" },
+      ];
+      const audienceRules = new Map<string, AudienceRules>();
+
+      const result = filterBreadcrumbsByAudience(items, audienceRules, null);
+
+      expect(result).toHaveLength(3);
+      expect(result).toEqual(items);
+    });
+
+    it("returns empty array when all items have unknown audience rules", () => {
+      const items: TestBreadcrumb[] = [
+        { label: "Home", href: "/", audienceRuleId: "unknown-rule" },
+        { label: "Secret", href: "/secret", audienceRuleId: "another-unknown" },
+      ];
+      const audienceRules = new Map<string, AudienceRules>();
+
+      const result = filterBreadcrumbsByAudience(items, audienceRules, null);
+
+      expect(result).toHaveLength(0);
+    });
+
+    it("includes items with public audience rules for anonymous users", () => {
+      const items: TestBreadcrumb[] = [
+        { label: "Home", href: "/", audienceRuleId: "public-rule" },
+        { label: "Members Only", href: "/members", audienceRuleId: "members-rule" },
+      ];
+      const audienceRules = new Map<string, AudienceRules>([
+        ["public-rule", { isPublic: true }],
+        ["members-rule", { membershipStatuses: ["active"] }],
+      ]);
+
+      const result = filterBreadcrumbsByAudience(items, audienceRules, null);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].label).toBe("Home");
+    });
+
+    it("includes member-restricted items for matching members", () => {
+      const member = createMember({ id: "m1" });
+      const items: TestBreadcrumb[] = [
+        { label: "Home", href: "/" },
+        { label: "Members Only", href: "/members", audienceRuleId: "members-rule" },
+      ];
+      const audienceRules = new Map<string, AudienceRules>([
+        ["members-rule", { memberIds: ["m1"] }],
+      ]);
+
+      const result = filterBreadcrumbsByAudience(items, audienceRules, member);
+
+      expect(result).toHaveLength(2);
+    });
+
+    it("excludes member-restricted items for non-matching members", () => {
+      const member = createMember({ id: "m2" });
+      const items: TestBreadcrumb[] = [
+        { label: "Home", href: "/" },
+        { label: "VIP Only", href: "/vip", audienceRuleId: "vip-rule" },
+      ];
+      const audienceRules = new Map<string, AudienceRules>([
+        ["vip-rule", { memberIds: ["m1"] }],
+      ]);
+
+      const result = filterBreadcrumbsByAudience(items, audienceRules, member);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].label).toBe("Home");
+    });
+
+    it("filters by membership status", () => {
+      const member = createMember({
+        membershipStatus: {
+          id: "ms1",
+          code: "active",
+          label: "Active",
+          description: null,
+          isActive: true,
+          isEligibleForRenewal: false,
+          isBoardEligible: false,
+          sortOrder: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+      const items: TestBreadcrumb[] = [
+        { label: "Home", href: "/" },
+        { label: "Active Members", href: "/active", audienceRuleId: "active-rule" },
+        { label: "Board Only", href: "/board", audienceRuleId: "board-rule" },
+      ];
+      const audienceRules = new Map<string, AudienceRules>([
+        ["active-rule", { membershipStatuses: ["active"] }],
+        ["board-rule", { membershipStatuses: ["board"] }],
+      ]);
+
+      const result = filterBreadcrumbsByAudience(items, audienceRules, member);
+
+      expect(result).toHaveLength(2);
+      expect(result.map((r) => r.label)).toEqual(["Home", "Active Members"]);
+    });
+
+    it("mixes filtered and unfiltered items correctly", () => {
+      const items: TestBreadcrumb[] = [
+        { label: "Home", href: "/" }, // No audience rule
+        { label: "Public Section", href: "/public", audienceRuleId: "public-rule" },
+        { label: "Private Section", href: "/private", audienceRuleId: "private-rule" },
+        { label: "Current Page" }, // No audience rule
+      ];
+      const audienceRules = new Map<string, AudienceRules>([
+        ["public-rule", { isPublic: true }],
+        ["private-rule", { memberIds: ["m99"] }], // Won't match
+      ]);
+
+      const result = filterBreadcrumbsByAudience(items, audienceRules, null);
+
+      expect(result).toHaveLength(3);
+      expect(result.map((r) => r.label)).toEqual(["Home", "Public Section", "Current Page"]);
     });
   });
 });
