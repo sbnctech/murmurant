@@ -1,0 +1,356 @@
+=== Stripe -> Section inventory (generated) ===
+
+Generated: 2025-12-22 03:25:13Z
+
+## Matches: Stripe / Stripes / stripe
+
+- ./docs/api/API_REFERENCE.md:527:**Header:** `Stripe-Signature: {signature}`
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:43:In the current implementation, "Stripe" is effectively "Section".
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:59:- The term "stripe" appears in:
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:60:  - Component names (e.g. Stripe.tsx, HeroStripe.tsx)
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:7:The codebase currently uses the term "stripe" for a page-level layout container. That naming has caused confusion because the intended product concept is "blocks" (content/functional units), not "stripes".
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:71:## Deprecation plan: Stripe -> Section
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:74:- Stop introducing new "stripe" naming in new code.
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:77:Phase 1: Introduce Section components as wrappers around existing Stripe components
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:79:- Implement as light wrappers delegating to existing Stripe/HeroStripe
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:80:- Export both names temporarily; add comments marking Stripe as deprecated
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:83:- Update pages to import Section/HeroSection instead of Stripe/HeroStripe
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:87:Phase 3: Remove Stripe
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:88:- Delete stripes/ components and any remaining "Stripe" naming
+- ./docs/ARCHITECTURE.md:11:Note: The codebase historically used the term "stripe" for Section. Stripe is being deprecated in favor of Section to avoid confusion with the product concept of Blocks. See docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md.
+- ./docs/backlog/MICRO_PR_SALVAGE_CHECKLISTS.md:29:  - Inventory remaining "Stripe" references and create a migration checklist for moving to "Sections."
+- ./docs/demos/HOME_PAGE_STRIPES_DEMO.md:1:# Home Page Stripes Demo
+- ./docs/demos/HOME_PAGE_STRIPES_DEMO.md:124:### Stripes System
+- ./docs/demos/HOME_PAGE_STRIPES_DEMO.md:128:- `Stripe` - Base full-width section
+- ./docs/demos/HOME_PAGE_STRIPES_DEMO.md:129:- `HeroStripe` - Marketing hero with title, description, CTAs
+- ./docs/demos/HOME_PAGE_STRIPES_DEMO.md:130:- `ContentStripe` - Content section with optional title
+- ./docs/demos/HOME_PAGE_STRIPES_DEMO.md:131:- `TwoColumnStripe` - Two-column responsive layout
+- ./docs/demos/HOME_PAGE_STRIPES_DEMO.md:135:<HeroStripe
+- ./docs/demos/HOME_PAGE_STRIPES_DEMO.md:169:- `src/components/stripes/` - Stripe layout components
+- ./docs/demos/LEADERSHIP_DEMO_SCRIPT.md:134:| **Payment processing** | Not implemented | No Stripe integration, no financial transactions |
+- ./docs/demos/LIFECYCLE_EXPLAINER_DEMO.md:250:| **Payment processing** | NOT implemented | No Stripe integration |
+- ./docs/demos/MEMBERSHIP_APPLICATION_DEMO.md:143:A: No, this is demo-only. Real signup will require Stripe integration and backend work.
+- ./docs/FINANCE/ACH_OPTION.md:212:1. **Real ACH Provider Integration**: Integrate with Stripe ACH, Plaid, or similar for real bank verification.
+- ./docs/FINANCE/ACH_OPTION.md:44:Before deploying to production, a real ACH provider (e.g., Stripe ACH, Plaid) must be integrated.
+- ./docs/FINANCE/NET_COST_COMPARISON_SUMMARY.md:119:| ClubOS (Stripe) | 2.9% | $0.30 |
+- ./docs/FINANCE/NET_COST_COMPARISON_SUMMARY.md:123:### Potential Stripe Savings
+- ./docs/FINANCE/NET_COST_COMPARISON_SUMMARY.md:125:If SBNC qualifies for Stripe nonprofit pricing:
+- ./docs/FINANCE/NET_COST_COMPARISON_SUMMARY.md:84:#### 2. Payment Processing (Stripe)
+- ./docs/FINANCE/WA_VS_CLUBOS_COST_COMPARISON.md:117:- [ ] Confirm Stripe nonprofit eligibility
+- ./docs/FINANCE/WA_VS_CLUBOS_COST_COMPARISON.md:66:| Stripe standard rate | 2.9% + $0.30 | Same as Personify |
+- ./docs/FINANCE/WA_VS_CLUBOS_COST_COMPARISON.md:67:| Stripe nonprofit rate (if eligible) | 2.2% + $0.30 | Requires application |
+- ./docs/FOLLOWUP_PR_BLOCKS_AND_SECTIONS.md:1:# Follow-up PR draft: Make Blocks explicit; deprecate Stripe
+- ./docs/FOLLOWUP_PR_BLOCKS_AND_SECTIONS.md:23:   - Add header comments to src/components/stripes/Stripe.tsx and HeroStripe.tsx:
+- ./docs/FOLLOWUP_PR_BLOCKS_AND_SECTIONS.md:46:- Merge with Stripe still present but deprecated.
+- ./docs/FOLLOWUP_PR_BLOCKS_AND_SECTIONS.md:8:- Deprecate legacy "Stripe" naming to avoid confusion.
+- ./docs/MEMBERSHIP_LIFECYCLE_STATE_MACHINE.md:75:| `pending_new` | `active` | payment_received | System | Payment confirmed via Stripe/WA |
+- ./docs/operations/ACH_PAYMENT_GUIDE.md:175:  provider    String              // "DEMO_ACH", "stripe", etc.
+- ./docs/operations/ACH_PAYMENT_GUIDE.md:197:1. **Stripe ACH** - Simplest if already using Stripe for cards
+- ./docs/operations/ACH_PAYMENT_GUIDE.md:198:2. **Plaid + Stripe** - Bank verification via Plaid
+- ./docs/operations/ACH_PAYMENT_GUIDE.md:269:- [ ] Real bank integration (Plaid/Stripe)
+- ./docs/operations/ACH_PAYMENT_GUIDE.md:71:**Note:** The current implementation is a demo that does not connect to real banks. For production, integrate with a payment processor (Stripe, Plaid, etc.) that supports ACH.
+- ./docs/OPS/payments-state-machine.md:274:When adding Stripe or another provider:
+- ./docs/OPS/payments-state-machine.md:290:    case "stripe":
+- ./docs/POLICY_DECISION_DEPENDENCIES.md:54:| F-003 | What payment provider will be used for ClubOS? (Stripe vs. other) | Finance | Yes |
+- ./docs/QA/TEST_SUITE_STATUS_REPORT.md:145:### 1. Fix `toLocaleDateString()` in Stripes Components (High Priority)
+- ./docs/QA/TEST_SUITE_STATUS_REPORT.md:148:- `src/components/stripes/MemberSinceStripe.tsx`
+- ./docs/QA/TEST_SUITE_STATUS_REPORT.md:149:- `src/components/stripes/StatusStripe.tsx`
+- ./docs/QA/TEST_SUITE_STATUS_REPORT.md:76:7. `src/components/stripes/MemberSinceStripe.tsx` - toLocaleDateString
+- ./docs/QA/TEST_SUITE_STATUS_REPORT.md:77:8. `src/components/stripes/StatusStripe.tsx` - toLocaleDateString
+- ./docs/RENAME_STRIPES_TO_SECTIONS_PLAN.md:1:# Rename plan: Stripe -> Section
+- ./docs/RENAME_STRIPES_TO_SECTIONS_PLAN.md:16:"Stripe" has been interpreted as a product concept similar to legacy website builders.
+- ./docs/RENAME_STRIPES_TO_SECTIONS_PLAN.md:27:- Internally delegate to existing Stripe components
+- ./docs/RENAME_STRIPES_TO_SECTIONS_PLAN.md:28:- Mark Stripe components as deprecated via comments
+- ./docs/RENAME_STRIPES_TO_SECTIONS_PLAN.md:38:- Remove any remaining mentions of Stripe/HeroStripe
+- ./docs/RENAME_STRIPES_TO_SECTIONS_PLAN.md:43:- No remaining references to "Stripe" in new code paths for page composition.
+- ./docs/RENAME_STRIPES_TO_SECTIONS_PLAN.md:8:Replace the term "Stripe" with "Section" throughout the codebase and documentation, while preserving behavior and minimizing risk.
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:1:=== Stripe -> Section inventory (generated) ===
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:5:## Matches: Stripe / Stripes / stripe
+- ./prisma/schema.prisma:849:  provider          String              @default("fake") // "fake", "stripe", etc.
+- ./prisma/schema.prisma:893:  provider    String              // e.g., "DEMO_ACH", "stripe"
+- ./scripts/ci/sections_migration_inventory.zsh:10:printf "=== Stripe -> Section inventory (generated) ===\n\n" > "$OUT"
+- ./scripts/ci/sections_migration_inventory.zsh:13:printf "## Matches: Stripe / Stripes / stripe\n\n" >> "$OUT"
+- ./scripts/ci/sections_migration_inventory.zsh:15:  '(Stripe|Stripes|stripe)\b' . \
+- ./src/app/events/EventsDiscovery.tsx:14:import { ContentStripe } from "@/components/sections";
+- ./src/app/events/EventsDiscovery.tsx:146:    <ContentStripe testId="events-discovery" padding="lg">
+- ./src/app/events/EventsDiscovery.tsx:596:    </ContentStripe>
+- ./src/app/events/page.tsx:109:      <HeroStripe
+- ./src/app/events/page.tsx:14:import { HeroStripe } from "@/components/sections";
+- ./src/app/gift/page.tsx:13:import { HeroStripe, ContentStripe } from "@/components/sections";
+- ./src/app/gift/page.tsx:200:      </ContentStripe>
+- ./src/app/gift/page.tsx:55:      <HeroStripe
+- ./src/app/gift/page.tsx:63:      <ContentStripe
+- ./src/app/my/MySBNCContent.tsx:39:      <Section padding="md" testId="main-content-stripe">
+- ./src/app/my/page.tsx:139:      <Stripe padding="md" testId="my-sbnc-header">
+- ./src/app/my/page.tsx:16:import { Stripe } from "@/components/sections";
+- ./src/app/my/page.tsx:182:      </Stripe>
+- ./src/app/my/payment-methods/page.tsx:159:        <Stripe padding="md">
+- ./src/app/my/payment-methods/page.tsx:163:        </Stripe>
+- ./src/app/my/payment-methods/page.tsx:173:        <Stripe padding="md">
+- ./src/app/my/payment-methods/page.tsx:198:        </Stripe>
+- ./src/app/my/payment-methods/page.tsx:21:import { Stripe } from "@/components/sections";
+- ./src/app/my/payment-methods/page.tsx:213:      <Stripe padding="md" testId="payment-methods-header">
+- ./src/app/my/payment-methods/page.tsx:252:      </Stripe>
+- ./src/app/my/payment-methods/page.tsx:256:        <Stripe padding="md" testId="ach-promo-banner">
+- ./src/app/my/payment-methods/page.tsx:316:        </Stripe>
+- ./src/app/my/payment-methods/page.tsx:320:      <Stripe padding="md" background="muted">
+- ./src/app/my/payment-methods/page.tsx:738:      </Stripe>
+- ./src/app/my/profile/page.tsx:232:        <Stripe padding="md" testId="profile-header">
+- ./src/app/my/profile/page.tsx:256:        </Stripe>
+- ./src/app/my/profile/page.tsx:257:        <Stripe padding="md" background="muted">
+- ./src/app/my/profile/page.tsx:28:import { Stripe } from "@/components/sections";
+- ./src/app/my/profile/page.tsx:327:        </Stripe>
+- ./src/app/my/profile/page.tsx:337:        <Stripe padding="md">
+- ./src/app/my/profile/page.tsx:360:        </Stripe>
+- ./src/app/my/profile/page.tsx:373:      <Stripe padding="md" testId="profile-header">
+- ./src/app/my/profile/page.tsx:488:      </Stripe>
+- ./src/app/my/profile/page.tsx:491:      <Stripe padding="md" background="muted">
+- ./src/app/my/profile/page.tsx:942:      </Stripe>
+- ./src/app/page.tsx:127:      <Section background="muted" padding="md" testId="gift-certificate-stripe">
+- ./src/app/page.tsx:179:        testId="upcoming-events-stripe"
+- ./src/app/page.tsx:230:        testId="photo-highlights-stripe"
+- ./src/app/page.tsx:269:            [data-test-id="photo-highlights-stripe"] > div > div:first-child {
+- ./src/app/page.tsx:278:        testId="about-cta-stripe"
+- ./src/app/page.tsx:87:        testId="hero-stripe"
+- ./src/components/sections/index.ts:10:export { default as ContentSection } from "../stripes/ContentStripe";
+- ./src/components/sections/index.ts:4:export { Stripe, default as StripeDefault } from "../stripes/Stripe";
+- ./src/components/sections/index.ts:5:export { default as HeroStripe } from "../stripes/HeroStripe";
+- ./src/components/sections/index.ts:6:export { default as ContentStripe } from "../stripes/ContentStripe";
+- ./src/components/sections/index.ts:7:export { default as TwoColumnStripe } from "../stripes/TwoColumnStripe";
+- ./src/components/sections/index.ts:9:export { default as HeroSection } from "../stripes/HeroStripe";
+- ./src/components/sections/Section.tsx:2: * Section - layout-only wrapper (formerly "Stripe")
+- ./src/components/stripes/ContentStripe.tsx:11:import Stripe, { StripeProps } from "./Stripe";
+- ./src/components/stripes/ContentStripe.tsx:2: * ContentStripe - General content section with optional title
+- ./src/components/stripes/ContentStripe.tsx:24:export default function ContentStripe({
+- ./src/components/stripes/ContentStripe.tsx:32:    <Stripe {...stripeProps}>
+- ./src/components/stripes/ContentStripe.tsx:4: * A simple stripe for displaying content with an optional heading.
+- ./src/components/stripes/ContentStripe.tsx:42:              data-test-id={`${stripeProps.testId || "content-stripe"}-title`}
+- ./src/components/stripes/ContentStripe.tsx:56:              data-test-id={`${stripeProps.testId || "content-stripe"}-subtitle`}
+- ./src/components/stripes/ContentStripe.tsx:70:    </Stripe>
+- ./src/components/stripes/HeroStripe.tsx:104:    </Stripe>
+- ./src/components/stripes/HeroStripe.tsx:11:import Stripe from "./Stripe";
+- ./src/components/stripes/HeroStripe.tsx:2: * HeroStripe - Marketing hero section
+- ./src/components/stripes/HeroStripe.tsx:30:export default function HeroStripe({
+- ./src/components/stripes/HeroStripe.tsx:37:  testId = "hero-stripe",
+- ./src/components/stripes/HeroStripe.tsx:40:    <Stripe background={background} padding="xl" testId={testId}>
+- ./src/components/stripes/index.ts:10:export { default as HeroStripe } from "./HeroStripe";
+- ./src/components/stripes/index.ts:11:export { default as ContentStripe } from "./ContentStripe";
+- ./src/components/stripes/index.ts:2: * Stripes Components - Export all stripe-related components
+- ./src/components/stripes/index.ts:7:export { default as Stripe } from "./Stripe";
+- ./src/components/stripes/index.ts:8:export type { StripeProps } from "./Stripe";
+- ./src/components/stripes/index.ts:9:export { default as TwoColumnStripe } from "./TwoColumnStripe";
+- ./src/components/stripes/Stripe.tsx:16:export function Stripe(props: StripeProps) {
+- ./src/components/stripes/Stripe.tsx:20:export default Stripe;
+- ./src/components/stripes/Stripe.tsx:4: * Stripe was a legacy name for a layout wrapper. "Section" matches intent:
+- ./src/components/stripes/TwoColumnStripe.tsx:100:    </Stripe>
+- ./src/components/stripes/TwoColumnStripe.tsx:11:import Stripe, { StripeProps } from "./Stripe";
+- ./src/components/stripes/TwoColumnStripe.tsx:2: * TwoColumnStripe - Two-column layout stripe
+- ./src/components/stripes/TwoColumnStripe.tsx:38:export default function TwoColumnStripe({
+- ./src/components/stripes/TwoColumnStripe.tsx:49:    <Stripe {...stripeProps}>
+- ./src/lib/payments/index.ts:24: * In production, this will return the real payment provider (Stripe, etc.)
+- ./src/lib/payments/index.ts:35:    // Future: case "stripe": return getStripeProvider();
+- ./src/lib/payments/types.ts:105:  /** Provider name (e.g., "fake", "stripe") */
+- ./src/lib/payments/types.ts:18:  /** The external provider reference (e.g., Stripe PI ID) */
+
+## Matches: sections / section (for context)
+
+- ./src/templates/README.md:24:- **AdminDetailTemplate** - Detail/edit pages with section cards
+- ./src/templates/admin/AdminDetailTemplate.tsx:17: * - sections: Array of section configurations
+- ./src/templates/admin/AdminDetailTemplate.tsx:19: * - children: Alternative to sections prop
+- ./src/templates/admin/AdminDetailTemplate.tsx:33:  sections?: SectionConfig[];
+- ./src/templates/admin/AdminDetailTemplate.tsx:43:  sections,
+- ./src/templates/admin/AdminDetailTemplate.tsx:72:          {/* Render sections if provided */}
+- ./src/templates/admin/AdminDetailTemplate.tsx:73:          {sections && sections.length > 0 && (
+- ./src/templates/admin/AdminDetailTemplate.tsx:81:              {sections.map((section, index) => (
+- ./src/templates/admin/AdminDetailTemplate.tsx:83:                  key={section.testId || index}
+- ./src/templates/admin/AdminDetailTemplate.tsx:84:                  title={section.title}
+- ./src/templates/admin/AdminDetailTemplate.tsx:85:                  subtitle={section.subtitle}
+- ./src/templates/admin/AdminDetailTemplate.tsx:86:                  testId={section.testId || `admin-detail-section-${index}`}
+- ./src/templates/admin/AdminDetailTemplate.tsx:88:                  {section.content}
+- ./src/templates/admin/AdminDetailTemplate.tsx:94:          {/* Render children if no sections */}
+- ./src/templates/admin/AdminDetailTemplate.tsx:95:          {!sections && children}
+- ./src/templates/member/MemberHomeTemplate.tsx:7: * - Hero section with title and description
+- ./src/templates/member/MemberHomeTemplate.tsx:8: * - Feature cards section
+- ./src/templates/member/MemberHomeTemplate.tsx:47:      <section
+- ./src/templates/member/MemberHomeTemplate.tsx:100:      </section>
+- ./src/templates/member/MemberHomeTemplate.tsx:106:        <section
+- ./src/templates/member/MemberHomeTemplate.tsx:127:        </section>
+- ./src/templates/member/MemberHomeTemplate.tsx:134:        <section data-test-id="member-home-content">{children}</section>
+- ./STORY.md:374:This section is meant to grow over time. Initial themes include:
+- ./ARCHITECTURE.md:69:This section is the authoritative reference for how the persistence layer is expected to behave in the current phase.
+- ./SYSTEM_SPEC.md:472:This section tracks implementation stages for ClubOS at the system level.
+- ./SYSTEM_SPEC.md:697:  - Examples: hero, text section, image banner, event list, registration call to action, callout, gallery.
+- ./SYSTEM_SPEC.md:854:- nav-links: Custom navigation links for a section
+- ./SYSTEM_SPEC.md:2006:3. Update this section to reflect the hardened state
+- ./SYSTEM_SPEC_HISTORY.md:17:- Added full Trellis-style two way SMS integration section.
+- ./prompts/cc/WORKER_A_member_history_narrative_api.md:72:- Update SYSTEM_SPEC.md and ARCHITECTURE.md with a short section describing: member history narrative feature, permissions, endpoints.
+- ./tests/e2e/impersonation-ui.spec.ts:29:    test("support tools section is visible on demo page", async ({ page }) => {
+- ./tests/e2e/impersonation-ui.spec.ts:33:      // Check for support tools section (may require auth)
+- ./tests/e2e/impersonation-ui.spec.ts:34:      const supportSection = page.locator('[data-test-id="support-tools-section"]');
+- ./tests/e2e/impersonation-ui.spec.ts:38:        // Should have View As section
+- ./tests/e2e/impersonation-ui.spec.ts:39:        const viewAsSection = page.locator('[data-test-id="demo-view-as-section"]');
+- ./tests/e2e/impersonation-ui.spec.ts:56:      // Safety sections
+- ./tests/e2e/impersonation-ui.spec.ts:62:      // 60-second demo section
+- ./PROJECT_PLAN.md:147:  - Email Activity section that lists recent messages with:
+- ./docs/ARCHITECTURAL_CHARTER.md:165:- locked sections
+- ./docs/ARCHITECTURAL_CHARTER.md:174:This section maps each high-level experience to required data + permissions. Treat this as a contract: if you build the UI without these constraints, it will eventually become unsafe.
+- ./docs/ARCHITECTURAL_CHARTER.md:259:- content:edit scoped to section/committee
+- ./src/lib/governance/annotations.ts:8: * - Bylaws sections
+- ./docs/DEVELOPMENT_WORKFLOW.md:192:This section shows how a feature was built across multiple sessions.
+- ./tests/api/member-lifecycle.spec.ts:68:    test("lifecycle response includes expected sections", async ({ request }) => {
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:17: * - sections: Array of section configurations
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:19: * - children: Alternative to sections prop
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:33:  sections?: SectionConfig[];
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:43:  sections,
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:72:          {/* Render sections if provided */}
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:73:          {sections && sections.length > 0 && (
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:81:              {sections.map((section, index) => (
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:83:                  key={section.testId || index}
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:84:                  title={section.title}
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:85:                  subtitle={section.subtitle}
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:86:                  testId={section.testId || `admin-detail-section-${index}`}
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:88:                  {section.content}
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:94:          {/* Render children if no sections */}
+- ./theme-packs/sbnc-pack/templates/admin/AdminDetailTemplate.tsx:95:          {!sections && children}
+- ./docs/HISTORY.md:106:  - Owns docs/*.md and the Documentation section in README.md
+- ./docs/HISTORY.md:155:- Add a short bullet to the Major Milestones section if the change
+- ./docs/training/JIT_TRAINING_SYSTEM_SPEC.md:16:  - deep-links user to the exact UI section to complete the task
+- ./theme-packs/sbnc-pack/templates/member/MemberHomeTemplate.tsx:7: * - Hero section with title and description
+- ./theme-packs/sbnc-pack/templates/member/MemberHomeTemplate.tsx:8: * - Feature cards section
+- ./theme-packs/sbnc-pack/templates/member/MemberHomeTemplate.tsx:47:      <section
+- ./theme-packs/sbnc-pack/templates/member/MemberHomeTemplate.tsx:100:      </section>
+- ./theme-packs/sbnc-pack/templates/member/MemberHomeTemplate.tsx:106:        <section
+- ./theme-packs/sbnc-pack/templates/member/MemberHomeTemplate.tsx:127:        </section>
+- ./theme-packs/sbnc-pack/templates/member/MemberHomeTemplate.tsx:134:        <section data-test-id="member-home-content">{children}</section>
+- ./prisma/schema.prisma:1582:// Can annotate: motions, bylaws sections, policy docs, pages
+- ./prisma/schema.prisma:1588:  anchor      String? // Anchor/location within the target (e.g., section ID, paragraph)
+- ./docs/backlog/MICRO_PR_SALVAGE_CHECKLISTS.md:10:  - Clarify blocks vs sections terminology and document the deprecation/migration plan (rename stripes -> sections) without runtime changes.
+- ./docs/rbac/PERMISSION_CHANGE_NOTIFICATIONS_V1.md:116:- Internal permission codes unless in an "advanced details" section for admins only
+- ./docs/CI/PRISMA_RULES.md:109:- `.github/pull_request_template.md` - PR checklist (includes Prisma section)
+- ./HISTORY.md:217:1. Add a new dated entry under the Timeline section.
+- ./docs/publishing/PUBLISHING_SYSTEM_PLAN.md:72:| `faq` | content | Accordion FAQ section |
+- ./docs/DEMO_GUIDE.md:11:- Includes "What we have NOT done yet" honesty section
+- ./docs/DEMO_GUIDE.md:19:This section is written for board and leadership conversations. It presents both paths honestly.
+- ./docs/DEMO_GUIDE.md:222:The Lifecycle State Demo section shows demo members in each lifecycle state. Click any member to view their lifecycle explainer panel.
+- ./docs/publishing/TEMPLATE_THEME_MODEL.md:58:| faq | content | Accordion-style Q&A section |
+- ./docs/publishing/TEMPLATE_THEME_MODEL.md:80:Full-width header section with optional background image and CTA.
+- ./docs/publishing/BLOCK_VISIBILITY_RULES.md:201:      # "Member benefits" section
+- ./docs/publishing/BLOCK_VISIBILITY_RULES.md:207:      # "Officer notes" section
+- ./docs/communications/VP_COMMS_ENEWS_SPEC.md:14:- [Section Specifications](#section-specifications)
+- ./docs/communications/VP_COMMS_ENEWS_SPEC.md:41:- Provides one-click copy-to-clipboard for each section
+- ./docs/communications/VP_COMMS_ENEWS_SPEC.md:272:This section has two subsections:
+- ./docs/communications/VP_COMMS_ENEWS_SPEC.md:340:- This section is optional—VP Comms may choose to omit entirely
+- ./docs/communications/VP_COMMS_ENEWS_SPEC.md:366:│ ☐ Include this section in eNews                                  │
+- ./docs/communications/VP_COMMS_ENEWS_SPEC.md:542:  // Previous location (for "Welcome New Members" section)
+- ./docs/communications/VP_COMMS_ENEWS_SPEC.md:546:  // Membership expiration (for "Leaving This Month" section)
+- ./docs/communications/VP_COMMS_ENEWS_SPEC.md:607:  "sections": {
+- ./docs/chatbot/CHATBOT_PLUGIN_SPEC.md:9:- Helps navigate users to the correct page/section to complete tasks
+- ./scripts/ci/checklist-coverage-audit.ts:28:  section: string;
+- ./src/components/events/PostmortemTab.tsx:500:      {/* Form sections */}
+- ./src/components/events/PostmortemTab.tsx:503:        <section>
+- ./src/components/events/PostmortemTab.tsx:615:        </section>
+- ./src/components/events/PostmortemTab.tsx:618:        <section>
+- ./src/components/events/PostmortemTab.tsx:652:        </section>
+- ./src/components/events/PostmortemTab.tsx:655:        <section>
+- ./src/components/events/PostmortemTab.tsx:767:        </section>
+- ./docs/chatbot/playbooks/ACTIVITIES_RBAC_SUPPORT_PLAYBOOK.md:8:- Chatbot answers how-to questions and deep-links users to the correct admin page/section.
+- ./scripts/ci/checklist-registry.json:9:      "section": "3. Release Classification",
+- ./scripts/ci/checklist-registry.json:17:      "section": "3. Release Classification",
+- ./scripts/ci/checklist-registry.json:25:      "section": "4. Channels",
+- ./scripts/ci/checklist-registry.json:33:      "section": "4. Channels",
+- ./scripts/ci/checklist-registry.json:41:      "section": "6. Data Safety",
+- ./scripts/ci/checklist-registry.json:49:      "section": "6. Data Safety",
+- ./scripts/ci/checklist-registry.json:57:      "section": "6. Data Safety",
+- ./scripts/ci/checklist-registry.json:65:      "section": "6. Data Safety",
+- ./scripts/ci/checklist-registry.json:74:      "section": "6. Data Safety",
+- ./scripts/ci/checklist-registry.json:82:      "section": "6. Hard Stops",
+- ./scripts/ci/checklist-registry.json:90:      "section": "6. Hard Stops",
+- ./scripts/ci/checklist-registry.json:98:      "section": "6. Hard Stops",
+- ./scripts/ci/checklist-registry.json:106:      "section": "6. Hard Stops",
+- ./scripts/ci/checklist-registry.json:114:      "section": "7. Kill Switch",
+- ./scripts/ci/checklist-registry.json:122:      "section": "7. Kill Switch",
+- ./scripts/ci/checklist-registry.json:130:      "section": "8. Observability",
+- ./scripts/ci/checklist-registry.json:139:      "section": "8. Observability",
+- ./scripts/ci/checklist-registry.json:147:      "section": "8. Observability",
+- ./scripts/ci/checklist-registry.json:155:      "section": "9. Decision Memo",
+- ./scripts/ci/checklist-registry.json:163:      "section": "CI Enforcement",
+- ./scripts/ci/checklist-registry.json:172:      "section": "CI Enforcement",
+- ./scripts/ci/checklist-registry.json:181:      "section": "CI Enforcement",
+- ./scripts/ci/checklist-registry.json:190:      "section": "CI Enforcement",
+- ./scripts/ci/checklist-registry.json:199:      "section": "CI Enforcement",
+- ./docs/work-queue/README.md:53:2. Include sections: Goal, Scope, Data Model (draft), Open Questions, Acceptance Criteria.
+- ./scripts/ci/sections_migration_inventory.zsh:22:printf "\n## Matches: sections / section (for context)\n\n" >> "$OUT"
+- ./scripts/ci/sections_migration_inventory.zsh:24:  '\b(section|sections)\b' . \
+- ./tests/api/v1/officer/secretary-dashboard.test.ts:42:      // Verify all required sections exist
+- ./docs/UX/MEMBER_PROFILE_EXPERIENCE.md:81:Read-only section showing:
+- ./src/components/governance/AnnotationPanel.tsx:31:  /** Available section anchors for the document */
+- ./src/components/governance/AnnotationPanel.tsx:55: * - Support for section-level anchors
+- ./src/components/governance/AnnotationPanel.tsx:353:                <option value="">-- No specific section --</option>
+- ./docs/sidebar.json:2:  "sections": [
+- ./tests/public/events-pages.spec.ts:27:  test("shows hero section", async ({ page }) => {
+- ./docs/testing/admin-failures-baseline.md:180:| `admin-system-comms.spec.ts:6` | displays system comms section with health OK | "Health: OK" | "Health checkHealth: error" |
+- ./docs/testing/admin-failures-baseline.md:233:  tests/admin/admin-system-comms.spec.ts:6:7 › displays system comms section with health OK
+- ./docs/THEMES_TEMPLATES.md:223:  sections={[
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:24:- ./docs/demos/HOME_PAGE_STRIPES_DEMO.md:128:- `Stripe` - Base full-width section
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:26:- ./docs/demos/HOME_PAGE_STRIPES_DEMO.md:130:- `ContentStripe` - Content section with optional title
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:74:- ./src/app/events/EventsDiscovery.tsx:14:import { ContentStripe } from "@/components/sections";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:78:- ./src/app/events/page.tsx:14:import { HeroStripe } from "@/components/sections";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:79:- ./src/app/gift/page.tsx:13:import { HeroStripe, ContentStripe } from "@/components/sections";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:85:- ./src/app/my/page.tsx:16:import { Stripe } from "@/components/sections";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:91:- ./src/app/my/payment-methods/page.tsx:21:import { Stripe } from "@/components/sections";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:101:- ./src/app/my/profile/page.tsx:28:import { Stripe } from "@/components/sections";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:115:- ./src/components/sections/index.ts:10:export { default as ContentSection } from "../stripes/ContentStripe";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:116:- ./src/components/sections/index.ts:4:export { Stripe, default as StripeDefault } from "../stripes/Stripe";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:117:- ./src/components/sections/index.ts:5:export { default as HeroStripe } from "../stripes/HeroStripe";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:118:- ./src/components/sections/index.ts:6:export { default as ContentStripe } from "../stripes/ContentStripe";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:119:- ./src/components/sections/index.ts:7:export { default as TwoColumnStripe } from "../stripes/TwoColumnStripe";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:120:- ./src/components/sections/index.ts:9:export { default as HeroSection } from "../stripes/HeroStripe";
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:121:- ./src/components/sections/Section.tsx:2: * Section - layout-only wrapper (formerly "Stripe")
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:123:- ./src/components/stripes/ContentStripe.tsx:2: * ContentStripe - General content section with optional title
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:132:- ./src/components/stripes/HeroStripe.tsx:2: * HeroStripe - Marketing hero section
+- ./docs/SECTIONS_MIGRATION_INVENTORY.generated.md:155:## Matches: sections / section (for context)
+- ./src/app/page.tsx:8: * - Hero section with CTA
+- ./src/app/page.tsx:10: * - Gift Certificate section
+- ./src/app/page.tsx:18:import { HeroSection, ContentSection, Section } from "@/components/sections";
+- ./docs/DEMO_MEMBER_LIST.md:9:**Quick Access:** From the Demo Dashboard (`/admin/demo`), click "Member List with Lifecycle Hints" in the Quick Links section.
+- ./tests/admin/admin-activity-ui.spec.ts:7:  test("Recent activity section renders on the admin page", async ({ page }) => {
+- ./tests/admin/admin-activity-ui.spec.ts:14:    // Check for the section wrapper
+- ./tests/admin/admin-activity-ui.spec.ts:15:    const section = page.locator('[data-test-id="admin-activity-section"]');
+- ./tests/admin/admin-activity-ui.spec.ts:16:    await expect(section).toBeVisible();
+- ./tests/admin/admin-activity-ui.spec.ts:59:    // Check the activity section and table exist
+- ./tests/admin/admin-activity-ui.spec.ts:60:    const section = page.locator('[data-test-id="admin-activity-section"]');
+- ./tests/admin/admin-activity-ui.spec.ts:61:    await expect(section).toBeVisible();
+- ./tests/admin/admin-parliamentarian-dashboard.spec.ts:192:      // Check all flag sections for auditTrailUrl
+- ./tests/admin/admin-parliamentarian-dashboard.spec.ts:311:    test("overdue alert section displays when there are overdue flags", async ({
+- ./tests/admin/admin-parliamentarian-dashboard.spec.ts:339:          // Alert section should have red styling
+- ./tests/admin/admin-parliamentarian-dashboard.spec.ts:348:    test("policy questions section shows count badge", async ({ page }) => {
+- ./src/app/events/page.tsx:14:import { HeroStripe } from "@/components/sections";
+- ./docs/cc_projects/CC_PROJECT__BOARD_KPI_WIDGET.md:99:  - Target: Board dashboard / admin home (new panel section)
+- ./docs/policies/sbnc/EVENT_SUBMISSION_PHASE2_SPEC.md:40:- Policies & Procedures (events section)
+- ./src/app/events/EventsDiscovery.tsx:14:import { ContentStripe } from "@/components/sections";
+- ./tests/admin/impersonation-ui.spec.ts:17:    test("View as Member section is visible", async ({ page }) => {
+- ./tests/admin/impersonation-ui.spec.ts:23:      // Check for the View as Member section
+- ./tests/admin/impersonation-ui.spec.ts:24:      const viewAsSection = page.getByTestId("demo-view-as-section");
+- ./tests/admin/impersonation-ui.spec.ts:28:    test("View as Member section has search input", async ({ page }) => {
+- ./tests/admin/impersonation-ui.spec.ts:37:    test("View as Member section has search button", async ({ page }) => {
+- ./docs/policies/sbnc/UNVERIFIED_RULES_CANDIDATE_SET.md:21:| **Section** | Page/section reference if available |
+- ./docs/policies/sbnc/UNVERIFIED_RULES_CANDIDATE_SET.md:76:> "No part of the net earnings of the corporation shall inure to the benefit of any member or private shareholder, as defined in Internal Revenue Code section 501(c)(7)."
+- ./docs/policies/sbnc/UNVERIFIED_RULES_CANDIDATE_SET.md:382:> "Expanded from 3 bullet points to 9 comprehensive sections"
+- ./docs/policies/sbnc/UNVERIFIED_RULES_CANDIDATE_SET.md:388:**Blocking Issue:** PROPOSED enhancement. Actual section text not extractable.
+- ./docs/policies/sbnc/UNVERIFIED_RULES_CANDIDATE_SET.md:421:> "Improved Event Waiver: Reformatted for readability, Clear sections instead of dense paragraph, Enhanced legal protection: Maintains all original protections while improving clarity, Modern media considerations: Explicit social media and digital distribution language"
+- ./docs/policies/sbnc/UNVERIFIED_RULES_CANDIDATE_SET.md:545:| RULE-020 | 3 bullet points | 9 sections |
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:78:- Add src/components/sections/Section.tsx and HeroSection.tsx
+- ./docs/ARCHITECTURE_BLOCKS_AND_SECTIONS.md:84:- Update folder references in code to sections/
+- ./tests/admin/admin-system-comms.spec.ts:6:  test("displays system comms section with health OK", async ({ page }) => {
+- ./tests/admin/admin-system-comms.spec.ts:9:    // Assert the section is visible
+- ./tests/admin/admin-system-comms.spec.ts:10:    const section = page.locator('[data-test-id="system-comms-section"]');
+- ./tests/admin/admin-system-comms.spec.ts:11:    await expect(section).toBeVisible();
+- ./docs/demos/LEADERSHIP_DEMO_SCRIPT.md:37:> Third, the gadgets are live. That 'Upcoming Events' section has a Register button. One click, and I'm signed up. No form pages, no confirmation screens unless payment is involved."
+- ./docs/demos/LEADERSHIP_DEMO_SCRIPT.md:113:**Navigate to:** http://localhost:3000/admin/demo → View as Member section
+- ./docs/demos/LEADERSHIP_DEMO_SCRIPT.md:271:| View As Tool | Demo Dashboard → View as Member section |
+- ./tests/admin/admin-nav.spec.ts:28:    expect(hash).toBe("#admin-members-section");
+- ./tests/admin/admin-nav.spec.ts:33:    expect(hash).toBe("#admin-events-section");
+- ./docs/demos/DEMO_NARRATIVE.md:75:This section documents observed behaviors in the current system that ClubOS addresses. These are factual observations, not criticisms.
+- ./docs/demos/MEMBERSHIP_DEMO_SCRIPT.md:32:2. System status section - show database is connected
+- ./docs/demos/MEMBERSHIP_DEMO_SCRIPT.md:117:4. Point out the "What Happens Next" section - these are the state machine transitions
+- ./docs/policies/sbnc/BOARD_MEMO_POLICY_GAPS_AND_APPROVALS.md:79:- Same section states: "Home hosts may invite up to two (2) personal guests per Policies and Procedures"
