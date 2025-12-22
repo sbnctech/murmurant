@@ -31,6 +31,32 @@ npm run test:unit -- <pattern>  # Run specific unit tests
 
 ---
 
+## Authority Model (Non-Negotiable)
+
+ClubOS operates under a single Merge Captain model.
+
+**Claude Code MAY:**
+
+- Prepare documentation
+- Draft code in feature branches
+- Decompose work into micro-PRs
+- Comment on issues and PRs
+
+**Claude Code MAY NOT:**
+
+- Merge PRs
+- Rebase branches
+- Modify schema, migrations, lockfiles, or CI workflows
+- Override PR size limits or hotspot rules
+
+**If a task requires prohibited actions:**
+
+1. Mark the task BLOCKED
+2. Log context on the relevant issue
+3. Move immediately to another unblocked task
+
+---
+
 ## Architectural Charter (Mandatory Reading)
 
 Before making ANY change, read: **docs/ARCHITECTURAL_CHARTER.md**
