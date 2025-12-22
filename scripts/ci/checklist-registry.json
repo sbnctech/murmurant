@@ -1,0 +1,207 @@
+{
+  "$schema": "./checklist-registry.schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-21",
+  "sourceDocument": "docs/reliability/MULTITENANT_RELEASE_READINESS.md",
+  "items": [
+    {
+      "id": "CLASS-001",
+      "section": "3. Release Classification",
+      "description": "Every release MUST be classified before entering any channel",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No PR template or automation requires classification"
+    },
+    {
+      "id": "CLASS-002",
+      "section": "3. Release Classification",
+      "description": "Classification recorded in release manifest",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No manifest system exists"
+    },
+    {
+      "id": "CHAN-001",
+      "section": "4. Channels",
+      "description": "Releases progress through channels in order (dev -> experimental -> candidate -> stable)",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "Only sandbox and main branches exist currently"
+    },
+    {
+      "id": "CHAN-002",
+      "section": "4. Channels",
+      "description": "Minimum duration in each channel before promotion",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No automation enforces soak periods"
+    },
+    {
+      "id": "DATA-001",
+      "section": "6. Data Safety",
+      "description": "No cross-tenant data access possible (query isolation verified)",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No automated tenant isolation tests - CRITICAL for multi-tenant"
+    },
+    {
+      "id": "DATA-002",
+      "section": "6. Data Safety",
+      "description": "Tenant ID present in all new database queries",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No static analysis verifies tenant ID presence"
+    },
+    {
+      "id": "DATA-003",
+      "section": "6. Data Safety",
+      "description": "Audit log entries include tenant ID",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No automated check for audit log tenant ID"
+    },
+    {
+      "id": "DATA-004",
+      "section": "6. Data Safety",
+      "description": "Data migration is idempotent and reversible",
+      "enforcement": "partial",
+      "mustHave": false,
+      "notes": "check-migration-safety.sh catches destructive patterns but doesn't verify reversibility",
+      "enforcedBy": "scripts/ci/check-migration-safety.sh"
+    },
+    {
+      "id": "DATA-005",
+      "section": "6. Data Safety",
+      "description": "Test tenant data is not production data",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "Seed scripts exist but no verification"
+    },
+    {
+      "id": "HARD-001",
+      "section": "6. Hard Stops",
+      "description": "Rollback path defined for release",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No rollback documentation requirement"
+    },
+    {
+      "id": "HARD-002",
+      "section": "6. Hard Stops",
+      "description": "Cross-tenant data access risk identified and blocked",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No automated detection for cross-tenant access"
+    },
+    {
+      "id": "HARD-003",
+      "section": "6. Hard Stops",
+      "description": "Audit logging not regressed (fewer events logged)",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No audit coverage check in CI"
+    },
+    {
+      "id": "HARD-004",
+      "section": "6. Hard Stops",
+      "description": "Kill switch configured before release",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No kill switch verification system"
+    },
+    {
+      "id": "KILL-001",
+      "section": "7. Kill Switch",
+      "description": "Kill switch configurable without code deployment",
+      "enforcement": "partial",
+      "mustHave": false,
+      "notes": "Feature flags can be env vars, but no standard system"
+    },
+    {
+      "id": "KILL-002",
+      "section": "7. Kill Switch",
+      "description": "Kill switch activation logged in audit trail",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No audit integration for feature flag changes"
+    },
+    {
+      "id": "OBS-001",
+      "section": "8. Observability",
+      "description": "All new user actions logged with actor ID and tenant ID",
+      "enforcement": "partial",
+      "mustHave": false,
+      "notes": "Audit logging exists but coverage not verified in CI",
+      "enforcedBy": "src/lib/audit/index.ts"
+    },
+    {
+      "id": "OBS-002",
+      "section": "8. Observability",
+      "description": "All new errors logged with stack trace and context",
+      "enforcement": "partial",
+      "mustHave": false,
+      "notes": "Next.js error handling exists, no coverage check"
+    },
+    {
+      "id": "OBS-003",
+      "section": "8. Observability",
+      "description": "Release version identifiable in all log entries",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No version tagging in logs"
+    },
+    {
+      "id": "MEMO-001",
+      "section": "9. Decision Memo",
+      "description": "GO/NO-GO decision memo required for stable promotion",
+      "enforcement": "manual",
+      "mustHave": false,
+      "notes": "No enforcement of decision memo workflow"
+    },
+    {
+      "id": "BUILD-001",
+      "section": "CI Enforcement",
+      "description": "Charter files exist (ARCHITECTURAL_CHARTER.md, CLAUDE.md)",
+      "enforcement": "enforced",
+      "mustHave": true,
+      "notes": "Enforced by charter.yml workflow",
+      "enforcedBy": ".github/workflows/charter.yml"
+    },
+    {
+      "id": "BUILD-002",
+      "section": "CI Enforcement",
+      "description": "Destructive migrations require MIGRATION_APPROVED annotation",
+      "enforcement": "enforced",
+      "mustHave": true,
+      "notes": "Enforced by check-migration-safety.sh",
+      "enforcedBy": "scripts/ci/check-migration-safety.sh"
+    },
+    {
+      "id": "BUILD-003",
+      "section": "CI Enforcement",
+      "description": "Prisma schema validates",
+      "enforcement": "enforced",
+      "mustHave": true,
+      "notes": "Enforced by ci-prisma-build.yml",
+      "enforcedBy": ".github/workflows/ci-prisma-build.yml"
+    },
+    {
+      "id": "BUILD-004",
+      "section": "CI Enforcement",
+      "description": "TypeScript compiles without errors",
+      "enforcement": "enforced",
+      "mustHave": true,
+      "notes": "Enforced by ci-prisma-build.yml",
+      "enforcedBy": ".github/workflows/ci-prisma-build.yml"
+    },
+    {
+      "id": "BUILD-005",
+      "section": "CI Enforcement",
+      "description": "Build succeeds",
+      "enforcement": "enforced",
+      "mustHave": true,
+      "notes": "Enforced by ci-prisma-build.yml",
+      "enforcedBy": ".github/workflows/ci-prisma-build.yml"
+    }
+  ]
+}

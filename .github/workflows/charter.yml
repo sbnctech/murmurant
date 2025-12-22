@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "npm"
 
       - name: Install ripgrep
         run: |
@@ -26,3 +27,10 @@ jobs:
       - name: Charter checks
         run: |
           bash scripts/ci_charter_checks.sh
+
+      - name: Install dependencies for audit
+        run: npm ci --ignore-scripts
+
+      - name: Checklist coverage audit
+        run: |
+          npx tsx scripts/ci/checklist-coverage-audit.ts

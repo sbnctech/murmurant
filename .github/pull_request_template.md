@@ -1,3 +1,15 @@
+## Release Classification (Required)
+
+Select ONE classification for this PR:
+
+- [ ] **experimental** - Early exploration; may be reverted; not for production
+- [ ] **candidate** - Ready for review; may ship after validation
+- [ ] **stable** - Production-ready; fully tested and documented
+
+<!-- CI will fail if no classification is selected -->
+
+---
+
 ## Change checklist
 
 ### General

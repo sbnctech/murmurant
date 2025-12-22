@@ -66,3 +66,13 @@ Quick links:
 
 All scripts are ASCII-only, zsh-based, and autodetect the project root.
 
+
+---
+
+## Ownership & Intellectual Property
+
+ClubOS is an independently developed system owned by the Santa Barbara Newcomers Club (SBNC).
+
+All code and documentation in this repository are original works created for SBNC. Development follows a clean-room methodology, and SBNC retains full ownership of the resulting intellectual property. Use of AI-assisted tools does not transfer ownership or rights in the work product.
+
+See `docs/governance/OWNERSHIP_AND_IP.md` for details.

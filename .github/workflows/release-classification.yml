@@ -1,0 +1,29 @@
+name: Release Classification
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-classification:
+    name: Check Release Classification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install tsx
+        run: npm install -g tsx
+
+      - name: Check Release Classification
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          echo "Checking PR body for release classification..."
+          npx tsx scripts/ci/check-release-classification.ts "$PR_BODY"
