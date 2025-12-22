@@ -1,0 +1,6 @@
+Contact ID,Member ID,First name,Last name,Email,Phone,Member since,Membership level
+WA001,M001,Alice,Anderson,alice@example.com,805-555-0101,01/15/2024,Newcomer
+WA002,M002,Bob,Baker,bob@example.com,805-555-0102,06/01/2023,2nd Year
+WA003,M003,Carol,Chen,carol@example.com,805-555-0103,01/10/2022,Third Year
+WA004,M004,David,Davis,david@example.com,805-555-0104,03/20/2024,New Member
+WA005,M005,Eva,Edwards,eva@example.com,,08/15/2021,Alumni

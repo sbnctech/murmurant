@@ -1,0 +1,6 @@
+Registration ID,Contact ID,Event ID,Registration status,Registration date,Cancellation date
+REG001,WA001,EVT001,Confirmed,01/10/2024,
+REG002,WA002,EVT001,Confirmed,01/11/2024,
+REG003,WA003,EVT002,Confirmed,02/01/2024,
+REG004,WA001,EVT003,Confirmed,02/15/2024,
+REG005,WA002,EVT002,Cancelled,02/03/2024,02/08/2024
