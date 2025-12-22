@@ -1,0 +1,91 @@
+# ClubOS Migration Configuration - WA -> ClubOS
+version: "1.0"
+source: "wild-apricot"
+target: "clubos"
+
+membership_status_mapping:
+  "New Member": "NEWCOMER"
+  "Newcomer": "NEWCOMER"
+  "1st Year": "NEWCOMER"
+  "2nd Year": "NEWCOMER"
+  "Third Year": "EXTENDED"
+  "3rd Year": "EXTENDED"
+  "Alumni": "ALUMNI"
+  "Lapsed": "LAPSED"
+  "Prospect": "PROSPECT"
+  _default: "PROSPECT"
+
+member_fields:
+  firstName: "First name"
+  lastName: "Last name"
+  email: "Email"
+  phone: "Phone"
+  joinedAt: "Member since"
+  membershipStatusId:
+    source: "Membership level"
+    transform: "membership_status_lookup"
+  _wa_contact_id: "Contact ID"
+
+event_fields:
+  title: "Event name"
+  description: "Description"
+  category: "Tags"
+  location: "Location"
+  startTime: "Start date"
+  endTime: "End date"
+  capacity: "Registration limit"
+  isPublished: true
+  _wa_event_id: "Event ID"
+
+event_category_mapping:
+  "Social": "Social"
+  "Outdoor": "Outdoor Activities"
+  "Cultural": "Cultural"
+  "Dining": "Dining Out"
+  _default: "General"
+
+registration_fields:
+  memberId:
+    source: "Contact ID"
+    transform: "member_id_lookup"
+  eventId:
+    source: "Event ID"
+    transform: "event_id_lookup"
+  status:
+    source: "Registration status"
+    transform: "registration_status_lookup"
+  registeredAt: "Registration date"
+  cancelledAt: "Cancellation date"
+  _wa_registration_id: "Registration ID"
+
+registration_status_mapping:
+  "Confirmed": "CONFIRMED"
+  "Registered": "CONFIRMED"
+  "Cancelled": "CANCELLED"
+  "Waitlisted": "WAITLISTED"
+  "No show": "NO_SHOW"
+  _default: "CONFIRMED"
+
+id_reconciliation:
+  members:
+    primary_key: "email"
+    on_conflict: "update"
+  events:
+    composite_key: ["title", "startTime"]
+    time_tolerance_minutes: 60
+    on_conflict: "skip"
+  registrations:
+    composite_key: ["memberId", "eventId"]
+    on_conflict: "update"
+
+import_options:
+  batch_size: 100
+  continue_on_error: true
+  date_format: "MM/DD/YYYY"
+  datetime_format: "MM/DD/YYYY HH:mm"
+  source_timezone: "America/Los_Angeles"
+  skip_incomplete: true
+  required_fields:
+    members: ["email", "firstName", "lastName"]
+    events: ["title", "startTime"]
+    registrations: ["memberId", "eventId"]
