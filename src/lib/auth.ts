@@ -69,6 +69,9 @@ export type Capability =
   | "users:manage"          // Create/update user roles and entitlements
   | "admin:full"            // Full admin access (implies all capabilities)
   | "debug:readonly"        // Debug read-only access (for support, default OFF)
+  // Delegation and role assignment (DM-3, DM-4, SD-3)
+  | "roles:assign"          // Authority to create role assignments (delegation)
+  | "roles:view"            // Authority to view role assignments
   // Officer portal: Meetings
   | "meetings:read"                     // View meetings list and details
   | "meetings:motions:read"             // View motions within meetings
@@ -152,6 +155,8 @@ const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
     "transitions:view",
     "transitions:approve",
     "users:manage",
+    "roles:assign",   // DM-3: Can assign roles
+    "roles:view",     // Can view role assignments
     "files:upload",
     "files:manage",
     "files:view_all",
@@ -168,6 +173,8 @@ const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
     "finance:view",
     "transitions:view",
     "transitions:approve",
+    "roles:assign",   // DM-3: Can assign roles
+    "roles:view",     // Can view role assignments
     // Governance oversight
     "governance:flags:read",
     "governance:flags:resolve",
@@ -231,6 +238,8 @@ const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
     "registrations:view",
     "events:view",
     "events:submit",         // Can submit events for approval (own committee's events)
+    // NO roles:assign - DM-3: Chairs cannot assign roles
+    // NO roles:view - Cannot see role assignments
     // NO members:history - event chairs see only event-related member info
     // NO events:edit - committee-scoped edit handled separately
     // NO events:approve - VP Activities handles approval
@@ -336,6 +345,223 @@ function getEffectiveCapabilities(role: GlobalRole): Capability[] {
   }
 
   return baseCaps;
+}
+
+// ============================================================================
+// TIME-BOUNDED AUTHORITY (Charter P2)
+// Role assignments have startDate and endDate. Access is only granted when
+// the current time falls within the assignment's time bounds.
+// ============================================================================
+
+/**
+ * Map committee role slugs to GlobalRole for capability resolution.
+ * This bridges the gap between database CommitteeRole records and the
+ * static capability system.
+ *
+ * Convention: slugs use lowercase-with-dashes, matching GlobalRole values.
+ */
+const COMMITTEE_ROLE_TO_GLOBAL_ROLE: Record<string, GlobalRole> = {
+  // Leadership roles
+  president: "president",
+  "past-president": "past-president",
+  "vp-activities": "vp-activities",
+  "vp-communications": "vp-communications",
+  secretary: "secretary",
+  parliamentarian: "parliamentarian",
+  webmaster: "webmaster",
+  // Committee roles
+  "event-chair": "event-chair",
+  chair: "event-chair",
+  "committee-chair": "event-chair",
+};
+
+/**
+ * Derive GlobalRole from a CommitteeRole slug.
+ * Unknown slugs default to "member" (no elevated capabilities).
+ */
+export function deriveGlobalRoleFromSlug(slug: string): GlobalRole {
+  return COMMITTEE_ROLE_TO_GLOBAL_ROLE[slug.toLowerCase()] ?? "member";
+}
+
+/**
+ * Role assignment with included committee role info.
+ */
+export interface ActiveRoleAssignment {
+  id: string;
+  memberId: string;
+  committeeId: string;
+  committeeRoleId: string;
+  termId: string;
+  startDate: Date;
+  endDate: Date | null;
+  committeeRole: {
+    id: string;
+    slug: string;
+    name: string;
+  };
+}
+
+/**
+ * Result of time-bounded capability resolution.
+ */
+export interface EffectiveCapabilities {
+  /** Highest GlobalRole from active assignments */
+  role: GlobalRole;
+  /** Aggregated capabilities from all active assignments */
+  capabilities: Capability[];
+  /** Active assignments that contributed to these capabilities */
+  assignments: ActiveRoleAssignment[];
+}
+
+/**
+ * GlobalRole priority for determining highest effective role.
+ * Higher number = higher authority.
+ */
+const ROLE_PRIORITY: Record<GlobalRole, number> = {
+  member: 0,
+  "event-chair": 1,
+  webmaster: 2,
+  parliamentarian: 3,
+  secretary: 3,
+  "vp-communications": 4,
+  "vp-activities": 4,
+  "past-president": 5,
+  president: 6,
+  admin: 10,
+};
+
+/**
+ * Derive the highest GlobalRole from a set of active assignments.
+ */
+export function deriveGlobalRoleFromAssignments(
+  assignments: ActiveRoleAssignment[]
+): GlobalRole {
+  if (assignments.length === 0) {
+    return "member";
+  }
+
+  let highestRole: GlobalRole = "member";
+  let highestPriority = 0;
+
+  for (const assignment of assignments) {
+    const role = deriveGlobalRoleFromSlug(assignment.committeeRole.slug);
+    const priority = ROLE_PRIORITY[role];
+    if (priority > highestPriority) {
+      highestPriority = priority;
+      highestRole = role;
+    }
+  }
+
+  return highestRole;
+}
+
+/**
+ * Get all active role assignments for a member at a given time.
+ *
+ * Charter P2: Time-bounded authority.
+ * - TB-1: startDate <= asOfDate (must have started)
+ * - TB-2: endDate is null OR endDate > asOfDate (must not have ended)
+ *
+ * @param memberId - The member to check assignments for
+ * @param asOfDate - The point in time to evaluate (defaults to now)
+ * @returns Active role assignments with committee role info
+ */
+export async function getActiveRoleAssignments(
+  memberId: string,
+  asOfDate: Date = new Date()
+): Promise<ActiveRoleAssignment[]> {
+  const { prisma } = await import("@/lib/prisma");
+
+  const assignments = await prisma.roleAssignment.findMany({
+    where: {
+      memberId,
+      startDate: { lte: asOfDate }, // TB-1: Must have started
+      OR: [
+        { endDate: null }, // No end date = still active
+        { endDate: { gt: asOfDate } }, // TB-2: Must not have ended
+      ],
+    },
+    include: {
+      committeeRole: {
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  return assignments;
+}
+
+/**
+ * Get member's effective capabilities considering time bounds.
+ *
+ * Charter P2: Time-bounded authority.
+ * - Queries RoleAssignment with date validation
+ * - Aggregates capabilities from all active assignments
+ * - Returns highest effective GlobalRole
+ *
+ * This function enforces TB-1 (activation) and TB-2 (expiration) guarantees.
+ *
+ * @param memberId - The member to get capabilities for
+ * @param asOfDate - The point in time to evaluate (defaults to now)
+ * @returns Effective capabilities with active assignments
+ */
+export async function getEffectiveCapabilitiesForMember(
+  memberId: string,
+  asOfDate: Date = new Date()
+): Promise<EffectiveCapabilities> {
+  const assignments = await getActiveRoleAssignments(memberId, asOfDate);
+
+  // Derive highest role from active assignments
+  const role = deriveGlobalRoleFromAssignments(assignments);
+
+  // Aggregate capabilities from all active assignments
+  // Each assignment's role contributes its capabilities
+  const capabilitySet = new Set<Capability>();
+  for (const assignment of assignments) {
+    const assignmentRole = deriveGlobalRoleFromSlug(assignment.committeeRole.slug);
+    const roleCaps = getEffectiveCapabilities(assignmentRole);
+    for (const cap of roleCaps) {
+      capabilitySet.add(cap);
+    }
+  }
+
+  return {
+    role,
+    capabilities: [...capabilitySet],
+    assignments,
+  };
+}
+
+/**
+ * Check if a member has a capability at a given time.
+ * This is the time-aware version of hasCapability().
+ *
+ * Charter P2: Time-bounded authority.
+ * - Validates against active role assignments
+ * - Returns false if no active assignment grants the capability
+ *
+ * @param memberId - The member to check
+ * @param capability - The capability to check for
+ * @param asOfDate - The point in time to evaluate (defaults to now)
+ * @returns true if member has the capability via an active assignment
+ */
+export async function hasMemberCapability(
+  memberId: string,
+  capability: Capability,
+  asOfDate: Date = new Date()
+): Promise<boolean> {
+  const { capabilities } = await getEffectiveCapabilitiesForMember(memberId, asOfDate);
+
+  // admin:full implies all capabilities
+  if (capabilities.includes("admin:full")) {
+    return true;
+  }
+
+  return capabilities.includes(capability);
 }
 
 /**
