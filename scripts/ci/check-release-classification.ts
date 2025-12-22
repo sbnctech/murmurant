@@ -12,7 +12,7 @@ if (!body) {
   fail("✗ Missing PR body input. Pass as argv or PR_BODY env var.");
 }
 
-function parseReleaseClassification(text: string): ReleaseClass | null {
+export function _parseReleaseClassificationRaw(text: string): ReleaseClass | null {
   const t = text;
 
   const checkbox = t.match(/\[\s*[xX]\s*\]\s*(experimental|candidate|stable)\b/i);
@@ -27,10 +27,45 @@ function parseReleaseClassification(text: string): ReleaseClass | null {
   return null;
 }
 
-const selected = parseReleaseClassification(body);
+const selected = _parseReleaseClassificationRaw(body);
 
 if (!selected) {
   fail("✗ No release classification selected. Select one of: experimental, candidate, stable");
 }
 
 console.log(`✓ Release classification: ${selected}`);
+
+export {}; // Make this file a module for TS imports
+
+export function parseReleaseClassification(text: string): {
+  valid: boolean;
+  classification: ReleaseClass | null;
+  error: string | null;
+  selectedCount: number;
+} {
+  if (!text || !text.trim()) {
+    return { valid: false, classification: null, error: "PR body is empty", selectedCount: 0 };
+  }
+  const matches = (text.match(/\b(experimental|candidate|stable)\b/gi) || [])
+    .map(s => s.toLowerCase());
+  const uniq = Array.from(new Set(matches));
+  if (uniq.length === 1) {
+    return { valid: true, classification: uniq[0] as ReleaseClass, error: null, selectedCount: 1 };
+  }
+  if (uniq.length === 0) {
+    return {
+      valid: false,
+      classification: null,
+      error: "No release classification selected. Select one of: experimental, candidate, stable",
+      selectedCount: 0,
+    };
+  }
+  return {
+    valid: false,
+    classification: null,
+    error: `Multiple classifications selected: ${uniq.join(", ")}`,
+    selectedCount: uniq.length,
+  };
+}
+
+export {};
