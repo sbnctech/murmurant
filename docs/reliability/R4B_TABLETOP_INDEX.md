@@ -1,0 +1,11 @@
+# ClubOS - R4-B Tabletop Index
+
+Status: Canonical Index
+Last updated: 2025-12-21
+
+- TABLETOP_TEMPLATE.md
+- TT1_DATA_CORRUPTION_SUSPECTED.md
+- TT2_AUDIENCE_LEAK.md
+- TT3_BACKUP_FAILURE.md
+- TT4_EXTERNAL_DEPENDENCY_OUTAGE.md
+

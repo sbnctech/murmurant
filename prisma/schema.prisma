@@ -222,6 +222,7 @@ model Member {
   // Publishing system relations
   pagesCreated     Page[]            @relation("PageCreatedBy")
   pagesUpdated     Page[]            @relation("PageUpdatedBy")
+  pageRevisions    PageRevision[]
   permissions      Permission[]
   campaignsCreated MessageCampaign[]
   deliveryLogs     DeliveryLog[]
@@ -1011,6 +1012,7 @@ enum AuditAction {
   UNPUBLISH
   SEND
   ARCHIVE
+  DISCARD_DRAFT
   EMAIL_SENT
   EMAIL_BOUNCED
   EMAIL_COMPLAINED
@@ -1036,6 +1038,9 @@ enum AuditAction {
   // Payment method events
   PAYMENT_METHOD_ADDED
   PAYMENT_METHOD_REVOKED
+  // Page revision events (A7)
+  UNDO
+  REDO
 }
 
 // Theme - Visual styling tokens and CSS
@@ -1089,7 +1094,8 @@ model Page {
   visibility     PageVisibility @default(PUBLIC)
   templateId     String?        @db.Uuid
   themeId        String?        @db.Uuid
-  content        Json // Block content data
+  content        Json // Block content data (working draft)
+  publishedContent Json? // Frozen published snapshot
   seoTitle       String? // Override for SEO
   seoDescription String? // Override for SEO
   seoImage       String? // Social sharing image
@@ -1101,16 +1107,39 @@ model Page {
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 
-  template     Template?     @relation(fields: [templateId], references: [id])
-  theme        Theme?        @relation(fields: [themeId], references: [id])
-  audienceRule AudienceRule? @relation(fields: [audienceRuleId], references: [id])
-  createdBy    Member?       @relation("PageCreatedBy", fields: [createdById], references: [id])
-  updatedBy    Member?       @relation("PageUpdatedBy", fields: [updatedById], references: [id])
+  template     Template?       @relation(fields: [templateId], references: [id])
+  theme        Theme?          @relation(fields: [themeId], references: [id])
+  audienceRule AudienceRule?   @relation(fields: [audienceRuleId], references: [id])
+  createdBy    Member?         @relation("PageCreatedBy", fields: [createdById], references: [id])
+  updatedBy    Member?         @relation("PageUpdatedBy", fields: [updatedById], references: [id])
+  revisions    PageRevision[]
 
   @@index([status])
   @@index([visibility])
   @@index([publishAt])
   @@index([templateId])
+}
+
+// PageRevision - Undo/redo revision stack for draft editing (A7)
+// Charter P7: Full audit trail for privileged actions
+// Revisions are bounded (max 20 per page) and cleared on publish/discard
+model PageRevision {
+  id            String   @id @default(uuid()) @db.Uuid
+  pageId        String   @db.Uuid
+  content       Json     // Snapshot of page.content at this revision
+  action        String   // "edit_block", "reorder", "add_block", "remove_block"
+  actionSummary String?  // Human-readable: "Edited hero block"
+  // Position in undo/redo stack: positive = undo available, negative = redo available
+  // Current position is always 0; undo moves current to redo stack
+  stackPosition Int      @default(0)
+  createdAt     DateTime @default(now())
+  createdById   String?  @db.Uuid
+
+  page      Page    @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  createdBy Member? @relation(fields: [createdById], references: [id])
+
+  @@index([pageId, stackPosition])
+  @@index([pageId, createdAt(sort: Desc)])
 }
 
 // Navigation - Site navigation menus

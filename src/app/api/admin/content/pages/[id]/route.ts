@@ -1,11 +1,20 @@
 // Copyright (c) Santa Barbara Newcomers Club
 // Page management API - Get, Update, Delete, Publish
+// A4: Lifecycle state machine for Draft/Published management
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCapability, isFullAdmin } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
-import { validatePageContent } from "@/lib/publishing/blocks";
+import { validatePageContent, PageContent } from "@/lib/publishing/blocks";
+import { clearRevisions } from "@/lib/publishing/revisions";
+import {
+  isValidTransition,
+  hasDraftChanges,
+  getLifecycleMessage,
+  LifecycleAction,
+  PageStatus,
+} from "@/lib/publishing/pageLifecycle";
 
 type RouteParams = {
   params: Promise<{ id: string }>;
@@ -195,15 +204,28 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
   return NextResponse.json({ success: true });
 }
 
-// POST /api/admin/content/pages/[id] - Publish or unpublish page
+// POST /api/admin/content/pages/[id] - Lifecycle actions (publish, unpublish, archive, discardDraft)
 // Requires publishing:manage capability (webmaster has this)
+// A4: Uses lifecycle state machine for validation
 export async function POST(req: NextRequest, { params }: RouteParams) {
   const auth = await requireCapability(req, "publishing:manage");
   if (!auth.ok) return auth.response;
 
   const { id } = await params;
   const { searchParams } = new URL(req.url);
-  const action = searchParams.get("action");
+  const action = searchParams.get("action") as LifecycleAction | null;
+
+  // Validate action parameter
+  const validActions: LifecycleAction[] = ["publish", "unpublish", "archive", "discardDraft"];
+  if (!action || !validActions.includes(action)) {
+    return NextResponse.json(
+      {
+        error: "Bad Request",
+        message: "Invalid action. Use ?action=publish, ?action=unpublish, ?action=archive, or ?action=discardDraft",
+      },
+      { status: 400 }
+    );
+  }
 
   const existing = await prisma.page.findUnique({ where: { id } });
   if (!existing) {
@@ -213,35 +235,57 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     );
   }
 
+  // Calculate draft changes for validation
+  const content = existing.content as PageContent | null;
+  const publishedContent = existing.publishedContent as PageContent | null;
+  const hasChanges = hasDraftChanges(content, publishedContent);
+
+  // Validate state transition
+  const currentStatus = existing.status as PageStatus;
+  const validation = isValidTransition(currentStatus, action, hasChanges);
+  if (!validation.ok) {
+    return NextResponse.json(
+      { error: "Bad Request", message: validation.error },
+      { status: 400 }
+    );
+  }
+
+  const memberId = auth.context.memberId === "e2e-admin" ? null : auth.context.memberId;
+
   if (action === "publish") {
-    // Publish page
+    // Publish: copy content to publishedContent, update status and timestamp
     const page = await prisma.page.update({
       where: { id },
       data: {
         status: "PUBLISHED",
         publishedAt: new Date(),
-        updatedById: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+        publishedContent: existing.content as object, // Freeze current content as published snapshot
+        updatedById: memberId,
       },
     });
+
+    // Clear revision history on publish (A7: no undo across publish boundaries)
+    await clearRevisions(id);
 
     await createAuditLog({
       action: "PUBLISH",
       resourceType: "page",
       resourceId: page.id,
-      memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+      memberId,
+      before: { status: currentStatus },
       after: { status: "PUBLISHED", publishedAt: page.publishedAt },
     });
 
-    return NextResponse.json({ page, message: "Page published" });
+    return NextResponse.json({ page, message: getLifecycleMessage(action) });
   }
 
   if (action === "unpublish") {
-    // Unpublish page
+    // Unpublish: set status to DRAFT (keep publishedContent for reference)
     const page = await prisma.page.update({
       where: { id },
       data: {
         status: "DRAFT",
-        updatedById: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+        updatedById: memberId,
       },
     });
 
@@ -249,20 +293,21 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       action: "UNPUBLISH",
       resourceType: "page",
       resourceId: page.id,
-      memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+      memberId,
+      before: { status: currentStatus },
       after: { status: "DRAFT" },
     });
 
-    return NextResponse.json({ page, message: "Page unpublished" });
+    return NextResponse.json({ page, message: getLifecycleMessage(action) });
   }
 
   if (action === "archive") {
-    // Archive page
+    // Archive: set status to ARCHIVED
     const page = await prisma.page.update({
       where: { id },
       data: {
         status: "ARCHIVED",
-        updatedById: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+        updatedById: memberId,
       },
     });
 
@@ -270,15 +315,42 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       action: "ARCHIVE",
       resourceType: "page",
       resourceId: page.id,
-      memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+      memberId,
+      before: { status: currentStatus },
       after: { status: "ARCHIVED" },
     });
 
-    return NextResponse.json({ page, message: "Page archived" });
+    return NextResponse.json({ page, message: getLifecycleMessage(action) });
   }
 
+  if (action === "discardDraft") {
+    // Discard draft: copy publishedContent back to content
+    const page = await prisma.page.update({
+      where: { id },
+      data: {
+        content: existing.publishedContent!, // Restore from published snapshot
+        updatedById: memberId,
+      },
+    });
+
+    // Clear revision history on discard (A7: no undo across publish boundaries)
+    await clearRevisions(id);
+
+    await createAuditLog({
+      action: "DISCARD_DRAFT",
+      resourceType: "page",
+      resourceId: page.id,
+      memberId,
+      before: { hasDraftChanges: true },
+      after: { hasDraftChanges: false },
+    });
+
+    return NextResponse.json({ page, message: getLifecycleMessage(action) });
+  }
+
+  // This should never be reached due to early validation
   return NextResponse.json(
-    { error: "Bad Request", message: "Invalid action. Use ?action=publish, ?action=unpublish, or ?action=archive" },
+    { error: "Bad Request", message: "Invalid action" },
     { status: 400 }
   );
 }

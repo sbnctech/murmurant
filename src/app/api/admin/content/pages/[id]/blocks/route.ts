@@ -12,6 +12,8 @@ import {
   type Block,
   type PageContent,
 } from "@/lib/publishing/blocks";
+import { createRevision, getActionSummary, getRevisionState } from "@/lib/publishing/revisions";
+import { validateBlockData, isEditableBlockType } from "@/lib/publishing/blockSchemas";
 import { z } from "zod";
 
 type RouteParams = {
@@ -38,6 +40,11 @@ const addBlockSchema = z.object({
 
 const reorderSchema = z.object({
   blockIds: z.array(z.string().uuid()).min(1),
+});
+
+const updateBlockSchema = z.object({
+  blockId: z.string().uuid(),
+  data: z.record(z.string(), z.unknown()),
 });
 
 /**
@@ -120,6 +127,17 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       blocks: reorderedBlocks,
     };
 
+    // Create revision before applying change (A7)
+    if (content) {
+      await createRevision({
+        pageId: id,
+        content,
+        action: "reorder",
+        actionSummary: getActionSummary("reorder"),
+        memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+      });
+    }
+
     // Validate new content
     const validation = validatePageContent(newContent);
     if (!validation.valid) {
@@ -149,10 +167,118 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       metadata: { operation: "reorder_blocks" },
     });
 
+    // Get updated revision state (A7)
+    const revisionState = await getRevisionState(id);
+
     return NextResponse.json({
       page: updatedPage,
       blocks: reorderedBlocks,
       message: "Blocks reordered",
+      revisionState,
+    });
+  }
+
+  // Handle update block action
+  if (action === "update") {
+    const parsed = updateBlockSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Bad Request", message: "Invalid request", errors: parsed.error.issues },
+        { status: 400 }
+      );
+    }
+
+    const { blockId, data } = parsed.data;
+
+    // Find the block to update
+    const blockIndex = currentBlocks.findIndex((b) => b.id === blockId);
+    if (blockIndex === -1) {
+      return NextResponse.json(
+        { error: "Bad Request", message: `Block not found: ${blockId}` },
+        { status: 400 }
+      );
+    }
+
+    const originalBlock = currentBlocks[blockIndex];
+    const blockType = originalBlock.type;
+
+    // Validate data against block type schema
+    // For editable block types, strict validation is enforced
+    // For read-only block types, validation is permissive (passthrough)
+    const schemaValidation = validateBlockData(blockType, data);
+    if (!schemaValidation.ok) {
+      return NextResponse.json(
+        { error: "Bad Request", message: schemaValidation.error },
+        { status: 400 }
+      );
+    }
+
+    // Use validated/cleaned data (schema may strip unknown keys for simple types)
+    const validatedData = schemaValidation.data as Record<string, unknown>;
+
+    // Type assertion needed because Block is a discriminated union
+    const updatedBlock = {
+      ...originalBlock,
+      data: validatedData as typeof originalBlock.data,
+    } as Block;
+
+    // Build updated blocks array
+    const updatedBlocks: Block[] = [...currentBlocks];
+    updatedBlocks[blockIndex] = updatedBlock;
+
+    const newContent: PageContent = {
+      schemaVersion: content?.schemaVersion || 1,
+      blocks: updatedBlocks,
+    };
+
+    // Create revision before applying change (A7)
+    if (content) {
+      await createRevision({
+        pageId: id,
+        content,
+        action: "edit_block",
+        actionSummary: getActionSummary("edit_block", blockType),
+        memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+      });
+    }
+
+    // Validate overall page content structure
+    const validation = validatePageContent(newContent);
+    if (!validation.valid) {
+      return NextResponse.json(
+        { error: "Bad Request", message: "Invalid content", errors: validation.errors },
+        { status: 400 }
+      );
+    }
+
+    // Update page
+    const updatedPage = await prisma.page.update({
+      where: { id },
+      data: {
+        content: newContent as object,
+        updatedById: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+      },
+    });
+
+    // Audit log
+    await createAuditLog({
+      action: "UPDATE",
+      resourceType: "page",
+      resourceId: page.id,
+      memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+      before: { blockId, blockType: originalBlock.type, data: originalBlock.data },
+      after: { blockId, blockType: updatedBlock.type, data: validatedData },
+      metadata: { operation: "update_block" },
+    });
+
+    // Get updated revision state (A7)
+    const revisionState = await getRevisionState(id);
+
+    return NextResponse.json({
+      page: updatedPage,
+      block: updatedBlock,
+      message: "Block updated",
+      revisionState,
     });
   }
 
@@ -202,6 +328,17 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     blocks: updatedBlocks,
   };
 
+  // Create revision before applying change (A7)
+  if (content) {
+    await createRevision({
+      pageId: id,
+      content,
+      action: "add_block",
+      actionSummary: getActionSummary("add_block", type),
+      memberId: auth.context.memberId === "e2e-admin" ? null : auth.context.memberId,
+    });
+  }
+
   // Validate new content
   const validation = validatePageContent(newContent);
   if (!validation.valid) {
@@ -230,11 +367,15 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     metadata: { operation: "add_block" },
   });
 
+  // Get updated revision state (A7)
+  const revisionState = await getRevisionState(id);
+
   return NextResponse.json(
     {
       page: updatedPage,
       block: newBlock,
       message: "Block added",
+      revisionState,
     },
     { status: 201 }
   );

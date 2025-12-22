@@ -1,10 +1,11 @@
 // Copyright (c) Santa Barbara Newcomers Club
-// Public page rendering route
+// Public page rendering route - shows publishedContent only
 
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { generateCssVariables, mergeTokensWithDefaults, ThemeTokens } from "@/lib/publishing/theme";
 import { PageContent } from "@/lib/publishing/blocks";
+import { selectContent } from "@/lib/publishing/contentSelection";
 import BlockRenderer from "@/components/publishing/BlockRenderer";
 
 type RouteParams = {
@@ -64,6 +65,18 @@ export default async function PublicPage({ params }: RouteParams) {
     notFound();
   }
 
+  // Use content selection to get the published content (frozen snapshot)
+  const selection = selectContent(
+    page.content as PageContent | null,
+    page.publishedContent as PageContent | null,
+    "published"
+  );
+
+  // No published content available
+  if (!selection.content) {
+    notFound();
+  }
+
   // Get theme CSS
   let themeCss = "";
   if (page.theme) {
@@ -74,11 +87,9 @@ export default async function PublicPage({ params }: RouteParams) {
     }
   }
 
-  const content = page.content as PageContent;
-
   return (
     <main data-test-id="public-page" data-page-slug={slug}>
-      <BlockRenderer content={content} themeCss={themeCss} />
+      <BlockRenderer content={selection.content} themeCss={themeCss} />
     </main>
   );
 }

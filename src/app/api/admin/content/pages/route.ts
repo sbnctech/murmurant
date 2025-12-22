@@ -7,6 +7,8 @@ import { Prisma } from "@prisma/client";
 import { requireCapability } from "@/lib/auth";
 import { createAuditLog } from "@/lib/publishing/permissions";
 import { validatePageContent, createDefaultPageContent } from "@/lib/publishing/blocks";
+import { detectDraftChanges } from "@/lib/publishing/contentSelection";
+import type { PageContent } from "@/lib/publishing/blocks";
 
 type PageListItem = {
   id: string;
@@ -16,6 +18,7 @@ type PageListItem = {
   visibility: string;
   publishedAt: string | null;
   updatedAt: string;
+  hasDraftChanges: boolean;
 };
 
 // GET /api/admin/content/pages - List all pages
@@ -72,6 +75,8 @@ export async function GET(req: NextRequest) {
       visibility: true,
       publishedAt: true,
       updatedAt: true,
+      content: true,
+      publishedContent: true,
     },
   });
 
@@ -83,6 +88,10 @@ export async function GET(req: NextRequest) {
     visibility: p.visibility,
     publishedAt: p.publishedAt?.toISOString() || null,
     updatedAt: p.updatedAt.toISOString(),
+    hasDraftChanges: detectDraftChanges(
+      p.content as PageContent | null,
+      p.publishedContent as PageContent | null
+    ),
   }));
 
   return NextResponse.json({

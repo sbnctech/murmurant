@@ -11,6 +11,7 @@ type PageListItem = {
   visibility: string;
   publishedAt: string | null;
   updatedAt: string;
+  hasDraftChanges: boolean;
 };
 
 type PaginatedResponse = {
@@ -113,16 +114,20 @@ export default function PagesTable() {
               Status
             </th>
             <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
-              Visibility
+              Published
             </th>
             <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
               Updated
+            </th>
+            <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
+              Actions
             </th>
           </tr>
         </thead>
         <tbody>
           {pages.map((p) => {
             const statusStyle = getStatusBadge(p.status);
+            const isPublished = p.status === "PUBLISHED";
             return (
               <tr key={p.id} data-test-id="admin-pages-row">
                 <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
@@ -147,15 +152,65 @@ export default function PagesTable() {
                       backgroundColor: statusStyle.bg,
                       color: statusStyle.text,
                     }}
+                    data-test-id="admin-pages-status-badge"
                   >
                     {p.status}
                   </span>
+                  {p.hasDraftChanges && (
+                    <span
+                      data-test-id="admin-pages-has-changes"
+                      style={{
+                        display: "inline-block",
+                        marginLeft: "6px",
+                        padding: "2px 6px",
+                        borderRadius: "4px",
+                        fontSize: "11px",
+                        backgroundColor: "#fff3cd",
+                        color: "#856404",
+                        border: "1px solid #ffc107",
+                      }}
+                      title="Draft has unpublished changes"
+                    >
+                      Has changes
+                    </span>
+                  )}
                 </td>
-                <td style={{ borderBottom: "1px solid #eee", padding: "8px", fontSize: "13px" }}>
-                  {p.visibility.replace("_", " ")}
+                <td style={{ borderBottom: "1px solid #eee", padding: "8px", fontSize: "13px", color: "#666" }}>
+                  {p.publishedAt ? formatDate(p.publishedAt) : "—"}
                 </td>
                 <td style={{ borderBottom: "1px solid #eee", padding: "8px", fontSize: "13px", color: "#666" }}>
                   {formatDate(p.updatedAt)}
+                </td>
+                <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <a
+                      href={`/admin/content/pages/${p.id}`}
+                      data-test-id="admin-pages-action-edit"
+                      style={{ color: "#0066cc", textDecoration: "none", fontSize: "13px" }}
+                    >
+                      Edit
+                    </a>
+                    {isPublished && (
+                      <a
+                        href={`/pages/${p.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-test-id="admin-pages-action-view"
+                        style={{ color: "#006600", textDecoration: "none", fontSize: "13px" }}
+                      >
+                        View
+                      </a>
+                    )}
+                    <a
+                      href={`/pages/${p.slug}/preview`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-test-id="admin-pages-action-preview"
+                      style={{ color: "#995500", textDecoration: "none", fontSize: "13px" }}
+                    >
+                      Preview
+                    </a>
+                  </div>
                 </td>
               </tr>
             );
@@ -163,7 +218,7 @@ export default function PagesTable() {
           {!loading && pages.length === 0 && (
             <tr data-test-id="admin-pages-empty-state">
               <td
-                colSpan={5}
+                colSpan={6}
                 style={{ padding: "8px", fontStyle: "italic", color: "#666" }}
               >
                 No pages found.
