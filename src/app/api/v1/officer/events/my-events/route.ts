@@ -223,7 +223,7 @@ export async function GET(request: NextRequest) {
     const transformedCommitteeEvents = committeeEvents.map((e) => transformEvent(e, false));
 
     // 4. Filter for needing wrap-up: completed events where postmortem is not complete
-    let needingWrapUp = transformedMyChairEvents.filter(
+    const needingWrapUp = transformedMyChairEvents.filter(
       (e) =>
         e.status === EventStatus.COMPLETED &&
         e.postmortemCompletionStatus !== "COMPLETE"

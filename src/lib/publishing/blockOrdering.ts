@@ -41,7 +41,7 @@ export function reorderBlocks<T extends OrderedBlock>(
   next.splice(clampedTo, 0, moved);
 
   // Renumber order field, returning new objects (do not mutate originals).
-  const renumbered = next.map((b, idx) => ({ ...(b as any), order: idx })) as T[];
+  const renumbered = next.map((b, idx) => ({ ...b, order: idx })) as T[];
   return renumbered;
 }
 

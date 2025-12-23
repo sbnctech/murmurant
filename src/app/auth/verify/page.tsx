@@ -19,6 +19,7 @@
  */
 
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth/tokens";
 import { loginUser } from "@/lib/auth/session";
@@ -207,12 +208,12 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
           <p className="text-gray-600 mb-4">
             No verification token provided. Please request a new sign-in link.
           </p>
-          <a
+          <Link
             href="/login"
             className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Go to Login
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -232,12 +233,12 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
             This sign-in link is invalid or has expired. Links are valid for 30 minutes
             and can only be used once.
           </p>
-          <a
+          <Link
             href="/login"
             className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Request New Link
-          </a>
+          </Link>
         </div>
       </div>
     );

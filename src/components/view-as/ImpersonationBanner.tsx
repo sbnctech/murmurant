@@ -23,6 +23,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 
 interface ImpersonationState {
   isImpersonating: boolean;
@@ -289,7 +290,7 @@ export default function ImpersonationBanner() {
             <h4 style={styles.quickSwitchHeader}>Quick Switch to Demo Member</h4>
             <p style={styles.quickSwitchNote}>
               Switch to a different member type to test various user perspectives.
-              Go to <a href="/admin/demo" style={styles.linkStyle}>Admin Demo</a> for full member search.
+              Go to <Link href="/admin/demo" style={styles.linkStyle}>Admin Demo</Link> for full member search.
             </p>
             <div style={styles.personaGrid}>
               {QUICK_SWITCH_PERSONAS.map((persona) => (

@@ -13,7 +13,7 @@
 
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
   generateDerivedPreview,
   validateEventFields,
@@ -21,6 +21,7 @@ import {
   type UrgencyLevel,
   type EventValidationError,
 } from "@/lib/events";
+import { formatClubDateTime } from "@/lib/timezone";
 
 // ============================================================================
 // TYPES
@@ -307,13 +308,9 @@ function DerivationPreview({
   formData: EventFormData;
   registeredCount: number;
 }) {
-  const [preview, setPreview] = useState<ReturnType<typeof generateDerivedPreview> | null>(null);
-  const [inferredCategory, setInferredCategory] = useState<string | null>(null);
-
-  useEffect(() => {
+  const preview = useMemo(() => {
     if (!formData.title || !formData.startTime) {
-      setPreview(null);
-      return;
+      return null;
     }
 
     try {
@@ -321,7 +318,7 @@ function DerivationPreview({
       const endTime = formData.endTime ? new Date(formData.endTime) : null;
       const capacity = formData.capacity ? parseInt(formData.capacity, 10) : null;
 
-      const result = generateDerivedPreview({
+      return generateDerivedPreview({
         title: formData.title,
         startTime,
         endTime,
@@ -329,13 +326,12 @@ function DerivationPreview({
         isPublished: formData.isPublished,
         registeredCount,
       });
-
-      setPreview(result);
-      setInferredCategory(result.inferredCategory);
     } catch {
-      setPreview(null);
+      return null;
     }
   }, [formData, registeredCount]);
+
+  const inferredCategory = preview?.inferredCategory ?? null;
 
   if (!preview) {
     return (
@@ -461,7 +457,7 @@ function DerivationPreview({
             )}
           </div>
           <div style={{ fontWeight: 500, color: "#374151" }}>
-            {preview.effectiveEndTime.toLocaleString()}
+            {formatClubDateTime(preview.effectiveEndTime)}
           </div>
         </div>
 

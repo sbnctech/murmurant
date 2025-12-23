@@ -3,6 +3,7 @@
 // A4: Lifecycle state passed to client for Draft/Published controls
 
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PageContent } from "@/lib/publishing/blocks";
 import {
@@ -52,12 +53,12 @@ export default async function PageEditorPage({ params }: RouteParams) {
   return (
     <div data-test-id="page-editor-root" style={{ padding: "20px" }}>
       <div style={{ marginBottom: "16px" }}>
-        <a
+        <Link
           href="/admin/content/pages"
           style={{ color: "#0066cc", textDecoration: "none", fontSize: "14px" }}
         >
           &larr; Back to Pages
-        </a>
+        </Link>
       </div>
 
       <h1 data-test-id="page-editor-title" style={{ fontSize: "24px", margin: "0 0 8px 0" }}>

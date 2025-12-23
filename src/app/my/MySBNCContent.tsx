@@ -239,8 +239,9 @@ function EmptyEventsState() {
 }
 
 function EventCard({ registration }: { registration: Registration }) {
+  const [nowMs] = useState(() => Date.now());
   const eventDate = new Date(registration.eventDate);
-  const daysUntil = Math.ceil((eventDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  const daysUntil = Math.ceil((eventDate.getTime() - nowMs) / (1000 * 60 * 60 * 24));
   const isWaitlisted = registration.status === "WAITLISTED";
   const isUrgent = daysUntil <= 2;
 

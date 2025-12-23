@@ -11,8 +11,10 @@
  */
 
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { getCurrentSession } from "@/lib/auth/session";
 import PasskeyManager from "@/components/auth/PasskeyManager";
+import { formatClubDateTime } from "@/lib/timezone";
 
 export const metadata = {
   title: "Security Settings - ClubOS",
@@ -50,12 +52,12 @@ export default async function SecurityPage() {
               color: "#6b7280",
             }}
           >
-            <a
+            <Link
               href="/account"
               style={{ color: "#2563eb", textDecoration: "none" }}
             >
               Account
-            </a>
+            </Link>
             {" / "}
             <span>Security</span>
           </nav>
@@ -145,11 +147,11 @@ export default async function SecurityPage() {
             </div>
             <div style={{ marginBottom: "8px" }}>
               <strong style={{ color: "#374151" }}>Session created:</strong>{" "}
-              {session.createdAt.toLocaleString()}
+              {formatClubDateTime(session.createdAt)}
             </div>
             <div>
               <strong style={{ color: "#374151" }}>Session expires:</strong>{" "}
-              {session.expiresAt.toLocaleString()}
+              {formatClubDateTime(session.expiresAt)}
             </div>
           </div>
         </div>

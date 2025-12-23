@@ -210,7 +210,7 @@ export default function PasskeyLoginButton({
             Passkeys not available
           </div>
           <div>
-            Your browser doesn't support passkeys. Please use the email sign-in option below.
+            Your browser doesn&apos;t support passkeys. Please use the email sign-in option below.
           </div>
         </div>
       )}

@@ -12,6 +12,7 @@
  */
 
 import { useCallback } from "react";
+import Link from "next/link";
 import { useCurrentUser, getRoleDisplayName } from "@/hooks/useCurrentUser";
 
 interface AccessDeniedProps {
@@ -149,7 +150,7 @@ export default function AccessDenied({
       >
         {/* Show login for unauthenticated users */}
         {showLogin && !isAuthenticated && (
-          <a
+          <Link
             href="/login"
             data-test-id="access-denied-login"
             style={{
@@ -178,7 +179,7 @@ export default function AccessDenied({
               <line x1="15" y1="12" x2="3" y2="12" />
             </svg>
             Sign In
-          </a>
+          </Link>
         )}
 
         {/* Go back button */}
@@ -217,7 +218,7 @@ export default function AccessDenied({
         )}
 
         {/* Home link */}
-        <a
+        <Link
           href="/"
           data-test-id="access-denied-home"
           style={{
@@ -246,7 +247,7 @@ export default function AccessDenied({
             <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
           Go Home
-        </a>
+        </Link>
       </div>
 
       {/* Contact admin */}

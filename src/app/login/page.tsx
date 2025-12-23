@@ -12,6 +12,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { getSessionCookieName } from "@/lib/auth/cookies";
 import PasskeyLoginButton from "@/components/auth/PasskeyLoginButton";
 import MagicLinkForm from "@/components/auth/MagicLinkForm";
@@ -124,12 +125,12 @@ export default async function LoginPage() {
           </p>
           <p>
             Not a member?{" "}
-            <a
+            <Link
               href="/join"
               style={{ color: "#2563eb", textDecoration: "underline" }}
             >
               Join the club
-            </a>
+            </Link>
           </p>
         </div>
       </div>

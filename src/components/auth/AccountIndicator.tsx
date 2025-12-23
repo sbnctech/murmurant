@@ -12,6 +12,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { useCurrentUser, getRoleDisplayName } from "@/hooks/useCurrentUser";
 
 interface AccountIndicatorProps {
@@ -91,7 +92,7 @@ export default function AccountIndicator({ compact = false }: AccountIndicatorPr
   // Error state - show login link
   if (error || !isAuthenticated || !user) {
     return (
-      <a
+      <Link
         href="/login"
         data-test-id="account-indicator-login"
         style={{
@@ -120,7 +121,7 @@ export default function AccountIndicator({ compact = false }: AccountIndicatorPr
           <line x1="15" y1="12" x2="3" y2="12" />
         </svg>
         Sign In
-      </a>
+      </Link>
     );
   }
 
@@ -275,7 +276,7 @@ export default function AccountIndicator({ compact = false }: AccountIndicatorPr
 
           {/* Menu Items */}
           <div style={{ padding: "4px 0" }}>
-            <a
+            <Link
               href="/account/security"
               role="menuitem"
               data-test-id="account-menu-security"
@@ -304,7 +305,7 @@ export default function AccountIndicator({ compact = false }: AccountIndicatorPr
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
               Security Settings
-            </a>
+            </Link>
 
             <button
               type="button"

@@ -250,7 +250,7 @@ describe("blockSchemas", () => {
 
     describe("unknown block type", () => {
       it("rejects unknown block type", () => {
-        const result = validateBlockData("unknown" as any, {});
+        const result = validateBlockData("unknown" as Parameters<typeof validateBlockData>[0], {});
         expect(result.ok).toBe(false);
         if (!result.ok) {
           expect(result.error).toContain("Unknown block type");

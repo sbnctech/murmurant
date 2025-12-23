@@ -25,9 +25,13 @@ const getNextCookies = () => {
   return getNextCookies();
 };
 
+type CookieStore = {
+  get?: (name: string) => string | { value?: string } | undefined;
+};
+
 function cookieGet(store: unknown, name: string): string | undefined {
-  const anyStore = store as any;
-  const v = anyStore?.get?.(name);
+  const typedStore = store as CookieStore;
+  const v = typedStore?.get?.(name);
   if (typeof v === "string") return v;
   if (v && typeof v.value === "string") return v.value;
   return undefined;
