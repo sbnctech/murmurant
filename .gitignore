@@ -31,3 +31,5 @@ checkpoint_report_.*.txt
 
 # Local ClaudeCode settings
 .claude/
+
+checkpoint_report_*.txt
