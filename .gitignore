@@ -25,3 +25,6 @@ tsconfig.tsbuildinfo
 # --- ClubOS: ignore harvested WA/SBNC policy PDFs (local source artifacts) ---
 docs/policies/**/sources/**/*.pdf
 # --- end ClubOS harvested PDFs ---
+
+# Local checkpoint reports
+checkpoint_report_.*.txt
