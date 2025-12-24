@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import type { MigrationConfig, MigrationRunOptions, MigrationReport, MemberImport, EventImport, RegistrationImport, EntityReport } from './types';
 import { loadConfig, getDefaultConfigPath } from './config';
 import { loadCSVFile, mapMemberRecord, mapEventRecord, mapRegistrationRecord } from './csv-parser';
+import { generateIdMappingReport, writeIdMappingReport, formatTimestamp } from './id-mapping';
 
 export class MigrationEngine {
   private prisma: PrismaClient;
@@ -163,10 +164,13 @@ export class MigrationEngine {
   private writeReport() {
     const dir = path.resolve(this.options.outputDir);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    const ts = new Date().toISOString().replace(/[:.]/g, '-'), mode = this.options.dryRun ? 'dry-run' : 'live';
+    const ts = formatTimestamp(), mode = this.options.dryRun ? 'dry-run' : 'live';
     const summary = { ...this.report, members: { ...this.report.members, records: `[${this.report.members.records.length}]` }, events: { ...this.report.events, records: `[${this.report.events.records.length}]` }, registrations: { ...this.report.registrations, records: `[${this.report.registrations.records.length}]` } };
     fs.writeFileSync(path.join(dir, `migration-${mode}-${ts}.json`), JSON.stringify(summary, null, 2));
     fs.writeFileSync(path.join(dir, `migration-${mode}-${ts}-full.json`), JSON.stringify(this.report, null, 2));
+    // Write dedicated ID mapping report
+    const idMapReport = generateIdMappingReport(this.report);
+    writeIdMappingReport(idMapReport, dir, ts);
     this.log(`Reports written to ${dir}`);
   }
 
