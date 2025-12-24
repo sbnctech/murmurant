@@ -1,0 +1,68 @@
+name: Green Gate
+
+# ==============================================================================
+# REQUIRED PR GATE
+# ==============================================================================
+# This workflow runs `npm run green` on every PR and push to main.
+# It is the trusted, required gate for all PRs.
+#
+# green runs:
+#   1. typecheck    - TypeScript compilation
+#   2. guardrails   - Auth/impersonation safety checks
+#   3. contracts    - Unit-level contract tests
+#   4. test-admin   - Playwright admin suite (~32 tests)
+#
+# See: docs/CI/INVARIANTS.md
+# ==============================================================================
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: green-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  green:
+    name: Green Gate
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/clubos_test"
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: clubos_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Setup database
+        run: npx prisma db push --skip-generate
+
+      - name: Run green gate
+        run: npm run green

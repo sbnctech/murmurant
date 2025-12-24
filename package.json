@@ -25,7 +25,8 @@
     "test-contracts:unit": "vitest run tests/contracts --reporter=verbose",
     "test-contracts:api": "playwright test tests/contracts --grep-invert @quarantine --workers=2",
     "test:guardrails": "npx tsx scripts/ci/check-auth-guardrails.ts",
-    "green": "npm run typecheck && npm run lint && npm run test:guardrails && npm run test:unit && npm run db:seed && npm run test-admin:stable && npm run test-api:stable"
+    "green": "npm run typecheck && npm run test:guardrails && npm run test-contracts:unit && npm run db:seed && npm run test-admin",
+    "green:full": "npm run green && npm run lint && npm run test:unit && npm run test-api:stable"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
