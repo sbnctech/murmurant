@@ -14,6 +14,14 @@ Select exactly one:
 - [ ] M (6-15 files, 101-300 lines)
 - [ ] L (16+ files, 301+ lines) - requires split plan below
 
+## Risk level (required)
+
+Select exactly one:
+
+- [ ] Low - docs, tests, cosmetic changes, no behavior change
+- [ ] Medium - new features, refactors with test coverage
+- [ ] High - auth, RBAC, impersonation, lifecycle, DB schema, payments
+
 ## Hotspots touched (required)
 
 Check all that apply:
@@ -31,6 +39,50 @@ If ANY hotspot is checked, you MUST complete the Hotspot Plan section below.
 ## Summary
 
 What changed and why.
+
+## Invariants touched (required for Medium/High risk)
+
+Check all that apply:
+
+- [ ] RBAC (capability checks, role mappings)
+- [ ] Impersonation (blocked capabilities, impersonation context)
+- [ ] Lifecycle (state transitions, status changes)
+- [ ] DB Schema (migrations, model changes)
+- [ ] Auth (sessions, tokens, authentication flow)
+- [ ] None of the above
+
+## Proof of safety (required for Medium/High risk)
+
+Which verification commands were run before submitting:
+
+- [ ] `npm run green` - full CI gate passed
+- [ ] `npm run test:guardrails` - security guardrails passed
+- [ ] `npm run test-contracts` - contract tests passed
+- [ ] `npm run typecheck` - type check only (for docs/minor changes)
+
+**Test output summary** (paste key results or "all passed"):
+
+```
+<!-- e.g., "✅ 47 tests passed, 0 failed" -->
+```
+
+## Why this change is safe
+
+<!-- Required for Medium/High risk PRs. Delete for Low risk. -->
+
+**Worst-case failure mode:**
+
+<!-- One sentence. e.g., "Member could view another member's PII" -->
+
+**How this would be detected:**
+
+<!-- e.g., "Contract tests fail", "Audit log shows unauthorized action" -->
+
+**How invariants are enforced:**
+
+- Tests: <!-- e.g., "rbac.contract.spec.ts" -->
+- Guardrails: <!-- e.g., "security-guardrails.yml" -->
+- Runtime: <!-- e.g., "requireCapabilitySafe()" -->
 
 ## Hotspot Plan
 
@@ -58,35 +110,10 @@ What changed and why.
 1. PR: [title] - [files: X, lines: Y]
 2. PR: [title] - [files: X, lines: Y]
 
-## Why This Change Is Safe
-
-<!-- Required for any PR touching auth, RBAC, impersonation, or lifecycle logic. -->
-<!-- Delete this section ONLY if the PR is purely cosmetic (typos, comments, etc.) -->
-
-**Invariants touched:**
-
-- [ ] RBAC (capability checks, role mappings)
-- [ ] Impersonation (blocked capabilities, impersonation context)
-- [ ] Lifecycle (state transitions, status changes)
-- [ ] None of the above
-
-**How invariants are enforced:**
-
-- Tests: <!-- e.g., "rbac.contract.spec.ts" -->
-- Guardrails: <!-- e.g., "security-guardrails.yml" -->
-- Runtime checks: <!-- e.g., "requireCapabilitySafe()" -->
-
-**Worst-case failure mode if this breaks:**
-
-<!-- One sentence. e.g., "Member could view another member's PII" -->
-
-**How this would be detected:**
-
-<!-- e.g., "Contract tests fail", "Audit log shows unauthorized action" -->
-
 ## Checks
 
-- [ ] Local preflight passed: `npm run -s typecheck`
+- [ ] Risk level matches actual change scope
 - [ ] Size declaration matches actual changes
 - [ ] Hotspot declaration is accurate
-- [ ] Why This Change Is Safe section completed (if applicable)
+- [ ] Proof of safety completed (if Medium/High risk)
+- [ ] Invariants section completed (if Medium/High risk)
