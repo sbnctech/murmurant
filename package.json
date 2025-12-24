@@ -31,7 +31,10 @@
     "green:flaky": "playwright test --grep @flaky --workers=1",
     "test:flaky-backlog": "npx tsx scripts/ci/check-flaky-backlog.ts",
     "explain:green": "node -e \"console.log('\\n=== npm run green ===\\n\\nFast, deterministic gate (~30-60s):\\n  1. typecheck  - TypeScript compilation\\n  2. lint       - ESLint checks\\n  3. guardrails - Auth/impersonation safety\\n  4. test:unit  - Vitest unit tests (including contracts)\\n\\nDoes NOT run (use green:e2e or green:full):\\n  - Playwright browser tests (slow, need db:seed)\\n  - Database seeding\\n\\nDocs: docs/CI/GREEN_GATE.md\\n')\"",
-    "reviewer:quickcheck": "echo '\n=== Reviewer Quickcheck ===\n\nWhat to verify in the PR:\n  1. Risk level selected (Low/Medium/High)\n  2. For Medium/High: Invariants section completed\n  3. For Medium/High: Proof of safety section completed\n  4. Hotspot plan if hotspots touched\n\nKey docs:\n  - docs/CI/REVIEWER_QUICKSTART.md (2-min guide)\n  - docs/CI/SAFETY_NET.md (defense layers)\n  - docs/CI/PR_REVIEW_CHECKLIST.md (full checklist)\n  - docs/CI/INVARIANTS.md (security invariants)\n\nCommands to run:\n  npm run green           # Full verification\n  npm run test:guardrails # Security checks only\n  npm run test-contracts  # Contract tests only\n  npm run typecheck       # Type check only\n'"
+    "reviewer:quickcheck": "echo '\n=== Reviewer Quickcheck ===\n\nWhat to verify in the PR:\n  1. Risk level selected (Low/Medium/High)\n  2. For Medium/High: Invariants section completed\n  3. For Medium/High: Proof of safety section completed\n  4. Hotspot plan if hotspots touched\n\nKey docs:\n  - docs/CI/REVIEWER_QUICKSTART.md (2-min guide)\n  - docs/CI/SAFETY_NET.md (defense layers)\n  - docs/CI/PR_REVIEW_CHECKLIST.md (full checklist)\n  - docs/CI/INVARIANTS.md (security invariants)\n\nCommands to run:\n  npm run green           # Full verification\n  npm run test:guardrails # Security checks only\n  npm run test-contracts  # Contract tests only\n  npm run typecheck       # Type check only\n'",
+    "migrate:dry-run": "npx tsx scripts/migration/migrate.ts --verbose",
+    "migrate:live": "npx tsx scripts/migration/migrate.ts --live --verbose",
+    "migrate:reset": "npx tsx scripts/migration/reset-sandbox.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
