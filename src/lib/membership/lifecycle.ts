@@ -5,7 +5,14 @@
  * Based on docs/MEMBERSHIP/MEMBERSHIP_LIFECYCLE_STATE_MACHINE.md
  *
  * This module is READ-ONLY - it infers state but never writes.
+ *
+ * Policy Integration:
+ * - Thresholds (90-day newbie, 730-day extended) come from the policy layer
+ * - See: Issue #235 (Membership Lifecycle Thresholds Migration)
+ * - See: Issue #263 (Policy Configuration Layer)
  */
+
+import { getPolicyDefault } from "@/lib/policy/getPolicy";
 
 // ============================================================================
 // Types
@@ -91,11 +98,18 @@ export interface LifecycleExplanation {
 }
 
 // ============================================================================
-// Constants
+// Policy-Derived Constants
 // ============================================================================
 
-const NEWBIE_PERIOD_DAYS = 90;
-const TWO_YEAR_DAYS = 730;
+/**
+ * Lifecycle thresholds from the policy layer.
+ * These values are configurable per-organization in the future.
+ *
+ * See: Issue #235 (Membership Lifecycle Thresholds Migration)
+ * See: Issue #263 (Policy Configuration Layer)
+ */
+const NEWBIE_PERIOD_DAYS = getPolicyDefault("membership.newbieDays");
+const TWO_YEAR_DAYS = getPolicyDefault("membership.extendedDays");
 
 const STATE_LABELS: Record<LifecycleState, string> = {
   not_a_member: "Not a Member",
