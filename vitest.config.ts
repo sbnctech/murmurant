@@ -9,7 +9,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["tests/unit/**/*.spec.ts"],
+    include: ["tests/unit/**/*.spec.ts", "tests/contracts/lifecycle.contract.spec.ts"],
     env: {
       // Set dummy DATABASE_URL for unit tests that import modules with Prisma
       DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy_test",
