@@ -1,0 +1,274 @@
+{
+  "version": "1.0.0",
+  "description": "Invariant-to-test traceability data",
+  "lastUpdated": "2024-12-24",
+  "relatedIssues": ["#258", "#201"],
+  "categories": {
+    "RBAC": {
+      "description": "Role-Based Access Control",
+      "invariants": [
+        {
+          "id": "INV-RBAC-001",
+          "name": "Default Deny",
+          "charter": ["P2"],
+          "tests": [
+            {
+              "file": "tests/contracts/rbac.contract.spec.ts",
+              "pattern": "unauthenticated requests return 401"
+            },
+            {
+              "file": "tests/contracts/rbac.contract.spec.ts",
+              "pattern": "invalid token returns 401"
+            },
+            {
+              "file": "tests/contracts/rbac.contract.spec.ts",
+              "pattern": "member token cannot access admin endpoints"
+            }
+          ],
+          "command": "npm run test-contracts"
+        },
+        {
+          "id": "INV-RBAC-002",
+          "name": "Capability-Based Access",
+          "charter": ["P1", "P2"],
+          "tests": [
+            {
+              "file": "tests/unit/tenant-isolation.spec.ts",
+              "pattern": "admin:full capability is the only bypass"
+            },
+            {
+              "file": "tests/contracts/rbac.contract.spec.ts",
+              "pattern": "capability system invariants are documented"
+            }
+          ],
+          "command": "npm run test:unit"
+        },
+        {
+          "id": "INV-RBAC-003",
+          "name": "Admin Route Auth Guards",
+          "charter": ["P2", "P9"],
+          "ciScript": "scripts/ci/check-auth-guardrails.ts",
+          "command": "npm run test:guardrails"
+        }
+      ]
+    },
+    "Impersonation": {
+      "description": "Impersonation Safety",
+      "invariants": [
+        {
+          "id": "INV-IMP-001",
+          "name": "Impersonation Requires Admin",
+          "charter": ["P1", "P2"],
+          "tests": [
+            {
+              "file": "tests/contracts/impersonation.contract.spec.ts",
+              "pattern": "unauthenticated request to start returns 401"
+            },
+            {
+              "file": "tests/contracts/impersonation.contract.spec.ts",
+              "pattern": "member token cannot start impersonation"
+            }
+          ],
+          "command": "npm run test-contracts"
+        },
+        {
+          "id": "INV-IMP-002",
+          "name": "Blocked Capabilities During Impersonation",
+          "charter": ["P2", "P9"],
+          "blockedCapabilities": [
+            "finance:manage",
+            "comms:send",
+            "users:manage",
+            "events:delete",
+            "admin:full"
+          ],
+          "tests": [
+            {
+              "file": "tests/contracts/impersonation.contract.spec.ts",
+              "pattern": "blocked capabilities include critical dangerous operations"
+            }
+          ],
+          "ciScript": "scripts/ci/check-auth-guardrails.ts",
+          "command": "npm run test:guardrails"
+        },
+        {
+          "id": "INV-IMP-003",
+          "name": "Blocked Capabilities Sync",
+          "charter": ["P4"],
+          "ciScript": "scripts/ci/check-auth-guardrails.ts",
+          "command": "npm run test:guardrails"
+        },
+        {
+          "id": "INV-IMP-004",
+          "name": "No Nesting",
+          "charter": ["P9"],
+          "tests": [
+            {
+              "file": "tests/contracts/impersonation.contract.spec.ts",
+              "pattern": "nesting prevention is a documented invariant"
+            }
+          ],
+          "command": "npm run test-contracts"
+        },
+        {
+          "id": "INV-IMP-005",
+          "name": "Audit Trail",
+          "charter": ["P1", "P7"],
+          "auditEvents": [
+            "IMPERSONATION_START",
+            "IMPERSONATION_END",
+            "IMPERSONATION_BLOCKED_ACTION"
+          ],
+          "tests": [
+            {
+              "file": "tests/contracts/impersonation.contract.spec.ts",
+              "pattern": "audit action names are standardized"
+            }
+          ],
+          "command": "npm run test-contracts"
+        }
+      ]
+    },
+    "Lifecycle": {
+      "description": "Membership Lifecycle State Machine",
+      "invariants": [
+        {
+          "id": "INV-LIFE-001",
+          "name": "State Machine Transitions",
+          "charter": ["P3"],
+          "tests": [
+            {
+              "file": "tests/contracts/lifecycle.contract.spec.ts",
+              "pattern": "transition table has all expected entries"
+            },
+            {
+              "file": "tests/contracts/lifecycle.contract.spec.ts",
+              "pattern": "lapsed has no outgoing transitions"
+            }
+          ],
+          "command": "npm run test:unit"
+        },
+        {
+          "id": "INV-LIFE-002",
+          "name": "Boundary Conditions",
+          "charter": ["P4"],
+          "boundaries": {
+            "newbiePeriodDays": 90,
+            "extendedOfferDays": 730
+          },
+          "tests": [
+            {
+              "file": "tests/contracts/lifecycle.contract.spec.ts",
+              "pattern": "90-day newbie boundary"
+            },
+            {
+              "file": "tests/contracts/lifecycle.contract.spec.ts",
+              "pattern": "730-day two-year boundary"
+            }
+          ],
+          "command": "npm run test:unit"
+        },
+        {
+          "id": "INV-LIFE-003",
+          "name": "State Labels",
+          "charter": ["P6"],
+          "tests": [
+            {
+              "file": "tests/contracts/lifecycle.contract.spec.ts",
+              "pattern": "state .* has label"
+            }
+          ],
+          "command": "npm run test:unit"
+        }
+      ]
+    },
+    "Policy": {
+      "description": "Policy Configuration Layer",
+      "invariants": [
+        {
+          "id": "INV-POL-001",
+          "name": "Typed Policy Keys",
+          "charter": ["P4", "P8"],
+          "tests": [
+            {
+              "file": "tests/contracts/policy.contract.spec.ts",
+              "pattern": "throws InvalidPolicyKeyError"
+            }
+          ],
+          "command": "npm run test:unit"
+        },
+        {
+          "id": "INV-POL-002",
+          "name": "SBNC Defaults",
+          "charter": ["P4"],
+          "defaults": {
+            "membership.newbieDays": 90,
+            "membership.extendedDays": 730,
+            "scheduling.timezone": "America/Los_Angeles",
+            "governance.quorumPercentage": 50
+          },
+          "tests": [
+            {
+              "file": "tests/contracts/policy.contract.spec.ts",
+              "pattern": "defaults to"
+            }
+          ],
+          "command": "npm run test:unit"
+        },
+        {
+          "id": "INV-POL-003",
+          "name": "orgId Required",
+          "charter": ["P1"],
+          "tests": [
+            {
+              "file": "tests/contracts/policy.contract.spec.ts",
+              "pattern": "throws MissingOrgIdError"
+            }
+          ],
+          "command": "npm run test:unit"
+        }
+      ]
+    },
+    "TenantIsolation": {
+      "description": "Member-Scoped Data Isolation",
+      "invariants": [
+        {
+          "id": "INV-TENANT-001",
+          "name": "Self-Access Allowed",
+          "charter": ["P2"],
+          "tests": [
+            {
+              "file": "tests/unit/tenant-isolation.spec.ts",
+              "pattern": "can access own data"
+            }
+          ],
+          "command": "npm run test:unit"
+        },
+        {
+          "id": "INV-TENANT-002",
+          "name": "Cross-Access Denied",
+          "charter": ["P2", "P9"],
+          "tests": [
+            {
+              "file": "tests/unit/tenant-isolation.spec.ts",
+              "pattern": "CANNOT access other member data"
+            }
+          ],
+          "command": "npm run test:unit"
+        },
+        {
+          "id": "INV-TENANT-003",
+          "name": "Admin Bypass",
+          "charter": ["P1", "P2"],
+          "tests": [
+            {
+              "file": "tests/unit/tenant-isolation.spec.ts",
+              "pattern": "admin can access any member data"
+            }
+          ],
+          "command": "npm run test:unit"
+        }
+      ]
+    }
+  }
+}
