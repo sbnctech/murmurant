@@ -21,6 +21,9 @@
     "postinstall": "prisma generate",
     "test:unit": "vitest run",
     "test:unit:coverage": "vitest run --coverage",
+    "test-contracts": "vitest run tests/contracts --reporter=verbose && playwright test tests/contracts --grep-invert @quarantine --workers=2",
+    "test-contracts:unit": "vitest run tests/contracts --reporter=verbose",
+    "test-contracts:api": "playwright test tests/contracts --grep-invert @quarantine --workers=2",
     "green": "npm run typecheck && npm run lint && npm run test:unit && npm run db:seed && npm run test-admin:stable && npm run test-api:stable"
   },
   "prisma": {
