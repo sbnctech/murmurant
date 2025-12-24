@@ -52,6 +52,13 @@ Quick links:
 #### Navigation Overview
 - docs/NAV.md
 
+#### Security & Safety
+- docs/SECURITY/THREAT_MODEL.md - What we protect and from whom
+- docs/CI/SAFETY_NET.md - How we prevent catastrophic mistakes
+- docs/CI/PR_REVIEW_CHECKLIST.md - Mechanical review process
+- docs/CI/INVARIANTS.md - Security invariant documentation
+- docs/ARCHITECTURAL_CHARTER.md - Core principles (P1-P10)
+
 ### Tooling
 
 #### Development Scripts (scripts/dev)

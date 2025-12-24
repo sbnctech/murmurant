@@ -58,8 +58,35 @@ What changed and why.
 1. PR: [title] - [files: X, lines: Y]
 2. PR: [title] - [files: X, lines: Y]
 
+## Why This Change Is Safe
+
+<!-- Required for any PR touching auth, RBAC, impersonation, or lifecycle logic. -->
+<!-- Delete this section ONLY if the PR is purely cosmetic (typos, comments, etc.) -->
+
+**Invariants touched:**
+
+- [ ] RBAC (capability checks, role mappings)
+- [ ] Impersonation (blocked capabilities, impersonation context)
+- [ ] Lifecycle (state transitions, status changes)
+- [ ] None of the above
+
+**How invariants are enforced:**
+
+- Tests: <!-- e.g., "rbac.contract.spec.ts" -->
+- Guardrails: <!-- e.g., "security-guardrails.yml" -->
+- Runtime checks: <!-- e.g., "requireCapabilitySafe()" -->
+
+**Worst-case failure mode if this breaks:**
+
+<!-- One sentence. e.g., "Member could view another member's PII" -->
+
+**How this would be detected:**
+
+<!-- e.g., "Contract tests fail", "Audit log shows unauthorized action" -->
+
 ## Checks
 
 - [ ] Local preflight passed: `npm run -s typecheck`
 - [ ] Size declaration matches actual changes
 - [ ] Hotspot declaration is accurate
+- [ ] Why This Change Is Safe section completed (if applicable)
