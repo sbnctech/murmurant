@@ -1,0 +1,62 @@
+name: green
+
+# ==============================================================================
+# THE GREEN GATE - Required for all PRs
+# ==============================================================================
+#
+# This is the single, fast, deterministic check that must pass before merge.
+#
+# What it runs (~30-60 seconds):
+#   1. typecheck   - TypeScript compilation
+#   2. lint        - ESLint static analysis
+#   3. guardrails  - Auth/impersonation safety checks
+#   4. test:unit   - Vitest unit tests (including contracts)
+#
+# What it does NOT run (see green:e2e / green:full):
+#   - Playwright browser tests (slow, flaky risk)
+#   - Database seeding
+#
+# Why this is enough:
+#   - Type errors caught at compile time
+#   - Lint catches common bugs and style issues
+#   - Guardrails enforce security invariants (impersonation, auth)
+#   - Unit tests cover business logic deterministically
+#
+# For full E2E coverage, use: npm run green:full
+#
+# Docs: docs/CI/GREEN_GATE.md
+# ==============================================================================
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: green-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  green:
+    name: green
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run green gate
+        run: npm run green
+
+      - name: Explain what ran
+        if: always()
+        run: npm run explain:green

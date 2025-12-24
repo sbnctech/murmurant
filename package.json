@@ -25,7 +25,10 @@
     "test-contracts:unit": "vitest run tests/contracts --reporter=verbose",
     "test-contracts:api": "playwright test tests/contracts --grep-invert @quarantine --workers=2",
     "test:guardrails": "npx tsx scripts/ci/check-auth-guardrails.ts",
-    "green": "npm run typecheck && npm run lint && npm run test:guardrails && npm run test:unit && npm run db:seed && npm run test-admin:stable && npm run test-api:stable"
+    "green": "npm run typecheck && npm run lint && npm run test:guardrails && npm run test:unit",
+    "green:e2e": "npm run db:seed && npm run test-admin:stable && npm run test-api:stable",
+    "green:full": "npm run green && npm run green:e2e",
+    "explain:green": "node -e \"console.log('\\n=== npm run green ===\\n\\nFast, deterministic gate (~30-60s):\\n  1. typecheck  - TypeScript compilation\\n  2. lint       - ESLint checks\\n  3. guardrails - Auth/impersonation safety\\n  4. test:unit  - Vitest unit tests (including contracts)\\n\\nDoes NOT run (use green:e2e or green:full):\\n  - Playwright browser tests (slow, need db:seed)\\n  - Database seeding\\n\\nDocs: docs/CI/GREEN_GATE.md\\n')\""
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
