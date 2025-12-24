@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
 import { getSessionCookieName } from "@/lib/auth/cookies";
+import { getRoleCapabilitiesFromPolicy } from "@/lib/policies/roleCapabilities";
 
 /**
  * Authentication and authorization utilities for API routes.
@@ -119,7 +120,13 @@ export type Capability =
 
 /**
  * Map of which capabilities each role has.
- * This is the source of truth for permission checks.
+ *
+ * DEPRECATED: Direct access to this map is deprecated.
+ * Use getRoleCapabilitiesFromPolicy() for policy-backed lookups.
+ *
+ * SBNC Policy Coupling Audit Reference:
+ * - Issue #262, RD-002: This map is SBNC-specific coupling
+ * - See src/lib/policies/roleCapabilities.ts for policy layer
  *
  * IMPORTANT: webmaster is a UI/site role. They can manage publishing and comms
  * templates, but CANNOT:
@@ -132,6 +139,8 @@ export type Capability =
  * The webmaster role is intentionally limited. For debugging/support,
  * set WEBMASTER_DEBUG_READONLY=true to enable read-only access to some
  * additional data (default OFF).
+ *
+ * @deprecated Use getRoleCapabilitiesFromPolicy() instead
  */
 const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
   admin: [
@@ -329,9 +338,14 @@ export function isWebmasterDebugEnabled(): boolean {
 
 /**
  * Get effective capabilities for a role, considering runtime configuration.
+ *
+ * Uses policy-backed lookup (Issue #262, RD-002) while preserving
+ * webmaster debug mode runtime override.
  */
 function getEffectiveCapabilities(role: GlobalRole): Capability[] {
-  const baseCaps = ROLE_CAPABILITIES[role];
+  // Policy-backed lookup (Issue #262, RD-002)
+  const policyResult = getRoleCapabilitiesFromPolicy(role);
+  const baseCaps = [...policyResult.capabilities];
 
   // If webmaster debug mode is enabled, add read-only access
   if (role === "webmaster" && isWebmasterDebugEnabled()) {
