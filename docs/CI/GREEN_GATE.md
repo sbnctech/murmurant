@@ -1,92 +1,197 @@
 # The Green Gate
 
-`npm run green` is the single, fast, deterministic command that must pass before any PR can merge.
+ClubOS CI uses a **three-lane model** to keep builds fast, deterministic, and comprehensive.
 
-## What It Runs
+---
 
-| Step | Command | Time | Purpose |
-|------|---------|------|---------|
-| 1 | `typecheck` | ~5s | TypeScript compilation errors |
-| 2 | `lint` | ~5s | ESLint static analysis |
-| 3 | `test:guardrails` | ~2s | Auth/impersonation safety checks |
-| 4 | `test:unit` | ~10s | Vitest unit tests (including contracts) |
+## The Three Lanes
 
-**Total: ~30-60 seconds**
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                          CI SIGNAL LANES                            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  LANE 1: PR Gate (Fast)          npm run green                      │
+│  ─────────────────────           ~30-60 seconds                     │
+│  Runs on: Every PR, every push                                      │
+│  Purpose: Fast feedback, blocks merge if failing                    │
+│                                                                     │
+│  LANE 2: Full Suite              npm run green:full                 │
+│  ─────────────────────           ~5-10 minutes                      │
+│  Runs on: Push to main, nightly, label 'run-full-ci'               │
+│  Purpose: Comprehensive validation with Playwright                  │
+│                                                                     │
+│  LANE 3: Flaky Quarantine        npm run green:flaky                │
+│  ─────────────────────           Nightly only                       │
+│  Runs on: Nightly, tests/**  PRs (validation only)                  │
+│  Purpose: Monitor flaky tests, enforce issue tracking               │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
 
-## What It Does NOT Run
+---
 
-These are intentionally excluded from `green` to keep it fast and deterministic:
+## Lane 1: PR Gate (`npm run green`)
 
-| Excluded | Why | Alternative |
-|----------|-----|-------------|
-| Playwright browser tests | Slow (~3min), flaky risk | `npm run green:e2e` |
-| Database seeding | Requires Postgres | `npm run green:e2e` |
-| Full E2E suite | Too slow for every commit | `npm run green:full` |
+The fast, deterministic check that must pass before any PR can merge.
 
-## Why This Is Enough
+### What It Runs (~30-60 seconds)
 
-A skeptical senior engineer should ask: "How do I know this catches real bugs?"
+| Step | Command | Purpose |
+|------|---------|---------|
+| 1 | `typecheck` | TypeScript compilation errors |
+| 2 | `lint` | ESLint static analysis |
+| 3 | `test:guardrails` | Auth/impersonation safety checks |
+| 4 | `test:unit` | Vitest unit tests (including contracts) |
 
-### 1. Type Errors (typecheck)
+### What It Does NOT Run
 
-TypeScript catches:
-- Null/undefined access
-- Wrong argument types
-- Missing properties
-- API contract violations
+| Excluded | Why | Where It Runs |
+|----------|-----|---------------|
+| Playwright browser tests | Slow, flaky risk | Lane 2 (Full Suite) |
+| Database seeding | Requires Postgres | Lane 2 (Full Suite) |
+| `@flaky` tests | Intermittent failures | Lane 3 (Quarantine) |
 
-If it compiles, the types are correct.
+### Why This Is Enough
 
-### 2. Static Analysis (lint)
+- **Type errors**: Caught at compile time
+- **Lint issues**: Static analysis finds common bugs
+- **Security invariants**: Guardrails enforce impersonation safety
+- **Business logic**: Unit tests cover deterministic logic
 
-ESLint catches:
-- Unused variables (dead code)
-- Missing dependencies in hooks
-- Unreachable code
-- Common JavaScript pitfalls
+### CI Workflow
 
-### 3. Security Invariants (guardrails)
+File: `.github/workflows/green.yml`
 
-The guardrail script (`scripts/ci/check-auth-guardrails.ts`) enforces:
-- **Impersonation safety**: Routes with dangerous capabilities must use `requireCapabilitySafe()`
-- **Admin auth guards**: All admin routes must have authentication
-- **Blocked capabilities sync**: The blocked list stays consistent
+Runs on:
+- All pull requests
+- All pushes to main
 
-See: [INVARIANTS.md](./INVARIANTS.md)
+**Required check for merges to main.**
 
-### 4. Business Logic (unit tests)
+---
 
-Vitest tests cover:
-- Lifecycle state machine (90-day, 730-day boundaries)
-- RBAC capability checks
-- Event scheduling logic
-- Membership transitions
+## Lane 2: Full Suite (`npm run green:full`)
 
-These are deterministic (no network, no browser, no database).
+Comprehensive validation including browser tests.
 
-## Commands
+### What It Runs (~5-10 minutes)
+
+1. Everything in Lane 1 (PR Gate)
+2. Database seeding (`npm run db:seed`)
+3. Playwright admin tests (`npm run test-admin:stable`)
+4. Playwright API tests (`npm run test-api:stable`)
+
+### When It Runs
+
+| Trigger | Why |
+|---------|-----|
+| Push to main | Post-merge verification |
+| Nightly (3 AM UTC) | Catch regressions |
+| Label `run-full-ci` | On-demand for critical PRs |
+| Manual trigger | Via workflow_dispatch |
+
+### CI Workflow
+
+File: `.github/workflows/green-full.yml`
+
+---
+
+## Lane 3: Flaky Quarantine (`npm run green:flaky`)
+
+Managed isolation for intermittently failing tests.
+
+### How It Works
+
+1. Mark flaky test with `@flaky` tag
+2. Create GitHub issue to track the flakiness
+3. Add issue link as comment near the tag
+4. Test is excluded from PR gate but runs nightly
+
+### Requirements
+
+**Every `@flaky` test MUST have a GitHub issue link.**
+
+```typescript
+// REQUIRED format - must include issue link
+// Flaky: https://github.com/sbnctech/clubos/issues/XXX
+test('@flaky: sometimes fails due to timing', async () => {
+  // ...
+});
+```
+
+The `test:flaky-backlog` script validates this:
 
 ```bash
-# Fast gate (required for merge)
+npm run test:flaky-backlog
+```
+
+### CI Workflow
+
+File: `.github/workflows/flaky-quarantine.yml`
+
+Runs:
+- **On PRs touching tests/**: Validates issue links only (fast)
+- **Nightly (4 AM UTC)**: Runs actual flaky tests, reports health
+
+### Philosophy
+
+We don't hide flakiness — we track it:
+- Flaky tests don't block PRs (keeps CI calm)
+- But every flaky test needs an issue (accountability)
+- Nightly runs monitor progress (visibility)
+- Goal: fix and remove `@flaky` tags
+
+---
+
+## Commands Reference
+
+```bash
+# Lane 1: PR Gate (fast, required for merge)
 npm run green
 
-# E2E tests (Playwright, needs database)
+# Lane 2: Full Suite (comprehensive)
+npm run green:full
+
+# Lane 2: E2E only (Playwright + seed)
 npm run green:e2e
 
-# Full suite (green + e2e)
-npm run green:full
+# Lane 3: Flaky tests only
+npm run green:flaky
+
+# Validate flaky test backlog
+npm run test:flaky-backlog
 
 # Explain what green runs
 npm run explain:green
 ```
 
-## CI Integration
+---
 
-The `green` workflow (`.github/workflows/green.yml`) runs on:
-- All pull requests
-- All pushes to main
+## Tagging Tests
 
-It is configured as a **required check** for merges to main.
+### `@quarantine`
+
+Future/strict tests that aren't ready yet. Not expected to pass.
+
+```typescript
+test('@quarantine: strict assertion not yet implemented', async () => {
+  // ...
+});
+```
+
+### `@flaky`
+
+Tests that pass most of the time but occasionally fail. **Must have issue link.**
+
+```typescript
+// Flaky: https://github.com/sbnctech/clubos/issues/123
+test('@flaky: timing-sensitive operation', async () => {
+  // ...
+});
+```
+
+---
 
 ## Debugging Failures
 
@@ -118,20 +223,43 @@ npm run test:unit
 # Or run specific test: npx vitest run tests/unit/specific.spec.ts
 ```
 
-## Design Principles
+### flaky-backlog fails
 
-1. **Fast**: Under 60 seconds, so developers run it before every push
-2. **Deterministic**: No flaky tests, no network calls, no timing issues
-3. **Explainable**: `npm run explain:green` shows exactly what ran
-4. **Sufficient**: Catches the bugs that matter before they reach review
+```bash
+npm run test:flaky-backlog
+# Add issue link to any @flaky test missing one
+```
+
+---
 
 ## Adding New Checks
 
-To add a new check to `green`:
+### To Lane 1 (PR Gate)
 
-1. Ensure it's fast (<5s) and deterministic
-2. Add to the `green` script in `package.json`
+Requirements:
+- Fast (<5s)
+- Deterministic (no flaky failures)
+- No infrastructure requirements
+
+Steps:
+1. Add to the `green` script in `package.json`
+2. Add step to `.github/workflows/green.yml`
 3. Update this documentation
-4. Update `explain:green` output
 
-If the check is slow or requires infrastructure, add it to `green:e2e` instead.
+### To Lane 2 (Full Suite)
+
+For checks that need database or browser:
+1. Add to `green:e2e` or `green:full` in `package.json`
+2. Add step to `.github/workflows/green-full.yml`
+3. Update this documentation
+
+---
+
+## Design Principles
+
+1. **Fast PR gate**: Under 60 seconds, so developers run it often
+2. **Deterministic**: No flaky tests in the PR gate
+3. **Comprehensive nightly**: Full coverage runs every night
+4. **Tracked flakiness**: Flaky tests isolated but monitored
+5. **Calm failures**: Clear summaries, no wall of red text
+6. **High standards**: We don't lower the bar, we isolate the noise

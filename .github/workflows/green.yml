@@ -54,9 +54,44 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run green gate
-        run: npm run green
+      # ========== Fast Gate Steps ==========
+      - name: TypeScript check
+        id: typecheck
+        run: npm run typecheck
 
-      - name: Explain what ran
+      - name: Lint
+        id: lint
+        run: npm run lint
+
+      - name: Guardrails
+        id: guardrails
+        run: npm run test:guardrails
+
+      - name: Unit tests
+        id: unit
+        run: npm run test:unit
+
+      # ========== Summary ==========
+      - name: Generate summary
         if: always()
-        run: npm run explain:green
+        run: |
+          echo "## Green Gate Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Step | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| TypeScript | ${{ steps.typecheck.outcome == 'success' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint | ${{ steps.lint.outcome == 'success' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Guardrails | ${{ steps.guardrails.outcome == 'success' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ steps.unit.outcome == 'success' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### What This Covers" >> $GITHUB_STEP_SUMMARY
+          echo "- **TypeScript**: Compilation errors, type safety" >> $GITHUB_STEP_SUMMARY
+          echo "- **Lint**: ESLint static analysis" >> $GITHUB_STEP_SUMMARY
+          echo "- **Guardrails**: Auth/impersonation safety (security invariants)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Unit Tests**: Vitest tests (including contracts)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Not Included (use \`green:full\`)" >> $GITHUB_STEP_SUMMARY
+          echo "- Playwright browser tests" >> $GITHUB_STEP_SUMMARY
+          echo "- Database seeding" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📖 Docs: docs/CI/GREEN_GATE.md" >> $GITHUB_STEP_SUMMARY

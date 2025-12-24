@@ -1,0 +1,158 @@
+name: green-full
+
+# ==============================================================================
+# FULL SUITE - Comprehensive validation (not for every PR)
+# ==============================================================================
+#
+# This workflow runs the complete test suite including:
+#   1. Everything in `npm run green` (fast gate)
+#   2. Database seeding
+#   3. Playwright browser tests (admin + API)
+#
+# When it runs:
+#   - Push to main (post-merge verification)
+#   - Nightly schedule (catch regressions)
+#   - Manual trigger with workflow_dispatch
+#   - PRs labeled with 'run-full-ci'
+#
+# Why separate from green.yml:
+#   - Full suite takes ~5-10 minutes
+#   - Playwright tests have inherent flakiness risk
+#   - Not every PR needs browser testing
+#
+# Docs: docs/CI/GREEN_GATE.md
+# ==============================================================================
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    # Run nightly at 3 AM UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+
+concurrency:
+  group: green-full-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Only run on PRs if they have the run-full-ci label
+  check-label:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'run-full-ci')
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running full suite"
+
+  green-full:
+    needs: check-label
+    name: green-full
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: clubos
+          POSTGRES_PASSWORD: clubos
+          POSTGRES_DB: clubos_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://clubos:clubos@localhost:5432/clubos_test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Push schema to test database
+        run: npx prisma db push --skip-generate
+
+      # ========== Fast Gate ==========
+      - name: TypeScript check
+        id: typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        id: lint
+        run: npm run lint
+
+      - name: Guardrails
+        id: guardrails
+        run: npm run test:guardrails
+
+      - name: Unit tests
+        id: unit
+        run: npm run test:unit
+
+      # ========== E2E Tests ==========
+      - name: Seed database
+        id: seed
+        run: npm run db:seed
+
+      - name: Start server
+        run: |
+          npm run build
+          npm run start &
+          npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Admin E2E tests
+        id: admin-e2e
+        run: npm run test-admin:stable
+
+      - name: API E2E tests
+        id: api-e2e
+        run: npm run test-api:stable
+
+      # ========== Summary ==========
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## Full Suite Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Step | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| TypeScript | ${{ steps.typecheck.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint | ${{ steps.lint.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Guardrails | ${{ steps.guardrails.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ steps.unit.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Database Seed | ${{ steps.seed.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Admin E2E | ${{ steps.admin-e2e.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| API E2E | ${{ steps.api-e2e.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### What This Covers" >> $GITHUB_STEP_SUMMARY
+          echo "- All fast gate checks (typecheck, lint, guardrails, unit)" >> $GITHUB_STEP_SUMMARY
+          echo "- Database schema validation" >> $GITHUB_STEP_SUMMARY
+          echo "- Full Playwright browser tests" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📖 Docs: docs/CI/GREEN_GATE.md" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

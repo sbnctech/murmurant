@@ -19,8 +19,11 @@ const config: PlaywrightTestConfig = {
   expect: {
     timeout: 5000,
   },
-  // Skip tests marked with @quarantine - these are future/strict tests not yet passing
-  grepInvert: /@quarantine/,
+  // Skip tests marked with @quarantine or @flaky from the default test run
+  // - @quarantine: future/strict tests not yet passing
+  // - @flaky: tests with intermittent failures (must have issue links)
+  // Use `npm run green:flaky` to run flaky tests specifically
+  grepInvert: /@quarantine|@flaky/,
 };
 
 export default config;

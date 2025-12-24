@@ -1,0 +1,161 @@
+name: flaky-quarantine
+
+# ==============================================================================
+# FLAKY TEST QUARANTINE - Track and manage flaky tests
+# ==============================================================================
+#
+# This workflow:
+#   1. Validates that all @flaky tests have issue links (required)
+#   2. Runs quarantined flaky tests to monitor their status
+#   3. Reports flaky test health in the summary
+#
+# Purpose:
+#   - Flaky tests are excluded from the PR gate to keep CI deterministic
+#   - But we don't hide flakiness - every flaky test MUST have an issue
+#   - This workflow tracks progress on fixing flaky tests
+#
+# When it runs:
+#   - Nightly (monitor flaky test health)
+#   - On PR (validate issue links only - fast check)
+#   - Manual trigger
+#
+# Docs: docs/CI/GREEN_GATE.md
+# ==============================================================================
+
+on:
+  schedule:
+    # Run nightly at 4 AM UTC (after green-full)
+    - cron: '0 4 * * *'
+  pull_request:
+    paths:
+      - 'tests/**'
+      - 'scripts/ci/check-flaky-backlog.ts'
+  workflow_dispatch:
+
+concurrency:
+  group: flaky-quarantine-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Fast check: validate that all @flaky tests have issue links
+  validate-backlog:
+    name: validate-flaky-backlog
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate flaky test backlog
+        run: npm run test:flaky-backlog
+
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## Flaky Test Backlog" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Every test marked with \`@flaky\` must have a GitHub issue link." >> $GITHUB_STEP_SUMMARY
+          echo "This ensures we track flakiness rather than hiding it." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Rules" >> $GITHUB_STEP_SUMMARY
+          echo "1. Add \`@flaky\` tag to exclude test from PR gate" >> $GITHUB_STEP_SUMMARY
+          echo "2. Create issue to track the flakiness" >> $GITHUB_STEP_SUMMARY
+          echo "3. Add issue link as comment near the \`@flaky\` tag" >> $GITHUB_STEP_SUMMARY
+          echo "4. Fix the test and remove \`@flaky\` tag" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📖 Docs: docs/CI/GREEN_GATE.md" >> $GITHUB_STEP_SUMMARY
+
+  # Nightly only: run the actual flaky tests to monitor their status
+  run-flaky-tests:
+    name: run-flaky-tests
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: clubos
+          POSTGRES_PASSWORD: clubos
+          POSTGRES_DB: clubos_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://clubos:clubos@localhost:5432/clubos_test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Push schema to test database
+        run: npx prisma db push --skip-generate
+
+      - name: Seed database
+        run: npm run db:seed
+
+      - name: Start server
+        run: |
+          npm run build
+          npm run start &
+          npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Run flaky tests only
+        id: flaky-tests
+        continue-on-error: true
+        run: npm run green:flaky
+
+      - name: Generate flaky test report
+        if: always()
+        run: |
+          echo "## Flaky Test Health Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ steps.flaky-tests.outcome == 'success' && '✅ All flaky tests passed' || '⚠️ Some flaky tests failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "This nightly run monitors tests marked \`@flaky\`." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.flaky-tests.outcome }}" == "success" ]; then
+            echo "- Consider removing \`@flaky\` tags from stable tests" >> $GITHUB_STEP_SUMMARY
+            echo "- Close resolved flaky test issues" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Review failing tests in the linked issues" >> $GITHUB_STEP_SUMMARY
+            echo "- Prioritize fixing tests that fail frequently" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📖 Docs: docs/CI/GREEN_GATE.md" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flaky-test-report
+          path: playwright-report/
+          retention-days: 7
