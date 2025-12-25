@@ -116,6 +116,48 @@ Preflight validates:
 - WaSyncState table exists
 - Required MembershipStatus codes exist
 
+### 1.7 Capture Organization Policies
+
+Capture and validate organization policies before migration. See [WA_POLICY_CAPTURE.md](./WA_POLICY_CAPTURE.md) for details.
+
+```bash
+# Generate policy template (no WA access needed)
+npx tsx scripts/migration/capture-policies.ts --generate-template
+
+# Or capture with defaults for optional fields
+npx tsx scripts/migration/capture-policies.ts --use-defaults --org-name "Your Organization"
+```
+
+Edit the generated `migration-output/policy.json` to fill in required values, then validate:
+
+```bash
+npx tsx scripts/migration/capture-policies.ts --validate-only --mapping-file migration-output/policy.json
+```
+
+**Required policies:**
+
+- `scheduling.timezone` - Organization timezone (e.g., "America/Los_Angeles")
+- `display.organizationName` - Organization display name
+
+**Optional tier mapping:** If migrating WA membership levels to ClubOS tiers, configure `membership.tiers.waMapping` in the policy file. Note: WA membership level API may be unreliable; manual mapping is acceptable.
+
+## 1.8 Operator Pre-Migration Checklist
+
+Before running the full sync, complete this checklist:
+
+- [ ] **Environment variables set** - WA_API_KEY, WA_ACCOUNT_ID, DATABASE_URL
+- [ ] **Database migrations applied** - `npx prisma migrate deploy`
+- [ ] **MembershipStatus records seeded** - Section 1.3
+- [ ] **MembershipTier records seeded** (if using tiers) - Section 1.4
+- [ ] **Policy bundle captured** - `capture-policies.ts --generate-template`
+- [ ] **Policy bundle reviewed** - Check `migration-output/policy.md`
+- [ ] **Required policies filled** - Edit `policy.json` for missing values
+- [ ] **Policy bundle validated** - `capture-policies.ts --validate-only`
+- [ ] **Preflight checks pass** - Section 1.6
+- [ ] **Dry run completed** - `DRY_RUN=1 npx tsx scripts/importing/wa_full_sync.ts`
+
+**Safety principle:** No silent defaults for critical values. If something is missing, the validation step will fail explicitly.
+
 ## 2. Full Sync
 
 ### 2.1 Development/Staging
