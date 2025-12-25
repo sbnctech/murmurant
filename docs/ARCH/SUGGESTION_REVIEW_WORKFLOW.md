@@ -238,6 +238,8 @@ Failed operations return:
 
 ## Relation to Intent Manifest
 
+Suggestions and the Intent Manifest share a common principle: **nothing happens without explicit human authorization**. During migration and cutover rehearsal, accepted suggestions produce Intent Manifest entries.
+
 > **Note**: The [Intent Manifest](./INTENT_MANIFEST_SCHEMA.md) is a conceptual component for tracking intended changes during cutover rehearsal. This section describes alignment, not dependency.
 
 Suggestions operate similarly to Intent Manifest entries:
@@ -249,7 +251,7 @@ Suggestions operate similarly to Intent Manifest entries:
 | Authority | Human accepts/rejects | Human commits/aborts session |
 | Application | Individual suggestion applied | Entire manifest replayed |
 
-Both share the principle: **nothing happens without explicit human authorization**.
+See [Intent Manifest Schema](./INTENT_MANIFEST_SCHEMA.md) for the full specification.
 
 ---
 
