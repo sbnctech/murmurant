@@ -295,7 +295,7 @@ ERROR: Invalid value for scheduling.timezone: Must be a valid IANA timezone
 
 - [IMPORTER_RUNBOOK.md](./IMPORTER_RUNBOOK.md) - Full migration runbook
 - [WA_FIELD_MAPPING.md](./WA_FIELD_MAPPING.md) - Field mapping reference
-- [docs/ARCH/PLATFORM_VS_POLICY.md](/docs/ARCH/PLATFORM_VS_POLICY.md) - Policy architecture
+- [docs/ARCH/POLICY_KEY_CATALOG.md](/docs/ARCH/POLICY_KEY_CATALOG.md) - Policy key reference
 
 ## Revision History
 
