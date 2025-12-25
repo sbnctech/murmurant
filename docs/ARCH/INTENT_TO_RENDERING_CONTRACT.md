@@ -19,7 +19,8 @@
 - [D. Review and Safety](#d-review-and-safety)
 - [E. Preview Guarantees](#e-preview-guarantees)
 - [F. Export and Portability](#f-export-and-portability)
-- [G. Acceptance Tests](#g-acceptance-tests)
+- [G. Explicit Non-Guarantees and Undefined Areas](#g-explicit-non-guarantees-and-undefined-areas)
+- [H. Acceptance Tests](#h-acceptance-tests)
 - [Revision History](#revision-history)
 
 ---
@@ -390,7 +391,102 @@ An organization that exports their Intent Manifest and content can, in principle
 
 ---
 
-## G. Acceptance Tests
+## G. Explicit Non-Guarantees and Undefined Areas
+
+This section documents what this contract intentionally does not define, guarantee, or attempt to automate. These omissions are deliberate. They protect trust by being honest about boundaries rather than making promises the system cannot keep.
+
+### G.1 Visual Layout Preservation
+
+| Not Guaranteed | Why Intentionally Undefined | Who Is Responsible |
+|----------------|----------------------------|-------------------|
+| Column widths and proportions | Source layouts depend on WA's CSS framework; ClubOS uses different layout primitives | Operator reviews preview and adjusts if needed |
+| Responsive breakpoints | Mobile/tablet behavior is template-dependent, not extractable from source | ClubOS templates define responsive behavior |
+| Vertical rhythm and spacing | Precise pixel spacing is theme-engine specific | Theme tokens approximate; human validates |
+| Animation and transitions | Interactive behaviors are not part of presentation intent | ClubOS templates may add or omit as appropriate |
+
+**Why this protects trust**: Promising layout fidelity would require replicating WA's rendering engine. That creates fragile coupling. Instead, we promise *recognizable* presentation and give operators the preview to verify it.
+
+### G.2 CSS and Style Inheritance
+
+| Not Guaranteed | Why Intentionally Undefined | Who Is Responsible |
+|----------------|----------------------------|-------------------|
+| Custom CSS rules | Arbitrary CSS cannot be safely migrated without understanding its purpose | Organization provides brand guidelines; operator configures tokens |
+| WA theme internals | WA themes are proprietary; we extract visible outcomes, not implementation | Theme tokens capture visual intent, not source rules |
+| Browser-specific rendering | Browser quirks are outside scope | ClubOS targets modern browsers; edge cases are implementation concerns |
+| Third-party font licensing | Font availability depends on licensing agreements | Organization ensures fonts are licensed for ClubOS use |
+
+**Why this protects trust**: CSS is code. Migrating code without understanding it creates hidden failures. We extract *what it looks like*, not *how it was built*.
+
+### G.3 Widget and Component Equivalence
+
+| Not Guaranteed | Why Intentionally Undefined | Who Is Responsible |
+|----------------|----------------------------|-------------------|
+| WA-specific widgets | Widgets like event calendars, member directories are WA features | ClubOS provides its own components; mapping is explicit in manifest |
+| Custom code blocks | Embedded JavaScript or custom HTML may have unknown dependencies | Operator reviews and decides whether to migrate, recreate, or omit |
+| Third-party integrations | External widgets (forms, chat, analytics) are not part of presentation intent | Organization re-configures integrations in ClubOS |
+| Dynamic content sources | Content pulled from external APIs is not captured in intent | Operator documents external dependencies separately |
+
+**Why this protects trust**: Widgets are behavior, not presentation. Silently migrating a broken widget is worse than explicitly noting it needs attention.
+
+### G.4 Semantic Inference
+
+| Not Guaranteed | Why Intentionally Undefined | Who Is Responsible |
+|----------------|----------------------------|-------------------|
+| Understanding organizational meaning | System extracts structure, not purpose | Operator validates that extracted structure reflects actual intent |
+| Detecting outdated content | System cannot know if content is stale | Organization reviews content during migration |
+| Inferring navigation hierarchy | System suggests based on visible structure; may not match organizational mental model | Operator adjusts navigation in review |
+| Distinguishing important from incidental | System treats all visible content equally | Operator marks emphasis in manifest |
+
+**Why this protects trust**: Pretending the system understands meaning would create false confidence. Operators know their organization; the system provides tools, not judgment.
+
+### G.5 Content Completeness
+
+| Not Guaranteed | Why Intentionally Undefined | Who Is Responsible |
+|----------------|----------------------------|-------------------|
+| Capturing hidden content | Content behind login walls, unpublished drafts, or conditional display may not be visible to analysis | Operator ensures all intended content is accessible during analysis |
+| Detecting missing assets | Broken image links or deleted files in source may not be flagged | Preview surfaces what's available; operator verifies completeness |
+| Preserving content history | Version history and edit timestamps are not part of presentation intent | If history matters, it's a data migration concern, not presentation |
+| Migrating unpublished drafts | Only published presentation is analyzed | Operator manually migrates draft content if needed |
+
+**Why this protects trust**: The system sees what is visible. Promising to find invisible content would be a lie.
+
+### G.6 Rendering Engine Guarantees
+
+| Not Guaranteed | Why Intentionally Undefined | Who Is Responsible |
+|----------------|----------------------------|-------------------|
+| Template immutability | ClubOS templates may evolve over time | Renderable Plan references templates by ID; changes are versioned |
+| Cross-browser pixel identity | Different browsers render differently | ClubOS tests against modern browsers; minor variations are expected |
+| Print fidelity | Print rendering is not preview scope | If print matters, organization tests separately |
+| Accessibility perfection | Accessibility is improved incrementally | ClubOS templates aim for WCAG compliance; organization validates |
+
+**Why this protects trust**: Templates are living code. Freezing them would prevent improvements. The contract is that *the same plan produces the same output*—not that output never improves.
+
+### G.7 Automatic Error Correction
+
+| Not Guaranteed | Why Intentionally Undefined | Who Is Responsible |
+|----------------|----------------------------|-------------------|
+| Fixing organizational mistakes | If source content has errors, they migrate as-is | Organization reviews and corrects content |
+| Improving poor structure | If source navigation is confusing, system reproduces confusion | Operator restructures during review if desired |
+| Standardizing inconsistent branding | If source uses multiple conflicting styles, system captures the inconsistency | Operator chooses which style to normalize to |
+| Removing outdated content | System does not judge what should be removed | Organization decides what to keep |
+
+**Why this protects trust**: Migration is not editorial. The system's job is fidelity to intent, not improvement of intent. Operators and organizations make editorial decisions.
+
+### G.8 Summary: What Fills These Gaps
+
+| Gap Category | Filled By |
+|--------------|-----------|
+| Visual judgment calls | Operator preview review |
+| Semantic understanding | Organization's knowledge of itself |
+| Technical edge cases | ClubOS implementation decisions |
+| Content quality | Organization's editorial judgment |
+| Integration configuration | Operator re-configuration in ClubOS |
+
+The contract defines what the *system* guarantees. These gaps are filled by *humans*—operators and organizations—who bring context the system cannot have.
+
+---
+
+## H. Acceptance Tests
 
 ### Operator Checklist
 
@@ -445,3 +541,4 @@ This contract document is acceptable when:
 | Date | Author | Change |
 |------|--------|--------|
 | 2025-12-25 | System | Initial specification |
+| 2025-12-25 | System | Add Section G: Explicit Non-Guarantees and Undefined Areas |
