@@ -139,10 +139,43 @@ If you cannot recognize your organization in ClubOS, the migration is not comple
 
 ---
 
+## How This Becomes Renderable
+
+The philosophy described above translates into concrete, reviewable artifacts through a formal contract.
+
+### From Intent to Rendering
+
+When ClubOS reconstructs your organization's presentation:
+
+1. **Intent Manifest** - We capture your presentation intent in a structured, reviewable document
+2. **Renderable Plan** - The manifest is transformed into a deterministic plan specifying pages, navigation, and theme tokens
+3. **Preview** - You see exactly what will render, using the same path as production
+4. **Approval** - Nothing goes live until you say yes
+
+This is not automation that hopes for the best. It is a formal contract that lets you verify every step.
+
+### What "Recognizable Fidelity" Means
+
+We do not promise pixel-perfect reproduction. We promise:
+
+- Your brand colors will be present
+- Your logo will appear where expected
+- Your members will find major sections intuitively
+- Your mission and identity will be clear to visitors
+
+**The test**: A member visiting your new site says "Yes, this is my organization" within seconds.
+
+For the complete technical specification, see [Intent to Rendering Contract](../ARCH/INTENT_TO_RENDERING_CONTRACT.md).
+
+---
+
 ## Related Documents
 
 For technical details and procedures:
 
+- [Intent to Rendering Contract](../ARCH/INTENT_TO_RENDERING_CONTRACT.md) - How intent becomes rendering
+- [Organizational Representation Sketch](../ARCH/ORGANIZATIONAL_REPRESENTATION_SKETCH.md) - Architecture overview
+- [Intent Manifest Schema](../ARCH/INTENT_MANIFEST_SCHEMA.md) - What the intent manifest contains
 - [Migration Runbook](../IMPORTING/IMPORTER_RUNBOOK.md) - How migration operations work
 - [Cutover Rehearsal Mode](../IMPORTING/CUSTOMER_MIGRATION_CUTOVER_REHEARSAL.md) - How rehearsal and commit work
 - [Migration Customer Journey](../IMPORTING/MIGRATION_CUSTOMER_JOURNEY.md) - What customers experience during migration
