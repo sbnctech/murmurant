@@ -2,6 +2,23 @@
 
 This document provides exact commands for running the WA importer in all environments.
 
+---
+
+## Production Migration
+
+For production migrations using the CSV-based migration pipeline, see:
+
+**[Production Migration Runbook](./PRODUCTION_MIGRATION_RUNBOOK.md)**
+
+The production runbook covers:
+- End-to-end migration flow (DRY RUN and LIVE RUN)
+- Pre-flight checklist (policy bundle, tier mapping, invariants, backup)
+- Step-by-step execution commands
+- Post-run verification checklist
+- Rollback procedures
+
+---
+
 ## 1. Prerequisites
 
 ### 1.1 Environment Variables
