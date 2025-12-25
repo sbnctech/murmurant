@@ -125,6 +125,25 @@ We do not automatically publish anything. Every page, every section, every piece
 
 ---
 
+## Reversibility Contract
+
+Our safety guarantees are not just philosophy—they are a formal contract.
+
+The [Reversibility Contract](../ARCH/REVERSIBILITY_CONTRACT.md) formalizes this promise:
+
+> **You can return to Wild Apricot without data loss or identity erasure at any point before final commit.**
+
+This contract specifies:
+
+- **Abort is always safe**: Before commit, you can walk away and Wild Apricot remains exactly as it was
+- **Wild Apricot remains authoritative**: During cutover rehearsal, WA is the source of truth—ClubOS only records intentions
+- **Commit is explicit**: No passive timeouts, no automatic transitions—you must explicitly approve
+- **Preserved artifacts enable recovery**: Even after commit, we preserve snapshots and mapping tables
+
+If you need the technical details of what we guarantee (and what we do not), read the Reversibility Contract. It is written to be precise, not promotional.
+
+---
+
 ## Relationship to Migration
 
 Presentation reconstruction is not a "later phase" or "nice to have."
@@ -143,6 +162,7 @@ If you cannot recognize your organization in ClubOS, the migration is not comple
 
 For technical details and procedures:
 
+- [Reversibility Contract](../ARCH/REVERSIBILITY_CONTRACT.md) - Formal guarantees for migration safety
 - [Migration Runbook](../IMPORTING/IMPORTER_RUNBOOK.md) - How migration operations work
 - [Cutover Rehearsal Mode](../IMPORTING/CUSTOMER_MIGRATION_CUTOVER_REHEARSAL.md) - How rehearsal and commit work
 - [Migration Customer Journey](../IMPORTING/MIGRATION_CUSTOMER_JOURNEY.md) - What customers experience during migration
