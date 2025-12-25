@@ -26,6 +26,11 @@ This is the main entry point for all ClubOS developer documentation.
 - [Admin Registrations UI](ADMIN_REGISTRATIONS_UI.md)
 - [Admin Activity UI](ADMIN_ACTIVITY_UI.md)
 
+## Migration
+- [Migration Customer Journey](IMPORTING/MIGRATION_CUSTOMER_JOURNEY.md) - Customer experience walkthrough
+- [Importer Runbook](IMPORTING/IMPORTER_RUNBOOK.md) - Technical migration procedures
+- [WA Policy Capture](IMPORTING/WA_POLICY_CAPTURE.md) - Policy capture process
+
 ## Testing and Tooling
 - Test scripts under scripts/dev/*
 - Make targets documented in README.md

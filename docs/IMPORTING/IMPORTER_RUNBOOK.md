@@ -722,7 +722,16 @@ console.log(`Removed ${result.removed} mappings`);
 - `wa_api_requests_total` - API request count
 - `wa_api_latency_seconds` - API response time
 
-## 10. Contacts
+## 10. Related Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [Migration Customer Journey](./MIGRATION_CUSTOMER_JOURNEY.md) | Customer experience walkthrough |
+| [WA Policy Capture](./WA_POLICY_CAPTURE.md) | Policy capture process |
+| [WA Field Mapping](./WA_FIELD_MAPPING.md) | Field mapping reference |
+| [WA Full Sync Reporting](./WA_FULL_SYNC_REPORTING.md) | Sync reporting details |
+
+## 11. Contacts
 
 | Role | Contact | When to Contact |
 |------|---------|-----------------|
@@ -730,7 +739,7 @@ console.log(`Removed ${result.removed} mappings`);
 | WA admin | admin@example.org | API key issues |
 | Database admin | #db-help | Database issues |
 
-## 11. Revision History
+## 12. Revision History
 
 | Date | Author | Change |
 |------|--------|--------|
