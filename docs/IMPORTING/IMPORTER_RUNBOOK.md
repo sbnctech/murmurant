@@ -354,6 +354,8 @@ ALLOW_PROD_IMPORT=1 npx tsx scripts/importing/wa_incremental_sync.ts
 
 ## 4. Dry Run Mode
 
+Dry run mode produces a preview of what the migration intends to do without making changes. This preview is the basis for operator review before committing. See [Intent Manifest Schema](../ARCH/INTENT_MANIFEST_SCHEMA.md) for how intent is captured and validated.
+
 ### 4.1 What It Does
 
 - Fetches all data from WA API (real API calls)
