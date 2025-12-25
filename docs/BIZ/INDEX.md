@@ -24,14 +24,25 @@ board- and operator-readable synthesis of those discussions.
 
 ---
 
-## Transcript Archive
+## ChatGPT Design Studio Archive
 
-Raw ChatGPT transcripts are preserved as primary sources in:
+ChatGPT served as a design studio for exploring business model concepts.
+The reasoning from those sessions is preserved in two forms:
 
-- [_ARCHIVE/CHATGPT_TRANSCRIPTS/](./\_ARCHIVE/CHATGPT_TRANSCRIPTS/)
+| Document | Purpose |
+|----------|---------|
+| [CHATGPT_REASONING_INDEX.md](./CHATGPT_REASONING_INDEX.md) | Curated navigation guide - read this first |
+| [_ARCHIVE/CHATGPT_TRANSCRIPTS/](./_ARCHIVE/CHATGPT_TRANSCRIPTS/) | Verbatim transcript archive |
 
-These are verbatim records, not interpreted summaries. See the archive README
-for naming conventions and paste instructions.
+The transcript is the authoritative primary source. The index provides
+navigation and brief summaries. Neither is binding - the canonical docs
+in this folder are the actual rules.
+
+### Key Archive Files
+
+- [CHATGPT_BUSINESS_MODEL_TRANSCRIPT_2025-12-24.md](./_ARCHIVE/CHATGPT_TRANSCRIPTS/CHATGPT_BUSINESS_MODEL_TRANSCRIPT_2025-12-24.md) -
+  Full design studio reasoning on business model, migration philosophy,
+  sync exclusions, and commercialization
 
 ---
 
