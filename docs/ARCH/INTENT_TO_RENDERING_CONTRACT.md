@@ -219,7 +219,7 @@ Assets are pointers, not embedded content. The rendering layer fetches assets fr
 
 ### Handling Unknowns
 
-When the system cannot determine intent, it must surface this explicitly.
+When intent cannot be extracted from the manifest, the system surfaces this explicitly.
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -542,3 +542,4 @@ This contract document is acceptable when:
 |------|--------|--------|
 | 2025-12-25 | System | Initial specification |
 | 2025-12-25 | System | Add Section G: Explicit Non-Guarantees and Undefined Areas |
+| 2025-12-25 | System | Language audit: remove ambiguous "determine" phrasing |

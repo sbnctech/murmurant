@@ -63,7 +63,7 @@ When the system cannot make a confident prediction, it must mark uncertainty exp
 
 | Marker | Meaning |
 |--------|---------|
-| `UNCERTAIN` | Decision depends on runtime conditions that may change |
+| `UNCERTAIN` | Outcome depends on runtime conditions that may change |
 | `REQUIRES_HUMAN` | System cannot proceed without human judgment |
 | `EXTERNAL_DEPENDENCY` | Outcome depends on an external system not under ClubOS control |
 | `POLICY_AMBIGUOUS` | Multiple valid interpretations exist; customer must clarify |
@@ -230,6 +230,7 @@ This contract has a version. If guarantees change, the version changes.
 | Version | Date | Change |
 |---------|------|--------|
 | 1.0 | 2024-12-24 | Initial contract |
+| 1.0.1 | 2025-12-25 | Language audit: "Decision" → "Outcome" in uncertainty markers |
 
 Implementations must declare which version of this contract they conform to.
 
