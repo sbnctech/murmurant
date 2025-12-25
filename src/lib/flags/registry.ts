@@ -106,6 +106,16 @@ export const FLAG_REGISTRY: readonly FlagDefinition[] = [
     owner: "platform",
     addedAt: "2025-12-21",
   },
+  {
+    key: "membership_tiers_enabled",
+    description: "Enable MembershipTier functionality for WA migrations",
+    defaultValue: false,
+    killSwitchEligible: true,
+    surface: "migration",
+    owner: "platform",
+    notes: "Gates tier seeding and migration tier mapping (Issue #276)",
+    addedAt: "2025-12-24",
+  },
 ] as const;
 
 // Type for valid flag keys

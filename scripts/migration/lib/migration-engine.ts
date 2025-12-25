@@ -6,6 +6,7 @@ import type { MigrationConfig, MigrationRunOptions, MigrationReport, MemberImpor
 import { loadConfig, getDefaultConfigPath } from './config';
 import { loadCSVFile, mapMemberRecord, mapEventRecord, mapRegistrationRecord } from './csv-parser';
 import { generateIdMappingReport, writeIdMappingReport, formatTimestamp } from './id-mapping';
+import { loadTierMappings, resolveTierId, validateTierMapper, type TierMapperResult } from './tier-mapper';
 
 export class MigrationEngine {
   private prisma: PrismaClient;
@@ -17,6 +18,7 @@ export class MigrationEngine {
   private eventLookup = new Map<string, string>();
   private memberIdMap = new Map<string, string>();
   private eventIdMap = new Map<string, string>();
+  private tierMapper: TierMapperResult | null = null;
 
   constructor(options: MigrationRunOptions) {
     this.options = options;
@@ -51,7 +53,20 @@ export class MigrationEngine {
     for (const m of await this.prisma.member.findMany({ select: { id: true, email: true } })) this.memberLookup.set(m.email.toLowerCase(), m.id);
     this.log(`  ${this.memberLookup.size} members`);
     for (const e of await this.prisma.event.findMany({ select: { id: true, title: true, startTime: true } })) this.eventLookup.set(this.eventKey(e.title, e.startTime), e.id);
-    this.log(`  ${this.eventLookup.size} events\n`);
+    this.log(`  ${this.eventLookup.size} events`);
+    // Load tier mappings if feature flag is enabled
+    this.tierMapper = await loadTierMappings(this.prisma);
+    if (this.tierMapper.enabled) {
+      const validation = validateTierMapper(this.tierMapper);
+      if (!validation.valid) {
+        this.log(`  WARN: Tier mapping issues: ${validation.errors.join(', ')}`, 'error');
+      } else {
+        this.log(`  ${this.tierMapper.mappings.size} tier mappings`);
+      }
+    } else {
+      this.log(`  tier mapping disabled`);
+    }
+    this.log('');
   }
 
   private eventKey(title: string, time: Date): string { const t = new Date(time); t.setMinutes(0, 0, 0); return `${title.toLowerCase().trim()}|${t.toISOString()}`; }
@@ -77,12 +92,19 @@ export class MigrationEngine {
     try {
       const email = r.email.toLowerCase(), existing = this.memberLookup.get(email), statusId = this.membershipStatuses[r.membershipStatusCode];
       if (!statusId) throw new Error(`Unknown status: ${r.membershipStatusCode}`);
+      // Resolve tier ID if tier mapping is enabled
+      let tierIdToAssign: string | undefined;
+      if (this.tierMapper?.enabled && r.waMembershipLevel) {
+        const tierResult = resolveTierId(r.waMembershipLevel, this.tierMapper);
+        if (tierResult.tierId) { tierIdToAssign = tierResult.tierId; r.membershipTierId = tierResult.tierId; }
+        else if (tierResult.error) { this.log(`  WARN: ${tierResult.error}`, 'error'); }
+      }
       if (existing) {
         if (this.config.id_reconciliation.members.on_conflict === 'skip') { r._action = 'skip'; r._clubosId = existing; this.report.members.skipped++; }
-        else { r._action = 'update'; r._clubosId = existing; if (!this.options.dryRun) await this.prisma.member.update({ where: { id: existing }, data: { firstName: r.firstName, lastName: r.lastName, phone: r.phone || null, joinedAt: r.joinedAt, membershipStatusId: statusId } }); this.report.members.updated++; }
+        else { r._action = 'update'; r._clubosId = existing; if (!this.options.dryRun) await this.prisma.member.update({ where: { id: existing }, data: { firstName: r.firstName, lastName: r.lastName, phone: r.phone || null, joinedAt: r.joinedAt, membershipStatusId: statusId, ...(tierIdToAssign && { membershipTierId: tierIdToAssign }) } }); this.report.members.updated++; }
       } else {
         r._action = 'create';
-        if (!this.options.dryRun) { const c = await this.prisma.member.create({ data: { firstName: r.firstName, lastName: r.lastName, email: r.email, phone: r.phone || null, joinedAt: r.joinedAt, membershipStatusId: statusId } }); r._clubosId = c.id; this.memberLookup.set(email, c.id); }
+        if (!this.options.dryRun) { const c = await this.prisma.member.create({ data: { firstName: r.firstName, lastName: r.lastName, email: r.email, phone: r.phone || null, joinedAt: r.joinedAt, membershipStatusId: statusId, ...(tierIdToAssign && { membershipTierId: tierIdToAssign }) } }); r._clubosId = c.id; this.memberLookup.set(email, c.id); }
         else r._clubosId = `dry-${randomUUID()}`;
         this.report.members.created++;
       }

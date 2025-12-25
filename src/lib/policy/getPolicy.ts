@@ -59,6 +59,22 @@ const POLICY_DEFAULTS: PolicyValueMap = {
   "display.organizationName": "Organization",
   "display.memberTermSingular": "member",
   "display.memberTermPlural": "members",
+
+  // Membership Tiers (Issue #276)
+  // WA level names → ClubOS tier codes for SBNC
+  "membership.tiers.enabled": false,
+  "membership.tiers.defaultCode": "GENERAL",
+  "membership.tiers.waMapping": {
+    "New Member": "NEWCOMER",
+    Newcomer: "NEWCOMER",
+    "1st Year": "FIRST_YEAR",
+    "2nd Year": "SECOND_YEAR",
+    "Third Year": "THIRD_YEAR",
+    "3rd Year": "THIRD_YEAR",
+    Alumni: "ALUMNI",
+    Lapsed: "LAPSED",
+    Prospect: "PROSPECT",
+  },
 };
 
 // =============================================================================

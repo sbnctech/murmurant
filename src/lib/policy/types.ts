@@ -61,6 +61,16 @@ export type DisplayPolicyKey =
   | "display.memberTermPlural"; // Plural form
 
 /**
+ * Membership tier policy keys
+ * Used for WA migration tier mapping
+ * Related: Issue #276
+ */
+export type MembershipTierPolicyKey =
+  | "membership.tiers.enabled" // Whether tier mapping is enabled
+  | "membership.tiers.defaultCode" // Default tier code for unmapped levels
+  | "membership.tiers.waMapping"; // WA level name → tier code mapping
+
+/**
  * Union of all valid policy keys
  */
 export type PolicyKey =
@@ -68,7 +78,8 @@ export type PolicyKey =
   | SchedulingPolicyKey
   | GovernancePolicyKey
   | KpiPolicyKey
-  | DisplayPolicyKey;
+  | DisplayPolicyKey
+  | MembershipTierPolicyKey;
 
 // =============================================================================
 // Policy Value Types
@@ -107,6 +118,11 @@ export interface PolicyValueMap {
   "display.organizationName": string;
   "display.memberTermSingular": string;
   "display.memberTermPlural": string;
+
+  // Membership Tiers (Issue #276)
+  "membership.tiers.enabled": boolean;
+  "membership.tiers.defaultCode": string;
+  "membership.tiers.waMapping": Record<string, string>;
 }
 
 // =============================================================================

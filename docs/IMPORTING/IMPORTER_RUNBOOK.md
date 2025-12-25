@@ -51,7 +51,45 @@ Expected status codes created:
 - `not_a_member` - Guest or non-member contact
 - `unknown` - Fallback for unmapped statuses
 
-### 1.4 Verify Configuration
+### 1.4 Seed MembershipTier Records (Optional)
+
+If using tier mapping during migration (Issue #276), seed the MembershipTier records:
+
+```bash
+# Enable the feature flag first
+export CLUBOS_FLAG_MEMBERSHIP_TIERS_ENABLED=1
+
+# Development/staging
+npx tsx scripts/migration/seed-membership-tiers.ts
+
+# Dry run (preview only)
+DRY_RUN=1 npx tsx scripts/migration/seed-membership-tiers.ts
+```
+
+Expected tier codes created (SBNC defaults):
+
+- `PROSPECT` - Not yet a member
+- `NEWCOMER` - New member (first 90 days)
+- `FIRST_YEAR` - First year member
+- `SECOND_YEAR` - Second year member
+- `THIRD_YEAR` - Third year member
+- `ALUMNI` - Former member
+- `LAPSED` - Expired membership
+- `GENERAL` - Default tier for unmapped levels
+
+**Rollback**: If tiers were seeded incorrectly:
+
+```sql
+-- Remove specific tier
+DELETE FROM "MembershipTier" WHERE code = 'TIER_CODE';
+
+-- Remove all tiers (use with caution)
+DELETE FROM "MembershipTier";
+```
+
+**Related**: Issue #276, #202, #275, #263
+
+### 1.5 Verify Configuration
 
 ```bash
 # Check WA API connectivity
@@ -63,7 +101,7 @@ npx tsx scripts/importing/wa_health_check.ts
 # [OK] Token obtained successfully
 ```
 
-### 1.5 Preflight Checks
+### 1.6 Preflight Checks
 
 The sync scripts automatically run preflight checks before syncing. You can also check manually via the API:
 

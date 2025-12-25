@@ -63,6 +63,10 @@ export interface MemberImport extends MigrationRecord {
   phone?: string;
   joinedAt: Date;
   membershipStatusCode: string;
+  /** Raw WA membership level for tier mapping (Issue #276) */
+  waMembershipLevel?: string;
+  /** Resolved ClubOS MembershipTier ID (Issue #276) */
+  membershipTierId?: string;
 }
 
 export interface EventImport extends MigrationRecord {
