@@ -304,3 +304,9 @@ These failures are tracked and NOT regressions:
 4. **Tracked flakiness**: Flaky tests isolated but monitored
 5. **Calm failures**: Clear summaries, no wall of red text
 6. **High standards**: We don't lower the bar, we isolate the noise
+
+---
+
+## Related Documentation
+
+- [LIGHTS_OUT_JOBS.md](./LIGHTS_OUT_JOBS.md) - Nightly/weekly job catalog and test sharding plan
