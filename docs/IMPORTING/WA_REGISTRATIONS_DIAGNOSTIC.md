@@ -26,7 +26,7 @@ Each registration references both:
 - A WA **Contact ID** (must map to a ClubOS Member)
 - A WA **Event ID** (must map to a ClubOS Event)
 
-If either mapping is missing, the registration is **skipped silently**.
+If either mapping is missing, the registration is **skipped and counted** in the diagnostics summary. The first 10 skips are logged individually; all skips are reflected in the final counters.
 
 ## Diagnostic Instrumentation
 
