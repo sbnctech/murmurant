@@ -7,6 +7,7 @@ This is the main entry point for all ClubOS developer documentation.
 - [Development Workflow](DEVELOPMENT_WORKFLOW.md)
 
 ## Architecture
+- [Core Trust Surface](ARCH/CORE_TRUST_SURFACE.md) - Locked guarantees for migration and preview
 - [Admin Architecture Map](ADMIN_ARCHITECTURE_MAP.md)
 - [API Surface](API_SURFACE.md)
 
