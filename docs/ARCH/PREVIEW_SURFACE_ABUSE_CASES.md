@@ -2,7 +2,7 @@
 
 **Status**: Adversarial Review
 **Last Updated**: 2024-12-25
-**Related Documents**: PREVIEW_SURFACE_CONTRACT.md, INTENT_MANIFEST_SCHEMA.md
+**Related Documents**: PREVIEW_SURFACE_CONTRACT.md, INTENT_MANIFEST_SCHEMA.md, SUGGESTION_REVIEW_WORKFLOW.md
 
 ---
 
@@ -16,6 +16,56 @@ This document identifies ways the Preview Surface Contract might be:
 4. **Weaponized** against the organization
 
 Adversarial review strengthens the contract by surfacing gaps before they become incidents.
+
+---
+
+## Non-Goals
+
+The Preview Surface is explicitly **NOT** the following:
+
+### Preview Is Not a CMS Publishing Workflow
+
+Content management systems often have "preview" modes that show how content will look before publishing. ClubOS preview is fundamentally different:
+
+| CMS Preview | ClubOS Preview |
+|-------------|----------------|
+| Shows rendering of authored content | Shows intended actions for a migration or operation |
+| Author controls content | System proposes based on source data |
+| Preview → Publish is a single decision | Preview → Approval → Execution is multi-step |
+| Publishing is immediate and reversible | Execution may involve irreversible changes |
+| Author can edit preview directly | Preview is read-only; changes require new source data |
+
+**Why this matters**: Customers familiar with CMS workflows may expect to "edit" a preview or assume "publish" is low-stakes. ClubOS preview requires understanding that what follows is potentially irreversible transformation, not content styling.
+
+### Preview Is Not a Test Environment
+
+Preview is not a sandbox where customers can "try things out" to see what happens:
+
+- Preview does not execute operations
+- Preview does not create test records
+- Preview does not allow "undo" of test actions (because there are no actions)
+- Preview is observation, not experimentation
+
+### Preview Is Not Approval
+
+Viewing a preview does not constitute approval. Approval requires:
+
+1. Explicit customer acknowledgment
+2. Recorded consent (audit log)
+3. Distinct action (button click, API call, signed confirmation)
+
+A customer viewing a preview has made no commitment. The system MUST NOT proceed on the basis of "they saw it."
+
+### Preview Is Not a Contract Amendment
+
+Preview shows system behavior at preview time. It does not:
+
+- Create binding obligations
+- Modify service terms
+- Guarantee specific outcomes
+- Override documented non-guarantees
+
+If preview output and contract terms conflict, contract terms govern.
 
 ---
 
@@ -366,19 +416,74 @@ The following are cases where the system MUST reject an action or surface a bloc
 
 ---
 
-## 8. Revision History
+## 8. Operator Responsibility Statements
+
+These are affirmative statements of what operators MUST do. They complement the system guarantees by defining human obligations.
+
+### 8.1 Before Generating Preview
+
+The operator MUST:
+
+1. **Verify scope is correct** — Confirm the preview will cover what the customer expects (not more, not less)
+2. **Confirm source data currency** — Verify source data is current; if stale, warn the customer
+3. **Disclose known limitations** — If known issues affect this operation, disclose them before preview
+
+### 8.2 During Preview Review
+
+The operator MUST:
+
+1. **Allow sufficient time** — Do not rush the customer; there is no valid reason for artificial urgency
+2. **Explain uncertainty markers** — If preview contains `UNCERTAIN`, `REQUIRES_HUMAN`, or other markers, explain what they mean
+3. **Answer questions completely** — If the customer asks a question, answer it; do not deflect or defer
+4. **Document concerns** — If the customer expresses concern, document it; do not dismiss or minimize
+
+### 8.3 Before Approving Execution
+
+The operator MUST:
+
+1. **Confirm explicit consent** — The customer must explicitly approve; "they didn't object" is not consent
+2. **Verify preview freshness** — Confirm the preview is recent; if significant time has passed, re-preview
+3. **Confirm customer understands non-guarantees** — The customer must understand that preview is approximation, not commitment
+
+### 8.4 After Execution
+
+The operator MUST:
+
+1. **Compare results to preview** — Review execution results against preview; note any discrepancies
+2. **Disclose discrepancies immediately** — If execution differed from preview, inform the customer
+3. **Document outcomes** — Record what happened for audit trail and future reference
+
+### 8.5 Prohibited Operator Behaviors
+
+The following behaviors are expressly prohibited:
+
+| Prohibited Behavior | Why It's Prohibited |
+|---------------------|---------------------|
+| Executing without customer's explicit approval | Violates consent requirement |
+| Using preview to pressure customer | Violates abort rights |
+| Proceeding despite customer concerns | Violates resolution protocol |
+| Substituting operator judgment for customer's | Operator is facilitator, not decision-maker |
+| Treating preview as customer commitment | Preview is information, not contract |
+| Creating artificial urgency | Undermines informed decision-making |
+| Suppressing uncertainty markers | Hides information customer needs |
+
+---
+
+## 9. Revision History
 
 | Date | Author | Change |
 |------|--------|--------|
 | 2024-12-25 | System | Initial adversarial review |
+| 2024-12-25 | System | Added Non-Goals section, Operator Responsibility Statements |
 
 ---
 
 ## References
 
-- [PREVIEW_SURFACE_CONTRACT.md](./PREVIEW_SURFACE_CONTRACT.md) - The contract being reviewed
-- [INTENT_MANIFEST_SCHEMA.md](./INTENT_MANIFEST_SCHEMA.md) - Manifest schema (preview source of truth)
-- [ARCHITECTURAL_CHARTER.md](../ARCHITECTURAL_CHARTER.md) - Charter P5 (reversible/previewable actions)
+- [PREVIEW_SURFACE_CONTRACT.md](./PREVIEW_SURFACE_CONTRACT.md) — The contract being reviewed
+- [INTENT_MANIFEST_SCHEMA.md](./INTENT_MANIFEST_SCHEMA.md) — Manifest schema (preview source of truth)
+- [SUGGESTION_REVIEW_WORKFLOW.md](./SUGGESTION_REVIEW_WORKFLOW.md) — Suggestion state machine
+- [ARCHITECTURAL_CHARTER.md](../ARCHITECTURAL_CHARTER.md) — Charter P5 (reversible/previewable actions)
 
 ---
 
