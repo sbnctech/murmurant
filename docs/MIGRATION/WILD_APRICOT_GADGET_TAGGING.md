@@ -160,6 +160,7 @@ When you encounter a WA feature not listed:
 
 ## Related Documents
 
+- [ClubOS Page Builder Primitives](../ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md) - ClubOS equivalents and migration behavior
 - [Migration Intake Checklist](./WILD_APRICOT_MIGRATION_INTAKE_CHECKLIST.md) - step-by-step discovery
 - [Presentation Discovery Stage](./PRESENTATION_DISCOVERY_STAGE.md) - automated site crawling
 - [Widgets vs Gadgets](./WILD_APRICOT_WIDGETS_VS_GADGETS.md) - terminology guide
