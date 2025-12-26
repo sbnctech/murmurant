@@ -128,11 +128,20 @@ Never
 
 ## Core Trust Surface (Non-Negotiable)
 
-The [Core Trust Surface](ARCH/CORE_TRUST_SURFACE.md) is normative for all migration, preview, and publishing behavior. It formally declares the contracts that customers can rely on.
+ClubOS migration and presentation guarantees are defined by a set of normative contracts. These contracts specify what the system promises, what it explicitly does not promise, and how customers can verify behavior. They are first-order architectural constraints—regressions are charter violations.
 
-The Core Trust Surface guarantees: human authority, intent determinism, preview fidelity, abortability, and auditability. It prohibits: automatic execution, silent mutation, preview-as-approval, implicit intent, and partial commits.
+The contracts:
 
-**Change control rule**: Implementations may evolve, but guarantees and prohibitions must not regress. Any change to trust surface documents requires architectural review.
+- [Intent Manifest Schema](./ARCH/INTENT_MANIFEST_SCHEMA.md) — Versioned, immutable representation of migration intentions
+- [Preview Surface Contract](./ARCH/PREVIEW_SURFACE_CONTRACT.md) — What preview guarantees and what it does not
+- [Suggestion Review Workflow](./ARCH/SUGGESTION_REVIEW_WORKFLOW.md) — Human-in-the-loop approval flow
+- [Reversibility Contract](./ARCH/REVERSIBILITY_CONTRACT.md) — Abort, rollback, and recovery guarantees
+
+See also:
+- [Core Trust Surface](./ARCH/CORE_TRUST_SURFACE.md) *(forthcoming—will consolidate invariants across all contracts)*
+- [Intent to Rendering Contract](./ARCH/INTENT_TO_RENDERING_CONTRACT.md) *(forthcoming—see PR #318)*
+
+**Change control rule**: Implementations may evolve, but contract guarantees must not regress. Any change to trust surface documents requires architectural review.
 
 ------------------------------------------------------------
 
