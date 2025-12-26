@@ -31,6 +31,7 @@ This is the main entry point for all ClubOS developer documentation.
 
 ## Operator Guides
 - [Calendar Trust and Reliability](BIZ/CALENDAR_TRUST_AND_RELIABILITY.md) - How ClubOS handles dates and times (non-technical)
+- [Core Trust Surface for Operators](BIZ/TRUST_SURFACE_FOR_OPERATORS.md) - The five guarantees that protect your organization
 
 ## Reference
 - Mock data definitions under lib/mock/*
