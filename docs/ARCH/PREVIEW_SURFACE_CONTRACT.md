@@ -237,6 +237,7 @@ Implementations must declare which version of this contract they conform to.
 
 ## 9. References
 
+- [INTENT_MANIFEST_SCHEMA.md](./INTENT_MANIFEST_SCHEMA.md) - The manifest that preview surfaces render
 - [ARCHITECTURAL_CHARTER.md](../ARCHITECTURAL_CHARTER.md) - Principle P5 (undoable/reversible actions)
 - [INTENT_MANIFEST_SCHEMA.md](./INTENT_MANIFEST_SCHEMA.md) - Manifest structure and guarantees
 - [SUGGESTION_REVIEW_WORKFLOW.md](./SUGGESTION_REVIEW_WORKFLOW.md) - Suggestion state machine

@@ -52,7 +52,7 @@ We do not ask you to start from a blank page. Instead, we:
 3. **Review** - You see exactly what we are proposing before anything happens
 4. **Approve** - Nothing changes until you say yes
 
-This is **assisted reconstruction** - the system does the heavy lifting, but you remain in control.
+This is **assisted reconstruction** - the system does the heavy lifting, but you remain in control. The result of this process is an **Intent Manifest**: a reviewable record of what we propose before any changes occur.
 
 ### Human-in-the-Loop
 
@@ -164,6 +164,7 @@ If members cannot find the core content they relied on in Wild Apricot, the migr
 
 For technical details and procedures:
 
+- [Intent Manifest Schema](../ARCH/INTENT_MANIFEST_SCHEMA.md) - What the manifest captures and guarantees
 - [Reversibility Contract](../ARCH/REVERSIBILITY_CONTRACT.md) - Formal guarantees for migration safety
 - [Migration Runbook](../IMPORTING/IMPORTER_RUNBOOK.md) - How migration operations work
 - [Cutover Rehearsal Mode](../IMPORTING/CUSTOMER_MIGRATION_CUTOVER_REHEARSAL.md) - How rehearsal and commit work

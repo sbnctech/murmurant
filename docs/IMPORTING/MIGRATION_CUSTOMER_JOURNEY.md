@@ -125,6 +125,8 @@ The operator walks through each policy area:
 - Summary statistics: members imported, events imported, etc.
 - Any warnings or anomalies highlighted
 
+The dry run produces an **Intent Manifest**—a reviewable record of exactly what the migration intends to do. This manifest becomes the basis for preview, verification, and eventual commit. Nothing renders or commits without first passing through the manifest.
+
 ### Decisions the Customer Makes
 
 | Decision | Stakes | Time Pressure |
@@ -370,6 +372,7 @@ ClubOS migration builds trust through:
 
 ## Related Documentation
 
+- [Intent Manifest Schema](../ARCH/INTENT_MANIFEST_SCHEMA.md) — What the manifest captures and guarantees
 - [Importer Runbook](./IMPORTER_RUNBOOK.md) — Technical migration procedures
 - [Wild Apricot Policy Capture](./WA_POLICY_CAPTURE.md) — Policy capture process
 - [Cutover Rehearsal Mode](./CUSTOMER_MIGRATION_CUTOVER_REHEARSAL.md) — Test migration before committing
