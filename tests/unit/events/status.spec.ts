@@ -4,8 +4,9 @@
 // Charter P3: Explicit state machine (no boolean flags)
 // Charter P7: Audit logging for all transitions
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { EventStatus } from "@prisma/client";
+import { freezeTime, restoreTime } from "../../helpers/freezeTime";
 
 // Mock prisma before importing status module
 vi.mock("@/lib/prisma", () => ({
@@ -72,6 +73,10 @@ describe("Event Status Lifecycle", () => {
     // Reset mock implementations
     vi.mocked(prisma.event.findUnique).mockReset();
     vi.mocked(prisma.event.update).mockReset();
+  });
+
+  afterEach(() => {
+    restoreTime();
   });
 
   /**
@@ -327,7 +332,8 @@ describe("Event Status Lifecycle", () => {
 
   describe("getEffectiveStatus", () => {
     it("returns COMPLETED for published past event", () => {
-      const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000); // Yesterday
+      freezeTime("2025-01-15T12:00:00Z");
+      const pastDate = new Date("2025-01-14T12:00:00Z"); // Yesterday
       const status = getEffectiveStatus({
         status: "PUBLISHED",
         startTime: pastDate,
@@ -337,7 +343,8 @@ describe("Event Status Lifecycle", () => {
     });
 
     it("returns PUBLISHED for future published event", () => {
-      const futureDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // Tomorrow
+      freezeTime("2025-01-15T12:00:00Z");
+      const futureDate = new Date("2025-01-16T12:00:00Z"); // Tomorrow
       const status = getEffectiveStatus({
         status: "PUBLISHED",
         startTime: futureDate,
@@ -347,15 +354,17 @@ describe("Event Status Lifecycle", () => {
     });
 
     it("returns original status for non-published events", () => {
-      const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      freezeTime("2025-01-15T12:00:00Z");
+      const pastDate = new Date("2025-01-14T12:00:00Z");
       expect(getEffectiveStatus({ status: "DRAFT", startTime: pastDate, endTime: pastDate })).toBe("DRAFT");
       expect(getEffectiveStatus({ status: "APPROVED", startTime: pastDate, endTime: pastDate })).toBe("APPROVED");
       expect(getEffectiveStatus({ status: "CANCELED", startTime: pastDate, endTime: pastDate })).toBe("CANCELED");
     });
 
     it("uses default 2-hour duration when endTime is null", () => {
+      freezeTime("2025-01-15T12:00:00Z");
       // Event that started 3 hours ago (should be completed)
-      const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
+      const threeHoursAgo = new Date("2025-01-15T09:00:00Z");
       expect(
         getEffectiveStatus({
           status: "PUBLISHED",
@@ -365,7 +374,7 @@ describe("Event Status Lifecycle", () => {
       ).toBe("COMPLETED");
 
       // Event that started 1 hour ago (not completed yet - within 2hr default)
-      const oneHourAgo = new Date(Date.now() - 1 * 60 * 60 * 1000);
+      const oneHourAgo = new Date("2025-01-15T11:00:00Z");
       expect(
         getEffectiveStatus({
           status: "PUBLISHED",
@@ -382,7 +391,8 @@ describe("Event Status Lifecycle", () => {
 
   describe("isEventCompleted", () => {
     it("returns true for completed events", () => {
-      const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      freezeTime("2025-01-15T12:00:00Z");
+      const pastDate = new Date("2025-01-14T12:00:00Z");
       expect(
         isEventCompleted({
           status: "PUBLISHED",
@@ -393,7 +403,8 @@ describe("Event Status Lifecycle", () => {
     });
 
     it("returns false for future published events", () => {
-      const futureDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      freezeTime("2025-01-15T12:00:00Z");
+      const futureDate = new Date("2025-01-16T12:00:00Z");
       expect(
         isEventCompleted({
           status: "PUBLISHED",
@@ -404,7 +415,8 @@ describe("Event Status Lifecycle", () => {
     });
 
     it("returns false for non-published events even if past", () => {
-      const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      freezeTime("2025-01-15T12:00:00Z");
+      const pastDate = new Date("2025-01-14T12:00:00Z");
       expect(
         isEventCompleted({
           status: "DRAFT",
