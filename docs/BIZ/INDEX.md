@@ -24,6 +24,14 @@ board- and operator-readable synthesis of those discussions.
 
 ---
 
+## Customer-Facing Brand and Voice
+
+| Document | Audience | Purpose |
+|----------|----------|---------|
+| [Brand and Voice](./BRAND_AND_VOICE.md) | Contributors, Operators | Formalized brand principles and language rules for customer-facing materials |
+
+---
+
 ## ChatGPT Design Studio Archive
 
 ChatGPT served as a design studio for exploring business model concepts.
@@ -59,12 +67,16 @@ refined conclusions (canonical docs).
 
 ---
 
-## Related Epics
+## Related
 
 - Epic #248 - Business Model
 - Epic #232 - Policy Isolation
 - Epic #202 - WA Migration
+- [Architectural Charter](../ARCHITECTURAL_CHARTER.md) - Platform design principles
+- [Importer Runbook](../IMPORTING/IMPORTER_RUNBOOK.md) - Technical migration procedures
 
 ---
+
+_This index is maintained as part of business documentation governance._
 
 Last updated: 2025-12-24
