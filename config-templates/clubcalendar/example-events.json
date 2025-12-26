@@ -1,0 +1,44 @@
+{
+  "_comment": "Example events.json file for static JSON hosting. Export from ClubOS or create manually.",
+  "_docs": "See docs/INSTALL/SBNC_INLINE_ONLY_INSTALL.md",
+  "generatedAt": "2025-12-26T00:00:00Z",
+  "timezone": "America/Los_Angeles",
+  "events": [
+    {
+      "id": "evt-001",
+      "title": "Monthly General Meeting",
+      "description": "All members welcome! Join us for updates and socializing.",
+      "startTime": "2025-01-15T10:00:00-08:00",
+      "endTime": "2025-01-15T12:00:00-08:00",
+      "location": "Faulkner Gallery, Santa Barbara Public Library",
+      "category": "general",
+      "registrationOpen": true,
+      "spotsAvailable": 25,
+      "eventUrl": "/events/evt-001"
+    },
+    {
+      "id": "evt-002",
+      "title": "Wine Tasting Social",
+      "description": "Sample local wines and meet fellow newcomers.",
+      "startTime": "2025-01-18T17:00:00-08:00",
+      "endTime": "2025-01-18T19:00:00-08:00",
+      "location": "Municipal Winemakers, Santa Barbara",
+      "category": "social",
+      "registrationOpen": true,
+      "spotsAvailable": 12,
+      "eventUrl": "/events/evt-002"
+    },
+    {
+      "id": "evt-003",
+      "title": "Book Club: January Selection",
+      "description": "Discussing this month's book pick.",
+      "startTime": "2025-01-22T14:00:00-08:00",
+      "endTime": "2025-01-22T16:00:00-08:00",
+      "location": "Member's home (address provided upon registration)",
+      "category": "interest",
+      "registrationOpen": false,
+      "spotsAvailable": 0,
+      "eventUrl": "/events/evt-003"
+    }
+  ]
+}
