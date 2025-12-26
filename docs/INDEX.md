@@ -9,6 +9,7 @@ This is the main entry point for all ClubOS developer documentation.
 ## Architecture
 - [Admin Architecture Map](ADMIN_ARCHITECTURE_MAP.md)
 - [API Surface](API_SURFACE.md)
+- [Reversibility Contract](ARCH/REVERSIBILITY_CONTRACT.md) - Migration safety guarantees
 
 ## Authorization & Access Control
 - [Authorization & RBAC Guide](RBAC_OVERVIEW.md) - High-level overview
