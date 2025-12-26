@@ -41,6 +41,12 @@ This is the main entry point for all ClubOS developer documentation.
 - Make targets documented in README.md
 - Playwright test suites in tests/api and tests/admin
 
+## Business Model
+- [Business Model Canonical](BIZ/BUSINESS_MODEL_CANONICAL.md) - Core business model rules
+- [Pricing and Entitlements](BIZ/PRICING_AND_ENTITLEMENTS.md) - Tiers, entitlements, limits
+- [Billing Invariants](BIZ/BILLING_INVARIANTS.md) - Billing safety requirements
+- [ChatGPT Working Notes](BIZ/_ARCHIVE/CHATGPT_BUSINESS_MODEL_WORKING_NOTES.md) - Archived design rationale
+
 ## Operator Guides
 - [Calendar Trust and Reliability](BIZ/CALENDAR_TRUST_AND_RELIABILITY.md) - How ClubOS handles dates and times (non-technical)
 - [Core Trust Surface for Operators](BIZ/TRUST_SURFACE_FOR_OPERATORS.md) - The five guarantees that protect your organization
