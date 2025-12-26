@@ -255,7 +255,7 @@ WA_ASYNC_MAX_ATTEMPTS=100 npx tsx scripts/importing/wa_full_sync.ts
 - [ ] `WA_API_KEY` and `WA_ACCOUNT_ID` are set
 - [ ] Database migrations are applied (`npx prisma migrate deploy`)
 - [ ] MembershipStatus records are seeded
-- [ ] Preflight checks pass (script runs them automatically)
+- [ ] Preflight checks pass (script includes these checks)
 - [ ] For production: `ALLOW_PROD_IMPORT=1` is set
 
 ## Related Documentation

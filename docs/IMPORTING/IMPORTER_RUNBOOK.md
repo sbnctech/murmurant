@@ -103,7 +103,7 @@ npx tsx scripts/importing/wa_health_check.ts
 
 ### 1.6 Preflight Checks
 
-The sync scripts automatically run preflight checks before syncing. You can also check manually via the API:
+When you run the sync script, it performs preflight checks first. You can also check manually via the API:
 
 ```bash
 curl http://localhost:3000/api/v1/admin/import/status

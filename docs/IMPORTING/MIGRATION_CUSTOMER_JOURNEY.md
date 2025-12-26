@@ -248,7 +248,7 @@ No blocking errors found.
 
 ### Reassurance Points
 
-- **Automated counts**: System counts match automatically, humans spot-check
+- **Count verification**: System generates count comparisons; operators verify samples
 - **Sampling strategy**: Operator guides which records to verify manually
 - **Problems fixable**: Post-import corrections are possible
 - **No commitment yet**: Cutover requires separate explicit decision
