@@ -126,6 +126,16 @@ Never
 
 ------------------------------------------------------------
 
+## Core Trust Surface (Non-Negotiable)
+
+The [Core Trust Surface](ARCH/CORE_TRUST_SURFACE.md) is normative for all migration, preview, and publishing behavior. It formally declares the contracts that customers can rely on.
+
+The Core Trust Surface guarantees: human authority, intent determinism, preview fidelity, abortability, and auditability. It prohibits: automatic execution, silent mutation, preview-as-approval, implicit intent, and partial commits.
+
+**Change control rule**: Implementations may evolve, but guarantees and prohibitions must not regress. Any change to trust surface documents requires architectural review.
+
+------------------------------------------------------------
+
 ## B. ClubOS Must Never Do These Things (Anti-Patterns)
 
 These are the "avoid becoming WA-like" rules.
