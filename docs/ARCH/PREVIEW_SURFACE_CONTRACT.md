@@ -8,7 +8,7 @@
 
 ## 1. Purpose of Preview
 
-A **preview** is a representation of what the system intends to do before it does it.
+A **preview** is a representation of what the system proposes to do, shown to a human for approval before any action occurs.
 
 Preview exists because:
 
@@ -113,7 +113,7 @@ A **[suggestion](./SUGGESTION_REVIEW_WORKFLOW.md)** is a system-generated recomm
 | `REJECTED` | Human has declined; no action taken |
 | `MODIFIED` | Human has adjusted the suggestion; modified version proceeds |
 
-**Relationship**: Preview provides visibility into what a suggestion would do. The suggestion workflow provides the approval gate.
+**Relationship**: Preview provides visibility into what a suggestion would do. The suggestion workflow provides the approval gate. **No suggestion proceeds without explicit human authorization.**
 
 ```
 [System generates suggestion]
@@ -201,10 +201,12 @@ The customer has the unconditional right to:
 |---------|--------------|
 | **Abort during preview** | No record created; no state changed |
 | **Abort before execution** | Intent manifest may be retained for audit; no execution occurs |
-| **Abort during execution** | Depends on execution model; checkpoint-based execution may partially complete |
-| **Rollback after execution** | Separate procedure; see rollback documentation |
+| **Abort during execution** | Customer-initiated; checkpoint-based execution may partially complete |
+| **Rollback after execution** | Customer-initiated separate procedure; see rollback documentation |
 
 **Abort is always safe**. The customer should never fear that aborting will leave the system in a broken state.
+
+> **Authority principle**: Abort and rollback are always human-initiated. The system never aborts or rolls back on its own initiative. Technical failure recovery (e.g., transaction rollback on database error) is distinct from user-initiated abort—the former is a safety mechanism, the latter is a decision.
 
 ---
 

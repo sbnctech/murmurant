@@ -182,16 +182,19 @@ At any point before commit, a suggestion can be abandoned without side effects.
 |--------|--------|--------|
 | **Reject** | Suggestion moves to Rejected state. Preserved for audit. | Yes |
 | **Discard** | Suggestion deleted entirely (if never reviewed). | Yes (deletion event) |
-| **Expire** | Suggestion auto-transitions to Expired after configurable period. | Yes (system-initiated) |
+| **Expire** | Suggestion transitions to Expired after operator-configured period if no human acts. This is a staleness safeguard, not a system decision. Operators set the expiration policy; the system enforces it. | Yes (policy-driven) |
 
-### Post-Commit Abort
+### Post-Commit Rollback
 
-If a suggestion has been applied (committed), abort requires:
+If a suggestion has been applied (committed), rollback requires **explicit human initiation**:
 
-1. Rollback artifact exists
-2. Actor has `content:rollback` capability
-3. Rollback is logged as a distinct action
-4. Original suggestion retains "Applied then Rolled Back" status
+1. A human with `content:rollback` capability decides to initiate rollback
+2. Rollback artifact exists (created at commit time)
+3. The human confirms the rollback action
+4. Rollback is logged as a distinct action with the initiating actor recorded
+5. Original suggestion retains "Applied then Rolled Back" status
+
+> **The system never auto-rolls back.** Rollback is always a deliberate human decision.
 
 This aligns with **P5**: reversibility must be supported, not assumed.
 

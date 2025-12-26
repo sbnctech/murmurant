@@ -173,7 +173,7 @@ npx tsx scripts/importing/wa_health_check.ts
 
 ### 1.6 Preflight Checks
 
-When you run the sync script, it performs preflight checks first. You can also check manually via the API:
+When you run the sync script, it performs preflight checks first (before any data operations). You can also check manually via the API:
 
 ```bash
 curl http://localhost:3000/api/v1/admin/import/status
@@ -353,6 +353,8 @@ ALLOW_PROD_IMPORT=1 npx tsx scripts/importing/wa_incremental_sync.ts
 ```
 
 ## 4. Dry Run Mode
+
+Dry run mode produces a preview of what the migration intends to do without making changes. This preview is the basis for operator review before committing. See [Intent Manifest Schema](../ARCH/INTENT_MANIFEST_SCHEMA.md) for how intent is captured and validated.
 
 ### 4.1 What It Does
 
@@ -561,6 +563,8 @@ ORDER BY "createdAt" DESC LIMIT 50;
 
 ## 7. Cron Setup
 
+> **Operator-configured automation**: Cron jobs are set up and managed by operators. The system does not self-schedule syncs. Operators decide the schedule, and operators can disable automation at any time.
+
 ### 7.1 Recommended Schedule
 
 ```cron
@@ -602,6 +606,8 @@ exit 1
 
 ## 8. Recovery Procedures
 
+> **Operator-initiated recovery**: All recovery procedures are initiated by operators. The system does not auto-recover or auto-retry without operator involvement. If something fails, the operator investigates and decides how to proceed.
+>
 > **Full Guide**: For comprehensive rollback and recovery procedures including failure modes, rollback levels, and audit trail requirements, see [MIGRATION_ROLLBACK_RECOVERY.md](./MIGRATION_ROLLBACK_RECOVERY.md).
 
 ### 8.1 Partial Sync Failure

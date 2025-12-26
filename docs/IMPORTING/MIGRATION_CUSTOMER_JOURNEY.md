@@ -203,11 +203,11 @@ No blocking errors found.
 
 ### Reassurance Points
 
-- **Failure recovery**: If sync fails due to a technical error, the database transaction is discarded (no partial state); you decide whether to retry
+- **Transactional safety**: Sync either completes fully or, if a technical error occurs, the database transaction is discarded (no partial state). This is automatic failure recovery, not a system-initiated abort—the customer controls whether to retry.
 - **Wild Apricot unchanged**: Source system is read-only during migration
 - **Progress visibility**: Can monitor sync progress in real time
 - **Idempotent**: Re-running sync is safe if needed (operations can be repeated without harm)
-- **Recovery documented**: Procedures ready if needed
+- **Recovery documented**: Rollback procedures ready if needed
 
 ---
 
@@ -294,8 +294,8 @@ After cutover:
 
 ### Reassurance Points
 
-- **You control the timing**: Cutover happens when you say, not before
-- **Rollback exists**: Emergency procedures documented for reversal
+- **You control the timing**: Cutover happens when you explicitly authorize it, not before. The system never initiates cutover.
+- **Rollback exists**: Customer-initiated emergency procedures documented for reversal. The system never auto-reverts.
 - **Soft launch possible**: Can invite subset of members first
 - **Communication templates**: Help announcing the change to members
 - **Support ready**: Operator available during initial go-live
@@ -363,10 +363,10 @@ After cutover:
 ClubOS migration builds trust through:
 
 1. **Visibility**: Customer sees exactly what will happen before it happens
-2. **Control**: Every consequential step requires explicit approval
-3. **Reversibility**: Abort before commit discards all work; recovery procedures documented for after commit
+2. **Control**: Every consequential step requires explicit human approval. The system proposes; humans decide.
+3. **Reversibility**: Abort before commit discards all work; recovery procedures documented for after commit. The system never auto-reverts.
 4. **Partnership**: Operator accompanies—never operates behind the scenes
-5. **Patience**: No artificial time pressure on decisions
+5. **Patience**: No artificial time pressure on decisions. The system never forces a deadline.
 
 ---
 
