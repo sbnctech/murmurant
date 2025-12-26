@@ -3,6 +3,10 @@
 **Status**: Specification Draft
 **Last Updated**: 2024-12-24
 **Related Issues**: #202, #275, #277
+**Related Documents**:
+- [Preview Surface Contract](./PREVIEW_SURFACE_CONTRACT.md)
+- [Suggestion Review Workflow](./SUGGESTION_REVIEW_WORKFLOW.md)
+- [Migration Invariants](./MIGRATION_INVARIANTS.md)
 
 ---
 

@@ -92,7 +92,7 @@ The following are explicitly **not guaranteed**:
 
 ### 4.1 Intent Manifest
 
-An **intent manifest** is a structured, machine-readable record of what the system intends to do.
+An **[intent manifest](./INTENT_MANIFEST_SCHEMA.md)** is a structured, machine-readable record of what the system intends to do.
 
 | Property | Intent Manifest | Preview |
 |----------|-----------------|---------|
@@ -104,7 +104,7 @@ An **intent manifest** is a structured, machine-readable record of what the syst
 
 ### 4.2 Suggestion Workflow
 
-A **suggestion** is a system-generated recommendation that requires human approval before taking effect.
+A **[suggestion](./SUGGESTION_REVIEW_WORKFLOW.md)** is a system-generated recommendation that requires human approval before taking effect.
 
 | State | Description |
 |-------|-------------|
@@ -238,6 +238,8 @@ Implementations must declare which version of this contract they conform to.
 ## 9. References
 
 - [ARCHITECTURAL_CHARTER.md](../ARCHITECTURAL_CHARTER.md) - Principle P5 (undoable/reversible actions)
+- [INTENT_MANIFEST_SCHEMA.md](./INTENT_MANIFEST_SCHEMA.md) - Manifest structure and guarantees
+- [SUGGESTION_REVIEW_WORKFLOW.md](./SUGGESTION_REVIEW_WORKFLOW.md) - Suggestion state machine
 - [MIGRATION_INVARIANTS.md](./MIGRATION_INVARIANTS.md) - Invariant validation for migration previews
 - [IMPORTER_RUNBOOK.md](../IMPORTING/IMPORTER_RUNBOOK.md) - Dry run mode documentation
 

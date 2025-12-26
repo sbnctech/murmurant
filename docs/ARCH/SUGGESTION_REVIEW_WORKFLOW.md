@@ -238,7 +238,7 @@ Failed operations return:
 
 ## Relation to Intent Manifest
 
-> **Note**: The Intent Manifest is a conceptual component for tracking intended changes during cutover rehearsal. This section describes alignment, not dependency.
+> **Note**: The [Intent Manifest](./INTENT_MANIFEST_SCHEMA.md) is a conceptual component for tracking intended changes during cutover rehearsal. This section describes alignment, not dependency.
 
 Suggestions operate similarly to Intent Manifest entries:
 
@@ -267,7 +267,9 @@ Both share the principle: **nothing happens without explicit human authorization
 
 ## References
 
-- [Architectural Charter](./ARCHITECTURAL_CHARTER.md) — Governing principles
+- [Architectural Charter](../ARCHITECTURAL_CHARTER.md) — Governing principles
+- [Intent Manifest Schema](./INTENT_MANIFEST_SCHEMA.md) — Manifest structure and guarantees
+- [Preview Surface Contract](./PREVIEW_SURFACE_CONTRACT.md) — Preview guarantees and fidelity bounds
 - [Migration Invariants](./MIGRATION_INVARIANTS.md) — Validation patterns
 - [Importer Runbook](../IMPORTING/IMPORTER_RUNBOOK.md) — Migration procedures
 
