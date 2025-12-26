@@ -1,3 +1,17 @@
+## Presentation Discovery Stage
+
+Planned (docs complete, code later):
+- Site crawler for public WA pages (default: public-only scope)
+- Widget/gadget inventory with classification tagging
+- Navigation structure extraction
+- Theme/CSS extraction
+- Discovery report generation (JSON schema defined)
+
+Related docs:
+- docs/MIGRATION/PRESENTATION_DISCOVERY_STAGE.md
+- docs/MIGRATION/PRESENTATION_DISCOVERY_CONTRACT.json
+
+---
 
 ## Migration Awareness: WA Gadgets and Extensions
 
