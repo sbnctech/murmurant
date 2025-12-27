@@ -161,7 +161,7 @@ ClubOS does not maintain live sync with WA. During rehearsal:
 
 If WA is unavailable during rehearsal, ClubOS cannot fetch updated data. Rehearsal may need to restart when WA is available.
 
-**Why**: ClubOS depends on WA for source data; there is no magic data reconstruction.
+**Why**: ClubOS depends on WA for source data; there is no data reconstruction capability.
 
 ### NG4: Preservation of WA-Specific Features
 
@@ -347,7 +347,7 @@ This contract adheres to ClubOS brand principles:
 ### 9.1 Plainspoken, No Hype
 
 - This document describes what the system does and does not do
-- There are no claims of "seamless" or "magic" capabilities
+- There are no claims of "seamless" or hidden capabilities <!-- docs-trust-allow: magic -->
 - Limitations are stated explicitly
 
 ### 9.2 Explicit Risks
@@ -362,7 +362,7 @@ This contract adheres to ClubOS brand principles:
 - Commit requires explicit operator action
 - The customer is the authority on whether to proceed
 
-### 9.4 No "Magic Sync" Claims
+### 9.4 No Hidden Sync Claims
 
 - ClubOS does not claim to keep WA and ClubOS in perfect sync
 - Drift during rehearsal is acknowledged as a known limitation
