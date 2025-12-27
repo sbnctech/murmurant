@@ -57,7 +57,7 @@ ls -la ~/clubos/dist/inline-widget/
 
 ```zsh
 # Validate JSON syntax
-cat ~/clubos/config-templates/clubcalendar/sbnc-wa-feed.config.json | jq .
+cat ~/clubos/config-templates/[widget-name]/config.json | jq .
 # If jq outputs formatted JSON without errors, syntax is valid
 ```
 
@@ -144,8 +144,8 @@ Execute these steps to make changes live.
 ```
 Publication Record:
 - Date: YYYY-MM-DD HH:MM
-- Page: Events Calendar
-- Change: Updated ClubCalendar widget to v1.2
+- Page: [Page Name]
+- Change: Updated widget to v1.2
 - Operator: [Your Name]
 ```
 
@@ -334,15 +334,15 @@ Maintain a running log of all widget changes:
 ```
 ## Widget Change Log
 
-### 2025-12-26 - ClubCalendar v1.2 Update
+### 2025-12-26 - Calendar Widget v1.2 Update
 - Operator: Jane Smith
 - Change: Updated to new calendar widget version
 - Verification: Passed all checks
 - Notes: Improved mobile display
 
-### 2025-12-15 - Initial ClubCalendar Deploy
+### 2025-12-15 - Initial Calendar Widget Deploy
 - Operator: John Doe
-- Change: First deployment of ClubCalendar widget
+- Change: First deployment of calendar widget
 - Verification: Passed with minor styling adjustments
 - Notes: Adjusted colors in config
 ```
