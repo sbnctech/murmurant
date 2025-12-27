@@ -2007,3 +2007,298 @@ When v1 auth is implemented:
 
 ----------------------------------------------------------------
 
+## Page Templates and Theme Hooks (v0.3.0)
+
+### Overview
+
+ClubOS pages are rendered in two distinct view contexts: public (unauthenticated
+visitors) and member (authenticated users with active membership). Each context
+has different layout requirements, navigation menus, and available blocks.
+
+This section defines the page template system and theme hooks that allow pages
+to render appropriately for each view context while sharing the underlying
+block-based content model.
+
+### View Contexts
+
+#### Public Context
+
+- Target audience: Unauthenticated visitors and search engines
+- Layout: Marketing-focused with prominent join/login CTAs
+- Navigation: Public menu items only (Home, About, Events, Join, Contact)
+- Blocks allowed: All non-member-only block types
+- Theme hooks: usePublicTheme, PublicLayoutProvider
+
+#### Member Context
+
+- Target audience: Authenticated members with ACTIVE membership status
+- Layout: Dashboard-focused with member navigation and profile access
+- Navigation: Full member menu (My Club, Events, Groups, Directory, Account)
+- Blocks allowed: All block types including member-only blocks
+- Theme hooks: useMemberTheme, MemberLayoutProvider
+
+### Page Template Types
+
+Page templates define the structural layout for pages within each context.
+Templates are stored in the Template model with type = PAGE.
+
+#### Template Structure
+
+```
+PageTemplate {
+  id: uuid
+  name: string                    // Display name
+  slug: string                    // Unique identifier
+  context: "public" | "member"    // View context
+  regions: TemplateRegion[]       // Layout regions
+  defaultBlocks?: BlockConfig[]   // Blocks added to new pages
+  constraints: TemplateConstraints
+}
+
+TemplateRegion {
+  name: string                    // Region identifier (header, main, sidebar, footer)
+  label: string                   // Display label
+  allowedBlockTypes: BlockType[]  // Block types permitted in this region
+  minBlocks?: number              // Minimum blocks required
+  maxBlocks?: number              // Maximum blocks allowed (null = unlimited)
+}
+
+TemplateConstraints {
+  requiresAuth: boolean           // Whether template requires authentication
+  allowedRoles?: string[]         // Restrict to specific roles
+  allowedMembershipStatuses?: string[]  // Restrict to membership statuses
+}
+```
+
+#### Standard Templates
+
+1. public-landing
+   - Context: public
+   - Regions: header (hero only), main (all public blocks), footer
+   - Use case: Home page, landing pages
+
+2. public-content
+   - Context: public
+   - Regions: main (text, image, cards, faq, contact, cta, divider, spacer)
+   - Use case: About pages, info pages
+
+3. public-events
+   - Context: public
+   - Regions: header (optional hero), main (event-list, text, cta)
+   - Use case: Public events calendar
+
+4. member-dashboard
+   - Context: member
+   - Regions: header, main, sidebar
+   - Use case: Member home page with widgets
+
+5. member-content
+   - Context: member
+   - Regions: main (all block types)
+   - Use case: Member-only content pages
+
+6. member-group
+   - Context: member
+   - Regions: header, main, sidebar
+   - Use case: Interest group pages
+
+### Theme Hooks
+
+Theme hooks provide theme tokens and CSS variables to components based on
+the current view context. Hooks are implemented as React hooks and context
+providers.
+
+#### Hook API
+
+```typescript
+// Public theme hook - uses site default theme
+function usePublicTheme(): ThemeContext;
+
+// Member theme hook - uses member preferences or site default
+function useMemberTheme(): ThemeContext;
+
+// Generic theme hook - auto-detects context
+function useTheme(): ThemeContext;
+
+// Theme context type
+type ThemeContext = {
+  themeId: string;
+  tokens: ThemeTokens;
+  cssVariables: string;
+  isLoading: boolean;
+  error?: Error;
+};
+```
+
+#### Context Providers
+
+```typescript
+// Wraps public pages with theme context
+function PublicLayoutProvider({ children }: { children: React.ReactNode });
+
+// Wraps member pages with theme context and auth
+function MemberLayoutProvider({ children }: { children: React.ReactNode });
+
+// Generic provider that determines context from route
+function PageLayoutProvider({
+  context,
+  children,
+}: {
+  context: "public" | "member";
+  children: React.ReactNode;
+});
+```
+
+### Page Rendering Flow
+
+1. Request arrives for page path (e.g., /about or /member/groups/hiking)
+2. Router determines view context from path prefix:
+   - /member/* -> member context
+   - /* -> public context
+3. Layout provider wraps page with appropriate context
+4. Page component fetches page data including template and blocks
+5. canViewPage check runs against user context and page visibility
+6. If denied: redirect to login (public) or show access denied (member)
+7. If allowed: render page using template regions and blocks
+8. Theme hook provides CSS variables to block renderer
+
+### Block Visibility Rules
+
+Blocks can have their own visibility rules independent of page visibility:
+
+```typescript
+type BlockVisibility = "inherit" | "public" | "members_only" | "role_restricted";
+
+type BlockConfig = {
+  id: string;
+  type: BlockType;
+  visibility: BlockVisibility;
+  visibilityRule?: AudienceRule;  // For role_restricted
+  data: BlockData;
+  order: number;
+};
+```
+
+Visibility resolution:
+- inherit: Uses page visibility
+- public: Always visible
+- members_only: Visible only to authenticated members
+- role_restricted: Visible only to members matching visibilityRule
+
+### Member-Only Block Types
+
+The following block types are only available in member context:
+
+- member-directory: Searchable member directory widget
+- my-registrations: Current user's event registrations
+- my-groups: Current user's group memberships
+- group-roster: Group member list (for group chairs)
+- officer-widget: Role-specific admin widget
+
+These blocks query live data and are never rendered in public context.
+
+### Theme Inheritance
+
+Themes follow an inheritance chain:
+
+1. Site default theme (always present)
+2. Page-specific theme override (optional)
+3. Block-specific style overrides (optional)
+
+The effective theme is computed by merging tokens:
+
+```typescript
+const effectiveTokens = mergeTokensWithDefaults(
+  siteTheme.tokens,
+  pageTheme?.tokens || {},
+  blockStyles || {}
+);
+```
+
+### API Endpoints
+
+Page rendering endpoints:
+
+- GET /api/pages/[slug]/render
+  - Returns rendered page data for given context
+  - Query params: context (public|member)
+  - Auth: None for public, session for member
+  - Response: { page, blocks, theme, template }
+
+- GET /api/theme/current
+  - Returns current theme CSS for view context
+  - Query params: context (public|member), pageId (optional)
+  - Response: { css: string, themeId: string }
+
+### Implementation Files
+
+Library modules:
+
+- src/lib/publishing/pageTemplates.ts
+  - Template type definitions
+  - Template validation
+  - Default template configurations
+  - getTemplateForContext()
+  - validateBlocksForTemplate()
+
+- src/lib/publishing/themeHooks.ts
+  - usePublicTheme hook
+  - useMemberTheme hook
+  - useTheme hook
+  - ThemeProvider component
+  - Theme token merging utilities
+
+- src/lib/publishing/viewContext.ts
+  - ViewContext type definitions
+  - getViewContextFromPath()
+  - ViewContextProvider component
+
+Components:
+
+- src/components/publishing/PageLayoutProvider.tsx
+- src/components/publishing/PublicLayout.tsx
+- src/components/publishing/MemberLayout.tsx
+- src/components/publishing/BlockRenderer.tsx (existing, extended)
+
+### Test Requirements
+
+Unit tests (Vitest):
+
+- tests/unit/publishing/pageTemplates.spec.ts
+  - Template validation
+  - Block type restrictions
+  - Region constraints
+
+- tests/unit/publishing/themeHooks.spec.ts
+  - Token merging
+  - CSS variable generation
+  - Context detection
+
+- tests/unit/publishing/viewContext.spec.ts
+  - Path-based context detection
+  - Block visibility filtering
+
+E2E tests (Playwright):
+
+- tests/e2e/public-page-render.spec.ts
+  - Public page loads without auth
+  - Member-only blocks hidden
+  - Correct theme applied
+
+- tests/e2e/member-page-render.spec.ts
+  - Requires authentication
+  - All blocks visible
+  - Member theme applied
+
+### Migration Notes
+
+Existing pages without explicit template assignment:
+
+- Public pages (visibility = PUBLIC) default to public-content template
+- Member pages (visibility = MEMBERS_ONLY) default to member-content template
+- Role-restricted pages default to member-content template
+
+No data migration required; defaults are computed at render time.
+
+----------------------------------------------------------------
+
