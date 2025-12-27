@@ -6,7 +6,7 @@ Master index of all backlog files. Check this first to find where work is tracke
 
 | Domain | File | Description |
 |--------|------|-------------|
-| Migration | [WA_IMPORT_PIPELINE_BACKLOG.md](MIGRATION/WA_IMPORT_PIPELINE_BACKLOG.md) | WA import pipeline work, schema changes, verification |
+| Migration | [WA_IMPORT_PIPELINE_BACKLOG.md](MIGRATION/WA_IMPORT_PIPELINE_BACKLOG.md) | WA import pipeline, schema changes, cron job discovery |
 | Business/Features | [BIZ/IMPLEMENTATION_BACKLOG.md](BIZ/IMPLEMENTATION_BACKLOG.md) | Discovery stage, gadgets, webhooks |
 | Specs | [specs/BACKLOG.md](specs/BACKLOG.md) | Approved specs not yet implemented |
 | V2 Features | [backlog/V2_TODO.md](backlog/V2_TODO.md) | Board dashboard, org health metrics |
@@ -21,7 +21,4 @@ Master index of all backlog files. Check this first to find where work is tracke
 
 ## Quick Add
 
-If unsure where something goes, add it to `BIZ/IMPLEMENTATION_BACKLOG.md` with a `## Unsorted` section.
-
----
-Last updated: $(date +%Y-%m-%d)
+If unsure where something goes, add it to `BIZ/IMPLEMENTATION_BACKLOG.md` under `## Unsorted`.
