@@ -14,7 +14,15 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { CLUB_TIMEZONE, formatClubTime } from "@/lib/timezone";
+import {
+  formatClubTime,
+  getClubYearMonth,
+  getClubDayOfMonth,
+  getClubDayOfWeek,
+  formatClubMonthName,
+  createClubDate,
+  formatClubDateLong,
+} from "@/lib/timezone";
 
 interface EventSummary {
   id: string;
@@ -57,70 +65,6 @@ interface EventCalendarProps {
 }
 
 const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-/**
- * Get the year and month in club timezone for a given UTC date
- */
-function getClubYearMonth(dateUtc: Date): { year: number; month: number } {
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: CLUB_TIMEZONE,
-    year: "numeric",
-    month: "numeric",
-  });
-  const parts = formatter.formatToParts(dateUtc);
-  const year = parseInt(parts.find((p) => p.type === "year")?.value ?? "0", 10);
-  const month = parseInt(parts.find((p) => p.type === "month")?.value ?? "0", 10);
-  return { year, month };
-}
-
-/**
- * Get the day of month in club timezone for a given UTC date
- */
-function getClubDayOfMonth(dateUtc: Date): number {
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: CLUB_TIMEZONE,
-    day: "numeric",
-  });
-  return parseInt(formatter.format(dateUtc), 10);
-}
-
-/**
- * Get the day of week (0=Sun, 6=Sat) in club timezone for a given UTC date
- */
-function getClubDayOfWeek(dateUtc: Date): number {
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: CLUB_TIMEZONE,
-    weekday: "short",
-  });
-  const dayName = formatter.format(dateUtc);
-  return DAYS_OF_WEEK.indexOf(dayName);
-}
-
-/**
- * Create a date in club timezone at midnight
- */
-function createClubDate(year: number, month: number, day: number): Date {
-  // Create date string in ISO format, then adjust for timezone
-  const dateStr = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T12:00:00`;
-  const tempDate = new Date(dateStr);
-  // Format to get the actual UTC offset for this date in club timezone
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: CLUB_TIMEZONE,
-    timeZoneName: "shortOffset",
-  });
-  const parts = formatter.formatToParts(tempDate);
-  const offsetPart = parts.find((p) => p.type === "timeZoneName")?.value ?? "GMT-8";
-  const match = offsetPart.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?$/);
-  if (!match) return tempDate;
-
-  const sign = match[1] === "-" ? -1 : 1;
-  const hours = parseInt(match[2], 10);
-  const minutes = parseInt(match[3] ?? "0", 10);
-  const offsetMinutes = sign * (hours * 60 + minutes);
-
-  // Create UTC date that represents midnight in club timezone
-  return new Date(Date.UTC(year, month - 1, day, 0, 0, 0) - offsetMinutes * 60000);
-}
 
 /**
  * Get start and end dates for a month (for API query)
@@ -237,11 +181,7 @@ export default function EventCalendar({ category, search }: EventCalendarProps) 
   // Month name for header
   const monthName = useMemo(() => {
     const date = createClubDate(year, month, 15);
-    return new Intl.DateTimeFormat("en-US", {
-      timeZone: CLUB_TIMEZONE,
-      month: "long",
-      year: "numeric",
-    }).format(date);
+    return `${formatClubMonthName(date)} ${year}`;
   }, [year, month]);
 
   // Fetch events for the current month
@@ -562,13 +502,7 @@ export default function EventCalendar({ category, search }: EventCalendarProps) 
                   fontWeight: 600,
                 }}
               >
-                Events on{" "}
-                {new Intl.DateTimeFormat("en-US", {
-                  timeZone: CLUB_TIMEZONE,
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                }).format(selectedDay.date)}
+                Events on {formatClubDateLong(selectedDay.date)}
               </h3>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "var(--token-space-sm)" }}>
@@ -652,13 +586,7 @@ export default function EventCalendar({ category, search }: EventCalendarProps) 
                 color: "var(--token-color-text-muted)",
               }}
             >
-              No events scheduled for{" "}
-              {new Intl.DateTimeFormat("en-US", {
-                timeZone: CLUB_TIMEZONE,
-                weekday: "long",
-                month: "long",
-                day: "numeric",
-              }).format(selectedDay.date)}
+              No events scheduled for {formatClubDateLong(selectedDay.date)}
             </div>
           )}
         </>
