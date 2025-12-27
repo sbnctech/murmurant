@@ -16,6 +16,7 @@ import ViewAsMemberSection from "./ViewAsMemberSection";
 import EventDerivedPreviewDemo from "./EventDerivedPreviewDemo";
 import EntitlementsSection from "./EntitlementsSection";
 import EventChairDemo from "./EventChairDemo";
+import SecretaryDemoDashboard from "./SecretaryDemoDashboard";
 
 // Use default dev token if ADMIN_E2E_TOKEN not set (matches auth.ts logic)
 const adminHeaders =
@@ -250,6 +251,21 @@ export default async function DemoPage() {
       >
         <h2 style={{ fontSize: "18px", marginBottom: "16px" }}>Event Chair Workflow</h2>
         <EventChairDemo />
+      </section>
+
+      {/* Secretary Dashboard Demo */}
+      <section
+        data-test-id="demo-secretary-section"
+        style={{
+          marginBottom: "32px",
+          padding: "16px",
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          backgroundColor: "#fafafa",
+        }}
+      >
+        <h2 style={{ fontSize: "18px", marginBottom: "16px" }}>Secretary Dashboard</h2>
+        <SecretaryDemoDashboard />
       </section>
 
       {/* System Status Section */}
