@@ -427,7 +427,7 @@ Step 1: Review required fields
 - dataSource.url (for ics-feed type)
 
 Step 2: Compare to template
-- Check against config-templates/clubcalendar/sbnc-wa-feed.config.json
+- Check against config-templates/ for widget-specific examples
 
 Step 3: Check nested structure
 - Is organization an object, not a string?
