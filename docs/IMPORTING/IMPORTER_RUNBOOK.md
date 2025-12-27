@@ -2,6 +2,76 @@
 
 This document provides exact commands for running the WA importer in all environments.
 
+---
+
+## Production Migration
+
+For production migrations using the CSV-based migration pipeline, see:
+
+**[Production Migration Runbook](./PRODUCTION_MIGRATION_RUNBOOK.md)**
+
+The production runbook covers:
+- End-to-end migration flow (DRY RUN and LIVE RUN)
+- Pre-flight checklist (policy bundle, tier mapping, invariants, backup)
+- Step-by-step execution commands
+- Post-run verification checklist
+- Rollback procedures
+
+---
+
+## What Migration Includes — and What It Does Not
+
+### Migration Scope
+
+The Wild Apricot migration preserves your organization's **operational data**:
+
+| Included | Description |
+|----------|-------------|
+| Members | Contact records, membership status, join dates, custom fields |
+| Events | Event details, dates, locations, capacity limits |
+| Registrations | Attendee lists, registration status, cancellations |
+| Membership tiers | Level definitions and member-to-tier assignments |
+| Policies and configuration | Membership rules, eligibility settings, org-specific policies |
+
+### Explicitly Excluded
+
+The following are **intentionally not part of migration**:
+
+| Excluded | Reason |
+|----------|--------|
+| Automatic HTML scraping | WA pages are semi-structured and inconsistent |
+| Website/page cloning | Layout depends on WA's proprietary theme engine |
+| Theme or style migration | Visual presentation is platform-specific |
+| CMS content reconstruction | Automatic extraction would produce unreliable results |
+
+### Why Content Scraping Is Not Included
+
+Wild Apricot websites use a mix of structured widgets, embedded HTML, and theme-specific layouts. Attempting to automatically scrape and reconstruct this content would:
+
+- Produce fragmented, inconsistent output
+- Require constant maintenance as WA's markup changes
+- Create false confidence in content that needs human review anyway
+- Risk importing outdated or incorrect information
+
+This is a deliberate boundary, not a limitation.
+
+### The Intended Alternative
+
+Content migration is best handled through an **assisted, human-reviewed process**:
+
+- **Content inventory**: Identify which pages contain valuable content
+- **Template preparation**: Set up ClubOS page structures before copying
+- **Manual editorial review**: Verify accuracy and relevance during transfer
+- **Optional import tools**: Copy/paste or markdown import for text content
+
+This approach produces higher-quality results and ensures content is reviewed during the transition rather than blindly copied.
+
+> **Operator Expectation**
+>
+> This migration preserves *truth*, not *presentation*. You will receive accurate member data, event history, and registration records. Website appearance and page content require separate, human-guided work.
+
+---
+
 ## 1. Prerequisites
 
 ### 1.1 Environment Variables
@@ -103,7 +173,7 @@ npx tsx scripts/importing/wa_health_check.ts
 
 ### 1.6 Preflight Checks
 
-The sync scripts automatically run preflight checks before syncing. You can also check manually via the API:
+When you run the sync script, it performs preflight checks first (before any data operations). You can also check manually via the API:
 
 ```bash
 curl http://localhost:3000/api/v1/admin/import/status
@@ -283,6 +353,8 @@ ALLOW_PROD_IMPORT=1 npx tsx scripts/importing/wa_incremental_sync.ts
 ```
 
 ## 4. Dry Run Mode
+
+Dry run mode produces a preview of what the migration intends to do without making changes. This preview is the basis for operator review before committing. See [Intent Manifest Schema](../ARCH/INTENT_MANIFEST_SCHEMA.md) for how intent is captured and validated.
 
 ### 4.1 What It Does
 
@@ -491,6 +563,8 @@ ORDER BY "createdAt" DESC LIMIT 50;
 
 ## 7. Cron Setup
 
+> **Operator-configured automation**: Cron jobs are set up and managed by operators. The system does not self-schedule syncs. Operators decide the schedule, and operators can disable automation at any time.
+
 ### 7.1 Recommended Schedule
 
 ```cron
@@ -531,6 +605,10 @@ exit 1
 ```
 
 ## 8. Recovery Procedures
+
+> **Operator-initiated recovery**: All recovery procedures are initiated by operators. The system does not auto-recover or auto-retry without operator involvement. If something fails, the operator investigates and decides how to proceed.
+>
+> **Full Guide**: For comprehensive rollback and recovery procedures including failure modes, rollback levels, and audit trail requirements, see [MIGRATION_ROLLBACK_RECOVERY.md](./MIGRATION_ROLLBACK_RECOVERY.md).
 
 ### 8.1 Partial Sync Failure
 
@@ -652,7 +730,16 @@ console.log(`Removed ${result.removed} mappings`);
 - `wa_api_requests_total` - API request count
 - `wa_api_latency_seconds` - API response time
 
-## 10. Contacts
+## 10. Related Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [Migration Customer Journey](./MIGRATION_CUSTOMER_JOURNEY.md) | Customer experience walkthrough |
+| [WA Policy Capture](./WA_POLICY_CAPTURE.md) | Policy capture process |
+| [WA Field Mapping](./WA_FIELD_MAPPING.md) | Field mapping reference |
+| [WA Full Sync Reporting](./WA_FULL_SYNC_REPORTING.md) | Sync reporting details |
+
+## 11. Contacts
 
 | Role | Contact | When to Contact |
 |------|---------|-----------------|
@@ -660,7 +747,7 @@ console.log(`Removed ${result.removed} mappings`);
 | WA admin | admin@example.org | API key issues |
 | Database admin | #db-help | Database issues |
 
-## 11. Revision History
+## 12. Revision History
 
 | Date | Author | Change |
 |------|--------|--------|

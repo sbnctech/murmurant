@@ -7,7 +7,7 @@
  * Current implementation: Returns hard-coded defaults (SBNC values)
  * Future implementation: Database lookup with caching
  *
- * See: docs/ARCH/PLATFORM_VS_POLICY.md
+ * See: docs/ARCH/POLICY_KEY_CATALOG.md
  * Related: Issue #263 (Policy Configuration Layer)
  */
 

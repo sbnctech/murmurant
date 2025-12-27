@@ -182,16 +182,19 @@ At any point before commit, a suggestion can be abandoned without side effects.
 |--------|--------|--------|
 | **Reject** | Suggestion moves to Rejected state. Preserved for audit. | Yes |
 | **Discard** | Suggestion deleted entirely (if never reviewed). | Yes (deletion event) |
-| **Expire** | Suggestion auto-transitions to Expired after configurable period. | Yes (system-initiated) |
+| **Expire** | Suggestion transitions to Expired after operator-configured period if no human acts. This is a staleness safeguard, not a system decision. Operators set the expiration policy; the system enforces it. | Yes (policy-driven) |
 
-### Post-Commit Abort
+### Post-Commit Rollback
 
-If a suggestion has been applied (committed), abort requires:
+If a suggestion has been applied (committed), rollback requires **explicit human initiation**:
 
-1. Rollback artifact exists
-2. Actor has `content:rollback` capability
-3. Rollback is logged as a distinct action
-4. Original suggestion retains "Applied then Rolled Back" status
+1. A human with `content:rollback` capability decides to initiate rollback
+2. Rollback artifact exists (created at commit time)
+3. The human confirms the rollback action
+4. Rollback is logged as a distinct action with the initiating actor recorded
+5. Original suggestion retains "Applied then Rolled Back" status
+
+> **The system never auto-rolls back.** Rollback is always a deliberate human decision.
 
 This aligns with **P5**: reversibility must be supported, not assumed.
 
@@ -238,7 +241,9 @@ Failed operations return:
 
 ## Relation to Intent Manifest
 
-> **Note**: The Intent Manifest is a conceptual component for tracking intended changes during cutover rehearsal. This section describes alignment, not dependency.
+Suggestions and the Intent Manifest share a common principle: **nothing happens without explicit human authorization**. During migration and cutover rehearsal, accepted suggestions produce Intent Manifest entries.
+
+> **Note**: The [Intent Manifest](./INTENT_MANIFEST_SCHEMA.md) is a conceptual component for tracking intended changes during cutover rehearsal. This section describes alignment, not dependency.
 
 Suggestions operate similarly to Intent Manifest entries:
 
@@ -249,7 +254,7 @@ Suggestions operate similarly to Intent Manifest entries:
 | Authority | Human accepts/rejects | Human commits/aborts session |
 | Application | Individual suggestion applied | Entire manifest replayed |
 
-Both share the principle: **nothing happens without explicit human authorization**.
+See [Intent Manifest Schema](./INTENT_MANIFEST_SCHEMA.md) for the full specification.
 
 ---
 
@@ -267,7 +272,9 @@ Both share the principle: **nothing happens without explicit human authorization
 
 ## References
 
-- [Architectural Charter](./ARCHITECTURAL_CHARTER.md) — Governing principles
+- [Architectural Charter](../ARCHITECTURAL_CHARTER.md) — Governing principles
+- [Intent Manifest Schema](./INTENT_MANIFEST_SCHEMA.md) — Manifest structure and guarantees
+- [Preview Surface Contract](./PREVIEW_SURFACE_CONTRACT.md) — Preview guarantees and fidelity bounds
 - [Migration Invariants](./MIGRATION_INVARIANTS.md) — Validation patterns
 - [Importer Runbook](../IMPORTING/IMPORTER_RUNBOOK.md) — Migration procedures
 

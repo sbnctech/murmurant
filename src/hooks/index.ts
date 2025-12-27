@@ -12,3 +12,13 @@ export {
   type CurrentUser,
   type UseCurrentUserResult,
 } from "./useCurrentUser";
+
+export {
+  useTheme,
+  usePublicTheme,
+  useMemberTheme,
+  useThemeToken,
+  ThemeProvider,
+  PublicLayoutProvider,
+  MemberLayoutProvider,
+} from "./useTheme";
