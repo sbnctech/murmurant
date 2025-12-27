@@ -318,24 +318,24 @@ export default async function ReportsDashboardPage() {
           <StatCard
             testId="stat-total-revenue"
             label="Total Revenue"
-            value={`$${totalRevenue.toLocaleString()}`}
+            value={`$${formatCurrency(totalRevenue)}`}
             subtext="All sources"
           />
           <StatCard
             testId="stat-dues-revenue"
             label="Membership Dues"
-            value={`$${duesRevenue.toLocaleString()}`}
+            value={`$${formatCurrency(duesRevenue)}`}
             subtext="Coming soon"
           />
           <StatCard
             testId="stat-event-revenue"
             label="Event Fees"
-            value={`$${eventRevenue.toLocaleString()}`}
+            value={`$${formatCurrency(eventRevenue)}`}
           />
           <StatCard
             testId="stat-donation-revenue"
             label="Donations"
-            value={`$${donationRevenue.toLocaleString()}`}
+            value={`$${formatCurrency(donationRevenue)}`}
             subtext="Coming soon"
           />
         </div>
