@@ -388,6 +388,8 @@ cd ~/sbnc-widget-netlify && netlify deploy --prod --dir=.
 
 - [Embed Widget SDK](../widgets/EMBED_WIDGET_SDK_V1.md) - Widget SDK specification
 - [Embedded Widgets Security Model](../widgets/EMBEDDED_WIDGETS_SECURITY_MODEL.md) - Security requirements
+- [SBNC Operator Checklist](../OPS/SBNC_OPERATOR_CHECKLIST.md) - Pre-publish, publish, verify, rollback procedures
+- [Inline Widget Troubleshooting](../OPS/INLINE_WIDGET_TROUBLESHOOTING.md) - Problem diagnosis and resolution
 
 ---
 

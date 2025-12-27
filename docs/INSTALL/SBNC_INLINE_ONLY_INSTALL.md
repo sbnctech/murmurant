@@ -230,6 +230,8 @@ chmod 755 dist/inline-widget/
 - [SBNC_HOSTING_GUIDE.md](./SBNC_HOSTING_GUIDE.md) - Deployment to GitHub Pages and Netlify
 - [../widgets/EMBED_WIDGET_SDK_V1.md](../widgets/EMBED_WIDGET_SDK_V1.md) - Widget SDK specification
 - [../widgets/EMBEDDED_WIDGETS_SECURITY_MODEL.md](../widgets/EMBEDDED_WIDGETS_SECURITY_MODEL.md) - Security model
+- [SBNC Operator Checklist](../OPS/SBNC_OPERATOR_CHECKLIST.md) - Pre-publish, publish, verify, rollback procedures
+- [Inline Widget Troubleshooting](../OPS/INLINE_WIDGET_TROUBLESHOOTING.md) - Problem diagnosis and resolution
 
 ---
 
