@@ -59,7 +59,7 @@ type ActivityItem = {
 
 async function getMembers(): Promise<Member[]> {
   const base = getBaseUrl();
-  const res = await fetch(\`\${base}/api/members\`, { cache: "no-store" });
+  const res = await fetch(`${base}/api/members`, { cache: "no-store" });
 
   if (!res.ok) {
     console.error("Failed to fetch members:", res.status, res.statusText);
@@ -72,7 +72,7 @@ async function getMembers(): Promise<Member[]> {
 
 async function getEvents(): Promise<EventItem[]> {
   const base = getBaseUrl();
-  const res = await fetch(\`\${base}/api/events\`, { cache: "no-store" });
+  const res = await fetch(`${base}/api/events`, { cache: "no-store" });
 
   if (!res.ok) {
     console.error("Failed to fetch events:", res.status, res.statusText);
@@ -85,7 +85,7 @@ async function getEvents(): Promise<EventItem[]> {
 
 async function getRegistrations(): Promise<Registration[]> {
   const base = getBaseUrl();
-  const res = await fetch(\`\${base}/api/registrations\`, { cache: "no-store" });
+  const res = await fetch(`${base}/api/registrations`, { cache: "no-store" });
 
   if (!res.ok) {
     console.error("Failed to fetch registrations:", res.status, res.statusText);
@@ -99,7 +99,7 @@ async function getRegistrations(): Promise<Registration[]> {
 async function getAdminSummary(): Promise<AdminSummary | null> {
   const base = getBaseUrl();
   try {
-    const res = await fetch(\`\${base}/api/admin/summary\`, { headers: adminHeaders, cache: "no-store" });
+    const res = await fetch(`${base}/api/admin/summary`, { headers: adminHeaders, cache: "no-store" });
     if (!res.ok) return null;
     const data = await res.json();
     return data.summary ?? null;
@@ -111,7 +111,7 @@ async function getAdminSummary(): Promise<AdminSummary | null> {
 async function getActivity(): Promise<ActivityItem[]> {
   const base = getBaseUrl();
   try {
-    const res = await fetch(\`\${base}/api/admin/activity\`, { headers: adminHeaders, cache: "no-store" });
+    const res = await fetch(`${base}/api/admin/activity`, { headers: adminHeaders, cache: "no-store" });
     if (!res.ok) return [];
     const data = await res.json();
     return data.activity ?? [];
@@ -127,7 +127,7 @@ function formatActivityTime(isoString: string): string {
   const day = String(date.getDate()).padStart(2, "0");
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
-  return \`\${year}-\${month}-\${day} \${hours}:\${minutes}\`;
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
 function joinRegistrations(
@@ -143,7 +143,7 @@ function joinRegistrations(
     const event = eventById.get(r.eventId);
 
     const memberName = member
-      ? \`\${member.firstName} \${member.lastName}\`
+      ? `${member.firstName} ${member.lastName}`
       : r.memberId;
 
     const eventTitle = event ? event.title : r.eventId;

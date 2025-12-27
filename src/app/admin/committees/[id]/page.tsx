@@ -14,6 +14,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { formatClubDate, formatClubDateTime } from "@/lib/timezone";
 
 // ============================================================================
 // Types
@@ -237,20 +238,11 @@ export default function CommitteeDetailPage() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+    return formatClubDate(new Date(dateString));
   };
 
   const formatTimestamp = (timestamp: string) => {
-    return new Date(timestamp).toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    });
+    return formatClubDateTime(new Date(timestamp));
   };
 
   return (
