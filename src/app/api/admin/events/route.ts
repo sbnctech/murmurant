@@ -129,6 +129,7 @@ export async function GET(req: NextRequest) {
   // Parse pagination params with defaults
   const pageParam = searchParams.get("page");
   const pageSizeParam = searchParams.get("pageSize");
+  const query = searchParams.get("query")?.trim() || null;
 
   let page = 1;
   let pageSize = 20;
@@ -147,14 +148,26 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  // Build where clause for optional query filter
+  const whereClause = query
+    ? {
+        OR: [
+          { title: { contains: query, mode: "insensitive" as const } },
+          { category: { contains: query, mode: "insensitive" as const } },
+          { id: query }, // Exact match on ID
+        ],
+      }
+    : {};
+
   // Get total count for pagination
-  const totalItems = await prisma.event.count();
+  const totalItems = await prisma.event.count({ where: whereClause });
 
   const totalPages = Math.ceil(totalItems / pageSize);
   const skip = (page - 1) * pageSize;
 
   // Fetch events with registration counts
   const events = await prisma.event.findMany({
+    where: whereClause,
     include: {
       _count: {
         select: {

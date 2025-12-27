@@ -1,0 +1,45 @@
+{
+  "$schema": "./clubcalendar.schema.json",
+  "_comment": "SBNC ClubCalendar config - Static JSON file variant",
+  "_docs": "See docs/INSTALL/SBNC_INLINE_ONLY_INSTALL.md for setup instructions",
+
+  "organization": {
+    "name": "Santa Barbara Newcomers Club",
+    "shortName": "SBNC",
+    "timezone": "America/Los_Angeles"
+  },
+
+  "dataSource": {
+    "type": "json-file",
+    "url": "https://YOUR-HOSTING-URL/events.json",
+    "_comment_url": "Replace with the URL where you host your events.json file. Examples: https://sbnctech.github.io/sbnc-events/events.json or https://sbnc-events.netlify.app/events.json",
+    "refreshIntervalMinutes": 60,
+    "corsProxy": null
+  },
+
+  "display": {
+    "defaultView": "month",
+    "views": ["month", "week", "list"],
+    "showPastEvents": false,
+    "maxEventsVisible": 50,
+    "eventColors": {
+      "default": "#2563eb",
+      "social": "#16a34a",
+      "interest": "#9333ea",
+      "general": "#dc2626"
+    }
+  },
+
+  "features": {
+    "showRegistrationStatus": true,
+    "showEventDetails": true,
+    "linkToEventPage": true,
+    "eventPageBaseUrl": "/events/"
+  },
+
+  "styling": {
+    "fontFamily": "system-ui, -apple-system, sans-serif",
+    "borderRadius": "8px",
+    "compactMode": false
+  }
+}

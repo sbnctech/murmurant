@@ -93,7 +93,7 @@ This is a no-op skip, not an error.
 
 ---
 
-## 4. Silent Drop Analysis
+## 4. Skip Visibility Analysis
 
 ### 4.1 Missing Member Causes Limited Logging
 

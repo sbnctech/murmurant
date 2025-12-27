@@ -10,7 +10,7 @@ Before migrating data from Wild Apricot to ClubOS, you must capture and configur
 
 The policy capture script generates a **policy bundle** that:
 
-1. Captures what it can from WA automatically
+1. Extracts available values from WA when you run the script
 2. Provides templates for manual entry where needed
 3. Validates completeness before migration
 
@@ -186,7 +186,7 @@ npx tsx scripts/migration/capture-policies.ts --generate-template --output-dir .
 Attempts to capture from WA, falls back to templates for uncapturable policies.
 
 ```bash
-# With WA credentials (captures org name automatically)
+# With WA credentials (retrieves org name from WA)
 WA_API_KEY=xxx WA_ACCOUNT_ID=176353 npx tsx scripts/migration/capture-policies.ts
 
 # Use platform defaults for optional fields
@@ -295,7 +295,7 @@ ERROR: Invalid value for scheduling.timezone: Must be a valid IANA timezone
 
 - [IMPORTER_RUNBOOK.md](./IMPORTER_RUNBOOK.md) - Full migration runbook
 - [WA_FIELD_MAPPING.md](./WA_FIELD_MAPPING.md) - Field mapping reference
-- [docs/ARCH/PLATFORM_VS_POLICY.md](/docs/ARCH/PLATFORM_VS_POLICY.md) - Policy architecture
+- [docs/ARCH/POLICY_KEY_CATALOG.md](/docs/ARCH/POLICY_KEY_CATALOG.md) - Policy key reference
 
 ## Revision History
 

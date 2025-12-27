@@ -8,7 +8,7 @@
 
 ## 1. Purpose of Preview
 
-A **preview** is a representation of what the system intends to do before it does it.
+A **preview** is a representation of what the system proposes to do, shown to a human for approval before any action occurs.
 
 Preview exists because:
 
@@ -92,7 +92,7 @@ The following are explicitly **not guaranteed**:
 
 ### 4.1 Intent Manifest
 
-An **intent manifest** is a structured, machine-readable record of what the system intends to do.
+An **[intent manifest](./INTENT_MANIFEST_SCHEMA.md)** is a structured, machine-readable record of what the system intends to do.
 
 | Property | Intent Manifest | Preview |
 |----------|-----------------|---------|
@@ -104,7 +104,7 @@ An **intent manifest** is a structured, machine-readable record of what the syst
 
 ### 4.2 Suggestion Workflow
 
-A **suggestion** is a system-generated recommendation that requires human approval before taking effect.
+A **[suggestion](./SUGGESTION_REVIEW_WORKFLOW.md)** is a system-generated recommendation that requires human approval before taking effect.
 
 | State | Description |
 |-------|-------------|
@@ -113,7 +113,7 @@ A **suggestion** is a system-generated recommendation that requires human approv
 | `REJECTED` | Human has declined; no action taken |
 | `MODIFIED` | Human has adjusted the suggestion; modified version proceeds |
 
-**Relationship**: Preview provides visibility into what a suggestion would do. The suggestion workflow provides the approval gate.
+**Relationship**: Preview provides visibility into what a suggestion would do. The suggestion workflow provides the approval gate. **No suggestion proceeds without explicit human authorization.**
 
 ```
 [System generates suggestion]
@@ -201,10 +201,12 @@ The customer has the unconditional right to:
 |---------|--------------|
 | **Abort during preview** | No record created; no state changed |
 | **Abort before execution** | Intent manifest may be retained for audit; no execution occurs |
-| **Abort during execution** | Depends on execution model; checkpoint-based execution may partially complete |
-| **Rollback after execution** | Separate procedure; see rollback documentation |
+| **Abort during execution** | Customer-initiated; checkpoint-based execution may partially complete |
+| **Rollback after execution** | Customer-initiated separate procedure; see rollback documentation |
 
 **Abort is always safe**. The customer should never fear that aborting will leave the system in a broken state.
+
+> **Authority principle**: Abort and rollback are always human-initiated. The system never aborts or rolls back on its own initiative. Technical failure recovery (e.g., transaction rollback on database error) is distinct from user-initiated abort—the former is a safety mechanism, the latter is a decision.
 
 ---
 
@@ -237,7 +239,10 @@ Implementations must declare which version of this contract they conform to.
 
 ## 9. References
 
+- [INTENT_MANIFEST_SCHEMA.md](./INTENT_MANIFEST_SCHEMA.md) - The manifest that preview surfaces render
 - [ARCHITECTURAL_CHARTER.md](../ARCHITECTURAL_CHARTER.md) - Principle P5 (undoable/reversible actions)
+- [INTENT_MANIFEST_SCHEMA.md](./INTENT_MANIFEST_SCHEMA.md) - Manifest structure and guarantees
+- [SUGGESTION_REVIEW_WORKFLOW.md](./SUGGESTION_REVIEW_WORKFLOW.md) - Suggestion state machine
 - [MIGRATION_INVARIANTS.md](./MIGRATION_INVARIANTS.md) - Invariant validation for migration previews
 - [IMPORTER_RUNBOOK.md](../IMPORTING/IMPORTER_RUNBOOK.md) - Dry run mode documentation
 
