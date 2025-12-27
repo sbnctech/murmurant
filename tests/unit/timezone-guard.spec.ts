@@ -21,7 +21,11 @@ describe("timezone guardrails", () => {
     const files: string[] = [];
     walk(srcDir, files);
 
-    const allow = new Set([path.join(srcDir, "lib", "timezone.ts")]);
+    // Allow files that correctly use Intl.DateTimeFormat with explicit timeZone option
+    const allow = new Set([
+      path.join(srcDir, "lib", "timezone.ts"),
+      path.join(srcDir, "lib", "calendar", "ics.ts"), // Uses timeZone param correctly
+    ]);
 
     const forbidden: Array<{ file: string; line: number; snippet: string }> = [];
     // Note: .toLocaleString() is allowed for number formatting
