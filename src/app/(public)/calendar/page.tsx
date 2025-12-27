@@ -1,6 +1,18 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { formatClubMonthYear, formatClubDateLong, getClubDayOfWeek } from "@/lib/timezone";
+
+const WEEKDAY_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAY_LONG = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+/**
+ * Format weekday name using club timezone
+ */
+function formatWeekday(date: Date, style: "short" | "long" = "short"): string {
+  const dayIndex = getClubDayOfWeek(date);
+  return style === "long" ? WEEKDAY_LONG[dayIndex] : WEEKDAY_SHORT[dayIndex];
+}
 
 /**
  * Event type for calendar display
@@ -45,10 +57,7 @@ function getFirstDayOfMonth(year: number, month: number): number {
  * Format month name
  */
 function formatMonth(year: number, month: number): string {
-  return new Date(year, month, 1).toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
+  return formatClubMonthYear(new Date(year, month, 1));
 }
 
 /**
@@ -336,7 +345,7 @@ export default function CalendarPage() {
                     <div style={styles.listDate}>
                       <div style={styles.listDay}>{event.date.getDate()}</div>
                       <div style={styles.listDayName}>
-                        {event.date.toLocaleDateString("en-US", { weekday: "short" })}
+                        {formatWeekday(event.date, "short")}
                       </div>
                     </div>
                     <div style={styles.listContent}>
@@ -388,12 +397,7 @@ export default function CalendarPage() {
             <div style={styles.modalMeta}>
               <div style={styles.modalMetaItem}>
                 <span style={styles.modalMetaIcon}>&#128197;</span>
-                {selectedEvent.date.toLocaleDateString("en-US", {
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+                {formatWeekday(selectedEvent.date, "long")}, {formatClubDateLong(selectedEvent.date)}
               </div>
               <div style={styles.modalMetaItem}>
                 <span style={styles.modalMetaIcon}>&#128336;</span>
