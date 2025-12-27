@@ -6,6 +6,13 @@
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 
+/**
+ * Format a number with commas for display (e.g., 1234 -> "1,234")
+ */
+function formatNum(n: number): string {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 // Mock event data
 const mockEvent = {
   id: "evt-123",
@@ -312,7 +319,7 @@ export default function EventReportsPage() {
         />
         <StatCard
           label="Net Revenue"
-          value={`$${mockRevenue.net.toLocaleString()}`}
+          value={`$${formatNum(mockRevenue.net)}`}
         />
         <StatCard
           label="Avg Rating"
@@ -415,7 +422,7 @@ export default function EventReportsPage() {
                 }}
               >
                 <span style={{ color: "#374151" }}>Gross Revenue</span>
-                <span style={{ fontWeight: 600 }}>${mockRevenue.gross.toLocaleString()}</span>
+                <span style={{ fontWeight: 600 }}>${formatNum(mockRevenue.gross)}</span>
               </div>
               <div
                 style={{
@@ -427,7 +434,7 @@ export default function EventReportsPage() {
               >
                 <span style={{ color: "#dc2626" }}>Refunds</span>
                 <span style={{ fontWeight: 600, color: "#dc2626" }}>
-                  -${mockRevenue.refunds.toLocaleString()}
+                  -${formatNum(mockRevenue.refunds)}
                 </span>
               </div>
               <div
@@ -442,7 +449,7 @@ export default function EventReportsPage() {
               >
                 <span style={{ fontWeight: 600, color: "#059669" }}>Net Revenue</span>
                 <span style={{ fontWeight: 700, color: "#059669", fontSize: "18px" }}>
-                  ${mockRevenue.net.toLocaleString()}
+                  ${formatNum(mockRevenue.net)}
                 </span>
               </div>
             </div>
@@ -456,7 +463,7 @@ export default function EventReportsPage() {
               {mockRevenue.byTier.map((tier) => (
                 <div key={tier.name} style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "#374151" }}>{tier.name}</span>
-                  <span style={{ fontWeight: 500 }}>${tier.revenue.toLocaleString()}</span>
+                  <span style={{ fontWeight: 500 }}>${formatNum(tier.revenue)}</span>
                 </div>
               ))}
             </div>

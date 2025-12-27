@@ -15,6 +15,20 @@ export const metadata = {
   description: "Club metrics, statistics, and reporting tools",
 };
 
+/**
+ * Format a number with commas for display (e.g., 1234 -> "1,234")
+ */
+function formatNum(n: number): string {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+/**
+ * Format a currency amount for display (e.g., 1234 -> "$1,234")
+ */
+function formatMoney(amount: number): string {
+  return `$${formatNum(amount)}`;
+}
+
 // Stat card component for consistent styling
 function StatCard({
   label,
@@ -318,24 +332,24 @@ export default async function ReportsDashboardPage() {
           <StatCard
             testId="stat-total-revenue"
             label="Total Revenue"
-            value={`$${formatCurrency(totalRevenue)}`}
+            value={formatMoney(totalRevenue)}
             subtext="All sources"
           />
           <StatCard
             testId="stat-dues-revenue"
             label="Membership Dues"
-            value={`$${formatCurrency(duesRevenue)}`}
+            value={formatMoney(duesRevenue)}
             subtext="Coming soon"
           />
           <StatCard
             testId="stat-event-revenue"
             label="Event Fees"
-            value={`$${formatCurrency(eventRevenue)}`}
+            value={formatMoney(eventRevenue)}
           />
           <StatCard
             testId="stat-donation-revenue"
             label="Donations"
-            value={`$${formatCurrency(donationRevenue)}`}
+            value={formatMoney(donationRevenue)}
             subtext="Coming soon"
           />
         </div>
