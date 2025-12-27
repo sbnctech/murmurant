@@ -24,6 +24,14 @@ const config: PlaywrightTestConfig = {
   // - @flaky: tests with intermittent failures (must have issue links)
   // Use `npm run green:flaky` to run flaky tests specifically
   grepInvert: /@quarantine|@flaky/,
+
+  // Auto-start dev server when running E2E tests
+  webServer: {
+    command: "npm run dev",
+    url: "http://localhost:3000",
+    reuseExistingServer: !process.env.CI,
+    timeout: 120000,
+  },
 };
 
 export default config;
