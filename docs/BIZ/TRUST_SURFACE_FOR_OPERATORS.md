@@ -247,6 +247,8 @@ If any answer is unclear, ask before proceeding. The system should be able to an
 - [System Guarantees](../reliability/SYSTEM_GUARANTEES.md) - Technical specification of what the system guarantees
 - [Preview Surface Contract](../ARCH/PREVIEW_SURFACE_CONTRACT.md) - How previews work in detail
 - [Organizational Presentation Philosophy](ORGANIZATIONAL_PRESENTATION_PHILOSOPHY.md) - How ClubOS handles your organization's identity
+- [SBNC Operator Checklist](../OPS/SBNC_OPERATOR_CHECKLIST.md) - Pre-publish, publish, verify, rollback procedures
+- [Inline Widget Troubleshooting](../OPS/INLINE_WIDGET_TROUBLESHOOTING.md) - Problem diagnosis and resolution
 
 ---
 
