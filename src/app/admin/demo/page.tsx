@@ -14,6 +14,7 @@ import Link from "next/link";
 import DemoScenarioCards from "./DemoScenarioCards";
 import ViewAsMemberSection from "./ViewAsMemberSection";
 import EventDerivedPreviewDemo from "./EventDerivedPreviewDemo";
+import EntitlementsSection from "./EntitlementsSection";
 
 // Use default dev token if ADMIN_E2E_TOKEN not set (matches auth.ts logic)
 const adminHeaders =
@@ -306,6 +307,9 @@ export default async function DemoPage() {
           </p>
         )}
       </section>
+
+      {/* Entitlements Status */}
+      <EntitlementsSection />
 
       {/* Demo Scenario Cards - Officers, Lifecycle, Events */}
       <DemoScenarioCards />

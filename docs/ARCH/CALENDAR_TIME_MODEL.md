@@ -112,7 +112,7 @@ Recurrence MUST be calculated in the event's timezone to handle DST correctly. A
 ClubOS uses IANA timezone identifiers (e.g., `America/Los_Angeles`). These are:
 
 - Unambiguous (unlike "PST" which some systems interpret differently)
-- DST-aware (automatically handle spring forward / fall back)
+- DST-aware (include DST transitions for spring forward / fall back)
 - Widely supported (JavaScript, iCalendar, Google Calendar, Apple Calendar)
 
 **Valid:**

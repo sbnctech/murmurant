@@ -374,8 +374,7 @@ function extractEventSamples(file: ParsedFile | undefined, count = 5): SampleEve
 // Report Generation
 // ---------------------------------------------------------------------------
 
-function computeContentHash(report: Omit<PreviewReport, 'contentHash' | 'generatedAt' | 'previewId'>): string {
-  // Hash only the deterministic content (excludes previewId, generatedAt, contentHash)
+function computeContentHash(report: Omit<PreviewReport, 'contentHash' | 'generatedAt'>): string {
   const content = JSON.stringify(report, Object.keys(report).sort());
   return crypto.createHash('sha256').update(content).digest('hex').substring(0, 16);
 }
@@ -408,9 +407,10 @@ export function generatePreviewReport(options: PreviewOptions): PreviewReport {
   events?.rows.forEach(validateEventRow);
   registrations?.rows.forEach(validateRegistrationRow);
 
-  // Build report - compute hash from deterministic content only (excludes previewId)
+  // Build report (without hash/timestamp for deterministic hashing)
   const previewId = crypto.randomUUID();
-  const deterministicContent = {
+  const partialReport = {
+    previewId,
     bundlePath: path.resolve(bundlePath),
     configVersion,
     summary: {
@@ -425,12 +425,11 @@ export function generatePreviewReport(options: PreviewOptions): PreviewReport {
     },
   };
 
-  const contentHash = computeContentHash(deterministicContent);
+  const contentHash = computeContentHash(partialReport);
 
   return {
-    previewId,
+    ...partialReport,
     generatedAt: new Date().toISOString(),
-    ...deterministicContent,
     contentHash,
   };
 }
