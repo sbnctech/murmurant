@@ -178,7 +178,6 @@ export function PendingActionsTable() {
   const handlePreview = (actionId: string) => {
     // TODO: Wire to preview route or modal
     // router.push(`/admin/actions/${actionId}/preview`);
-    console.log("[TODO] Open preview for action:", actionId);
     alert(`Preview for action ${actionId} - TODO: Implement preview modal/route`);
   };
 
