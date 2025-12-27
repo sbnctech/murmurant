@@ -9,7 +9,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import type { MigrationReport, EntityReport } from "./types";
+import type { MigrationReport } from "./types";
 import type { PolicyBundle, CapturedPolicy } from "./policy-capture";
 
 // =============================================================================

@@ -12,6 +12,7 @@
  */
 
 import { Metadata } from "next";
+import Link from "next/link";
 import { PendingActionsTable } from "./PendingActionsTable";
 
 export const metadata: Metadata = {
@@ -83,9 +84,9 @@ export default function ActionsPage() {
         <p>
           All decisions are recorded in the audit log with your identity,
           timestamp, and rationale. See{" "}
-          <a href="/admin/audit" style={{ color: "#0066cc" }}>
+          <Link href="/admin/audit" style={{ color: "#0066cc" }}>
             Audit Log
-          </a>{" "}
+          </Link>{" "}
           for history.
         </p>
       </footer>

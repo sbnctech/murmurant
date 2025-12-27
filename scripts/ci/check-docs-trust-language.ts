@@ -22,8 +22,19 @@ function hasEscape(line: string, phrase: string): boolean {
   return m ? m[1].toLowerCase().split(",").some(a => phrase.toLowerCase().includes(a.trim())) : false;
 }
 
+interface Violation {
+  file: string;
+  line: number;
+  col: number;
+  text: string;
+  phrase: string;
+  pattern: RegExp;
+  description: string;
+  suggestion: string;
+}
+
 function checkFile(fp: string) {
-  const violations: any[] = [];
+  const violations: Violation[] = [];
   if (EXCLUDE_FILES.includes(path.basename(fp))) return [];
   const lines = fs.readFileSync(fp, "utf-8").split("\n");
   lines.forEach((line, i) => {

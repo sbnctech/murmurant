@@ -39,7 +39,7 @@ import * as path from "path";
 import * as fs from "fs";
 import * as readline from "readline";
 import { MigrationEngine } from "./lib/migration-engine";
-import { loadConfig, getDefaultConfigPath } from "./lib/config";
+import { getDefaultConfigPath } from "./lib/config";
 import type { MigrationRunOptions } from "./lib/types";
 
 // =============================================================================
@@ -267,7 +267,7 @@ export function validateArgs(args: CLIArgs): ValidationResult {
   if (!args.membersFile && !args.eventsFile && !args.registrationsFile) {
     const defaultMembers = path.resolve(args.dataDir, DEFAULT_MEMBERS_FILE);
     const defaultEvents = path.resolve(args.dataDir, DEFAULT_EVENTS_FILE);
-    const defaultRegistrations = path.resolve(args.dataDir, DEFAULT_REGISTRATIONS_FILE);
+    const _defaultRegistrations = path.resolve(args.dataDir, DEFAULT_REGISTRATIONS_FILE);
 
     if (!fs.existsSync(defaultMembers) && !fs.existsSync(defaultEvents)) {
       warnings.push(

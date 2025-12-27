@@ -271,7 +271,7 @@ describe("Passkey Session Management", () => {
       vi.setSystemTime(now);
 
       // Create session1 that will expire
-      const session1 = createSession({
+      const _session1 = createSession({
         memberId: "member-cleanup-1",
         userAccountId: "account-cleanup-1",
         email: "test-cleanup1@example.com",

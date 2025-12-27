@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export async function createMinutes(_p: any): Promise<any> { throw new Error("Not implemented"); }
 export async function getMinutesByMeeting(_mid: string): Promise<any> { throw new Error("Not implemented"); }
 export async function updateMinutes(_id: string, _p: any): Promise<any> { throw new Error("Not implemented"); }

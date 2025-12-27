@@ -25,8 +25,6 @@ import {
   GlobalRole,
   Capability,
   AuthContext,
-  AuthResult,
-  SafeAuthResult,
 } from "@/lib/auth";
 
 // ============================================================================

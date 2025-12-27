@@ -142,7 +142,7 @@ export type Capability =
  *
  * @deprecated Use getRoleCapabilitiesFromPolicy() instead
  */
-const ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
+const _ROLE_CAPABILITIES: Record<GlobalRole, Capability[]> = {
   admin: [
     "admin:full",
     "publishing:manage",

@@ -22,9 +22,8 @@ import {
   generateMarkdownReport,
   type TierDistribution,
   type VerificationCheck,
-  type DatabaseCounts,
 } from "../../../scripts/migration/lib/verification";
-import type { MigrationReport, EntityReport } from "../../../scripts/migration/lib/types";
+import type { MigrationReport } from "../../../scripts/migration/lib/types";
 
 // =============================================================================
 // Test Fixtures

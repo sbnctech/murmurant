@@ -199,7 +199,7 @@ export function filterVisibleSections(
  */
 export function filterVisibleBlocks(
   blocks: Block[],
-  user: VisibilityUserContext | null
+  _user: VisibilityUserContext | null
 ): Block[] {
   // Note: To enable block-level visibility, blocks would need visibilityRule/roleGate fields
   // For now, this passes through all blocks in the section

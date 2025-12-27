@@ -38,7 +38,7 @@ export default function AuthorizedButton({
   style,
   ...buttonProps
 }: AuthorizedButtonProps) {
-  const { loading, hasCapability, hasAnyCapability, hasAllCapabilities, isAuthenticated } = useCurrentUser();
+  const { loading, hasCapability, hasAnyCapability, hasAllCapabilities, isAuthenticated: _isAuthenticated } = useCurrentUser();
 
   // Determine if button should be disabled due to authorization
   let isAuthorized = true;

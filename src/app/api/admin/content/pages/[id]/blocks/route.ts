@@ -13,7 +13,7 @@ import {
   type PageContent,
 } from "@/lib/publishing/blocks";
 import { createRevision, getActionSummary, getRevisionState } from "@/lib/publishing/revisions";
-import { validateBlockData, isEditableBlockType } from "@/lib/publishing/blockSchemas";
+import { validateBlockData } from "@/lib/publishing/blockSchemas";
 import { z } from "zod";
 
 type RouteParams = {

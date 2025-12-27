@@ -28,7 +28,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import { MigrationEngine } from "./lib/migration-engine";
-import { loadConfig, getDefaultConfigPath } from "./lib/config";
+import { getDefaultConfigPath } from "./lib/config";
 import type { MigrationRunOptions, MigrationReport } from "./lib/types";
 
 // =============================================================================

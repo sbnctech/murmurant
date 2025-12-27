@@ -44,6 +44,7 @@ export default function PasskeyManager({ initialPasskeys = [] }: PasskeyManagerP
     if (initialPasskeys.length === 0) {
       fetchPasskeys();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchPasskeys is defined below and stable
   }, [initialPasskeys.length]);
 
   const fetchPasskeys = useCallback(async () => {

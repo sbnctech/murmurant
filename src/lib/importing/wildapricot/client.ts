@@ -444,7 +444,7 @@ export class WildApricotClient {
       await this.getAccessToken();
 
       // Verify account access
-      const levels = await this.fetchMembershipLevels();
+      const _levels = await this.fetchMembershipLevels();
 
       return {
         ok: true,

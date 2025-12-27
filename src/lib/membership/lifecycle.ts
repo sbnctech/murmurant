@@ -328,7 +328,7 @@ function getNextTransitions(
 function generateNarrative(
   state: LifecycleState,
   input: MemberLifecycleInput,
-  milestones: LifecycleExplanation["milestones"]
+  _milestones: LifecycleExplanation["milestones"]
 ): string {
   const daysSinceJoin = daysBetween(input.joinedAt, new Date());
 

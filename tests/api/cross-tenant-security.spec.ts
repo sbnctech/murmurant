@@ -36,10 +36,10 @@ const BASE = process.env.PW_BASE_URL ?? "http://localhost:3000";
 // Test tokens for different member identities
 // Format: "test-{role}-{memberId}" - see src/lib/auth.ts parseTestToken()
 const MEMBER_A_HEADERS = { Authorization: "Bearer test-member-memberA" };
-const MEMBER_B_HEADERS = { Authorization: "Bearer test-member-memberB" };
+const _MEMBER_B_HEADERS = { Authorization: "Bearer test-member-memberB" };
 const CHAIR_A_HEADERS = { Authorization: "Bearer test-chair-chairA" };
-const CHAIR_B_HEADERS = { Authorization: "Bearer test-chair-chairB" };
-const ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
+const _CHAIR_B_HEADERS = { Authorization: "Bearer test-chair-chairB" };
+const _ADMIN_HEADERS = { Authorization: "Bearer test-admin-token" };
 
 // =============================================================================
 // TEST 1: CAPABILITY-BASED ACCESS CONTROL

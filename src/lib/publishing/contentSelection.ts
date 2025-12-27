@@ -132,7 +132,7 @@ export function isPagePubliclyVisible(
  */
 export function hasPreviewableDraft(
   content: PageContent | null,
-  publishedContent: PageContent | null
+  _publishedContent: PageContent | null
 ): boolean {
   // If there's no content at all, nothing to preview
   if (content === null) {

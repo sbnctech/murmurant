@@ -22,7 +22,7 @@ import type { GlobalRole } from "@/lib/auth";
 const getNextCookies = () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { cookies } = require("next/headers");
-  return getNextCookies();
+  return cookies();
 };
 
 type CookieStore = {

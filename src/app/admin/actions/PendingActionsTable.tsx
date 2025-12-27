@@ -192,7 +192,8 @@ export function PendingActionsTable() {
 
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
-    return date.toLocaleDateString();
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays}d ago`;
   };
 
   // Get type badge color
@@ -346,7 +347,7 @@ export function PendingActionsTable() {
                       </div>
                     </td>
                     <td style={{ ...tdStyle, textAlign: "right", fontFamily: "monospace" }}>
-                      {action.affectedRecords.toLocaleString()}
+                      {action.affectedRecords.toString()}
                     </td>
                     <td style={{ ...tdStyle, color: "#666", fontSize: "13px" }}>
                       <div>{formatRelativeTime(action.createdAt)}</div>

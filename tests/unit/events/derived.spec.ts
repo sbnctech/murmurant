@@ -23,8 +23,6 @@ import {
   inferCategory,
   validateEventFields,
   generateDerivedPreview,
-  type EventStatus,
-  type UrgencyLevel,
 } from "@/lib/events";
 
 // ============================================================================

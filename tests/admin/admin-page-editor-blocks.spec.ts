@@ -495,7 +495,7 @@ test.describe("Page Editor Lifecycle (A4)", () => {
     // Full state machine tests are in tests/unit/publishing/pageLifecycle.spec.ts
 
     test("DRAFT page can be published", () => {
-      const status = "DRAFT";
+      const _status = "DRAFT";
       const allowedActions = ["publish", "archive"];
 
       expect(allowedActions).toContain("publish");
@@ -504,7 +504,7 @@ test.describe("Page Editor Lifecycle (A4)", () => {
     });
 
     test("PUBLISHED page can be unpublished or archived", () => {
-      const status = "PUBLISHED";
+      const _status = "PUBLISHED";
       const allowedActions = ["unpublish", "archive", "discardDraft"];
 
       expect(allowedActions).toContain("unpublish");
@@ -524,7 +524,7 @@ test.describe("Page Editor Lifecycle (A4)", () => {
     });
 
     test("ARCHIVED page has no allowed transitions", () => {
-      const status = "ARCHIVED";
+      const _status = "ARCHIVED";
       const allowedActions: string[] = [];
 
       expect(allowedActions).not.toContain("publish");

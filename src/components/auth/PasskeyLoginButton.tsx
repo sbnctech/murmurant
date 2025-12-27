@@ -14,7 +14,7 @@
 
 import { useState, useCallback } from "react";
 import { startAuthentication, browserSupportsWebAuthn } from "@simplewebauthn/browser";
-import { getFriendlyAuthError, type AuthErrorCode } from "@/lib/auth/errors";
+import { getFriendlyAuthError } from "@/lib/auth/errors";
 
 interface PasskeyLoginButtonProps {
   onSuccess?: () => void;

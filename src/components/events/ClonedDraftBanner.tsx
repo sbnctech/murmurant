@@ -1,3 +1,5 @@
+"use client";
+
 import { formatDateLocale } from "@/lib/timezone";
 /**
  * ClonedDraftBanner - Visual warning for cloned draft events
@@ -14,8 +16,6 @@ import { formatDateLocale } from "@/lib/timezone";
  *
  * Copyright (c) Santa Barbara Newcomers Club
  */
-
-"use client";
 
 interface ClonedDraftBannerProps {
   /** Title of the original event this was cloned from (optional) */

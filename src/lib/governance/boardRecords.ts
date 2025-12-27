@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export async function createBoardRecord(_p: any): Promise<any> { throw new Error("Not implemented"); }
 export async function listBoardRecords(_p: any): Promise<any> { throw new Error("Not implemented"); }
 export async function getBoardRecord(_id: string): Promise<any> { throw new Error("Not implemented"); }

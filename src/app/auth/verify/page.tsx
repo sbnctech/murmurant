@@ -263,7 +263,7 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
   );
 
   // Find or create user
-  const { userAccountId, memberId, globalRole } = await findOrCreateUser(
+  const { userAccountId, memberId: _memberId, globalRole } = await findOrCreateUser(
     magicLink.email
   );
 
