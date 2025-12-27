@@ -35,7 +35,8 @@
     "migrate:dry-run": "npx tsx scripts/migration/migrate.ts --verbose",
     "migrate:dry-run:sbnc": "npx tsx scripts/migration/run-sbnc-dry-run.ts",
     "migrate:live": "npx tsx scripts/migration/migrate.ts --live --verbose",
-    "migrate:reset": "npx tsx scripts/migration/reset-sandbox.ts"
+    "migrate:reset": "npx tsx scripts/migration/reset-sandbox.ts",
+    "demo:refresh": "npx tsx scripts/demo/refresh-sbnc-demo.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
