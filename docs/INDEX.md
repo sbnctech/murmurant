@@ -38,6 +38,9 @@ This is the main entry point for all ClubOS developer documentation.
 - [Gadget Tagging](MIGRATION/WILD_APRICOT_GADGET_TAGGING.md) - Migration classification by gadget type
 - [Migration Intake Checklist](MIGRATION/WILD_APRICOT_MIGRATION_INTAKE_CHECKLIST.md) - Discovery questions for operators
 
+### External Resources
+- **ClubCalendar** (`clubcalendar_sbnc/`) - Inline calendar widget for WA sites (parallel deliverable, not in this repo)
+
 ## Testing and Tooling
 - Test scripts under scripts/dev/*
 - Make targets documented in README.md

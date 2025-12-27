@@ -27,6 +27,7 @@ Check all features the customer uses for events.
 - [ ] **Calendar view of events**
   - Where: Site pages > Page editor > Event calendar gadget
   - Ask: "Do you use month view, week view, or both?"
+  - Note: See [ClubCalendar](#clubcalendar-parallel-deliverable) for calendar widget replacement
 
 - [ ] **Event detail pages**
   - Where: Automatically generated for each event
@@ -324,3 +325,24 @@ Copy this block and fill it out for each customer. This becomes the migration sc
 - [ClubOS Page Builder Primitives](../ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md) - ClubOS equivalents and migration behavior
 - [Presentation Discovery Stage](./PRESENTATION_DISCOVERY_STAGE.md) - automated site crawling
 - [Widgets vs Gadgets](./WILD_APRICOT_WIDGETS_VS_GADGETS.md) - terminology guide
+
+---
+
+## ClubCalendar (Parallel Deliverable)
+
+For calendar widget replacement during migration, ClubCalendar provides an inline-only engine that runs on WA sites without external server dependencies.
+
+**Location**: `clubcalendar_sbnc/` (separate from ClubOS repo)
+
+**Key documents**:
+
+| Document | Purpose |
+|----------|---------|
+| `README.md` | Quick start and file manifest |
+| `CLUBOS_HANDOFF.md` | What ClubOS needs to know (answer: nothing - fully decoupled) |
+| `CONFIG_FETCH_CONTRACT.md` | Locked contract for config page format |
+| `inline-engine/` | Ready-to-paste templates for WA pages |
+
+**Architecture**: Config page stores JSON config; events page fetches config and renders calendar using WA API directly.
+
+**No ClubOS dependencies**: ClubCalendar runs independently. ClubOS does not need to host, serve, or manage it.
