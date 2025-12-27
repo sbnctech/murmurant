@@ -15,6 +15,7 @@ import DemoScenarioCards from "./DemoScenarioCards";
 import ViewAsMemberSection from "./ViewAsMemberSection";
 import EventDerivedPreviewDemo from "./EventDerivedPreviewDemo";
 import EntitlementsSection from "./EntitlementsSection";
+import ParityDashboard from "./ParityDashboard";
 
 // Use default dev token if ADMIN_E2E_TOKEN not set (matches auth.ts logic)
 const adminHeaders =
@@ -310,6 +311,9 @@ export default async function DemoPage() {
 
       {/* Entitlements Status */}
       <EntitlementsSection />
+
+      {/* WA Parity Dashboard */}
+      <ParityDashboard />
 
       {/* Demo Scenario Cards - Officers, Lifecycle, Events */}
       <DemoScenarioCards />
