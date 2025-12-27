@@ -187,6 +187,156 @@ These govern visibility and behavior.
 
 ---
 
+## Implementation Details
+
+This section documents the concrete implementation of Page Builder primitives in ClubOS.
+
+### Page Structure: Page → Sections → Blocks
+
+Pages use a hierarchical structure:
+
+```
+Page (slug, title, visibility, audienceRule)
+  └── Sections[] (id, name, order, layout, visibilityRule, roleGate)
+        └── Blocks[] (id, type, order, data, visibilityRule, roleGate)
+```
+
+**Key files:**
+
+- `src/lib/publishing/blocks.ts` - Block type definitions
+- `src/lib/publishing/visibility.ts` - VisibilityRule and RoleGate evaluation
+- `src/components/publishing/BlockRenderer.tsx` - Render path
+
+### Section Type Definition
+
+```typescript
+type Section = {
+  id: string;
+  name?: string;                    // Display name, e.g., "Hero", "Main Content"
+  order: number;                    // Sort order within page
+  blocks: Block[];                  // Blocks in this section
+  visibilityRule?: VisibilityRuleData;  // Optional visibility control
+  roleGate?: RoleGateData;          // Optional role restriction
+  layout?: "full-width" | "contained" | "narrow";  // Layout hint
+};
+```
+
+### VisibilityRule Type Definition
+
+Controls conditional display based on membership status and date ranges:
+
+```typescript
+type VisibilityRuleData = {
+  isPublic?: boolean;              // Visible to all if true
+  membershipStatuses?: string[];   // e.g., ["active", "board"]
+  dateRange?: {
+    start?: string;                // ISO date string
+    end?: string;                  // ISO date string
+  };
+  featureFlags?: string[];         // Future: feature flag names
+};
+```
+
+**Example: Show section only to active members:**
+
+```typescript
+const memberOnlySection: Section = {
+  id: "members-welcome",
+  name: "Member Welcome",
+  order: 1,
+  blocks: [/* ... */],
+  visibilityRule: {
+    membershipStatuses: ["active", "board"]
+  }
+};
+```
+
+### RoleGate Type Definition
+
+Restricts content to specific committee roles:
+
+```typescript
+type RoleGateData = {
+  allowedRoles: string[];      // Committee role slugs
+  committeeIds?: string[];     // Optional: limit to specific committees
+};
+```
+
+**Example: Show block only to board members:**
+
+```typescript
+const boardBlock: Block = {
+  id: "board-notice",
+  type: "text",
+  order: 0,
+  data: { content: "<p>Board-only content here.</p>" },
+  roleGate: {
+    allowedRoles: ["president", "board-member", "treasurer"]
+  }
+};
+```
+
+### Render-Time Visibility Enforcement
+
+Visibility is enforced at render time, not at the database level. This ensures:
+
+1. **Server-side enforcement** (Charter P2) - Not just UI gating
+2. **Audit trail** - User context is evaluated per request
+3. **Fail closed** (Charter P9) - If evaluation fails, content is hidden
+
+**Render flow:**
+
+```
+1. Page route fetches published content
+2. Session provides user context (roles, membership status)
+3. normalizeToSections() converts content to section format
+4. filterVisibleSections() applies visibility rules
+5. BlockRenderer renders only visible sections/blocks
+```
+
+### Block Types Reference
+
+| Type | Component | Editable Fields |
+|------|-----------|-----------------|
+| text | TextBlock | content, alignment |
+| image | ImageBlock | src, alt, caption, width, alignment, linkUrl |
+| hero | HeroBlock | title, subtitle, backgroundImage, ctaText, ctaLink |
+| gallery | GalleryBlock | images[], columns, enableLightbox |
+| cta | CtaBlock | text, link, style, size, alignment |
+| cards | CardsBlock | cards[], columns |
+| faq | FaqBlock | title, items[] |
+| contact | ContactBlock | title, description, recipientEmail, fields[] |
+| event-list | EventListBlock | title, limit, categories, layout |
+| divider | DividerBlock | style, width |
+| spacer | SpacerBlock | height |
+
+### Adding a New Block to a Page
+
+Admin UI workflow:
+
+1. Open page in admin → Content → Pages
+2. Navigate to desired section
+3. Click "Add Block" button
+4. Select block type from palette
+5. Configure block fields
+6. Save and preview
+
+### Backwards Compatibility
+
+The system supports both legacy `blocks[]` format (schemaVersion 1) and new `sections[]` format (schemaVersion 2+):
+
+```typescript
+// Legacy format (auto-converted to single section)
+{ schemaVersion: 1, blocks: [...] }
+
+// New format (explicit sections)
+{ schemaVersion: 2, sections: [...] }
+```
+
+The `normalizeToSections()` function transparently handles both formats.
+
+---
+
 ## SafeEmbed Specification
 
 SafeEmbed renders external content via a locked-down iframe. It replaces arbitrary HTML embeds from Wild Apricot custom blocks with a secure, auditable alternative.
