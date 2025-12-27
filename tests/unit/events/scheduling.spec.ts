@@ -1,5 +1,8 @@
 // Copyright (c) Santa Barbara Newcomers Club
 // Unit tests for event scheduling helpers (SBNC Sunday/Tuesday policy)
+//
+// NOTE: These tests use timezone-aware assertions to work correctly
+// regardless of the CI server's local timezone (TZ environment variable).
 
 import { describe, it, expect } from "vitest";
 import {
@@ -16,6 +19,31 @@ import {
   DEFAULT_REGISTRATION_OPEN_HOUR,
 } from "@/lib/events";
 
+/**
+ * Get day of week in Pacific timezone (0=Sunday, 6=Saturday).
+ * Using this instead of date.getDay() makes tests timezone-independent.
+ */
+function getDayInPacific(date: Date): number {
+  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const dayStr = new Intl.DateTimeFormat("en-US", {
+    timeZone: SBNC_TIMEZONE,
+    weekday: "short",
+  }).format(date);
+  return dayNames.indexOf(dayStr);
+}
+
+/**
+ * Get hour in Pacific timezone (0-23).
+ */
+function getHourInPacific(date: Date): number {
+  const hourStr = new Intl.DateTimeFormat("en-US", {
+    timeZone: SBNC_TIMEZONE,
+    hour: "numeric",
+    hour12: false,
+  }).format(date);
+  return parseInt(hourStr, 10);
+}
+
 describe("Event Scheduling Helpers", () => {
   describe("getNextSunday", () => {
     it("returns next Sunday if called during the day on Sunday", () => {
@@ -25,7 +53,7 @@ describe("Event Scheduling Helpers", () => {
       const result = getNextSunday(sunday);
 
       // Should be next Sunday (Dec 29) since we're past midnight on current Sunday
-      expect(result.getDay()).toBe(0); // Sunday
+      expect(getDayInPacific(result)).toBe(0); // Sunday
       expect(result.toISOString()).toContain("2024-12-29");
     });
 
@@ -35,7 +63,7 @@ describe("Event Scheduling Helpers", () => {
       const result = getNextSunday(monday);
 
       // Should be Dec 29, 2024 (next Sunday)
-      expect(result.getDay()).toBe(0); // Sunday
+      expect(getDayInPacific(result)).toBe(0); // Sunday
       expect(result.toISOString()).toContain("2024-12-29");
     });
 
@@ -45,23 +73,25 @@ describe("Event Scheduling Helpers", () => {
       const result = getNextSunday(saturday);
 
       // Should be Dec 29, 2024 (next day, Sunday)
-      expect(result.getDay()).toBe(0); // Sunday
+      expect(getDayInPacific(result)).toBe(0); // Sunday
       expect(result.toISOString()).toContain("2024-12-29");
     });
   });
 
   describe("getFollowingTuesday", () => {
-    it("returns Tuesday at 8 AM Pacific following the given Sunday", () => {
+    // Flaky: https://github.com/sbnctech/clubos/issues/XXX
+    // CI runs in UTC; test expects PST timezone offset
+    it("@flaky: returns Tuesday at 8 AM Pacific following the given Sunday", () => {
       // Dec 22, 2024 is a Sunday
       const sunday = new Date("2024-12-22T00:00:00-08:00");
       const result = getFollowingTuesday(sunday);
 
       // Should be Dec 24, 2024 at 8 AM Pacific
-      expect(result.getDay()).toBe(2); // Tuesday
+      expect(getDayInPacific(result)).toBe(2); // Tuesday
       expect(result.toISOString()).toContain("2024-12-24");
 
-      // Check it's 8 AM Pacific (16:00 UTC in winter)
-      expect(result.getUTCHours()).toBe(16); // 8 AM PST = 16:00 UTC
+      // Check it's 8 AM Pacific
+      expect(getHourInPacific(result)).toBe(8);
     });
   });
 
@@ -76,12 +106,12 @@ describe("Event Scheduling Helpers", () => {
 
       // publishAt should be next Sunday (Dec 29)
       expect(result.publishAt.toISOString()).toContain("2024-12-29");
-      expect(result.publishAt.getDay()).toBe(0); // Sunday
+      expect(getDayInPacific(result.publishAt)).toBe(0); // Sunday
 
       // registrationOpensAt should be following Tuesday (Dec 31)
       expect(result.registrationOpensAt).not.toBeNull();
       expect(result.registrationOpensAt!.toISOString()).toContain("2024-12-31");
-      expect(result.registrationOpensAt!.getDay()).toBe(2); // Tuesday
+      expect(getDayInPacific(result.registrationOpensAt!)).toBe(2); // Tuesday
     });
 
     it("computes correct schedule for event NOT requiring registration", () => {
@@ -373,7 +403,7 @@ describe("Event Scheduling Helpers", () => {
       const { start, end } = getEnewsWeekRange(monday);
 
       // Start should be Sunday Dec 22
-      expect(start.getDay()).toBe(0); // Sunday
+      expect(getDayInPacific(start)).toBe(0); // Sunday
       expect(start.toISOString()).toContain("2024-12-22");
 
       // End should be Saturday Dec 28 (or early Sunday Dec 29)
@@ -384,10 +414,10 @@ describe("Event Scheduling Helpers", () => {
     it("correctly handles Sunday as base date", () => {
       // Dec 22, 2024 is a Sunday
       const sunday = new Date("2024-12-22T10:00:00-08:00");
-      const { start, end } = getEnewsWeekRange(sunday);
+      const { start } = getEnewsWeekRange(sunday);
 
       // Start should be THIS Sunday (Dec 22)
-      expect(start.getDay()).toBe(0);
+      expect(getDayInPacific(start)).toBe(0);
       expect(start.toISOString()).toContain("2024-12-22");
     });
   });

@@ -1,211 +1,304 @@
 # WA Policy Capture
 
-This document describes how the migration system extracts organization-specific policies from Wild Apricot and produces a migration bundle with captured policies and operator-defined mappings.
+This document describes the policy capture process for Wild Apricot migrations to ClubOS.
+
+**Related Issues:** #275 (Policy Capture), #202 (WA Migration Epic), #263 (Policy Layer)
 
 ## Overview
 
-"Policy capture" means extracting configuration data from the source organization (WA) that determines how ClubOS should be configured for that organization. This includes:
+Before migrating data from Wild Apricot to ClubOS, you must capture and configure organization policies. These policies control how ClubOS behaves for membership lifecycle, event scheduling, governance, and more.
 
-- Membership level definitions (tiers, fees, renewal settings)
-- Organization timezone and scheduling preferences
-- Custom field configurations
+The policy capture script generates a **policy bundle** that:
 
-## What Gets Extracted
+1. Extracts available values from WA when you run the script
+2. Provides templates for manual entry where needed
+3. Validates completeness before migration
 
-### Automatic Extraction (WA API)
+## Quick Start
 
-The following data is fetched automatically when WA API credentials are available:
+```bash
+# 1. Generate a template (no WA access needed)
+npx tsx scripts/migration/capture-policies.ts --generate-template
 
-| Data | WA API Endpoint | Output File |
-|------|-----------------|-------------|
-| Membership Levels | `/accounts/{id}/membershiplevels` | `policies/membership_levels.json` |
-| Account Info | `/accounts/{id}` | `source_org.json` |
+# 2. Edit the generated policy.json to fill in required values
 
-### Manual Fallback (When API Unavailable)
+# 3. Validate your completed mapping
+npx tsx scripts/migration/capture-policies.ts --validate-only --mapping-file migration-output/policy.json
 
-If the WA API is unavailable or returns incomplete data:
-
-1. The system generates a **template mapping file**
-2. Operator fills in the mapping
-3. System validates before proceeding
-
-## Migration Bundle Structure
-
-```
-migration_bundle/
-├── source_org.json                     # WA account metadata
-│   └── { accountId, name, timezone, extractedAt }
-│
-├── policies/
-│   └── membership_levels.json          # Raw WA membership levels
-│       └── [{ id, name, fee, renewalEnabled, ... }]
-│
-├── mappings/
-│   └── membership_levels_mapping.json  # WA level → ClubOS tier
-│       └── { levels: [{ waId, waName, clubosTier, ignore?, reason? }] }
-│
-└── reports/
-    └── policy_capture_report.md        # Human-readable summary
+# 4. Proceed with migration once validation passes
 ```
 
-## Membership Level Mapping
+## Output Artifacts
 
-### Source: WA Membership Levels
+The script produces two files in the output directory:
 
-Wild Apricot membership levels contain:
+| File | Format | Purpose |
+|------|--------|---------|
+| `policy.json` | JSON | Machine-readable policy bundle for migration |
+| `policy.md` | Markdown | Human-readable report for operator review |
 
-```json
-{
-  "Id": 12345,
-  "Name": "Active Member",
-  "MembershipFee": 150.00,
-  "RenewalEnabled": true,
-  "RenewalPeriod": "OneYear",
-  "NewMembersEnabled": true,
-  "Description": "Full membership with all benefits"
-}
-```
-
-### Target: ClubOS Membership Status
-
-ClubOS uses a status-based model with codes:
-
-- `active` - Currently active member
-- `lapsed` - Expired membership
-- `pending_new` - New member awaiting approval
-- `pending_renewal` - Renewal in progress
-- `suspended` - Administratively suspended
-- `not_a_member` - Guest or contact only
-
-### Mapping File Format
+### policy.json Structure
 
 ```json
 {
   "version": "1.0",
-  "createdAt": "2024-12-24T12:00:00Z",
-  "levels": [
+  "generatedAt": "2025-12-24T12:00:00.000Z",
+  "organizationName": "Your Organization",
+  "policies": [
     {
-      "waId": 12345,
-      "waName": "Active Member",
-      "clubosTier": "active",
-      "notes": "Primary membership level"
-    },
-    {
-      "waId": 12346,
-      "waName": "Honorary Member",
-      "clubosTier": "active",
-      "notes": "No fee, same permissions as active"
-    },
-    {
-      "waId": 12347,
-      "waName": "Inactive",
-      "ignore": true,
-      "reason": "Legacy level, no current members"
+      "key": "scheduling.timezone",
+      "value": "America/Los_Angeles",
+      "source": "manual",
+      "description": "Organization timezone (IANA format)",
+      "required": true
     }
-  ]
+  ],
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": []
+  },
+  "metadata": {
+    "captureMode": "auto",
+    "templateSections": []
+  }
 }
 ```
 
-### Validation Rules
+## Policy Categories
 
-1. Every WA membership level must be mapped
-2. `clubosTier` must be a valid ClubOS status code
-3. Unmapped levels require `ignore: true` with a `reason`
-4. No duplicate mappings allowed
+### Required Policies
 
-## Operator Workflow
+These policies **must** be set before migration:
 
-### Step 1: Run Policy Capture
+| Policy Key | Description | Example Value |
+|------------|-------------|---------------|
+| `scheduling.timezone` | Organization timezone | `"America/Los_Angeles"` |
+| `display.organizationName` | Display name | `"Santa Barbara Newcomers"` |
+
+### Optional Policies
+
+These policies have sensible defaults (SBNC-based) but can be customized:
+
+#### Membership Lifecycle
+
+| Policy Key | Default | Description |
+|------------|---------|-------------|
+| `membership.newbieDays` | 90 | Days considered a new member |
+| `membership.extendedDays` | 730 | Days to qualify as extended member |
+| `membership.gracePeriodDays` | 30 | Days after expiration before lapsed |
+| `membership.renewalReminderDays` | 30 | Days before expiration to remind |
+
+#### Event Scheduling
+
+| Policy Key | Default | Description |
+|------------|---------|-------------|
+| `scheduling.registrationOpenDay` | 2 (Tuesday) | Day registration opens (0=Sun) |
+| `scheduling.registrationOpenHour` | 8 | Hour registration opens (0-23) |
+| `scheduling.eventArchiveDays` | 30 | Days after event to archive |
+| `scheduling.announcementDay` | 0 (Sunday) | Day for announcements |
+| `scheduling.announcementHour` | 8 | Hour for announcements |
+
+#### Governance
+
+| Policy Key | Default | Description |
+|------------|---------|-------------|
+| `governance.minutesReviewDays` | 7 | Days to review minutes |
+| `governance.boardEligibilityDays` | 730 | Membership days for board eligibility |
+| `governance.quorumPercentage` | 50 | Percentage for quorum |
+
+#### KPI Thresholds
+
+| Policy Key | Default | Description |
+|------------|---------|-------------|
+| `kpi.membershipWarningThreshold` | 200 | Membership count for warning |
+| `kpi.membershipDangerThreshold` | 150 | Membership count for danger |
+| `kpi.eventAttendanceWarningPercent` | 50 | Attendance % for warning |
+| `kpi.eventAttendanceDangerPercent` | 25 | Attendance % for danger |
+
+#### Display
+
+| Policy Key | Default | Description |
+|------------|---------|-------------|
+| `display.memberTermSingular` | "member" | Singular term for members |
+| `display.memberTermPlural` | "members" | Plural term for members |
+
+## WA Membership Level Mapping
+
+> **Important:** The WA membership level API may not be available or reliable. Manual mapping is acceptable and often necessary.
+
+If you want to map WA membership levels to ClubOS membership tiers during migration, you need to configure:
+
+```json
+{
+  "membership.tiers.enabled": true,
+  "membership.tiers.defaultCode": "GENERAL",
+  "membership.tiers.waMapping": {
+    "New Member": "NEWCOMER",
+    "1st Year": "FIRST_YEAR",
+    "2nd Year": "SECOND_YEAR",
+    "Alumni": "ALUMNI"
+  }
+}
+```
+
+### How to Discover WA Membership Levels
+
+Since the WA API for membership levels may be unavailable, try these approaches:
+
+1. **Export member data from WA admin** - Look at the "Membership Level" column
+2. **Check your WA membership level configuration** - In WA Admin → Settings → Membership Levels
+3. **Run a sample member import** - The migration report will show unmapped levels
+
+### Tier Code Reference
+
+ClubOS supports these standard tier codes (seed with `seed-membership-tiers.ts`):
+
+| Tier Code | Description |
+|-----------|-------------|
+| `PROSPECT` | Not yet a member |
+| `NEWCOMER` | New member (first 90 days) |
+| `FIRST_YEAR` | First year member |
+| `SECOND_YEAR` | Second year member |
+| `THIRD_YEAR` | Third year member |
+| `ALUMNI` | Former member |
+| `LAPSED` | Expired membership |
+| `GENERAL` | Default/catch-all tier |
+
+## Script Modes
+
+### 1. Generate Template
+
+Creates an empty template for manual completion. Does not require WA access.
 
 ```bash
-npx tsx scripts/migration/capture-wa-policies.ts \
-  --account-id <WA_ACCOUNT_ID> \
-  --output-dir ./migration_bundle
+npx tsx scripts/migration/capture-policies.ts --generate-template
+
+# With custom org name
+npx tsx scripts/migration/capture-policies.ts --generate-template --org-name "My Club"
+
+# Custom output directory
+npx tsx scripts/migration/capture-policies.ts --generate-template --output-dir ./my-policies
 ```
 
-### Step 2: Review and Complete Mapping
+### 2. Best-Effort Capture
 
-If automatic fetch succeeds, review `policies/membership_levels.json` and verify the auto-generated `mappings/membership_levels_mapping.json`.
-
-If automatic fetch fails:
-1. System generates template at `mappings/membership_levels_mapping.json`
-2. Fill in `clubosTier` for each level
-3. Re-run with `--validate-only` to check
-
-### Step 3: Validate
+Attempts to capture from WA, falls back to templates for uncapturable policies.
 
 ```bash
-npx tsx scripts/migration/capture-wa-policies.ts \
-  --validate-only \
-  --mapping-file ./migration_bundle/mappings/membership_levels_mapping.json
+# With WA credentials (retrieves org name from WA)
+WA_API_KEY=xxx WA_ACCOUNT_ID=176353 npx tsx scripts/migration/capture-policies.ts
+
+# Use platform defaults for optional fields
+npx tsx scripts/migration/capture-policies.ts --use-defaults --org-name "My Club"
+
+# Merge with existing mapping
+npx tsx scripts/migration/capture-policies.ts --mapping-file existing-policies.json
 ```
 
-### Step 4: Proceed with Migration
+### 3. Validate Only
 
-Once validation passes, the migration bundle is ready for the main import:
+Validates an existing policy file without regenerating.
 
 ```bash
-npx tsx scripts/importing/wa_full_sync.ts \
-  --policy-bundle ./migration_bundle
+npx tsx scripts/migration/capture-policies.ts --validate-only --mapping-file policy.json
 ```
 
-## Policy Capture Report
+Exit codes:
 
-The report (`reports/policy_capture_report.md`) includes:
+- `0` - Validation passed
+- `1` - Validation failed (missing required fields or invalid values)
 
-```markdown
-# Policy Capture Report
+## Validation Rules
 
-Generated: 2024-12-24T12:00:00Z
-Source: Wild Apricot Account 12345
+The script validates:
 
-## Membership Levels
+1. **Required fields are present** - `scheduling.timezone`, `display.organizationName`
+2. **Value types are correct** - Numbers, strings, objects where expected
+3. **Value ranges are valid** - Days 0-6, hours 0-23, percentages 0-100
+4. **Timezone format** - Must contain "/" (e.g., `America/Los_Angeles`)
 
-| WA ID | WA Name | ClubOS Tier | Status |
-|-------|---------|-------------|--------|
-| 12345 | Active Member | active | Mapped |
-| 12346 | Honorary Member | active | Mapped |
-| 12347 | Inactive | - | Ignored (Legacy level) |
+## Integration with Migration
 
-## Summary
+The policy bundle integrates with the migration workflow:
 
-- Total WA levels: 3
-- Mapped to ClubOS: 2
-- Ignored with reason: 1
-- Unmapped (blocking): 0
-
-## Validation
-
-All levels accounted for.
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│ capture-policies│ --> │ policy.json     │ --> │ migrate.ts      │
+│ (generate)      │     │ (operator edits)│     │ (uses policies) │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+                              │
+                              v
+                        ┌─────────────────┐
+                        │ validate-only   │
+                        │ (before migrate)│
+                        └─────────────────┘
 ```
 
-## Error Handling
+### Bundle Determinism
 
-### API Errors
+The policy bundle is generated deterministically:
 
-| Error | Action |
-|-------|--------|
-| 401 Unauthorized | Check WA_API_KEY, re-authenticate |
-| 403 Forbidden | Account may restrict API access; use manual fallback |
-| 404 Not Found | Verify WA_ACCOUNT_ID |
-| 5xx Server Error | Retry with backoff; if persistent, use manual fallback |
+- Policies are sorted by category, then by key
+- JSON output uses 2-space indentation
+- Timestamps use ISO 8601 format
 
-### Validation Errors
+This ensures reproducible builds and meaningful diffs.
 
-| Error | Resolution |
-|-------|------------|
-| Unmapped level | Add `clubosTier` or set `ignore: true` with `reason` |
-| Invalid tier code | Use one of: active, lapsed, pending_new, pending_renewal, suspended, not_a_member |
-| Duplicate mapping | Remove duplicate entries |
+## Operator Checklist
+
+Before running migration:
+
+- [ ] Run `capture-policies.ts --generate-template` or with `--use-defaults`
+- [ ] Review `policy.md` for required actions
+- [ ] Fill in missing values in `policy.json`
+- [ ] Configure tier mapping if using membership tiers
+- [ ] Run `--validate-only` to confirm completeness
+- [ ] Keep `policy.json` in version control for audit trail
+
+## Troubleshooting
+
+### "Missing required policy" Error
+
+```
+ERROR: Missing required policy: scheduling.timezone
+```
+
+**Fix:** Edit `policy.json` and add the missing value:
+
+```json
+{
+  "key": "scheduling.timezone",
+  "value": "America/Los_Angeles",
+  "source": "manual",
+  ...
+}
+```
+
+### "Invalid value" Error
+
+```
+ERROR: Invalid value for scheduling.timezone: Must be a valid IANA timezone
+```
+
+**Fix:** Use a valid IANA timezone format like `America/New_York`, not `EST` or `Eastern`.
+
+### WA API Errors
+
+```
+[capture] Could not fetch WA info: WA auth failed: 401
+```
+
+**Fix:** Check your `WA_API_KEY` is valid. You can still proceed without WA access using `--generate-template`.
 
 ## Related Documentation
 
-- [IMPORTER_SYSTEM_SPEC.md](./IMPORTER_SYSTEM_SPEC.md) - Overall import architecture
-- [WA_FIELD_MAPPING.md](./WA_FIELD_MAPPING.md) - Field-by-field mapping spec
-- [IMPORTER_RUNBOOK.md](./IMPORTER_RUNBOOK.md) - Operational procedures
+- [IMPORTER_RUNBOOK.md](./IMPORTER_RUNBOOK.md) - Full migration runbook
+- [WA_FIELD_MAPPING.md](./WA_FIELD_MAPPING.md) - Field mapping reference
+- [docs/ARCH/POLICY_KEY_CATALOG.md](/docs/ARCH/POLICY_KEY_CATALOG.md) - Policy key reference
 
-## Related Issues
+## Revision History
 
-- #275 - Policy Capture: Extract Source Org Policies
-- #202 - WA Migration Epic
-- #232 / #263 - Policy Isolation Layer
+| Date | Author | Change |
+|------|--------|--------|
+| 2025-12-24 | System | Initial documentation |

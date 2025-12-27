@@ -1,361 +1,527 @@
 /**
  * Policy Capture Unit Tests
  *
- * Tests for the WA policy capture module including:
- * - Mapping file parsing and validation
- * - Template generation
- * - Report generation
+ * Tests for policy capture, validation, and bundle generation.
+ *
+ * Related: Issue #275 (Policy Capture), #202 (WA Migration)
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import {
-  generateMappingTemplate,
-  parseMappingFile,
-  validateMappingFile,
-  generatePolicyCaptureReport,
-  renderReportAsMarkdown,
+  generatePolicyTemplate,
+  capturePolicies,
+  validatePolicies,
+  validatePolicyBundle,
+  extractPolicyValues,
+  mergeWithDefaults,
+  generatePolicyMarkdown,
+  POLICY_DEFINITIONS,
+  type CapturedPolicy,
+  type PolicyBundle,
 } from "../../../scripts/migration/lib/policy-capture";
-import {
-  CapturedMembershipLevel,
-  MembershipLevelMappingFile,
-} from "../../../scripts/migration/lib/policy-capture-types";
+import type { PolicyKey } from "../../../src/lib/policy/types";
 
-// ============================================================================
-// Test Data
-// ============================================================================
+// =============================================================================
+// Test Fixtures
+// =============================================================================
 
-const sampleCapturedLevels: CapturedMembershipLevel[] = [
-  {
-    waId: 100,
-    name: "Active Member",
-    fee: 150,
-    description: "Full membership",
-    renewalEnabled: true,
-    renewalPeriod: "OneYear",
-    newMembersEnabled: true,
-  },
-  {
-    waId: 101,
-    name: "Honorary Member",
-    fee: 0,
-    description: "Lifetime honorary",
-    renewalEnabled: false,
-    renewalPeriod: null,
-    newMembersEnabled: false,
-  },
-  {
-    waId: 102,
-    name: "Legacy Inactive",
-    fee: 0,
-    description: null,
-    renewalEnabled: false,
-    renewalPeriod: null,
-    newMembersEnabled: false,
-  },
-];
+function createValidBundle(): PolicyBundle {
+  return {
+    version: "1.0",
+    generatedAt: "2025-12-24T12:00:00.000Z",
+    organizationName: "Test Organization",
+    policies: [
+      {
+        key: "scheduling.timezone",
+        value: "America/Los_Angeles",
+        source: "manual",
+        description: "Organization timezone",
+        required: true,
+      },
+      {
+        key: "display.organizationName",
+        value: "Test Organization",
+        source: "manual",
+        description: "Organization display name",
+        required: true,
+      },
+    ],
+    validation: { valid: true, errors: [], warnings: [] },
+    metadata: { captureMode: "auto", templateSections: [] },
+  };
+}
 
-const validMappingFile: MembershipLevelMappingFile = {
-  version: "1.0",
-  createdAt: "2024-12-24T12:00:00Z",
-  source: "api",
-  levels: [
-    {
-      waId: 100,
-      waName: "Active Member",
-      clubosTier: "active",
-    },
-    {
-      waId: 101,
-      waName: "Honorary Member",
-      clubosTier: "active",
-      notes: "No fee, same permissions",
-    },
-    {
-      waId: 102,
-      waName: "Legacy Inactive",
-      ignore: true,
-      reason: "No current members in this level",
-    },
-  ],
-};
+function createPolicyWithValue<K extends PolicyKey>(
+  key: K,
+  value: unknown,
+  source: "manual" | "template" | "default" | "wa_api" = "manual"
+): CapturedPolicy<K> {
+  return {
+    key,
+    value: value as CapturedPolicy<K>["value"],
+    source,
+    description: POLICY_DEFINITIONS[key].description,
+    required: POLICY_DEFINITIONS[key].required,
+  };
+}
 
-// ============================================================================
+// =============================================================================
 // Template Generation Tests
-// ============================================================================
+// =============================================================================
 
-describe("generateMappingTemplate", () => {
-  it("generates template from captured levels", () => {
-    const template = generateMappingTemplate(sampleCapturedLevels);
+describe("Policy Template Generation", () => {
+  it("generates template with all policy keys", () => {
+    const template = generatePolicyTemplate();
+    const keys = template.policies.map((p) => p.key);
 
-    expect(template.version).toBe("1.0");
-    expect(template.source).toBe("template");
-    expect(template.levels).toHaveLength(3);
-
-    // Check first level
-    expect(template.levels[0].waId).toBe(100);
-    expect(template.levels[0].waName).toBe("Active Member");
-    expect(template.levels[0].clubosTier).toBeUndefined(); // Not pre-filled
-    expect(template.levels[0].notes).toContain("$150");
+    // Should include all defined policies
+    for (const key of Object.keys(POLICY_DEFINITIONS)) {
+      expect(keys).toContain(key);
+    }
   });
 
-  it("generates example template when no levels provided", () => {
-    const template = generateMappingTemplate([]);
+  it("generates template with null values and template source", () => {
+    const template = generatePolicyTemplate();
 
-    expect(template.levels).toHaveLength(2);
-    expect(template.levels[0].waName).toBe("Example Active Member");
-    expect(template.levels[0].clubosTier).toBe("active");
+    for (const policy of template.policies) {
+      expect(policy.value).toBeNull();
+      expect(policy.source).toBe("template");
+    }
+  });
+
+  it("marks required fields correctly", () => {
+    const template = generatePolicyTemplate();
+
+    const timezone = template.policies.find(
+      (p) => p.key === "scheduling.timezone"
+    );
+    const orgName = template.policies.find(
+      (p) => p.key === "display.organizationName"
+    );
+    const newbieDays = template.policies.find(
+      (p) => p.key === "membership.newbieDays"
+    );
+
+    expect(timezone?.required).toBe(true);
+    expect(orgName?.required).toBe(true);
+    expect(newbieDays?.required).toBe(false);
+  });
+
+  it("uses provided organization name", () => {
+    const template = generatePolicyTemplate("My Club");
+    expect(template.organizationName).toBe("My Club");
+  });
+
+  it("template is invalid by default", () => {
+    const template = generatePolicyTemplate();
+    expect(template.validation.valid).toBe(false);
+    expect(template.validation.errors).toContain(
+      "Template requires manual completion"
+    );
+  });
+
+  it("identifies template sections needing attention", () => {
+    const template = generatePolicyTemplate();
+    expect(template.metadata.templateSections.length).toBeGreaterThan(0);
   });
 });
 
-// ============================================================================
-// Mapping File Parsing Tests
-// ============================================================================
+// =============================================================================
+// Determinism Tests
+// =============================================================================
 
-describe("parseMappingFile", () => {
-  it("parses valid JSON mapping file", () => {
-    const json = JSON.stringify(validMappingFile);
-    const result = parseMappingFile(json);
+describe("Policy Bundle Determinism", () => {
+  it("generates identical bundles for same input", () => {
+    const bundle1 = generatePolicyTemplate("Test Org");
+    const bundle2 = generatePolicyTemplate("Test Org");
 
-    expect("error" in result).toBe(false);
-    if (!("error" in result)) {
-      expect(result.version).toBe("1.0");
-      expect(result.levels).toHaveLength(3);
-    }
+    // Remove generatedAt for comparison (timestamps differ)
+    const normalize = (b: PolicyBundle) => ({
+      ...b,
+      generatedAt: "NORMALIZED",
+    });
+
+    expect(normalize(bundle1)).toEqual(normalize(bundle2));
   });
 
-  it("returns error for invalid JSON", () => {
-    const result = parseMappingFile("not valid json");
+  it("policies are sorted by category then key", () => {
+    const template = generatePolicyTemplate();
+    const keys = template.policies.map((p) => p.key);
 
-    expect("error" in result).toBe(true);
-    if ("error" in result) {
-      expect(result.error).toContain("Failed to parse");
-    }
+    // Verify sorting: display < governance < kpi < membership < scheduling < tiers
+    const displayIdx = keys.indexOf("display.organizationName");
+    const governanceIdx = keys.indexOf("governance.quorumPercentage");
+    const schedulingIdx = keys.indexOf("scheduling.timezone");
+
+    expect(displayIdx).toBeLessThan(governanceIdx);
+    expect(governanceIdx).toBeLessThan(schedulingIdx);
   });
 
-  it("returns error for missing version", () => {
-    const json = JSON.stringify({ levels: [] });
-    const result = parseMappingFile(json);
+  it("capture produces deterministic output", () => {
+    const bundle1 = capturePolicies({
+      waAccountInfo: { name: "Test Org", id: "123" },
+      useDefaults: true,
+    });
+    const bundle2 = capturePolicies({
+      waAccountInfo: { name: "Test Org", id: "123" },
+      useDefaults: true,
+    });
 
-    expect("error" in result).toBe(true);
-    if ("error" in result) {
-      expect(result.error).toContain("missing version");
-    }
-  });
+    const normalize = (b: PolicyBundle) => ({
+      ...b,
+      generatedAt: "NORMALIZED",
+    });
 
-  it("returns error for missing levels array", () => {
-    const json = JSON.stringify({ version: "1.0" });
-    const result = parseMappingFile(json);
-
-    expect("error" in result).toBe(true);
-    if ("error" in result) {
-      expect(result.error).toContain("levels array");
-    }
+    expect(normalize(bundle1)).toEqual(normalize(bundle2));
   });
 });
 
-// ============================================================================
+// =============================================================================
+// Policy Capture Tests
+// =============================================================================
+
+describe("Policy Capture", () => {
+  it("captures organization name from WA account info", () => {
+    const bundle = capturePolicies({
+      waAccountInfo: { name: "WA Org Name", id: "123" },
+    });
+
+    expect(bundle.organizationName).toBe("WA Org Name");
+  });
+
+  it("uses existing mapping values when provided", () => {
+    const bundle = capturePolicies({
+      existingMapping: {
+        "scheduling.timezone": "America/New_York",
+        "display.organizationName": "My Club",
+      },
+    });
+
+    const timezone = bundle.policies.find(
+      (p) => p.key === "scheduling.timezone"
+    );
+    expect(timezone?.value).toBe("America/New_York");
+    expect(timezone?.source).toBe("manual");
+  });
+
+  it("uses defaults when --use-defaults is true", () => {
+    const bundle = capturePolicies({
+      useDefaults: true,
+    });
+
+    const newbieDays = bundle.policies.find(
+      (p) => p.key === "membership.newbieDays"
+    );
+    expect(newbieDays?.value).toBe(90);
+    expect(newbieDays?.source).toBe("default");
+  });
+
+  it("warns about missing required fields", () => {
+    const bundle = capturePolicies({});
+
+    expect(bundle.validation.warnings.some((w) => w.includes("timezone"))).toBe(
+      true
+    );
+  });
+
+  it("sets captureMode in metadata", () => {
+    const bundle = capturePolicies({});
+    expect(bundle.metadata.captureMode).toBe("auto");
+  });
+
+  it("includes waAccountId in metadata when provided", () => {
+    const bundle = capturePolicies({
+      waAccountInfo: { name: "Test", id: "12345" },
+    });
+    expect(bundle.metadata.waAccountId).toBe("12345");
+  });
+});
+
+// =============================================================================
 // Validation Tests
-// ============================================================================
+// =============================================================================
 
-describe("validateMappingFile", () => {
-  it("validates correctly mapped file", () => {
-    const result = validateMappingFile(validMappingFile);
+describe("Policy Validation", () => {
+  describe("required field validation", () => {
+    it("fails when required fields are missing", () => {
+      const policies: CapturedPolicy[] = [
+        createPolicyWithValue("scheduling.timezone", null, "template"),
+        createPolicyWithValue("display.organizationName", null, "template"),
+      ];
 
-    expect(result.valid).toBe(true);
-    expect(result.errors).toHaveLength(0);
-    expect(result.summary.mappedLevels).toBe(2);
-    expect(result.summary.ignoredLevels).toBe(1);
-    expect(result.summary.unmappedLevels).toBe(0);
+      const result = validatePolicies(policies);
+
+      expect(result.valid).toBe(false);
+      expect(result.missingRequired).toContain("scheduling.timezone");
+      expect(result.missingRequired).toContain("display.organizationName");
+    });
+
+    it("passes when all required fields are present", () => {
+      const policies: CapturedPolicy[] = [
+        createPolicyWithValue("scheduling.timezone", "America/Los_Angeles"),
+        createPolicyWithValue("display.organizationName", "Test Org"),
+      ];
+
+      const result = validatePolicies(policies);
+
+      expect(result.missingRequired).toHaveLength(0);
+    });
   });
 
-  it("rejects unmapped levels without clubosTier or ignore", () => {
-    const invalidMapping: MembershipLevelMappingFile = {
-      version: "1.0",
-      createdAt: "2024-12-24T12:00:00Z",
-      source: "template",
-      levels: [
-        {
-          waId: 100,
-          waName: "Unmapped Level",
-          // No clubosTier or ignore
-        },
-      ],
-    };
+  describe("timezone validation", () => {
+    it("accepts valid IANA timezone", () => {
+      const policies = [
+        createPolicyWithValue("scheduling.timezone", "America/Los_Angeles"),
+      ];
+      const result = validatePolicies(policies);
+      expect(result.invalidValues).toHaveLength(0);
+    });
 
-    const result = validateMappingFile(invalidMapping);
-
-    expect(result.valid).toBe(false);
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0].message).toContain("must have either clubosTier or ignore");
+    it("rejects invalid timezone format", () => {
+      const policies = [createPolicyWithValue("scheduling.timezone", "EST")];
+      const result = validatePolicies(policies);
+      expect(
+        result.invalidValues.some((v) => v.key === "scheduling.timezone")
+      ).toBe(true);
+    });
   });
 
-  it("rejects invalid tier codes", () => {
-    const invalidMapping: MembershipLevelMappingFile = {
-      version: "1.0",
-      createdAt: "2024-12-24T12:00:00Z",
-      source: "template",
-      levels: [
-        {
-          waId: 100,
-          waName: "Bad Tier",
-          clubosTier: "invalid_tier" as never,
-        },
-      ],
-    };
+  describe("day of week validation", () => {
+    it("accepts valid day values (0-6)", () => {
+      const policies = [
+        createPolicyWithValue("scheduling.registrationOpenDay", 2),
+        createPolicyWithValue("scheduling.announcementDay", 0),
+      ];
+      const result = validatePolicies(policies);
+      expect(result.invalidValues).toHaveLength(0);
+    });
 
-    const result = validateMappingFile(invalidMapping);
-
-    expect(result.valid).toBe(false);
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0].message).toContain("Invalid clubosTier");
+    it("rejects invalid day values", () => {
+      const policies = [
+        createPolicyWithValue("scheduling.registrationOpenDay", 7),
+      ];
+      const result = validatePolicies(policies);
+      expect(
+        result.invalidValues.some(
+          (v) => v.key === "scheduling.registrationOpenDay"
+        )
+      ).toBe(true);
+    });
   });
 
-  it("rejects ignored levels without reason", () => {
-    const invalidMapping: MembershipLevelMappingFile = {
-      version: "1.0",
-      createdAt: "2024-12-24T12:00:00Z",
-      source: "template",
-      levels: [
-        {
-          waId: 100,
-          waName: "Ignored No Reason",
-          ignore: true,
-          // No reason
-        },
-      ],
-    };
+  describe("hour validation", () => {
+    it("accepts valid hour values (0-23)", () => {
+      const policies = [
+        createPolicyWithValue("scheduling.registrationOpenHour", 8),
+        createPolicyWithValue("scheduling.announcementHour", 23),
+      ];
+      const result = validatePolicies(policies);
+      expect(result.invalidValues).toHaveLength(0);
+    });
 
-    const result = validateMappingFile(invalidMapping);
-
-    expect(result.valid).toBe(false);
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0].message).toContain("must have a reason");
+    it("rejects invalid hour values", () => {
+      const policies = [
+        createPolicyWithValue("scheduling.registrationOpenHour", 24),
+      ];
+      const result = validatePolicies(policies);
+      expect(
+        result.invalidValues.some(
+          (v) => v.key === "scheduling.registrationOpenHour"
+        )
+      ).toBe(true);
+    });
   });
 
-  it("rejects duplicate waId entries", () => {
-    const invalidMapping: MembershipLevelMappingFile = {
-      version: "1.0",
-      createdAt: "2024-12-24T12:00:00Z",
-      source: "template",
-      levels: [
-        { waId: 100, waName: "First", clubosTier: "active" },
-        { waId: 100, waName: "Duplicate", clubosTier: "active" },
-      ],
-    };
+  describe("percentage validation", () => {
+    it("accepts valid percentages (0-100)", () => {
+      const policies = [
+        createPolicyWithValue("governance.quorumPercentage", 50),
+      ];
+      const result = validatePolicies(policies);
+      expect(result.invalidValues).toHaveLength(0);
+    });
 
-    const result = validateMappingFile(invalidMapping);
-
-    expect(result.valid).toBe(false);
-    expect(result.errors.some((e) => e.message.includes("Duplicate waId"))).toBe(true);
+    it("rejects invalid percentages", () => {
+      const policies = [
+        createPolicyWithValue("governance.quorumPercentage", 150),
+      ];
+      const result = validatePolicies(policies);
+      expect(
+        result.invalidValues.some((v) => v.key === "governance.quorumPercentage")
+      ).toBe(true);
+    });
   });
 
-  it("warns about captured levels not in mapping", () => {
-    const incompleteMapping: MembershipLevelMappingFile = {
-      version: "1.0",
-      createdAt: "2024-12-24T12:00:00Z",
-      source: "api",
-      levels: [
-        { waId: 100, waName: "Active Member", clubosTier: "active" },
-        // Missing 101 and 102
-      ],
-    };
+  describe("tier mapping validation", () => {
+    it("accepts valid tier mapping object", () => {
+      const policies = [
+        createPolicyWithValue("membership.tiers.waMapping", {
+          Newcomer: "NEWCOMER",
+          Alumni: "ALUMNI",
+        }),
+      ];
+      const result = validatePolicies(policies);
+      expect(result.invalidValues).toHaveLength(0);
+    });
 
-    const result = validateMappingFile(incompleteMapping, sampleCapturedLevels);
-
-    // Still valid (warnings don't block)
-    expect(result.valid).toBe(true);
-    expect(result.warnings).toHaveLength(2);
-    expect(result.warnings[0].message).toContain("not in mapping file");
-  });
-});
-
-// ============================================================================
-// Report Generation Tests
-// ============================================================================
-
-describe("generatePolicyCaptureReport", () => {
-  it("generates report from captured levels and mapping", () => {
-    const validation = validateMappingFile(validMappingFile, sampleCapturedLevels);
-    const report = generatePolicyCaptureReport(
-      "12345",
-      sampleCapturedLevels,
-      validMappingFile,
-      validation
-    );
-
-    expect(report.sourceAccountId).toBe("12345");
-    expect(report.membershipLevels).toHaveLength(3);
-    expect(report.validationStatus).toBe("passed");
-    expect(report.summary.totalWaLevels).toBe(3);
-    expect(report.summary.mappedToClubos).toBe(2);
-    expect(report.summary.ignoredWithReason).toBe(1);
+    it("rejects non-object tier mapping", () => {
+      const policies = [
+        createPolicyWithValue("membership.tiers.waMapping", "not an object"),
+      ];
+      const result = validatePolicies(policies);
+      expect(
+        result.invalidValues.some((v) => v.key === "membership.tiers.waMapping")
+      ).toBe(true);
+    });
   });
 
-  it("marks unmapped levels correctly", () => {
-    const partialMapping: MembershipLevelMappingFile = {
-      version: "1.0",
-      createdAt: "2024-12-24T12:00:00Z",
-      source: "api",
-      levels: [
-        { waId: 100, waName: "Active Member", clubosTier: "active" },
-      ],
-    };
-
-    const validation = validateMappingFile(partialMapping);
-    const report = generatePolicyCaptureReport(
-      "12345",
-      sampleCapturedLevels,
-      partialMapping,
-      validation
-    );
-
-    const unmapped = report.membershipLevels.filter((l) => l.status === "unmapped");
-    expect(unmapped).toHaveLength(2);
+  describe("bundle validation", () => {
+    it("validates complete bundle", () => {
+      const bundle = createValidBundle();
+      const result = validatePolicyBundle(bundle);
+      expect(result.valid).toBe(true);
+    });
   });
 });
 
-describe("renderReportAsMarkdown", () => {
-  it("renders report as valid markdown", () => {
-    const validation = validateMappingFile(validMappingFile, sampleCapturedLevels);
-    const report = generatePolicyCaptureReport(
-      "12345",
-      sampleCapturedLevels,
-      validMappingFile,
-      validation
-    );
+// =============================================================================
+// Value Extraction Tests
+// =============================================================================
 
-    const markdown = renderReportAsMarkdown(report);
+describe("Policy Value Extraction", () => {
+  it("extracts non-null values from bundle", () => {
+    const bundle = createValidBundle();
+    const values = extractPolicyValues(bundle);
 
-    expect(markdown).toContain("# Policy Capture Report");
-    expect(markdown).toContain("Wild Apricot Account 12345");
-    expect(markdown).toContain("| WA ID | WA Name | ClubOS Tier | Status |");
-    expect(markdown).toContain("Active Member");
-    expect(markdown).toContain("## Summary");
-    expect(markdown).toContain("Total WA levels: 3");
-    expect(markdown).toContain("All levels accounted for");
+    expect(values["scheduling.timezone"]).toBe("America/Los_Angeles");
+    expect(values["display.organizationName"]).toBe("Test Organization");
   });
 
-  it("includes validation errors in markdown when failed", () => {
-    const invalidMapping: MembershipLevelMappingFile = {
-      version: "1.0",
-      createdAt: "2024-12-24T12:00:00Z",
-      source: "template",
-      levels: [
-        { waId: 100, waName: "Unmapped", clubosTier: "bad" as never },
+  it("skips null values", () => {
+    const bundle: PolicyBundle = {
+      ...createValidBundle(),
+      policies: [
+        createPolicyWithValue("scheduling.timezone", "America/Los_Angeles"),
+        createPolicyWithValue("membership.newbieDays", null, "template"),
       ],
     };
 
-    const validation = validateMappingFile(invalidMapping);
-    const report = generatePolicyCaptureReport(
-      "12345",
-      sampleCapturedLevels,
-      invalidMapping,
-      validation
+    const values = extractPolicyValues(bundle);
+    expect("membership.newbieDays" in values).toBe(false);
+  });
+});
+
+// =============================================================================
+// Merge with Defaults Tests
+// =============================================================================
+
+describe("Merge with Defaults", () => {
+  it("merges partial values with defaults", () => {
+    const partial = {
+      "scheduling.timezone": "America/New_York" as const,
+      "display.organizationName": "My Club",
+    };
+
+    const merged = mergeWithDefaults(partial);
+
+    // Overridden values
+    expect(merged["scheduling.timezone"]).toBe("America/New_York");
+    expect(merged["display.organizationName"]).toBe("My Club");
+
+    // Default values
+    expect(merged["membership.newbieDays"]).toBe(90);
+    expect(merged["governance.quorumPercentage"]).toBe(50);
+  });
+
+  it("returns complete PolicyValueMap", () => {
+    const partial = {};
+    const merged = mergeWithDefaults(partial);
+
+    // Should have all keys from POLICY_DEFINITIONS
+    for (const key of Object.keys(POLICY_DEFINITIONS)) {
+      expect(key in merged).toBe(true);
+    }
+  });
+});
+
+// =============================================================================
+// Markdown Generation Tests
+// =============================================================================
+
+describe("Markdown Generation", () => {
+  it("generates markdown with organization name", () => {
+    const bundle = createValidBundle();
+    const md = generatePolicyMarkdown(bundle);
+
+    expect(md).toContain("Test Organization");
+  });
+
+  it("includes validation status", () => {
+    const bundle = createValidBundle();
+    const md = generatePolicyMarkdown(bundle);
+
+    expect(md).toContain("Validation Status");
+    expect(md).toContain("VALID");
+  });
+
+  it("shows errors for invalid bundle", () => {
+    const bundle: PolicyBundle = {
+      ...createValidBundle(),
+      validation: {
+        valid: false,
+        errors: ["Missing required policy: scheduling.timezone"],
+        warnings: [],
+      },
+    };
+
+    const md = generatePolicyMarkdown(bundle);
+
+    expect(md).toContain("INVALID");
+    expect(md).toContain("Missing required policy");
+  });
+
+  it("includes tier mapping note", () => {
+    const bundle = createValidBundle();
+    const md = generatePolicyMarkdown(bundle);
+
+    expect(md).toContain("WA Membership Level Mapping");
+    expect(md).toContain("API may not be available");
+  });
+
+  it("generates table for policies by category", () => {
+    const bundle = createValidBundle();
+    const md = generatePolicyMarkdown(bundle);
+
+    expect(md).toContain("Policies by Category");
+    expect(md).toContain("| Policy |");
+  });
+});
+
+// =============================================================================
+// Edge Cases
+// =============================================================================
+
+describe("Edge Cases", () => {
+  it("handles empty existing mapping", () => {
+    const bundle = capturePolicies({ existingMapping: {} });
+    expect(bundle.policies.length).toBeGreaterThan(0);
+  });
+
+  it("handles undefined WA account info", () => {
+    const bundle = capturePolicies({ waAccountInfo: undefined });
+    expect(bundle.organizationName).toBe("UNKNOWN");
+  });
+
+  it("prefers existing mapping over WA capture", () => {
+    const bundle = capturePolicies({
+      waAccountInfo: { name: "WA Name" },
+      existingMapping: { "display.organizationName": "Manual Name" },
+    });
+
+    const orgName = bundle.policies.find(
+      (p) => p.key === "display.organizationName"
     );
-
-    const markdown = renderReportAsMarkdown(report);
-
-    expect(markdown).toContain("**Validation failed:**");
-    expect(markdown).toContain("Invalid clubosTier");
+    expect(orgName?.value).toBe("Manual Name");
+    expect(orgName?.source).toBe("manual");
   });
 });

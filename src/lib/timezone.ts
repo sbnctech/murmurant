@@ -158,3 +158,38 @@ export function formatDateLocaleDefault(date: Date | string | number, locale: st
   const d = date instanceof Date ? date : new Date(date);
   return makeDateFormatter(locale, {}).format(d);
 }
+
+// Calendar-specific timezone helpers
+
+export function getClubYearMonth(date: Date, tz: string = CLUB_TIMEZONE): { year: number; month: number } {
+  const formatter = new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: 'numeric' });
+  const parts = formatter.formatToParts(date);
+  return {
+    year: parseInt(parts.find(p => p.type === 'year')?.value || '0'),
+    month: parseInt(parts.find(p => p.type === 'month')?.value || '0')
+  };
+}
+
+export function getClubDayOfMonth(date: Date, tz: string = CLUB_TIMEZONE): number {
+  const formatter = new Intl.DateTimeFormat('en-US', { timeZone: tz, day: 'numeric' });
+  return parseInt(formatter.format(date));
+}
+
+export function getClubDayOfWeek(date: Date, tz: string = CLUB_TIMEZONE): number {
+  const formatter = new Intl.DateTimeFormat('en-US', { timeZone: tz, weekday: 'short' });
+  const day = formatter.format(date);
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  return days.indexOf(day);
+}
+
+export function formatClubMonthName(date: Date, tz: string = CLUB_TIMEZONE): string {
+  return new Intl.DateTimeFormat('en-US', { timeZone: tz, month: 'long' }).format(date);
+}
+
+/**
+ * Create a UTC Date representing midnight on a specific date in club timezone.
+ * Useful for calendar grids where you need dates for specific year/month/day.
+ */
+export function createClubDate(year: number, month: number, day: number): Date {
+  return utcForTzMidnight({ year, month, day }, CLUB_TIMEZONE);
+}

@@ -1,0 +1,6 @@
+Email,Display name,Membership level,Status
+alice@example.org,Alice Johnson,Active Member,Active
+bob@example.org,Bob Smith,Active Member,Active
+carol@example.org,Carol Williams,Guest,Pending
+david@example.org,David Brown,Active Member,Active
+eve@example.org,Eve Davis,Board Member,Active

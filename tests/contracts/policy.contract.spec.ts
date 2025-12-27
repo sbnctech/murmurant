@@ -212,6 +212,10 @@ describe("Policy Contract: Default Values", () => {
       "display.organizationName",
       "display.memberTermSingular",
       "display.memberTermPlural",
+      // Membership Tiers (Issue #276)
+      "membership.tiers.enabled",
+      "membership.tiers.defaultCode",
+      "membership.tiers.waMapping",
     ];
 
     it("has all expected policy keys", () => {

@@ -6,3 +6,4 @@
 
 export * from "./loader";
 export * from "./enforcement";
+export * from "./roleCapabilities";

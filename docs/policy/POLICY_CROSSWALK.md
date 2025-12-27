@@ -2,7 +2,7 @@
 
 Comprehensive mapping of embedded policies in the ClubOS codebase to formal Policy IDs.
 
-**Last Updated:** 2025-12-20
+**Last Updated:** 2025-12-25
 **Charter Reference:** docs/ARCHITECTURAL_CHARTER.md
 
 Copyright (c) Santa Barbara Newcomers Club
@@ -59,8 +59,8 @@ This document maps each policy from [INDEX.md](./INDEX.md) to its enforcement lo
 | Policy ID | Policy Name | Current Location | Description | Ambiguities/Conflicts |
 |-----------|-------------|------------------|-------------|----------------------|
 | MEMBER-001 | Member Lifecycle State Machine | src/lib/membership/lifecycle.ts:14-26 | Eight states: not_a_member, pending_new, active_newbie, active_member, offer_extended, active_extended, lapsed, suspended, unknown. | State machine is READ-ONLY inference. |
-| MEMBER-002 | Newbie Period (90 Days) | src/lib/membership/lifecycle.ts:97, 172-176 | New members start in active_newbie. After 90 days, transition to active_member. NEWBIE_PERIOD_DAYS=90 hardcoded. | Transition is derived, not triggered. |
-| MEMBER-003 | Two-Year Extended Offer | src/lib/membership/lifecycle.ts:98, 180-186 | At 2-year mark (730 days), member state becomes offer_extended. TWO_YEAR_DAYS=730 hardcoded. | Payment/decline system separate. |
+| MEMBER-002 | Newbie Period (90 Days) | src/lib/membership/lifecycle.ts:111 | New members start in active_newbie. After 90 days, transition to active_member. Uses getPolicyDefault("membership.newbieDays"). | **Now policy-driven.** |
+| MEMBER-003 | Two-Year Extended Offer | src/lib/membership/lifecycle.ts:112 | At 2-year mark (730 days), member state becomes offer_extended. Uses getPolicyDefault("membership.extendedDays"). | **Now policy-driven.** |
 | MEMBER-004 | Active Member State | src/lib/membership/lifecycle.ts:104, 229-243 | Active member: past 90 days, before 2 years, or extended member who has not lapsed. | State derived from tier. |
 | MEMBER-005 | Suspension Policy | src/lib/membership/lifecycle.ts:108 | Admin can suspend any active member. No automatic suspension. Indefinite until admin lifts. | Manual action only. |
 | MEMBER-006 | Lapsed Member | src/lib/membership/lifecycle.ts:119 | Membership ends (lapsed). Historical record preserved. Member can rejoin by new application. | Terminal state for lifecycle. |
@@ -138,15 +138,102 @@ This document maps each policy from [INDEX.md](./INDEX.md) to its enforcement lo
 
 ## Configuration & Hardcoded Values
 
+### Scheduling/Timezone Constants
+
+| Constant | Value | Location | Policy Key | Status |
+|----------|-------|----------|------------|--------|
+| `SBNC_TIMEZONE` | "America/Los_Angeles" | src/lib/events/scheduling.ts:27 | `scheduling.timezone` | Not wired (see Future Work) |
+| `CLUB_TIMEZONE` | "America/Los_Angeles" | src/lib/timezone.ts:1 | `scheduling.timezone` | Not wired (see Future Work) |
+| `DEFAULT_REGISTRATION_OPEN_HOUR` | 8 | src/lib/events/scheduling.ts:30 | `scheduling.registrationOpenHour` | Not wired (see Future Work) |
+| `ARCHIVE_DAYS_AFTER_END` | 30 | src/lib/events/scheduling.ts:33 | `scheduling.eventArchiveDays` | Not wired (see Future Work) |
+
+### Membership Constants
+
+| Constant | Value | Location | Policy Key | Status |
+|----------|-------|----------|------------|--------|
+| `NEWBIE_PERIOD_DAYS` | 90 | src/lib/membership/lifecycle.ts:111 | `membership.newbieDays` | **Wired via getPolicyDefault()** |
+| `TWO_YEAR_DAYS` | 730 | src/lib/membership/lifecycle.ts:112 | `membership.extendedDays` | **Wired via getPolicyDefault()** |
+
+### Security Constants (Not Configurable)
+
 | Constant | Value | Location | Should Be Configurable? |
 |----------|-------|----------|-------------------------|
-| NEWBIE_PERIOD_DAYS | 90 | src/lib/membership/lifecycle.ts:97 | Yes - consider env var |
-| TWO_YEAR_DAYS | 730 | src/lib/membership/lifecycle.ts:98 | Yes - consider env var |
-| SBNC_TIMEZONE | "America/Los_Angeles" | src/lib/events/scheduling.ts:27 | Low priority (SBNC-specific) |
-| DEFAULT_REGISTRATION_OPEN_HOUR | 8 | src/lib/events/scheduling.ts:30 | Yes - consider env var |
-| ARCHIVE_DAYS_AFTER_END | 30 | src/lib/events/scheduling.ts:33 | Yes - consider env var |
-| BLOCKED_WHILE_IMPERSONATING | 5 capabilities | src/lib/auth.ts:639-645 | No - core security feature |
-| ROLE_CAPABILITIES | 38+ entries | src/lib/auth.ts:130-296 | Consider database-driven roles |
+| `BLOCKED_WHILE_IMPERSONATING` | 5 capabilities | src/lib/auth.ts:639-645 | No - core security feature |
+| `ROLE_CAPABILITIES` | 38+ entries | src/lib/auth.ts:130-296 | Consider database-driven roles |
+
+---
+
+## Future Work: Policy Layer Wiring
+
+### Gap Analysis
+
+The policy layer (`src/lib/policy/getPolicy.ts`) already defines policy keys for scheduling:
+
+- `scheduling.timezone` (default: "America/Los_Angeles")
+- `scheduling.registrationOpenHour` (default: 8)
+- `scheduling.eventArchiveDays` (default: 30)
+
+However, the runtime code still uses hardcoded constants instead of `getPolicy()` because:
+
+1. **getPolicy() requires orgId**: The policy API signature is `getPolicy(key, { orgId })`. This ensures future multi-tenant support.
+
+2. **Scheduling functions lack orgId context**: Functions like `getNextSunday()`, `getFollowingTuesday()`, and `getEventOperationalStatus()` don't receive `orgId` as a parameter.
+
+3. **Significant refactoring required**: Wiring these constants to `getPolicy()` would require:
+   - Adding `orgId` parameter to all scheduling functions
+   - Updating all call sites (API routes, tests, components)
+   - Changing function signatures in test fixtures
+
+### Risk Assessment
+
+| Change | Risk Level | Reason |
+|--------|------------|--------|
+| Wire `SBNC_TIMEZONE` | High | Used in 10+ locations for date formatting |
+| Wire `CLUB_TIMEZONE` | High | Foundation of ALL timezone helpers |
+| Wire `DEFAULT_REGISTRATION_OPEN_HOUR` | Medium | Only used in `getFollowingTuesday()` |
+| Wire `ARCHIVE_DAYS_AFTER_END` | Medium | Only used in `getEventOperationalStatus()` |
+
+### Recommended Approach (Future Issue)
+
+1. **Create tracking issue**: Document this gap formally in GitHub
+2. **Thread orgId through scheduling layer**: Start from API route entry points and propagate `orgId` through the call stack
+3. **Replace constants incrementally**: Begin with lower-risk constants (`ARCHIVE_DAYS_AFTER_END`) to build confidence
+4. **Parallel exports**: During transition, keep existing constants as deprecated aliases that call `getPolicyDefault()`
+5. **Test coverage**: Add contract tests verifying policy-driven behavior
+
+### Example Migration Pattern
+
+```typescript
+// Before (current):
+export const SBNC_TIMEZONE = "America/Los_Angeles";
+
+export function getNextSunday(fromDate: Date = new Date()): Date {
+  // Uses SBNC_TIMEZONE directly
+}
+
+// After (future):
+// No exported constant - use getPolicy()
+
+export function getNextSunday(
+  fromDate: Date = new Date(),
+  options: { orgId: string }
+): Date {
+  const tz = getPolicy("scheduling.timezone", { orgId: options.orgId });
+  // Uses policy-driven timezone
+}
+```
+
+### What Was Already Done
+
+The membership lifecycle constants were successfully migrated:
+
+```typescript
+// src/lib/membership/lifecycle.ts:111-112
+const NEWBIE_PERIOD_DAYS = getPolicyDefault("membership.newbieDays");
+const TWO_YEAR_DAYS = getPolicyDefault("membership.extendedDays");
+```
+
+This pattern works because lifecycle functions receive member context and can derive `orgId` from the member's organization. The scheduling layer needs similar context threading.
 
 ---
 
@@ -160,6 +247,7 @@ This document maps each policy from [INDEX.md](./INDEX.md) to its enforcement lo
 6. **Campaign Rate Limiting**: Add rate limiting to prevent accidental mass sends
 7. **Audit Resilience**: Ensure audit failures alert admins
 8. **Grace Period Duration**: Hardcode and document extended membership grace period
+9. **Scheduling Policy Wiring**: Complete the orgId threading work to connect scheduling constants to the policy layer (see Future Work section)
 
 ---
 
@@ -168,3 +256,5 @@ This document maps each policy from [INDEX.md](./INDEX.md) to its enforcement lo
 - [INDEX.md](./INDEX.md) - Policy taxonomy and master index
 - [ARCHITECTURAL_CHARTER.md](../ARCHITECTURAL_CHARTER.md) - Non-negotiable principles
 - [AUTH_AND_RBAC.md](../rbac/AUTH_AND_RBAC.md) - Role-based access control guide
+- [getPolicy.ts](../../src/lib/policy/getPolicy.ts) - Policy access layer implementation
+- [Policy Types](../../src/lib/policy/types.ts) - Policy key definitions

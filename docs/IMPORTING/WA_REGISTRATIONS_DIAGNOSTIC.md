@@ -26,7 +26,7 @@ Each registration references both:
 - A WA **Contact ID** (must map to a ClubOS Member)
 - A WA **Event ID** (must map to a ClubOS Event)
 
-If either mapping is missing, the registration is **skipped silently**.
+If either mapping is missing, the registration is **skipped and counted** in the diagnostics summary. The first 10 skips are logged individually; all skips are reflected in the final counters.
 
 ## Diagnostic Instrumentation
 
@@ -255,7 +255,7 @@ WA_ASYNC_MAX_ATTEMPTS=100 npx tsx scripts/importing/wa_full_sync.ts
 - [ ] `WA_API_KEY` and `WA_ACCOUNT_ID` are set
 - [ ] Database migrations are applied (`npx prisma migrate deploy`)
 - [ ] MembershipStatus records are seeded
-- [ ] Preflight checks pass (script runs them automatically)
+- [ ] Preflight checks pass (script includes these checks)
 - [ ] For production: `ALLOW_PROD_IMPORT=1` is set
 
 ## Related Documentation

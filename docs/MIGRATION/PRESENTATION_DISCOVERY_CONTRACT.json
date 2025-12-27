@@ -1,0 +1,292 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://clubos.dev/schemas/presentation-discovery-report.json",
+  "title": "Presentation Discovery Report",
+  "description": "Schema for the output of the Presentation Discovery stage. This report inventories a Wild Apricot site's public presentation layer.",
+  "type": "object",
+  "required": ["metadata", "pages", "navigation", "widgets", "theme"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Crawl metadata and summary statistics",
+      "required": ["siteUrl", "crawlDate", "crawlDuration", "pagesDiscovered", "scope"],
+      "properties": {
+        "siteUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "The base URL of the Wild Apricot site"
+        },
+        "crawlDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when crawl started"
+        },
+        "crawlDuration": {
+          "type": "string",
+          "pattern": "^PT[0-9]+[HMS]([0-9]+[MS])?([0-9]+S)?$",
+          "description": "ISO 8601 duration of the crawl"
+        },
+        "pagesDiscovered": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of pages successfully crawled"
+        },
+        "scope": {
+          "type": "string",
+          "enum": ["public-only", "member-extended", "admin-extended"],
+          "description": "The crawl scope used"
+        },
+        "depthLimit": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 3,
+          "description": "Maximum link depth from home page"
+        },
+        "rateLimit": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 10,
+          "default": 1,
+          "description": "Requests per second limit"
+        },
+        "errors": {
+          "type": "array",
+          "description": "Non-fatal errors encountered during crawl",
+          "items": {
+            "type": "object",
+            "required": ["url", "errorType", "message"],
+            "properties": {
+              "url": { "type": "string" },
+              "errorType": { "type": "string" },
+              "message": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "pages": {
+      "type": "array",
+      "description": "Inventory of discovered pages",
+      "items": {
+        "type": "object",
+        "required": ["url", "title", "depth", "discoveredAt"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Full URL of the page"
+          },
+          "path": {
+            "type": "string",
+            "description": "URL path relative to site root"
+          },
+          "title": {
+            "type": "string",
+            "description": "Page title from HTML title tag"
+          },
+          "depth": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Link depth from home page (home = 0)"
+          },
+          "discoveredAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this page was crawled"
+          },
+          "inNavigation": {
+            "type": "boolean",
+            "description": "Whether this page appears in site navigation"
+          },
+          "templateType": {
+            "type": "string",
+            "enum": ["home", "content", "event-list", "event-detail", "member-directory", "contact", "custom", "unknown"],
+            "description": "Detected WA page template type"
+          },
+          "widgets": {
+            "type": "array",
+            "description": "Widget/gadget IDs found on this page",
+            "items": { "type": "string" }
+          },
+          "externalResources": {
+            "type": "array",
+            "description": "External resources referenced by this page",
+            "items": {
+              "type": "object",
+              "required": ["type", "url"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["css", "js", "image", "font", "iframe"]
+                },
+                "url": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "navigation": {
+      "type": "object",
+      "description": "Site navigation structure",
+      "properties": {
+        "menuItems": {
+          "type": "array",
+          "description": "Top-level navigation menu items",
+          "items": {
+            "$ref": "#/$defs/navItem"
+          }
+        },
+        "footerLinks": {
+          "type": "array",
+          "description": "Footer navigation links",
+          "items": {
+            "type": "object",
+            "required": ["label", "url"],
+            "properties": {
+              "label": { "type": "string" },
+              "url": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "widgets": {
+      "type": "object",
+      "description": "Inventory of widgets and gadgets",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "classification"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for this widget instance"
+              },
+              "type": {
+                "type": "string",
+                "description": "Widget type (e.g., EventCalendar, MemberDirectory, CustomGadget)"
+              },
+              "classification": {
+                "type": "string",
+                "enum": ["auto-migrate", "manual-rebuild", "unsupported"],
+                "description": "Migration classification per WILD_APRICOT_GADGET_TAGGING.md"
+              },
+              "pagesUsedOn": {
+                "type": "array",
+                "description": "URLs of pages where this widget appears",
+                "items": { "type": "string" }
+              },
+              "configuration": {
+                "type": "object",
+                "description": "Detected widget configuration (if extractable)"
+              },
+              "notes": {
+                "type": "string",
+                "description": "Additional notes for manual review"
+              }
+            }
+          }
+        },
+        "summary": {
+          "type": "object",
+          "description": "Widget counts by classification",
+          "properties": {
+            "autoMigrate": { "type": "integer", "minimum": 0 },
+            "manualRebuild": { "type": "integer", "minimum": 0 },
+            "unsupported": { "type": "integer", "minimum": 0 },
+            "total": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "description": "Theme and styling information",
+      "properties": {
+        "themeName": {
+          "type": "string",
+          "description": "Detected WA theme name (if identifiable)"
+        },
+        "stylesheets": {
+          "type": "array",
+          "description": "CSS stylesheet URLs",
+          "items": { "type": "string" }
+        },
+        "customCss": {
+          "type": "boolean",
+          "description": "Whether custom CSS was detected"
+        },
+        "fonts": {
+          "type": "array",
+          "description": "Font families detected",
+          "items": { "type": "string" }
+        },
+        "colorPalette": {
+          "type": "object",
+          "description": "Primary colors extracted from CSS",
+          "properties": {
+            "primary": { "type": "string" },
+            "secondary": { "type": "string" },
+            "accent": { "type": "string" },
+            "background": { "type": "string" },
+            "text": { "type": "string" }
+          }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "description": "Recommendations for the Suggestion Plan stage",
+      "items": {
+        "type": "object",
+        "required": ["type", "message"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["info", "warning", "action-required"],
+            "description": "Recommendation severity"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["pages", "widgets", "theme", "structure", "compatibility"],
+            "description": "What the recommendation relates to"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable recommendation"
+          },
+          "affectedItems": {
+            "type": "array",
+            "description": "URLs or widget IDs this applies to",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "navItem": {
+      "type": "object",
+      "description": "Navigation menu item (recursive for dropdowns)",
+      "required": ["label"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Menu item label"
+        },
+        "url": {
+          "type": "string",
+          "description": "Target URL (may be null for parent items)"
+        },
+        "children": {
+          "type": "array",
+          "description": "Child menu items (for dropdowns)",
+          "items": { "$ref": "#/$defs/navItem" }
+        }
+      }
+    }
+  }
+}

@@ -13,6 +13,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { ContentStripe } from "@/components/sections";
 import { formatClubDate, formatClubTime } from "@/lib/timezone";
+import EventCalendar from "@/components/events/EventCalendar";
 
 interface EventSummary {
   id: string;
@@ -43,7 +44,7 @@ interface EventsResponse {
   categories: string[];
 }
 
-type ViewMode = "list" | "grid";
+type ViewMode = "list" | "grid" | "calendar";
 type TimeFilter = "upcoming" | "past";
 
 export default function EventsDiscovery() {
@@ -288,11 +289,36 @@ export default function EventsDiscovery() {
               <rect x="14" y="14" width="7" height="7" />
             </svg>
           </button>
+          <button
+            onClick={() => setViewMode("calendar")}
+            data-test-id="events-view-calendar"
+            title="Calendar view"
+            style={{
+              padding: "var(--token-space-sm)",
+              border: "none",
+              borderLeft: "1px solid var(--token-color-border)",
+              backgroundColor: viewMode === "calendar" ? "var(--token-color-primary)" : "var(--token-color-surface)",
+              color: viewMode === "calendar" ? "white" : "var(--token-color-text)",
+              cursor: "pointer",
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          </button>
         </div>
       </div>
 
-      {/* Loading State - Skeleton Cards */}
-      {loading && (
+      {/* Calendar View */}
+      {viewMode === "calendar" && (
+        <EventCalendar category={category} search={debouncedSearch} />
+      )}
+
+      {/* Loading State - Skeleton Cards (list/grid only) */}
+      {viewMode !== "calendar" && loading && (
         <div
           data-test-id="events-loading"
           style={{
@@ -376,8 +402,8 @@ export default function EventsDiscovery() {
         </div>
       )}
 
-      {/* Error State */}
-      {error && (
+      {/* Error State (list/grid only) */}
+      {viewMode !== "calendar" && error && (
         <div
           data-test-id="events-error"
           style={{
@@ -390,8 +416,8 @@ export default function EventsDiscovery() {
         </div>
       )}
 
-      {/* Empty State */}
-      {!loading && !error && events.length === 0 && (
+      {/* Empty State (list/grid only) */}
+      {viewMode !== "calendar" && !loading && !error && events.length === 0 && (
         <div
           data-test-id="events-empty"
           style={{
@@ -413,8 +439,8 @@ export default function EventsDiscovery() {
         </div>
       )}
 
-      {/* Events List/Grid */}
-      {!loading && !error && events.length > 0 && (
+      {/* Events List/Grid (list/grid only) */}
+      {viewMode !== "calendar" && !loading && !error && events.length > 0 && (
         <div
           data-test-id="events-list"
           style={{
@@ -546,8 +572,8 @@ export default function EventsDiscovery() {
         </div>
       )}
 
-      {/* Pagination */}
-      {pagination && pagination.totalPages > 1 && (
+      {/* Pagination (list/grid only) */}
+      {viewMode !== "calendar" && pagination && pagination.totalPages > 1 && (
         <div
           data-test-id="events-pagination"
           style={{

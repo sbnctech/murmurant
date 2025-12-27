@@ -1,0 +1,5 @@
+# Ignore CSV data files (contain PII)
+*.csv
+
+# Keep README
+!README.md

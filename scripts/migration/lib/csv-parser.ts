@@ -120,6 +120,11 @@ export function mapMemberRecord(
       r.joinedAt = parseDate(v as string) || new Date();
     } else if (tf === 'membershipStatusId') {
       r.membershipStatusCode = v as string;
+      // Capture raw WA membership level for tier mapping (Issue #276)
+      const spec = ss;
+      if (typeof spec === 'object' && 'source' in spec) {
+        r.waMembershipLevel = row[(spec as FieldTransform).source] || undefined;
+      }
     } else {
       (r as Record<string, unknown>)[tf] = v;
     }

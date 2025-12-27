@@ -222,10 +222,15 @@ describe("flags", () => {
 
     it("kill switches default to true (convention)", () => {
       const killSwitches = FLAG_REGISTRY.filter((f) => f.killSwitchEligible);
+      // These migration-related flags default to false (opt-in behavior)
+      const optInKillSwitches = new Set([
+        "migration_mode_enabled",
+        "membership_tiers_enabled",
+      ]);
       for (const ks of killSwitches) {
         // Kill switches should generally default to true (enabled)
-        // Exception: migration_mode_enabled defaults to false (opt-in behavior)
-        if (ks.key !== "migration_mode_enabled") {
+        // Exception: opt-in migration flags default to false
+        if (!optInKillSwitches.has(ks.key)) {
           expect(ks.defaultValue).toBe(true);
         }
       }
