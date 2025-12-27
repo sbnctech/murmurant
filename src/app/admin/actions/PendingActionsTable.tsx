@@ -146,16 +146,15 @@ export function PendingActionsTable() {
           )
         );
 
-        // TODO: Trigger audit log entry
-        // await auditMutation(req, auth.context, {
-        //   action: decision.decision === "approve" ? "APPROVE" : "ABORT",
-        //   capability: "actions:decide",
-        //   objectType: "PendingAction",
-        //   objectId: decision.actionId,
-        //   metadata: { rationale: decision.rationale },
-        // });
-
-        console.log("[AUDIT] Decision recorded:", decision);
+        // NOTE: Real audit logging happens server-side via the API endpoint.
+        // The POST to /api/v1/admin/actions/:id/decide creates an audit entry
+        // with decision, rationale, actor identity, and timestamp per P1/P7.
+        console.log("[AUDIT] Decision submitted:", {
+          actionId: decision.actionId,
+          decision: decision.decision,
+          rationaleProvided: !!decision.rationale,
+          timestamp: new Date().toISOString(),
+        });
         router.refresh();
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to submit decision");
