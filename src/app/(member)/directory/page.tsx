@@ -37,11 +37,6 @@ export default async function MemberDirectoryPage() {
       firstName: true,
       lastName: true,
       joinedAt: true,
-      photos: {
-        where: { isPrimary: true },
-        select: { url: true },
-        take: 1,
-      },
       roleAssignments: {
         where: {
           endDate: null, // Current assignments only
@@ -75,7 +70,7 @@ export default async function MemberDirectoryPage() {
     firstName: m.firstName,
     lastName: m.lastName,
     joinedAt: m.joinedAt.toISOString(),
-    photoUrl: m.photos[0]?.url ?? null,
+    photoUrl: null, // Photo functionality not yet implemented
     committees: m.roleAssignments.map((ra) => ({
       id: ra.committee.id,
       name: ra.committee.name,

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { formatClubDateTime } from "@/lib/timezone";
 
 type EventSummary = {
   id: string;
@@ -32,13 +33,7 @@ type EventsResponse = {
 
 function formatEventDate(isoString: string): string {
   const date = new Date(isoString);
-  return date.toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
+  return formatClubDateTime(date);
 }
 
 export default function PublicEventsPage() {
