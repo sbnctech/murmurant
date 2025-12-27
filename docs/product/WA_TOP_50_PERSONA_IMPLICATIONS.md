@@ -460,8 +460,8 @@ Note: Some issues have multiple failure types.
 
 ## Related Documents
 
-- [Wild Apricot Top 50 Issues](../competitive/WILD_APRICOT_TOP_50_ISSUES.md)
-- [ClubOS vs WA Matrix](../competitive/CLUBOS_VS_WA_50_ISSUE_MATRIX.md)
-- [WA Pain Points (Prospect-Facing)](../solutions/WA_PAIN_POINTS_AND_HOW_CLUBOS_ADDRESSES_THEM.md)
-- [Delivery Model Strategy](../DELIVERY_MODEL_STRATEGY.md)
-- [Pricing and Tiers](../DELIVERY_MODEL_PRICING_AND_TIERS.md)
+- Wild Apricot Top 50 Issues (TODO: create competitive/WILD_APRICOT_TOP_50_ISSUES.md)
+- ClubOS vs WA Matrix (TODO: create competitive/CLUBOS_VS_WA_50_ISSUE_MATRIX.md)
+- WA Pain Points Prospect-Facing (TODO: create solutions/WA_PAIN_POINTS_AND_HOW_CLUBOS_ADDRESSES_THEM.md)
+- Delivery Model Strategy (TODO: create DELIVERY_MODEL_STRATEGY.md)
+- Pricing and Tiers (TODO: create DELIVERY_MODEL_PRICING_AND_TIERS.md)

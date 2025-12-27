@@ -261,4 +261,3 @@ WA_ASYNC_MAX_ATTEMPTS=100 npx tsx scripts/importing/wa_full_sync.ts
 ## Related Documentation
 
 - [IMPORTER_RUNBOOK.md](./IMPORTER_RUNBOOK.md) - Full operational runbook
-- [src/lib/importing/wildapricot/README.md](../../src/lib/importing/wildapricot/README.md) - Code documentation (if exists)

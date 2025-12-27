@@ -459,4 +459,4 @@ When/if ClubOS supports multiple tenants:
 - [restore-drill.md](./restore-drill.md) - Backup/restore procedures
 - [BACKUP_EXECUTION_AND_RETENTION.md](../reliability/BACKUP_EXECUTION_AND_RETENTION.md) - Backup design
 - [RECOVERY_AND_RESTORATION.md](../reliability/RECOVERY_AND_RESTORATION.md) - Recovery guarantees
-- [DELIVERY_MODEL_STRATEGY.md](../DELIVERY_MODEL_STRATEGY.md) - Solutions-first rationale
+- DELIVERY_MODEL_STRATEGY.md (TODO: create DELIVERY_MODEL_STRATEGY.md) - Solutions-first rationale

@@ -300,6 +300,6 @@ test("can select a file", async ({ page }) => {
 
 ## Related Documentation
 
-- [File Authorization](../architecture/file-authorization.md)
-- [Audit Logging](../architecture/audit-logging.md)
+- File Authorization (TODO: create architecture/file-authorization.md)
+- Audit Logging (TODO: create architecture/audit-logging.md)
 - [RBAC Capabilities](../rbac/AUTH_AND_RBAC.md)

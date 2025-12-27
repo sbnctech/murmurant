@@ -33,7 +33,7 @@ Each runbook follows a standard format:
 ## Related Resources
 
 - [Health Check Scripts](../../../scripts/ops/health-checks/README.md)
-- [Deployment Guide](../../../docs/CI/DEPLOYMENT.md)
+- Deployment Guide (TODO: create docs/CI/DEPLOYMENT.md)
 - [Database Operations](../../../docs/MIGRATION/)
 
 ## Quick Health Check

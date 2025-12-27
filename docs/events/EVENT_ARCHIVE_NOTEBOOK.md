@@ -268,7 +268,7 @@ enum PostmortemStatus {
 ## Related Documents
 
 - [Architectural Charter](../ARCHITECTURAL_CHARTER.md) - Core principles
-- [Event Lifecycle](./EVENT_LIFECYCLE.md) - Event status workflow (if exists)
+- [Event Lifecycle](./EVENT_LIFECYCLE_DESIGN.md) - Event status workflow
 - [RBAC Documentation](../rbac/AUTH_AND_RBAC.md) - Role-based access control
 
 ---

@@ -204,9 +204,9 @@ These require adding `UNDO`, `REDO`, `REVISION_PRUNE` to the `AuditAction` enum 
 
 ## See Also
 
-- [A1: Block Ordering](./A1_BLOCK_ORDERING.md)
-- [A2: Block Editing](./A2_BLOCK_EDITING.md)
-- [A3: Block Schemas](./A3_BLOCK_SCHEMAS.md)
+- [A1: Block Ordering](./A1_BLOCK_ORDERING_UI_WIRING.md)
+- [A2: Block Editing](./A2_BLOCK_EDITING_UI.md)
+- [A3: Block Schemas](./A3_BLOCK_SCHEMAS_AND_EDITORS.md)
 - [A4: Page Lifecycle](./A4_PAGE_LIFECYCLE_BASICS.md)
 - [A5: Publishing Surface](./A5_PUBLISHING_SURFACE.md)
 - [Architectural Charter](../ARCHITECTURAL_CHARTER.md) - P7 Audit Trail

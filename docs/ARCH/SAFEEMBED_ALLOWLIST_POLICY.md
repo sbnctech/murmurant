@@ -470,7 +470,7 @@ See: docs/MIGRATION/WILD_APRICOT_CUSTOM_HTML_BLOCKS_GUIDE.md
 - [Page Builder Primitives](./CLUBOS_PAGE_BUILDER_PRIMITIVES.md) - SafeEmbed component spec
 - [Custom HTML Blocks Guide](../MIGRATION/WILD_APRICOT_CUSTOM_HTML_BLOCKS_GUIDE.md) - Operator guidance
 - [Gadget Tagging](../MIGRATION/WILD_APRICOT_GADGET_TAGGING.md) - Migration classification
-- [Architectural Charter](./ARCHITECTURAL_CHARTER.md) - P1 (audit), P2 (default deny), P9 (fail closed)
+- [Architectural Charter](../ARCHITECTURAL_CHARTER.md) - P1 (audit), P2 (default deny), P9 (fail closed)
 
 ---
 

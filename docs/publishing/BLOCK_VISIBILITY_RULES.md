@@ -322,9 +322,9 @@ Existing blocks without `visibility` field:
 
 ## Related Documents
 
-- [Page Audience and Visibility](./audience.md)
-- [Block Content System](./blocks.md)
-- [Page Editor Permissions](./permissions.md)
+- Page Audience and Visibility (TODO: create audience.md)
+- Block Content System (TODO: create blocks.md)
+- Page Editor Permissions (TODO: create permissions.md)
 
 ---
 

@@ -378,7 +378,7 @@ For very large migrations, consider:
 
 - [Customer Migration Cutover Rehearsal](../IMPORTING/CUSTOMER_MIGRATION_CUTOVER_REHEARSAL.md) — Customer-facing explanation
 - [Production Migration Runbook](../IMPORTING/PRODUCTION_MIGRATION_RUNBOOK.md) — Operational procedures
-- [Architectural Charter](./ARCHITECTURAL_CHARTER.md) — Governing principles
+- [Architectural Charter](../ARCHITECTURAL_CHARTER.md) — Governing principles
 
 ---
 

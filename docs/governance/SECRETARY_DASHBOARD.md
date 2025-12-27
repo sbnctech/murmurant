@@ -278,5 +278,5 @@ Coverage:
 ## Related Documentation
 
 - [Minutes Workflow](./MINUTES_WORKFLOW.md) - Full minutes lifecycle
-- [Capability System](../AUTH/CAPABILITIES.md) - Permission model
-- [Audit Logging](../OPS/AUDIT_LOGGING.md) - Audit trail details
+- Capability System (TODO: create AUTH/CAPABILITIES.md) - Permission model
+- Audit Logging (TODO: create OPS/AUDIT_LOGGING.md) - Audit trail details

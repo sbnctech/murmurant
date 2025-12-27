@@ -501,8 +501,8 @@ The widget is successful when:
 ## 12. Related Documents
 
 - [QuickBooks Integration Plan](./QUICKBOOKS_INTEGRATION_PLAN.md) - Data import approach
-- [Action Log Strategy](../operations/ACTION_LOG_STRATEGY.md) - Audit trail for financial actions
-- [SBNC Business Model](../ORG/SBNC_BUSINESS_MODEL.md) - $50K buffer philosophy
+- Action Log Strategy (TODO: create operations/ACTION_LOG_STRATEGY.md) - Audit trail for financial actions
+- SBNC Business Model (TODO: create ORG/SBNC_BUSINESS_MODEL.md) - $50K buffer philosophy
 
 ---
 

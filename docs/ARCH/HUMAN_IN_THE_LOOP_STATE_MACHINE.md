@@ -5,7 +5,7 @@
 **Related Documents:**
 - [Suggestion Review Workflow](./SUGGESTION_REVIEW_WORKFLOW.md)
 - [Preview Surface Contract](./PREVIEW_SURFACE_CONTRACT.md)
-- [Architectural Charter](./ARCHITECTURAL_CHARTER.md)
+- [Architectural Charter](../ARCHITECTURAL_CHARTER.md)
 
 ---
 
@@ -338,7 +338,7 @@ A conformant implementation must pass the following tests:
 |----------|--------------|
 | [Suggestion Review Workflow](./SUGGESTION_REVIEW_WORKFLOW.md) | Implements this state machine for suggestions |
 | [Preview Surface Contract](./PREVIEW_SURFACE_CONTRACT.md) | Defines PREVIEWING state behavior |
-| [Architectural Charter](./ARCHITECTURAL_CHARTER.md) | Provides governing principles (P3, P5, N5) |
+| [Architectural Charter](../ARCHITECTURAL_CHARTER.md) | Provides governing principles (P3, P5, N5) |
 | Intent Manifest (conceptual) | Records intent during APPROVED → EXECUTING |
 | Cutover Rehearsal | Specialized application for migration contexts |
 
