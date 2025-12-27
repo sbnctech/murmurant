@@ -4,6 +4,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { formatClubDate } from "@/lib/timezone";
 
 interface Document {
   id: string;
@@ -138,11 +139,7 @@ const categories = ["All", "Governance", "Forms", "Newsletters", "Minutes"] as c
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  return formatClubDate(date);
 }
 
 function getCategoryColor(category: Document["category"]): { bg: string; text: string } {
