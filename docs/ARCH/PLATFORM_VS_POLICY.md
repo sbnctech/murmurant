@@ -183,7 +183,7 @@ Environment Override (dev/staging/prod)
 Watch for these patterns that suggest policy is being hard-coded:
 
 ```typescript
-// Red flag: Magic numbers that are lifecycle thresholds
+// Red flag: Hard-coded numbers that are lifecycle thresholds
 if (daysSinceJoin < 90) { ... }
 
 // Red flag: Hard-coded day/time values

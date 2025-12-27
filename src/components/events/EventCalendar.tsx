@@ -19,9 +19,9 @@ import {
   getClubYearMonth,
   getClubDayOfMonth,
   getClubDayOfWeek,
-  createClubMidnight,
-  formatClubMonthYearLong,
-  formatClubWeekdayDate,
+  formatClubMonthName,
+  createClubDate,
+  formatClubDateLong,
 } from "@/lib/timezone";
 
 interface EventSummary {
@@ -70,11 +70,11 @@ const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
  * Get start and end dates for a month (for API query)
  */
 function getMonthDateRange(year: number, month: number): { from: string; to: string } {
-  const firstDay = createClubMidnight(year, month, 1);
+  const firstDay = createClubDate(year, month, 1);
   // Get last day of month
   const lastDay = new Date(year, month, 0); // Day 0 of next month = last day of this month
   const lastDayNum = lastDay.getDate();
-  const lastDayDate = createClubMidnight(year, month, lastDayNum);
+  const lastDayDate = createClubDate(year, month, lastDayNum);
   // Add 24 hours to include the full last day
   lastDayDate.setTime(lastDayDate.getTime() + 24 * 60 * 60 * 1000 - 1);
 
@@ -93,7 +93,7 @@ function buildCalendarGrid(year: number, month: number, events: EventSummary[]):
   const todayDay = getClubDayOfMonth(today);
 
   // First day of the month
-  const firstOfMonth = createClubMidnight(year, month, 1);
+  const firstOfMonth = createClubDate(year, month, 1);
   const firstDayOfWeek = getClubDayOfWeek(firstOfMonth);
 
   // Days in month
@@ -122,7 +122,7 @@ function buildCalendarGrid(year: number, month: number, events: EventSummary[]):
   // Add days from previous month to fill first week
   for (let i = firstDayOfWeek - 1; i >= 0; i--) {
     const day = daysInPrevMonth - i;
-    const date = createClubMidnight(prevMonthYear, prevMonth, day);
+    const date = createClubDate(prevMonthYear, prevMonth, day);
     const key = `${prevMonthYear}-${prevMonth}-${day}`;
     days.push({
       date,
@@ -135,7 +135,7 @@ function buildCalendarGrid(year: number, month: number, events: EventSummary[]):
 
   // Add days of current month
   for (let day = 1; day <= daysInMonth; day++) {
-    const date = createClubMidnight(year, month, day);
+    const date = createClubDate(year, month, day);
     const key = `${year}-${month}-${day}`;
     const isToday = todayClub.year === year && todayClub.month === month && todayDay === day;
     days.push({
@@ -153,7 +153,7 @@ function buildCalendarGrid(year: number, month: number, events: EventSummary[]):
   const remaining = 7 - (days.length % 7);
   if (remaining < 7) {
     for (let day = 1; day <= remaining; day++) {
-      const date = createClubMidnight(nextMonthYear, nextMonth, day);
+      const date = createClubDate(nextMonthYear, nextMonth, day);
       days.push({
         date,
         dayOfMonth: day,
@@ -180,8 +180,8 @@ export default function EventCalendar({ category, search }: EventCalendarProps) 
 
   // Month name for header
   const monthName = useMemo(() => {
-    const date = createClubMidnight(year, month, 15);
-    return formatClubMonthYearLong(date);
+    const date = createClubDate(year, month, 15);
+    return `${formatClubMonthName(date)} ${year}`;
   }, [year, month]);
 
   // Fetch events for the current month
@@ -502,7 +502,7 @@ export default function EventCalendar({ category, search }: EventCalendarProps) 
                   fontWeight: 600,
                 }}
               >
-                Events on {formatClubWeekdayDate(selectedDay.date)}
+                Events on {formatClubDateLong(selectedDay.date)}
               </h3>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "var(--token-space-sm)" }}>
@@ -586,7 +586,7 @@ export default function EventCalendar({ category, search }: EventCalendarProps) 
                 color: "var(--token-color-text-muted)",
               }}
             >
-              No events scheduled for {formatClubWeekdayDate(selectedDay.date)}
+              No events scheduled for {formatClubDateLong(selectedDay.date)}
             </div>
           )}
         </>

@@ -186,23 +186,10 @@ export function formatClubMonthName(date: Date, tz: string = CLUB_TIMEZONE): str
   return new Intl.DateTimeFormat('en-US', { timeZone: tz, month: 'long' }).format(date);
 }
 
-export function formatClubMonthYearLong(dateUtc: Date, locale = "en-US"): string {
-  return new Intl.DateTimeFormat(locale, {
-    timeZone: CLUB_TIMEZONE,
-    month: "long",
-    year: "numeric",
-  }).format(dateUtc);
-}
-
-export function formatClubWeekdayDate(dateUtc: Date, locale = "en-US"): string {
-  return new Intl.DateTimeFormat(locale, {
-    timeZone: CLUB_TIMEZONE,
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  }).format(dateUtc);
-}
-
-export function createClubMidnight(year: number, month: number, day: number): Date {
+/**
+ * Create a UTC Date representing midnight on a specific date in club timezone.
+ * Useful for calendar grids where you need dates for specific year/month/day.
+ */
+export function createClubDate(year: number, month: number, day: number): Date {
   return utcForTzMidnight({ year, month, day }, CLUB_TIMEZONE);
 }
