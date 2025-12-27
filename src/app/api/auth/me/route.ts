@@ -30,7 +30,7 @@ interface UserInfo {
   sessionExpiresAt: string;
 }
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Get current session
     const session = await getCurrentSession();

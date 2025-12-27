@@ -77,7 +77,7 @@ describe("Role Capabilities Policy Contract: Behavioral Compatibility", () => {
         const authCapabilities = getRoleCapabilities(role);
 
         // Compare capability sets
-        const policySet = new Set(policyResult.capabilities);
+        const _policySet = new Set(policyResult.capabilities);
         const authSet = new Set(authCapabilities);
 
         // Policy should return the base capabilities

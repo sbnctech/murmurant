@@ -9,7 +9,7 @@
  * Copyright (c) Santa Barbara Newcomers Club
  */
 
-import { EventPostmortem, PostmortemStatus } from "@prisma/client";
+import { EventPostmortem } from "@prisma/client";
 
 /**
  * Derived completion status for postmortems.

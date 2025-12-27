@@ -12,7 +12,6 @@
 
 import type {
   MigrationReport,
-  MigrationRecord,
   EntityReport,
 } from "./types";
 import type { IdMappingReport, IdMappingEntry } from "./id-mapping";

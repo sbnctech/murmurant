@@ -17,7 +17,7 @@
  * Copyright (c) Santa Barbara Newcomers Club
  */
 
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 
 // ============================================================================
 // Date Placeholder Detection

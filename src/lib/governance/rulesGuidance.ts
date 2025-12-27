@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export async function createRulesGuidance(_p: any): Promise<any> { throw new Error("Not implemented"); }
 export async function listRulesGuidance(_p: any): Promise<any> { throw new Error("Not implemented"); }
 export async function searchRulesGuidance(_q: string, _limit?: number): Promise<any> { throw new Error("Not implemented"); }

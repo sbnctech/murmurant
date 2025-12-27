@@ -6,9 +6,8 @@
  * Related: Issue #272 (A7: Migration CLI Entry Point)
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import * as path from "path";
-import * as fs from "fs";
 import { parseArgs, validateArgs, CLIArgs } from "../../../scripts/migration/migrate";
 
 // =============================================================================

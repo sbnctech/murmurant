@@ -119,7 +119,7 @@ export async function GET(req: NextRequest) {
 
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const _startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
     // Fetch data in parallel

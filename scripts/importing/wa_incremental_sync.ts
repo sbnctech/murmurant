@@ -74,7 +74,7 @@ async function main(): Promise<void> {
   console.log("[OK] All preflight checks passed");
   console.log("");
 
-  const startTime = Date.now();
+  const _startTime = Date.now();
 
   try {
     const result = await incrementalSync();

@@ -374,7 +374,7 @@ function InterpretationsSection({
   title,
   items,
   emptyText,
-  canPublish,
+  canPublish: _canPublish,
 }: {
   testId: string;
   title: string;

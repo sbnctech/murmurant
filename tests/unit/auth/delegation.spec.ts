@@ -9,14 +9,14 @@
  * These tests assume malicious but authenticated users.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   canGrantCapabilities,
   canAssignRoles,
   ROLES_WITH_ASSIGN_AUTHORITY,
   ROLES_WITHOUT_ASSIGN_AUTHORITY,
 } from "@/lib/auth/delegation";
-import { type GlobalRole, type Capability, hasCapability } from "@/lib/auth";
+import { type GlobalRole, hasCapability } from "@/lib/auth";
 
 // ============================================================================
 // SD-3: ESCALATION PREVENTION

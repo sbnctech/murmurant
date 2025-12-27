@@ -107,6 +107,7 @@ export default function ImpersonationBanner() {
     updateElapsed();
     const interval = setInterval(updateElapsed, 60000);
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- state.impersonating object is stable when isImpersonating is true
   }, [state.isImpersonating, state.impersonating?.startedAt]);
 
   const handleExit = useCallback(async () => {

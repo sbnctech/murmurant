@@ -42,17 +42,17 @@ const makeHeaders = (token: string) => ({ Authorization: `Bearer ${token}` });
 // ROLE TIERS FOR ESCALATION TESTING
 // ============================================================================
 
-const ADMIN_TIER = ["admin"];
+const _ADMIN_TIER = ["admin"];
 const BOARD_TIER = ["president", "pastPresident", "vpActivities", "secretary", "parliamentarian"];
 const COMMITTEE_TIER = ["eventChair", "webmaster"];
-const MEMBER_TIER = ["member"];
+const _MEMBER_TIER = ["member"];
 
 // ============================================================================
 // ADMIN-ONLY ENDPOINTS
 // These should ONLY be accessible by admin role
 // ============================================================================
 
-const ADMIN_ONLY_ENDPOINTS = [
+const _ADMIN_ONLY_ENDPOINTS = [
   // User management
   { path: "/api/admin/impersonate/start", method: "POST", data: { memberId: "test" } },
 
@@ -68,7 +68,7 @@ const ADMIN_ONLY_ENDPOINTS = [
 // These should NOT be accessible by finance-denied roles
 // ============================================================================
 
-const FINANCE_DENIED_ROLES = [
+const _FINANCE_DENIED_ROLES = [
   "webmaster",
   "eventChair",
   "secretary",

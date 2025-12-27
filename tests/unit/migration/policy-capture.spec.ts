@@ -6,7 +6,7 @@
  * Related: Issue #275 (Policy Capture), #202 (WA Migration)
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   generatePolicyTemplate,
   capturePolicies,

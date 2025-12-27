@@ -1,7 +1,7 @@
 // Copyright (c) Santa Barbara Newcomers Club
 // Unit tests for A7: Undo/Redo revisions module
 
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import {
   getActionSummary,
   RevisionAction,

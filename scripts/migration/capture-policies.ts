@@ -30,7 +30,6 @@
  */
 
 import * as fs from "fs";
-import * as path from "path";
 import {
   generatePolicyTemplate,
   capturePolicies,
@@ -38,7 +37,6 @@ import {
   loadPolicyBundle,
   writePolicyBundle,
   extractPolicyValues,
-  type PolicyBundle,
 } from "./lib/policy-capture";
 import type { PolicyValueMap } from "../../src/lib/policy/types";
 

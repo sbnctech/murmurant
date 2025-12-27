@@ -21,7 +21,7 @@ const MEMBER_PATH_PREFIXES = [
 /**
  * Prefixes that are always public context
  */
-const PUBLIC_PATH_PREFIXES = [
+const _PUBLIC_PATH_PREFIXES = [
   "/",
   "/about",
   "/join",

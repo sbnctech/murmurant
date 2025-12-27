@@ -8,7 +8,7 @@
 import { prisma } from "@/lib/prisma";
 import { AuditAction } from "@prisma/client";
 import { WildApricotClient, createWAClient } from "./client";
-import { loadWAConfig, isDryRun, getSystemActor } from "./config";
+import { loadWAConfig, isDryRun } from "./config";
 import {
   WAContact,
   WAEvent,
@@ -212,7 +212,7 @@ export async function runPreflightChecks(): Promise<PreflightResult> {
 // ID Mapping
 // ============================================================================
 
-async function getIdMapping(entityType: string, waId: number): Promise<string | null> {
+async function _getIdMapping(entityType: string, waId: number): Promise<string | null> {
   const mapping = await prisma.waIdMapping.findUnique({
     where: { entityType_waId: { entityType, waId } },
   });
@@ -1078,7 +1078,7 @@ function printWarnings(warnings: SyncWarning[]): void {
  *   /tmp/clubos/wa_full_sync_report.json
  */
 export async function fullSync(): Promise<SyncResult> {
-  const config = loadWAConfig();
+  const _config = loadWAConfig();
   const dryRun = isDryRun();
   const startedAt = new Date();
 

@@ -86,7 +86,7 @@ function hasVPAccess(role: GlobalRole): boolean {
 /**
  * Check if actor is the event chair.
  */
-async function isEventChair(memberId: string | null, eventId: string): Promise<boolean> {
+async function _isEventChair(memberId: string | null, eventId: string): Promise<boolean> {
   if (!memberId) return false;
 
   const event = await prisma.event.findUnique({

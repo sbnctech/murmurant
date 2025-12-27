@@ -453,7 +453,7 @@ export default function EventCalendar({ category, search }: EventCalendarProps) 
                         marginTop: "auto",
                       }}
                     >
-                      {day.events.slice(0, 3).map((event, i) => (
+                      {day.events.slice(0, 3).map((event, _i) => (
                         <div
                           key={event.id}
                           title={event.title}

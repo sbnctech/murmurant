@@ -142,7 +142,7 @@ export default function LifecycleExplainerPanel({ memberId }: Props) {
 
   if (!data) return null;
 
-  const { lifecycle, member } = data;
+  const { lifecycle, member: _member } = data;
   const stateColor = STATE_COLORS[lifecycle.currentState];
 
   return (

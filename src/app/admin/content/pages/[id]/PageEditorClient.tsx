@@ -35,7 +35,7 @@ type Props = {
 
 export default function PageEditorClient({ pageId, initialBlocks, lifecycle: initialLifecycle }: Props) {
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
-  const [lifecycle, setLifecycle] = useState<PageLifecycleState>(initialLifecycle);
+  const [lifecycle, _setLifecycle] = useState<PageLifecycleState>(initialLifecycle);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingBlockId, setEditingBlockId] = useState<string | null>(null);
@@ -98,6 +98,7 @@ export default function PageEditorClient({ pageId, initialBlocks, lifecycle: ini
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- handleUndo and handleRedo are stable callbacks defined below
   }, [revisionState, undoRedoLoading, saving]);
 
   // A7: Undo API call

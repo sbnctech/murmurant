@@ -4,10 +4,9 @@
  * Tests for registration sync logic, diagnostics, and skip reason tracking.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   WAEventRegistration,
-  WAContactRef,
   RegistrationDiagnostics,
 } from "@/lib/importing/wildapricot/types";
 import {

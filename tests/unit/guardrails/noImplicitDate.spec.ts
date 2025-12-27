@@ -32,7 +32,7 @@ const TIME_CRITICAL_FILES = [
 ];
 
 // Glob pattern for any future time modules
-const TIME_MODULES_GLOB = "src/lib/time/**/*.ts";
+const _TIME_MODULES_GLOB = "src/lib/time/**/*.ts";
 
 /**
  * Known exceptions - these are intentional uses that have been reviewed.

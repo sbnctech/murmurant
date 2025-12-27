@@ -90,7 +90,7 @@ function daysFromNow(days: number): Date {
   return date;
 }
 
-function hoursFromNow(hours: number): Date {
+function _hoursFromNow(hours: number): Date {
   const date = new Date();
   date.setHours(date.getHours() + hours);
   return date;
@@ -533,7 +533,7 @@ async function seedDemoEvents(
   console.log("\n--- Seeding Demo Events ---");
 
   // Get some demo members for registrations
-  const demoMemberEmails = Array.from(memberMap.keys());
+  const _demoMemberEmails = Array.from(memberMap.keys());
 
   for (const eventDef of DEMO_EVENTS) {
     const fullTitle = `${eventDef.titlePrefix} ${eventDef.title}`;

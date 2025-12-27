@@ -11,7 +11,6 @@ import {
   SBNC_TIER_DEFINITIONS,
   getTierDefinitions,
   isTierSeedingEnabled,
-  type TierDefinition,
 } from "../../../scripts/migration/seed-membership-tiers";
 import {
   isTierMappingEnabled,
