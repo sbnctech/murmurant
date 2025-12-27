@@ -200,3 +200,38 @@ Operators cannot configure club policies without code changes.
 ### Existing work
 - src/app/admin/policies/status/page.tsx (read-only)
 - src/lib/policies/ (definitions)
+
+---
+
+## Event Ticket Sales Tax for Non-Members
+
+**Priority:** Low (may not be needed)  
+**Added:** 2025-12-27
+
+### Problem
+When selling event tickets to non-members, we may need to charge sales tax. Requirements vary by geography.
+
+### Complexity
+- Tax rates vary by state/county/city
+- Nexus rules (where you're required to collect)
+- Exemptions for nonprofits vary
+- Reporting and remittance requirements
+
+### Recommendation
+**Do not build from scratch.** Integrate with a tax plugin/service:
+
+| Service | Notes |
+|---------|-------|
+| Stripe Tax | Built into Stripe, automatic calculation |
+| TaxJar | API-based, handles filing |
+| Avalara | Enterprise, comprehensive |
+
+### Decision needed
+1. Does SBNC actually need to collect sales tax on event tickets?
+2. If yes, which service to integrate?
+3. Who handles tax remittance?
+
+### Dependencies
+- Payment provider integration
+- Event pricing model
+- Nonprofit status verification
