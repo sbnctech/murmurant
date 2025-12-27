@@ -165,3 +165,21 @@ When you encounter a WA feature not listed:
 - [Presentation Discovery Stage](./PRESENTATION_DISCOVERY_STAGE.md) - automated site crawling
 - [Widgets vs Gadgets](./WILD_APRICOT_WIDGETS_VS_GADGETS.md) - terminology guide
 - [WA Custom HTML Blocks Guide](./WILD_APRICOT_CUSTOM_HTML_BLOCKS_GUIDE.md) - detailed HTML handling
+
+## External Resources
+
+### ClubCalendar (Parallel Deliverable)
+
+For calendar widget replacement, see the ClubCalendar inline engine documentation:
+
+- **Location**: `clubcalendar_sbnc/` (separate from ClubOS repo)
+- **Handoff Doc**: `CLUBOS_HANDOFF.md` - integration surface for ClubOS
+- **Config Contract**: `CONFIG_FETCH_CONTRACT.md` - locked config format
+- **Security**: `ClubCalendar_SECURITY_AND_WA_CONSTRAINTS.md` - WA embedding constraints
+
+ClubCalendar provides a self-contained calendar widget for WA sites with:
+
+- Inline JS only (no external server dependencies)
+- Config page + events page architecture
+- Auto-tagging by event name patterns
+- Filter bar with configurable categories
