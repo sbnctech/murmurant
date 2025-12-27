@@ -48,15 +48,15 @@ const KNOWN_EXCEPTIONS: Record<string, string[]> = {
   ],
   "src/lib/events/scheduling.ts": [
     // All of these are default parameters allowing callers to inject dates for testing
-    "115:new Date()", // getNextSunday default param
-    "175:new Date()", // getThisWeekSunday default param
-    "221:new Date()", // computeDefaultSchedule input.now fallback
-    "264:new Date()", // getEventVisibilityState default param
-    "300:new Date()", // getEventRegistrationState default param
-    "323:new Date()", // getEventOperationalStatus default param
-    "436:new Date()", // getEnewsWeekRange default param
-    "445:new Date()", // isAnnouncingThisWeek default param
-    "461:new Date()", // isRegistrationOpeningThisWeek default param
+    "207:new Date()", // getNextSunday default param
+    "243:new Date()", // getThisWeekSunday default param
+    "288:new Date()", // computeDefaultSchedule input.now fallback
+    "331:new Date()", // getEventVisibilityState default param
+    "367:new Date()", // getEventRegistrationState default param
+    "390:new Date()", // getEventOperationalStatus default param
+    "503:new Date()", // getEnewsWeekRange default param
+    "512:new Date()", // isAnnouncingThisWeek default param
+    "528:new Date()", // isRegistrationOpeningThisWeek default param
   ],
 };
 
