@@ -8,3 +8,6 @@ export * from "./blocks";
 export * from "./email";
 export * from "./blockOrdering";
 export * from "./revisions";
+export * from "./pageTemplates";
+export * from "./viewContext";
+export * from "./themeHooks";

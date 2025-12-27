@@ -10,7 +10,7 @@
  * const newbieDays = getPolicy("membership.newbieDays", { orgId });
  * ```
  *
- * See: docs/ARCH/PLATFORM_VS_POLICY.md
+ * See: docs/ARCH/POLICY_KEY_CATALOG.md
  * Related: Issue #263 (Policy Configuration Layer)
  */
 
@@ -31,6 +31,7 @@ export type {
   PolicyValueMap,
   GetPolicyOptions,
   MembershipPolicyKey,
+  MembershipTierPolicyKey,
   SchedulingPolicyKey,
   GovernancePolicyKey,
   KpiPolicyKey,

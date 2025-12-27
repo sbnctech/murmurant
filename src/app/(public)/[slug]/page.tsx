@@ -1,12 +1,19 @@
 // Copyright (c) Santa Barbara Newcomers Club
 // Public page rendering route - shows publishedContent only
+// Enforces VisibilityRule and RoleGate at render time (Charter P2)
 
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { generateCssVariables, mergeTokensWithDefaults, ThemeTokens } from "@/lib/publishing/theme";
+import {
+  generateCssVariables,
+  mergeTokensWithDefaults,
+  ThemeTokens,
+} from "@/lib/publishing/theme";
 import { PageContent } from "@/lib/publishing/blocks";
+import { VisibilityUserContext } from "@/lib/publishing/visibility";
 import { selectContent } from "@/lib/publishing/contentSelection";
 import BlockRenderer from "@/components/publishing/BlockRenderer";
+import { getCurrentSession } from "@/lib/auth/session";
 
 type RouteParams = {
   params: Promise<{ slug: string }>;
@@ -37,8 +44,56 @@ export async function generateMetadata({ params }: RouteParams) {
   };
 }
 
+/**
+ * Build user context for visibility evaluation from member ID
+ */
+async function buildVisibilityContext(
+  memberId: string | null
+): Promise<VisibilityUserContext | null> {
+  if (!memberId) {
+    return null;
+  }
+
+  const member = await prisma.member.findUnique({
+    where: { id: memberId },
+    include: {
+      membershipStatus: true,
+      roleAssignments: {
+        where: {
+          OR: [{ endDate: null }, { endDate: { gte: new Date() } }],
+        },
+        include: {
+          committeeRole: true,
+        },
+      },
+    },
+  });
+
+  if (!member) {
+    return null;
+  }
+
+  return {
+    isAuthenticated: true,
+    membershipStatusCode: member.membershipStatus.code,
+    roles: member.roleAssignments.map(
+      (ra: { committeeRole: { slug: string } }) => ra.committeeRole.slug
+    ),
+    committeeIds: [
+      ...new Set(
+        member.roleAssignments.map(
+          (ra: { committeeId: string }) => ra.committeeId
+        )
+      ),
+    ] as string[],
+  };
+}
+
 export default async function PublicPage({ params }: RouteParams) {
   const { slug } = await params;
+
+  // Get current session for visibility evaluation
+  const session = await getCurrentSession();
 
   // Fetch the page with theme
   const page = await prisma.page.findUnique({
@@ -59,7 +114,10 @@ export default async function PublicPage({ params }: RouteParams) {
   }
 
   // Page is members only - redirect to login
-  if (page.visibility === "MEMBERS_ONLY" || page.visibility === "ROLE_RESTRICTED") {
+  if (
+    page.visibility === "MEMBERS_ONLY" ||
+    page.visibility === "ROLE_RESTRICTED"
+  ) {
     // For now, just show not found for protected pages
     // In production, this would redirect to login
     notFound();
@@ -77,6 +135,12 @@ export default async function PublicPage({ params }: RouteParams) {
     notFound();
   }
 
+  // Build user context for visibility filtering
+  // This enables block/section-level visibility controls
+  const userContext = session
+    ? await buildVisibilityContext(session.userAccountId)
+    : null;
+
   // Get theme CSS
   let themeCss = "";
   if (page.theme) {
@@ -89,7 +153,11 @@ export default async function PublicPage({ params }: RouteParams) {
 
   return (
     <main data-test-id="public-page" data-page-slug={slug}>
-      <BlockRenderer content={selection.content} themeCss={themeCss} />
+      <BlockRenderer
+        content={selection.content}
+        themeCss={themeCss}
+        user={userContext}
+      />
     </main>
   );
 }

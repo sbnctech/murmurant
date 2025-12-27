@@ -1,11 +1,20 @@
 // Copyright (c) Santa Barbara Newcomers Club
 // Block renderer component for public pages
+// Supports Page → Sections → Blocks hierarchy with visibility filtering
 
 import { Block, PageContent } from "@/lib/publishing/blocks";
+import {
+  Section,
+  VisibilityUserContext,
+  normalizeToSections,
+  filterVisibleSections,
+} from "@/lib/publishing/visibility";
 
 type BlockRendererProps = {
   content: PageContent;
   themeCss?: string;
+  // Optional user context for visibility filtering
+  user?: VisibilityUserContext | null;
 };
 
 function HeroBlock({ block }: { block: Extract<Block, { type: "hero" }> }) {
@@ -457,13 +466,65 @@ function renderBlock(block: Block) {
   }
 }
 
-export default function BlockRenderer({ content, themeCss }: BlockRendererProps) {
-  const sortedBlocks = [...content.blocks].sort((a, b) => a.order - b.order);
+/**
+ * Render a section with its blocks
+ */
+function SectionRenderer({ section }: { section: Section }) {
+  const sortedBlocks = [...section.blocks].sort((a, b) => a.order - b.order);
+
+  // Layout styles based on section layout hint
+  const layoutStyles: React.CSSProperties = {
+    width: "100%",
+  };
+
+  if (section.layout === "contained") {
+    layoutStyles.maxWidth = "1200px";
+    layoutStyles.margin = "0 auto";
+    layoutStyles.padding = "0 var(--spacing-md, 16px)";
+  } else if (section.layout === "narrow") {
+    layoutStyles.maxWidth = "800px";
+    layoutStyles.margin = "0 auto";
+    layoutStyles.padding = "0 var(--spacing-md, 16px)";
+  }
+  // full-width: no constraints
+
+  return (
+    <div
+      data-test-id="page-section"
+      data-section-id={section.id}
+      data-section-name={section.name}
+      style={layoutStyles}
+    >
+      {sortedBlocks.map(renderBlock)}
+    </div>
+  );
+}
+
+/**
+ * Main block renderer component
+ * Handles both legacy blocks[] and new sections[] format
+ * Applies visibility filtering when user context is provided
+ */
+export default function BlockRenderer({
+  content,
+  themeCss,
+  user,
+}: BlockRendererProps) {
+  // Normalize content to sections format for unified rendering
+  const sections = normalizeToSections(content);
+
+  // Apply visibility filtering if user context is provided
+  const visibleSections = filterVisibleSections(sections, user ?? null);
+
+  // Sort sections by order
+  const sortedSections = [...visibleSections].sort((a, b) => a.order - b.order);
 
   return (
     <div data-test-id="page-content">
       {themeCss && <style dangerouslySetInnerHTML={{ __html: themeCss }} />}
-      {sortedBlocks.map(renderBlock)}
+      {sortedSections.map((section) => (
+        <SectionRenderer key={section.id} section={section} />
+      ))}
     </div>
   );
 }
