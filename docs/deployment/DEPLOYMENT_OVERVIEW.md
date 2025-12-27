@@ -108,6 +108,7 @@ See [NETLIFY.md](./NETLIFY.md) for how to set these.
 
 ## Related Documentation
 
+- [BUILD_AND_PACK.md](./BUILD_AND_PACK.md) - Local build and packaging scripts
 - [NETLIFY.md](./NETLIFY.md) - Netlify configuration and deployment
 - [NEON.md](./NEON.md) - Database setup and migrations
 - [RELEASE_PROCESS.md](./RELEASE_PROCESS.md) - How to release changes

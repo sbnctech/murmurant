@@ -1,0 +1,45 @@
+{
+  "$schema": "./clubcalendar.schema.json",
+  "_comment": "SBNC ClubCalendar config - Wild Apricot ICS feed variant",
+  "_docs": "See docs/INSTALL/SBNC_INLINE_ONLY_INSTALL.md for setup instructions",
+
+  "organization": {
+    "name": "Santa Barbara Newcomers Club",
+    "shortName": "SBNC",
+    "timezone": "America/Los_Angeles"
+  },
+
+  "dataSource": {
+    "type": "ics-feed",
+    "url": "https://sbnewcomers.wildapricot.org/widget/Calendar/YOUR_CALENDAR_ID.ics",
+    "_comment_url": "Replace YOUR_CALENDAR_ID with your WA calendar widget ID. Find it in WA Admin > Website > Page Editor > Calendar widget settings.",
+    "refreshIntervalMinutes": 15,
+    "corsProxy": null
+  },
+
+  "display": {
+    "defaultView": "month",
+    "views": ["month", "week", "list"],
+    "showPastEvents": false,
+    "maxEventsVisible": 50,
+    "eventColors": {
+      "default": "#2563eb",
+      "social": "#16a34a",
+      "interest": "#9333ea",
+      "general": "#dc2626"
+    }
+  },
+
+  "features": {
+    "showRegistrationStatus": false,
+    "showEventDetails": true,
+    "linkToEventPage": true,
+    "eventPageBaseUrl": "https://sbnewcomers.wildapricot.org/event-"
+  },
+
+  "styling": {
+    "fontFamily": "system-ui, -apple-system, sans-serif",
+    "borderRadius": "8px",
+    "compactMode": false
+  }
+}

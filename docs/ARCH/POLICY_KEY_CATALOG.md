@@ -630,13 +630,34 @@ Before merging, verify:
 
 ---
 
-## Related Documents
+## Future Work: Hardcoded Constants to Migrate
 
-- [PLATFORM_VS_POLICY.md](./PLATFORM_VS_POLICY.md) - Philosophy and decision framework
-- [Policy Master Index](../policy/INDEX.md) - Operational policy registry
-- [Policy Crosswalk](../policy/POLICY_CROSSWALK.md) - SBNC-specific mappings
+The following code locations use hardcoded constants that should eventually be migrated
+to use `getPolicy()`. This is tracked for future work; no behavior changes are required now.
+
+| File | Constant | Should Use Policy Key |
+|------|----------|----------------------|
+| `src/lib/events/scheduling.ts` | `SBNC_TIMEZONE` | `scheduling.timezone` |
+| `src/lib/events/scheduling.ts` | `DEFAULT_REGISTRATION_OPEN_HOUR` | `scheduling.registrationOpenHour` |
+| `src/lib/events/scheduling.ts` | `ARCHIVE_DAYS_AFTER_END` | `scheduling.eventArchiveDays` |
+| `src/lib/timezone.ts` | `CLUB_TIMEZONE` | `scheduling.timezone` |
+
+**Note:** These are not bugs. The current behavior is correct for SBNC (Tenant Zero).
+Migration to `getPolicy()` enables future multi-tenant support.
 
 ---
 
-*Last updated: 2024-12-24*
+## Related Documents
+
+- [WA Policy Capture](../IMPORTING/WA_POLICY_CAPTURE.md) - Migration policy capture process
+- [Migration Customer Journey](../IMPORTING/MIGRATION_CUSTOMER_JOURNEY.md) - Policy capture in migration context
+
+> **Note:** The following documents are planned but not yet created:
+> - `PLATFORM_VS_POLICY.md` - Philosophy and decision framework (Issue #263)
+> - `docs/policy/INDEX.md` - Operational policy registry
+> - `docs/policy/POLICY_CROSSWALK.md` - SBNC-specific mappings
+
+---
+
+*Last updated: 2025-12-24*
 *Maintainer: ClubOS Development Team*

@@ -63,7 +63,7 @@ ClubOS treats migration as a trust-building exercise. Every step is designed to 
 
 - **Parallel operation**: Both systems can run simultaneously during transition
 - **Dry run first**: Full preview before any real changes
-- **Rollback available**: Recovery procedures exist for every phase
+- **Abort available**: Before commit, you can stop and discard all migration work; after commit, recovery procedures exist
 - **Operator partnership**: A human guide accompanies every step
 
 ---
@@ -125,6 +125,8 @@ The operator walks through each policy area:
 - Summary statistics: members imported, events imported, etc.
 - Any warnings or anomalies highlighted
 
+The dry run produces an **Intent Manifest**—a reviewable record of exactly what the migration intends to do. This manifest becomes the basis for preview, verification, and eventual commit. Nothing renders or commits without first passing through the manifest.
+
 ### Decisions the Customer Makes
 
 | Decision | Stakes | Time Pressure |
@@ -161,7 +163,7 @@ No blocking errors found.
 
 - **Warnings are normal**: Every migration has some data quality findings
 - **Nothing happened yet**: Dry run made no changes—this is purely informational
-- **Same code path**: Real sync uses identical logic as dry run
+- **Same logic path**: Real sync uses identical decision logic as dry run
 - **Operator reviews too**: ClubOS staff review all warnings before recommending proceed
 - **Can repeat**: Run dry runs as many times as needed
 
@@ -201,10 +203,10 @@ No blocking errors found.
 
 ### Reassurance Points
 
-- **Transactional safety**: Sync either completes fully or rolls back entirely
+- **Transactional safety**: Sync either completes fully or, if a technical error occurs, the database transaction is discarded (no partial state). This is automatic failure recovery, not a system-initiated abort—the customer controls whether to retry.
 - **Wild Apricot unchanged**: Source system is read-only during migration
 - **Progress visibility**: Can monitor sync progress in real time
-- **Resumable**: If interrupted, can resume from checkpoint
+- **Idempotent**: Re-running sync is safe if needed (operations can be repeated without harm)
 - **Recovery documented**: Rollback procedures ready if needed
 
 ---
@@ -248,7 +250,7 @@ No blocking errors found.
 
 ### Reassurance Points
 
-- **Automated counts**: System counts match automatically, humans spot-check
+- **Count verification**: System generates count comparisons; operators verify samples
 - **Sampling strategy**: Operator guides which records to verify manually
 - **Problems fixable**: Post-import corrections are possible
 - **No commitment yet**: Cutover requires separate explicit decision
@@ -292,8 +294,8 @@ After cutover:
 
 ### Reassurance Points
 
-- **You control the timing**: Cutover happens when you say, not before
-- **Rollback exists**: Emergency procedures documented for reversal
+- **You control the timing**: Cutover happens when you explicitly authorize it, not before. The system never initiates cutover.
+- **Rollback exists**: Customer-initiated emergency procedures documented for reversal. The system never auto-reverts.
 - **Soft launch possible**: Can invite subset of members first
 - **Communication templates**: Help announcing the change to members
 - **Support ready**: Operator available during initial go-live
@@ -350,7 +352,7 @@ After cutover:
 
 | Fear | Reassurance Mechanism |
 |------|----------------------|
-| Data loss | Dry run preview, transactional sync, rollback procedures |
+| Data loss | Dry run preview, idempotent sync, abort before commit / recovery after |
 | Member disruption | Parallel operation, soft launch option, communication templates |
 | Operational downtime | Wild Apricot continues until explicit cutover |
 | Complexity overwhelm | Operator guides every step, plain-English documentation |
@@ -361,15 +363,16 @@ After cutover:
 ClubOS migration builds trust through:
 
 1. **Visibility**: Customer sees exactly what will happen before it happens
-2. **Control**: Every consequential step requires explicit approval
-3. **Reversibility**: Rollback documented for every phase
+2. **Control**: Every consequential step requires explicit human approval. The system proposes; humans decide.
+3. **Reversibility**: Abort before commit discards all work; recovery procedures documented for after commit. The system never auto-reverts.
 4. **Partnership**: Operator accompanies—never operates behind the scenes
-5. **Patience**: No artificial time pressure on decisions
+5. **Patience**: No artificial time pressure on decisions. The system never forces a deadline.
 
 ---
 
 ## Related Documentation
 
+- [Intent Manifest Schema](../ARCH/INTENT_MANIFEST_SCHEMA.md) — What the manifest captures and guarantees
 - [Importer Runbook](./IMPORTER_RUNBOOK.md) — Technical migration procedures
 - [Wild Apricot Policy Capture](./WA_POLICY_CAPTURE.md) — Policy capture process
 - [Cutover Rehearsal Mode](./CUSTOMER_MIGRATION_CUTOVER_REHEARSAL.md) — Test migration before committing

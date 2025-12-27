@@ -79,7 +79,7 @@ These terms were used historically but should be replaced. When encountered in e
 | **Smart defaults** | Suggested values | "Smart" implies system judgment |
 | **Intelligent** | Suggested, proposed | Anthropomorphizes the system |
 | **Learning** | Configured, based on | Implies autonomous adaptation |
-| **Magic** | Configured, automated | Obscures how things work |
+| **Magic** | Configured, automated | Obscures how things work | <!-- docs-trust-allow: magic -->
 | **Seamless** | Straightforward, guided | Over-promises smoothness |
 | **Effortless** | Guided, assisted | Under-acknowledges human work required |
 

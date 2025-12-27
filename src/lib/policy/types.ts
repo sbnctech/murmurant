@@ -7,7 +7,7 @@
  * 2. Default value resolution
  * 3. Future database/config integration
  *
- * See: docs/ARCH/PLATFORM_VS_POLICY.md
+ * See: docs/ARCH/POLICY_KEY_CATALOG.md
  * Related: Issue #263 (Policy Configuration Layer)
  */
 
