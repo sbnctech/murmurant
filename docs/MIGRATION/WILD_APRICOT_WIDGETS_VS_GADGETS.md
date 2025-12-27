@@ -107,4 +107,12 @@ and note the date of verification.
 
 ---
 
+## ClubCalendar (Parallel Deliverable)
+
+For calendar gadget replacement, see the ClubCalendar inline engine (`clubcalendar_sbnc/`). It provides a self-contained calendar widget for WA sites with no external server dependencies.
+
+See [Gadget Tagging - ClubCalendar](./WILD_APRICOT_GADGET_TAGGING.md#clubcalendar-parallel-deliverable) for details.
+
+---
+
 Last updated: 2025-12-26

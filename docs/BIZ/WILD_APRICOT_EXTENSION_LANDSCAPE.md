@@ -520,6 +520,217 @@ This section specifies the technical contracts external systems can rely on.
 
 ---
 
+## Integration Deep Dives
+
+This section provides detailed analysis of each major integration category.
+
+### Deep Dive: Automation Platforms (Zapier / Make / Power Automate)
+
+#### What Clubs Are Trying to Do
+
+| Trigger | Action | Why |
+|---------|--------|-----|
+| New member joins | Add to Mailchimp list | Welcome email sequence |
+| Member renews | Update CRM record | Donor tracking |
+| Member lapses | Send to follow-up sequence | Win-back campaign |
+| Event created | Post to Slack channel | Staff awareness |
+| Registration received | Add row to Google Sheet | Check-in roster |
+| Payment completed | Create QuickBooks entry | Financial tracking |
+
+#### Data Dependencies
+
+| Automation Type | Data Required | Frequency |
+|-----------------|---------------|-----------|
+| Member sync | Member object (email, name, status, tier, dates) | Real-time |
+| Event notifications | Event object (title, dates, location) | On publish |
+| Registration sync | Registration + member + event | Real-time |
+| Payment tracking | Transaction + member | Real-time |
+
+#### What ClubOS Must Provide
+
+- **P0:** Webhook events (`member.created`, `member.renewed`, `member.lapsed`, `registration.created`, `payment.completed`)
+- **P0:** HMAC-signed payloads, retry with backoff, event replay
+- **P1:** Zapier app in marketplace
+- **P2:** Native Make module, two-way sync
+
+---
+
+### Deep Dive: Spreadsheet Sync (Google Sheets / Excel)
+
+#### What Clubs Are Trying to Do
+
+| Use Case | Who | Frequency |
+|----------|-----|-----------|
+| Dues reconciliation | Treasurer | Monthly |
+| Event check-in roster | Event chair | Per event |
+| Activity roster | Activity chair | Ad-hoc |
+| Board eligibility audit | Governance | Annually |
+| Mail merge | Comms volunteer | Occasional |
+
+#### Data Dependencies
+
+| Export Type | Columns Needed |
+|-------------|----------------|
+| Member list | ID, name, email, status, tier, join date, expiry |
+| Event registrations | Member info, event, status, guests, payment |
+| Transaction history | Date, amount, type, member, description |
+
+#### What ClubOS Must Provide
+
+- **P0:** CSV export for members, registrations
+- **P0:** Stable column schema, ISO 8601 dates
+- **P1:** CSV export for transactions, activity rosters, filterable exports
+- **P2:** Scheduled exports, XLSX format
+
+---
+
+### Deep Dive: Calendar Subscriptions (ICS Feeds)
+
+#### What Clubs Are Trying to Do
+
+| Subscriber | Calendar App | Why |
+|------------|--------------|-----|
+| Members | Google Calendar | See events alongside personal schedule |
+| Activity participants | Apple Calendar | Get reminders for activity events |
+| Board members | Outlook | Block time for board meetings |
+| Webmaster | External site | Display events on WordPress |
+
+#### Data Dependencies
+
+| Feed Type | Events Included | Access |
+|-----------|-----------------|--------|
+| Public feed | All published public events | Anonymous |
+| Activity feed | Events for specific activity | Anonymous |
+| Personal feed | Events member is registered for | Token-auth |
+
+#### What ClubOS Must Provide
+
+- **P0:** ICS feed for all public events, VTIMEZONE with IANA tzid, stable UIDs
+- **P1:** Per-activity feeds, personal feeds
+- **P2:** Calendar widget embed, JSON event feed
+
+---
+
+### Deep Dive: Email Marketing (Mailchimp / Constant Contact)
+
+#### What Clubs Are Trying to Do
+
+| Purpose | Tool | Why Not WA Email? |
+|---------|------|-------------------|
+| Monthly newsletter | Mailchimp | Better templates, analytics |
+| Event announcements | Constant Contact | Higher deliverability |
+| Renewal reminders | Email platform | Automated sequences |
+| Welcome series | Mailchimp | Drip campaigns |
+
+#### Data Dependencies
+
+| Sync Type | Data Required | Frequency |
+|-----------|---------------|-----------|
+| Full list sync | All members: email, name, status, tier | Weekly |
+| New member add | Member object | Real-time |
+| Unsubscribe sync | Unsubscribe events | Real-time (critical) |
+
+#### What ClubOS Must Provide
+
+- **P0:** CSV export with email/status/tier, `member.created` webhook, native unsubscribe handling
+- **P1:** `member.updated` webhook, segment exports
+- **P2:** Native Mailchimp integration, two-way unsubscribe sync
+
+---
+
+### Deep Dive: Payment/Financial Reporting
+
+#### What Clubs Are Trying to Do
+
+| Task | Data Needed | Destination |
+|------|-------------|-------------|
+| Monthly close | All transactions | QuickBooks/Xero |
+| Dues reconciliation | Dues payments vs. deposits | Spreadsheet |
+| Event revenue | Registration fees by event | Board packet |
+| Tax prep (990) | Revenue categories | Accountant |
+
+#### What ClubOS Must Provide
+
+- **P0:** Transaction CSV (date, amount, type, member), date filtering, refunds as negative
+- **P1:** QuickBooks-compatible format, per-event summary
+- **P2:** Direct QuickBooks integration, automated exports
+
+---
+
+## Integration Contract: Webhooks + Exports First
+
+**Confirmed approach for ClubOS v1:**
+
+ClubOS provides integrations via webhooks and exports rather than native connectors.
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| Native integrations | Best UX | Must build and maintain each |
+| Webhooks + exports | Universal, low maintenance | Requires Zapier for glue |
+| Public API only | Maximum flexibility | Requires developer |
+
+**Decision:** Webhooks + exports for v1, native integrations for v2+
+
+### What This Means for Migration
+
+| Integration | v1 Approach | How Customer Connects |
+|-------------|-------------|----------------------|
+| Mailchimp | Webhook + CSV | Zapier or manual import |
+| Google Sheets | CSV export | Manual download or Zapier |
+| Slack | Webhook | Zapier |
+| QuickBooks | CSV export | Manual import |
+| Calendar apps | ICS feed | Native subscription |
+
+---
+
+## Discovery Questions for Intake Calls
+
+Copy this section for intake calls.
+
+### Automation Questions
+
+1. **Do you use Zapier, Make, or Power Automate?** What workflows? Who set them up?
+
+2. **When someone joins, what happens automatically?** Added to email list? Posted to Slack?
+
+3. **If automations stopped, what would break?** Critical vs. nice-to-have?
+
+### Spreadsheet Questions
+
+4. **Who exports data regularly?** Treasurer, event chairs, activity leaders?
+
+5. **What do they export, and where does it go?** Member list → Sheets? Registrations → Excel?
+
+6. **What columns and format do they need?**
+
+### Calendar Questions
+
+7. **Do members subscribe to your calendar?** How many? One calendar or per-activity?
+
+8. **Issues with wrong times or duplicates?**
+
+### Email Questions
+
+9. **How do you send email to members?** WA built-in or Mailchimp/Constant Contact?
+
+10. **How does the list stay synchronized?** Manual export? Zapier?
+
+11. **What happens when someone unsubscribes?**
+
+### Financial Questions
+
+12. **What accounting software do you use?**
+
+13. **How does payment data get there?**
+
+14. **Walk me through month-end close.**
+
+### Summary Questions
+
+15. **Which integrations are must-haves for day one?**
+
+16. **Who maintains these? What if they're unavailable?**
+
 ## Migration Intake Checklist
 
 During policy capture, ask the customer:
@@ -544,6 +755,7 @@ During policy capture, ask the customer:
 
 | Date | Change |
 |------|--------|
+| 2025-12-26 | Add Integration Deep Dives, Integration Contract, Discovery Questions |
 | 2025-12-26 | Add Minimum Viable Integration Surface (export schemas, webhook design, ICS spec) |
 | 2025-12-26 | Add WA Integration Taxonomy, Typical Club Use Cases, ClubOS Positioning table |
 | 2025-12-26 | Add ClubOS Integration Roadmap (P0/P1/P2 tiers) |

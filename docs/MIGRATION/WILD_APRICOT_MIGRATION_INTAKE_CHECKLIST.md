@@ -27,6 +27,7 @@ Check all features the customer uses for events.
 - [ ] **Calendar view of events**
   - Where: Site pages > Page editor > Event calendar gadget
   - Ask: "Do you use month view, week view, or both?"
+  - Note: See [ClubCalendar](#clubcalendar-parallel-deliverable) for calendar widget replacement
 
 - [ ] **Event detail pages**
   - Where: Automatically generated for each event
@@ -208,33 +209,94 @@ Check all custom HTML and third-party embeds. These require special handling.
 
 ## Step 6: Integrations and Automations
 
-Check all external connections and automated workflows.
+Check all external connections and automated workflows. This is critical for migration planning.
 
 **Where to find in WA**: Admin > Settings > Authorized applications, external tool configs.
 
+**Reference**: For detailed integration analysis, see [WA Extension Landscape Deep Dives](../BIZ/WILD_APRICOT_EXTENSION_LANDSCAPE.md#integration-deep-dives).
+
+### Automation Platforms
+
 - [ ] **Zapier connections**
   - Where: Zapier account > Wild Apricot app
-  - Ask: "What do your Zaps do?" (e.g., new member triggers)
+  - Ask: "What do your Zaps do?"
+  - Ask: "When a new member joins, what happens automatically?"
+  - Ask: "Who set these up? Do you have login access?"
+  - **Document**: Trigger → Platform → Action → Destination
+  - **Priority**: Ask "If this stopped working, what would break?"
 
 - [ ] **Make (Integromat) connections**
   - Where: Make account > Scenarios
-  - Ask: "What automations run?"
+  - Ask: "What automations run? Walk me through each one."
+  - **Document**: Same as Zapier
 
-- [ ] **Google Sheets exports**
-  - Where: Manual exports or Zapier
-  - Ask: "Do you export data to spreadsheets regularly?"
+- [ ] **Power Automate (Microsoft)**
+  - Where: Power Automate account
+  - Ask: "Do you use Microsoft tools for any WA automations?"
+
+### Spreadsheet Exports
+
+- [ ] **Regular data exports**
+  - Ask: "Who downloads data from WA regularly?"
+  - Ask: "What do they export? Members, events, payments?"
+  - Ask: "Where does the data go? Google Sheets, Excel, QuickBooks?"
+  - Ask: "What columns and format do they need?"
+  - **Document**: Who → What data → How often → Destination tool
+
+- [ ] **Treasurer exports**
+  - Ask: "Walk me through your monthly financial close."
+  - Ask: "What exports do you pull from WA for accounting?"
+
+- [ ] **Event check-in rosters**
+  - Ask: "How do event chairs create check-in lists?"
+  - Ask: "Printed roster, tablet, or something else?"
+
+### Calendar Subscriptions
 
 - [ ] **ICS calendar feeds**
   - Where: Events > Subscribe link
-  - Ask: "Do people subscribe to your calendar?"
+  - Ask: "Do members subscribe to your calendar in Google/Outlook/Apple?"
+  - Ask: "Roughly how many subscribers?"
+  - Ask: "One main calendar or separate per activity group?"
+  - Ask: "Have you had issues with events showing wrong times or duplicating?"
+  - **ClubOS note**: Calendar feeds are P0 for migration
 
-- [ ] **Email integrations**
-  - Where: WA email settings or external
-  - Ask: "Do you use WA email or external (Mailchimp, Constant Contact)?"
+### Email Marketing
+
+- [ ] **Email platform**
+  - Ask: "Do you use WA's built-in email or something external?"
+  - If external: "Which one? Mailchimp, Constant Contact, other?"
+
+- [ ] **List synchronization**
+  - Ask: "How does your email list stay synchronized with WA?"
+  - Ask: "Manual export, Zapier, or something else?"
+  - Ask: "How often does it sync?"
+
+- [ ] **Unsubscribe handling**
+  - Ask: "When someone unsubscribes in [email tool], does it update WA?"
+  - Ask: "Is that automatic or manual?"
+
+### Financial/Accounting
+
+- [ ] **Accounting software**
+  - Ask: "What accounting software do you use?"
+  - Ask: "QuickBooks Online, Desktop, Xero, Wave, or spreadsheets only?"
+
+- [ ] **Payment data flow**
+  - Ask: "How does payment data get from WA to your accounting system?"
+  - Ask: "Manual export and import? CSV? Direct connection?"
+
+- [ ] **Month-end process**
+  - Ask: "Walk me through your month-end close."
+  - Ask: "What reports do you pull? What's the most time-consuming part?"
+
+### API and Custom Integrations
 
 - [ ] **API access**
   - Where: Admin > Settings > Authorized applications > API
   - Ask: "Do you have custom integrations using the WA API?"
+  - Ask: "Who built them? Are they still maintained?"
+  - **Red flag**: Custom API integrations need case-by-case evaluation
 
 ---
 
@@ -320,7 +382,29 @@ Copy this block and fill it out for each customer. This becomes the migration sc
 
 ## Related Documents
 
+- [Operator Decision Tree](./OPERATOR_DECISION_TREE.md) - quick classification guidance for operators
 - [Canonical Gadget Matrix](./WILD_APRICOT_GADGET_TAGGING.md) - single source of truth for migration tags
 - [ClubOS Page Builder Primitives](../ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md) - ClubOS equivalents and migration behavior
 - [Presentation Discovery Stage](./PRESENTATION_DISCOVERY_STAGE.md) - automated site crawling
 - [Widgets vs Gadgets](./WILD_APRICOT_WIDGETS_VS_GADGETS.md) - terminology guide
+
+---
+
+## ClubCalendar (Parallel Deliverable)
+
+For calendar widget replacement during migration, ClubCalendar provides an inline-only engine that runs on WA sites without external server dependencies.
+
+**Location**: `clubcalendar_sbnc/` (separate from ClubOS repo)
+
+**Key documents**:
+
+| Document | Purpose |
+|----------|---------|
+| `README.md` | Quick start and file manifest |
+| `CLUBOS_HANDOFF.md` | What ClubOS needs to know (answer: nothing - fully decoupled) |
+| `CONFIG_FETCH_CONTRACT.md` | Locked contract for config page format |
+| `inline-engine/` | Ready-to-paste templates for WA pages |
+
+**Architecture**: Config page stores JSON config; events page fetches config and renders calendar using WA API directly.
+
+**No ClubOS dependencies**: ClubCalendar runs independently. ClubOS does not need to host, serve, or manage it.

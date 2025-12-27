@@ -32,59 +32,125 @@ Future code requirements:
 
 ## SafeEmbed v1
 
-Status: Docs complete, code not started
+Status: Design complete, code not started
 
 ### Summary
 
 SafeEmbed is a page builder primitive that renders external content via locked-down iframes. It replaces arbitrary HTML embeds from WA custom blocks with a secure, auditable alternative.
 
+**Security Model:** Two-person approval. One admin proposes a domain, a different admin must approve before embeds render.
+
 ### Specification
 
-See: docs/ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md (SafeEmbed Specification section)
+- docs/ARCH/SAFEEMBED_ALLOWLIST_POLICY.md (approval workflow, data model, UI spec)
+- docs/ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md (SafeEmbed component spec)
 
-### Implementation Tasks
+### Implementation Milestones
 
-1. **Allowlist schema and storage**
-   - Define Prisma model for SafeEmbedAllowlistEntry
-   - Fields: hostname, pathPrefixes, queryParamsAllowed, allowFullscreen, notes, createdBy, createdAt, updatedAt
-   - Seed default allowlist (YouTube, Vimeo, Google Maps, Calendly)
+#### Milestone 1: Allowlist Schema and Storage
 
-2. **URL validation logic**
-   - Parse incoming URL
-   - Match against allowlist entries (hostname exact match, path prefix match)
-   - Reject HTTP (HTTPS only)
-   - Return matched provider config or rejection reason
+**Deliverable:** Prisma model and seed data
 
-3. **SafeEmbed React component**
-   - Inputs: providerType, url, title, height, width, allowFullscreen
-   - Render locked-down iframe with sandbox, referrerpolicy, allow attributes
-   - Show fallback UI if URL rejected
+- Define `SafeEmbedAllowlistEntry` model with two-person approval fields:
+  - id, domain, pathPrefix, embedType, notes, status
+  - createdBy, createdAt, approvedBy, approvedAt, revokedBy, revokedAt
+- Add database constraint: `createdBy != approvedBy`
+- Seed default allowlist (YouTube, Vimeo, Google Maps, Calendly, Canva)
+- Status enum: PENDING, ACTIVE, REVOKED
 
-4. **Admin UI for allowlist management**
-   - List current allowlist entries
-   - Add/edit/remove entries (admin role required)
-   - Audit log on every change (who/when/what)
+**Hotspot:** Prisma schema change requires merge captain
 
-5. **Migration tooling integration**
-   - Detect iframe elements in WA custom HTML blocks
-   - Classify as AUTO-MIGRATE (matches default allowlist) or MANUAL REBUILD
-   - Generate SafeEmbed config from detected iframes
+#### Milestone 2: URL Validation Logic
+
+**Deliverable:** Server-side URL validator
+
+- Parse incoming embed URL
+- Match against ACTIVE allowlist entries only
+- Hostname exact match (no wildcards)
+- Path prefix match (if specified)
+- Reject HTTP (HTTPS only)
+- Return: matched entry or rejection reason
+
+#### Milestone 3: SafeEmbed React Component
+
+**Deliverable:** Locked-down iframe renderer
+
+- Props: url, title, height, width
+- Validate URL against allowlist before render
+- Render with sandbox attributes: `allow-scripts allow-same-origin`
+- Set `referrerpolicy="no-referrer"` and `allow=""`
+- Show fallback UI if blocked (with reason)
+
+#### Milestone 4: Admin UI - Allowlist Management
+
+**Deliverable:** Settings page for allowlist CRUD
+
+- List entries grouped by status (PENDING, ACTIVE, REVOKED)
+- "Add Domain" button opens proposal modal
+- Proposal form: domain, pathPrefix, embedType, justification
+- Entries show proposer, approver, timestamps
+- PENDING entries show [Review] and [Reject] buttons
+- ACTIVE entries show [Revoke] button
+
+#### Milestone 5: Admin UI - Two-Person Approval
+
+**Deliverable:** Review workflow with sandbox preview
+
+- Review modal shows proposal details and proposer
+- "Test Embed" sandbox for previewing before approval
+- System blocks self-approval (createdBy != approvedBy)
+- Approve/Reject actions with confirmation
+- Rejection requires reason text
+
+#### Milestone 6: Audit Logging
+
+**Deliverable:** Immutable audit trail
+
+- Log events: proposed, approved, rejected, revoked
+- Log embed renders and blocked attempts
+- Include actor, timestamp, entry details, reason
+- Retention: changes indefinitely, renders 90 days, blocks 30 days
+
+#### Milestone 7: Migration Tooling Integration
+
+**Deliverable:** Discovery classifier for WA custom HTML
+
+- Detect iframe/embed elements in WA pages
+- Classify: AUTO (matches default), MANUAL (unknown domain), UNSUPPORTED (scripts)
+- Generate SafeEmbed blocks for AUTO items
+- Flag MANUAL items for operator domain proposal
 
 ### Safety Requirements
 
-- Default deny: only allowlisted URLs render
-- HTTPS only: HTTP rejected
-- Hostname-based entries: no wildcards
-- Locked-down iframe: sandbox, referrerpolicy, allow="" (no camera/mic/geo)
-- Audit log: all allowlist changes logged with user, timestamp, action
+| Requirement | Implementation |
+|-------------|----------------|
+| Default deny | Only ACTIVE entries allow embeds |
+| Two-person rule | `createdBy != approvedBy` enforced at DB level |
+| No wildcards | Domain must be exact match |
+| HTTPS only | HTTP rejected at validation |
+| Sandbox isolation | iframe sandbox + referrerpolicy + allow="" |
+| Audit trail | All changes and renders logged |
+
+### Acceptance Criteria
+
+See: docs/ARCH/SAFEEMBED_ALLOWLIST_POLICY.md (Acceptance Tests section)
+
+Key scenarios:
+
+- Admin cannot approve their own proposal
+- Pending entries do not allow embeds
+- Revoked entries block immediately
+- All lifecycle events are audit logged
 
 ### Dependencies
 
 - Prisma schema change (HOTSPOT - merge captain)
-- Admin UI integration
+- Admin UI layout integration
+- Audit log infrastructure
 
 ### Related Docs
 
+- docs/ARCH/SAFEEMBED_ALLOWLIST_POLICY.md
 - docs/ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md
 - docs/MIGRATION/WILD_APRICOT_GADGET_TAGGING.md
-- docs/api/EMBED_WIDGET_SDK_CONTRACT.md
+- docs/MIGRATION/WILD_APRICOT_CUSTOM_HTML_BLOCKS_GUIDE.md

@@ -6,6 +6,28 @@ All intake checklists and migration manifests reference this table.
 
 ---
 
+## Board Member Summary
+
+**For board members and non-technical reviewers**: Here's what you need to know.
+
+| Category | What Happens | Your Action |
+|----------|--------------|-------------|
+| Member data | Migrates automatically | Review for accuracy after migration |
+| Event data | Migrates automatically | Verify events display correctly |
+| Payment history | Migrates automatically | Confirm transaction records |
+| Page content | Operator rebuilds in ClubOS | Approve new page layouts |
+| Custom embeds | Reviewed case-by-case | Decide what's essential |
+| Tracking code | Not migrated (privacy) | Discuss analytics needs separately |
+
+**Questions to ask:**
+
+- "Is our member directory included?" → Yes, automatically migrated.
+- "Will we lose our event history?" → No, all events and registrations migrate.
+- "What about our YouTube videos?" → Operator re-adds them (safe and easy).
+- "What about our custom scripts?" → Skipped for security; discuss alternatives.
+
+---
+
 ## How to Decide Quickly
 
 Use these three questions to classify any WA feature:
@@ -160,8 +182,27 @@ When you encounter a WA feature not listed:
 
 ## Related Documents
 
+- [Operator Decision Tree](./OPERATOR_DECISION_TREE.md) - quick classification flowchart for operators
 - [ClubOS Page Builder Primitives](../ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md) - ClubOS equivalents and migration behavior
 - [Migration Intake Checklist](./WILD_APRICOT_MIGRATION_INTAKE_CHECKLIST.md) - step-by-step discovery
 - [Presentation Discovery Stage](./PRESENTATION_DISCOVERY_STAGE.md) - automated site crawling
 - [Widgets vs Gadgets](./WILD_APRICOT_WIDGETS_VS_GADGETS.md) - terminology guide
 - [WA Custom HTML Blocks Guide](./WILD_APRICOT_CUSTOM_HTML_BLOCKS_GUIDE.md) - detailed HTML handling
+
+## External Resources
+
+### ClubCalendar (Parallel Deliverable)
+
+For calendar widget replacement, see the ClubCalendar inline engine documentation:
+
+- **Location**: `clubcalendar_sbnc/` (separate from ClubOS repo)
+- **Handoff Doc**: `CLUBOS_HANDOFF.md` - integration surface for ClubOS
+- **Config Contract**: `CONFIG_FETCH_CONTRACT.md` - locked config format
+- **Security**: `ClubCalendar_SECURITY_AND_WA_CONSTRAINTS.md` - WA embedding constraints
+
+ClubCalendar provides a self-contained calendar widget for WA sites with:
+
+- Inline JS only (no external server dependencies)
+- Config page + events page architecture
+- Auto-tagging by event name patterns
+- Filter bar with configurable categories

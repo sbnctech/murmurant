@@ -22,6 +22,16 @@ import { makeDateFormatter } from "@/lib/timezone";
 // ============================================================================
 // CONSTANTS
 // ============================================================================
+//
+// Future Work: These constants will be replaced with policy lookups.
+// See: src/lib/scheduling/policyKeys.ts for policy key accessors
+// See: Issue #263 (Policy Configuration Layer)
+//
+// Mapping:
+// - SBNC_TIMEZONE → getPolicy(getSchedulingTimezonePolicyKey(), orgContext)
+// - DEFAULT_REGISTRATION_OPEN_HOUR → getPolicy(getRegistrationOpenHourPolicyKey(), orgContext)
+// - ARCHIVE_DAYS_AFTER_END → getPolicy(getEventArchiveDaysPolicyKey(), orgContext)
+// ============================================================================
 
 /** SBNC operates in Pacific Time */
 export const SBNC_TIMEZONE = "America/Los_Angeles";

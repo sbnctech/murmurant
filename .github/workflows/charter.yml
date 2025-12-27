@@ -34,3 +34,7 @@ jobs:
       - name: Checklist coverage audit
         run: |
           npx tsx scripts/ci/checklist-coverage-audit.ts
+
+      - name: Docs trust language check
+        run: |
+          npx tsx scripts/ci/check-docs-trust-language.ts

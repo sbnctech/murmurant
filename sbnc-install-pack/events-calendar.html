@@ -1,0 +1,60 @@
+<!--
+  SBNC ClubOS Events Calendar Widget
+
+  Paste this entire block into a Wild Apricot Custom HTML gadget.
+  See README.md for detailed instructions.
+
+  Version: 1.0
+  Last Updated: December 2025
+-->
+
+<div id="sbnc-events-widget" style="width: 100%; max-width: 1200px; margin: 0 auto;">
+
+  <!-- Widget Container -->
+  <iframe
+    src="https://clubos-prod-sbnc.netlify.app/embed/events"
+    width="100%"
+    height="600"
+    frameborder="0"
+    scrolling="auto"
+    loading="lazy"
+    referrerpolicy="no-referrer"
+    sandbox="allow-scripts allow-same-origin allow-popups"
+    title="SBNC Events Calendar"
+    style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
+  ></iframe>
+
+  <!-- Fallback Message (hidden when iframe loads) -->
+  <noscript>
+    <div style="padding: 20px; text-align: center; background: #f9fafb; border-radius: 8px;">
+      <p style="margin: 0; color: #6b7280;">
+        JavaScript is required to view the events calendar.
+        <br>
+        <a href="https://clubos-prod-sbnc.netlify.app/events" style="color: #2563eb;">
+          View events on the ClubOS website
+        </a>
+      </p>
+    </div>
+  </noscript>
+
+</div>
+
+<!--
+  CUSTOMIZATION OPTIONS:
+
+  1. Change calendar height:
+     Find: height="600"
+     Replace with: height="400" (compact) or height="800" (expanded)
+
+  2. Remove rounded corners:
+     Find: border-radius: 8px;
+     Replace with: border-radius: 0;
+
+  3. Remove shadow:
+     Find: box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+     Replace with: box-shadow: none;
+
+  4. Use staging environment for testing:
+     Find: clubos-prod-sbnc.netlify.app
+     Replace with: clubos-staging-sbnc.netlify.app
+-->
