@@ -10,8 +10,7 @@ interface RouteParams {
 /**
  * GET /api/v1/members/:id/committees
  *
- * Get a member's committee assignments (via role assignments).
- * Requires authentication.
+ * Get a member's committee assignments.
  */
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const auth = await requireAuth(request);
@@ -21,13 +20,11 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
   const { id } = await params;
 
-  // Verify member exists
   const member = await prisma.member.findUnique({ where: { id } });
   if (!member) {
     return errors.notFound("Member", id);
   }
 
-  // Get role assignments for committees
   const roleAssignments = await prisma.roleAssignment.findMany({
     where: {
       memberId: id,
@@ -43,7 +40,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   return apiSuccess({
     data: roleAssignments.map((ra) => ({
       id: ra.id,
-      role: ra.committeeRole?.title ?? "Member",
+      role: ra.committeeRole?.name ?? "Member",
       assignedAt: ra.createdAt.toISOString(),
       committee: ra.committee
         ? {

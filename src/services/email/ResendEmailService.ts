@@ -6,6 +6,7 @@
  */
 
 import { Resend } from "resend";
+import type { CreateEmailOptions } from "resend";
 import { render } from "@react-email/components";
 import type { EmailService } from "./EmailService";
 import type {
@@ -34,16 +35,7 @@ const BATCH_SIZE = 100;
 /**
  * Maps Resend email status to our internal EmailStatus type
  */
-function mapResendStatus(
-  status:
-    | "queued"
-    | "sent"
-    | "delivered"
-    | "delivery_delayed"
-    | "bounced"
-    | "complained"
-    | "canceled"
-): EmailStatus {
+function mapResendStatus(status: string): EmailStatus {
   switch (status) {
     case "queued":
       return "queued";
@@ -56,9 +48,15 @@ function mapResendStatus(
     case "complained":
       return "complained";
     case "delivery_delayed":
+    case "scheduled":
       return "queued";
     case "canceled":
+    case "failed":
       return "failed";
+    case "opened":
+      return "opened";
+    case "clicked":
+      return "clicked";
     default:
       return "queued";
   }
@@ -106,27 +104,43 @@ export class ResendEmailService implements EmailService {
     return this.formatRecipient(sender);
   }
 
-  async sendEmail(message: EmailMessage): Promise<EmailResult> {
-    const payload = {
+  /**
+   * Build CreateEmailOptions for Resend API
+   */
+  private buildEmailPayload(message: EmailMessage): CreateEmailOptions {
+    const base = {
       from: this.getFromAddress(message.from),
       to: this.formatRecipients(message.to),
       subject: message.subject,
-      ...(message.replyTo && { reply_to: this.formatRecipient(message.replyTo) }),
-      ...(message.html && { html: message.html }),
-      ...(message.text && { text: message.text }),
-      ...(message.attachments && {
-        attachments: message.attachments.map((a) => ({
-          filename: a.filename,
-          content:
-            typeof a.content === "string"
-              ? a.content
-              : a.content.toString("base64"),
-          content_type: a.contentType,
-        })),
-      }),
-      ...(message.tags && { tags: Object.entries(message.tags).map(([name, value]) => ({ name, value })) }),
+      replyTo: message.replyTo
+        ? this.formatRecipient(message.replyTo)
+        : undefined,
+      attachments: message.attachments?.map((a) => ({
+        filename: a.filename,
+        content:
+          typeof a.content === "string"
+            ? a.content
+            : a.content.toString("base64"),
+        contentType: a.contentType,
+      })),
+      tags: message.tags
+        ? Object.entries(message.tags).map(([name, value]) => ({ name, value }))
+        : undefined,
     };
 
+    // Resend requires either html or text to be present (not both optional)
+    if (message.html) {
+      return { ...base, html: message.html } as CreateEmailOptions;
+    } else if (message.text) {
+      return { ...base, text: message.text } as CreateEmailOptions;
+    } else {
+      // Default to empty text if neither provided
+      return { ...base, text: "" } as CreateEmailOptions;
+    }
+  }
+
+  async sendEmail(message: EmailMessage): Promise<EmailResult> {
+    const payload = this.buildEmailPayload(message);
     const { data, error } = await this.client.emails.send(payload);
 
     if (error) {
@@ -186,21 +200,13 @@ export class ResendEmailService implements EmailService {
     // Process messages in batches of BATCH_SIZE
     for (let i = 0; i < messages.length; i += BATCH_SIZE) {
       const batch = messages.slice(i, i + BATCH_SIZE);
-
-      const batchRequests = batch.map((message) => ({
-        from: this.getFromAddress(message.from),
-        to: this.formatRecipients(message.to),
-        subject: message.subject,
-        ...(message.html && { html: message.html }),
-        ...(message.text && { text: message.text }),
-        ...(message.replyTo && { reply_to: this.formatRecipient(message.replyTo) }),
-      }));
+      const batchRequests = batch.map((m) => this.buildEmailPayload(m));
 
       const { data, error } = await this.client.batch.send(batchRequests);
 
       if (error) {
         // If entire batch fails, mark all as failed
-        for (const _ of batch) {
+        for (let j = 0; j < batch.length; j++) {
           results.push({
             success: false,
             status: "failed",
@@ -212,7 +218,7 @@ export class ResendEmailService implements EmailService {
       } else if (data) {
         // Process individual results
         for (const result of data.data) {
-          if ("id" in result) {
+          if ("id" in result && typeof result.id === "string") {
             results.push({
               success: true,
               messageId: result.id,
@@ -224,7 +230,7 @@ export class ResendEmailService implements EmailService {
             results.push({
               success: false,
               status: "failed",
-              error: "error" in result ? String(result.error) : "Unknown error",
+              error: "Unknown error in batch result",
               timestamp: new Date(),
             });
             failed++;
