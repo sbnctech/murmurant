@@ -27,4 +27,20 @@ export function isAchEnabled(): boolean {
  */
 export const FEATURE_FLAGS = {
   ACH_ENABLED: "CLUBOS_ACH_ENABLED",
+  NATIVE_AUTH: "CLUBOS_NATIVE_AUTH",
+  NATIVE_EMAIL: "CLUBOS_NATIVE_EMAIL",
+  NATIVE_PAYMENTS: "CLUBOS_NATIVE_PAYMENTS",
 } as const;
+
+export type FeatureFlag = keyof typeof FEATURE_FLAGS;
+
+/**
+ * Generic feature flag checker
+ * @param flag - The feature flag name (e.g., "NATIVE_AUTH")
+ * @returns true if the flag is enabled ("1" or "true")
+ */
+export function isFeatureEnabled(flag: FeatureFlag): boolean {
+  const envVar = FEATURE_FLAGS[flag];
+  const value = process.env[envVar];
+  return value === "1" || value === "true";
+}
