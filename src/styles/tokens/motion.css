@@ -1,0 +1,16 @@
+/**
+ * ClubOS Design Tokens - Motion
+ * Copyright (c) Santa Barbara Newcomers Club
+ */
+:root {
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --transition-colors: color var(--duration-fast) var(--ease-default), background-color var(--duration-fast) var(--ease-default);
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --duration-fast: 0ms; --duration-normal: 0ms; --duration-slow: 0ms; }
+}
