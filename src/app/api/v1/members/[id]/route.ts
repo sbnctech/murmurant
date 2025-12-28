@@ -11,7 +11,6 @@ interface RouteParams {
  * GET /api/v1/members/:id
  *
  * Get a single member by ID.
- * Requires authentication.
  */
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const auth = await requireAuth(request);
@@ -50,8 +49,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 /**
  * PATCH /api/v1/members/:id
  *
- * Update a member.
- * Requires members:view capability (admin access).
+ * Update a member. Requires members:view capability.
  */
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   const auth = await requireCapability(request, "members:view");
@@ -70,11 +68,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     const body = await request.json();
     const { firstName, lastName, email, phone, membershipStatusId, membershipTierId } = body;
 
-    // Check for duplicate email if changing
     if (email && email !== existing.email) {
       const emailExists = await prisma.member.findUnique({ where: { email } });
       if (emailExists) {
-        return errors.conflict("A member with this email already exists");
+        return errors.conflict("Email already exists");
       }
     }
 
@@ -99,10 +96,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       firstName: member.firstName,
       lastName: member.lastName,
       email: member.email,
-      phone: member.phone,
-      joinedAt: member.joinedAt.toISOString(),
       status: member.membershipStatus.label,
-      tier: member.membershipTier?.name ?? null,
       updatedAt: member.updatedAt.toISOString(),
     });
   } catch (error) {
@@ -114,8 +108,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 /**
  * DELETE /api/v1/members/:id
  *
- * Soft delete a member (sets status to inactive).
- * Requires members:view capability (admin access).
+ * Soft delete a member. Requires members:view capability.
  */
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   const auth = await requireCapability(request, "members:view");
@@ -131,7 +124,6 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   }
 
   try {
-    // Find inactive status
     const inactiveStatus = await prisma.membershipStatus.findFirst({
       where: { code: { in: ["inactive", "Inactive", "INACTIVE"] } },
     });
@@ -145,7 +137,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       data: { membershipStatusId: inactiveStatus.id },
     });
 
-    return apiSuccess({ message: "Member deactivated successfully" });
+    return apiSuccess({ message: "Member deactivated" });
   } catch (error) {
     console.error("Error deleting member:", error);
     return errors.internal("Failed to delete member");
