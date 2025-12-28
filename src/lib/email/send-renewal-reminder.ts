@@ -5,6 +5,7 @@
  */
 
 import { getEmailService } from "@/services/email";
+import { formatClubDateLong } from "@/lib/timezone";
 
 export interface RenewalReminderEmailParams {
   email: string;
@@ -38,12 +39,7 @@ export async function sendRenewalReminderEmail(
 
   const emailService = getEmailService();
 
-  const formattedDate = expirationDate.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const formattedDate = formatClubDateLong(expirationDate);
 
   const urgency =
     daysUntilExpiration !== undefined && daysUntilExpiration <= 7
