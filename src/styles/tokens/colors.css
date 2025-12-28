@@ -1,0 +1,110 @@
+/**
+ * ClubOS Design Tokens - Colors
+ *
+ * Brand colors, semantic colors, and neutral palette.
+ * Based on Tailwind CSS color system for consistency.
+ *
+ * Copyright (c) Santa Barbara Newcomers Club
+ */
+
+:root {
+  /* =========================================================================
+     ClubOS Brand Colors
+     ========================================================================= */
+  --color-brand-primary: #4F46E5;
+  --color-brand-primary-light: #6366F1;
+  --color-brand-primary-dark: #4338CA;
+  --color-brand-secondary: #7C3AED;
+  --color-brand-secondary-light: #8B5CF6;
+  --color-brand-secondary-dark: #6D28D9;
+  --color-brand-warm: #F59E0B;
+  --color-brand-warm-light: #FBBF24;
+  --color-brand-warm-dark: #D97706;
+
+  /* =========================================================================
+     Semantic Colors
+     ========================================================================= */
+  --color-success: #10B981;
+  --color-success-light: #34D399;
+  --color-success-dark: #059669;
+  --color-success-bg: #ECFDF5;
+
+  --color-warning: #F59E0B;
+  --color-warning-light: #FBBF24;
+  --color-warning-dark: #D97706;
+  --color-warning-bg: #FFFBEB;
+
+  --color-error: #F43F5E;
+  --color-error-light: #FB7185;
+  --color-error-dark: #E11D48;
+  --color-error-bg: #FFF1F2;
+
+  --color-info: #3B82F6;
+  --color-info-light: #60A5FA;
+  --color-info-dark: #2563EB;
+  --color-info-bg: #EFF6FF;
+
+  /* =========================================================================
+     Neutral Colors (Slate)
+     ========================================================================= */
+  --color-neutral-50: #F8FAFC;
+  --color-neutral-100: #F1F5F9;
+  --color-neutral-200: #E2E8F0;
+  --color-neutral-300: #CBD5E1;
+  --color-neutral-400: #94A3B8;
+  --color-neutral-500: #64748B;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1E293B;
+  --color-neutral-900: #0F172A;
+  --color-neutral-950: #020617;
+
+  /* =========================================================================
+     Surface & Background Colors
+     ========================================================================= */
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #F8FAFC;
+  --color-surface-elevated: #FFFFFF;
+  --color-backdrop: rgba(0, 0, 0, 0.5);
+
+  /* =========================================================================
+     Text Colors
+     ========================================================================= */
+  --color-text: #0F172A;
+  --color-text-muted: #64748B;
+  --color-text-subtle: #94A3B8;
+  --color-text-inverse: #FFFFFF;
+  --color-text-link: #4F46E5;
+  --color-text-link-hover: #4338CA;
+
+  /* =========================================================================
+     Border Colors
+     ========================================================================= */
+  --color-border: #E2E8F0;
+  --color-border-muted: #F1F5F9;
+  --color-border-focus: #4F46E5;
+  --color-border-error: #F43F5E;
+
+  /* =========================================================================
+     Interactive State Colors
+     ========================================================================= */
+  --color-focus-ring: rgba(79, 70, 229, 0.5);
+  --color-hover-overlay: rgba(0, 0, 0, 0.04);
+  --color-active-overlay: rgba(0, 0, 0, 0.08);
+  --color-disabled: #94A3B8;
+  --color-disabled-bg: #F1F5F9;
+}
+
+/* Dark mode support (future) */
+@media (prefers-color-scheme: dark) {
+  :root.dark-mode {
+    --color-surface: #0F172A;
+    --color-surface-muted: #1E293B;
+    --color-surface-elevated: #1E293B;
+    --color-text: #F8FAFC;
+    --color-text-muted: #94A3B8;
+    --color-text-subtle: #64748B;
+    --color-border: #334155;
+    --color-border-muted: #1E293B;
+  }
+}
