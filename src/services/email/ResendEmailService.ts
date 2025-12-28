@@ -1,10 +1,12 @@
 /**
  * Resend Email Service Implementation
- * Phase 0: Placeholder for Resend integration
+ * Implements EmailService interface using Resend API
  *
  * @see https://resend.com/docs
  */
 
+import { Resend } from "resend";
+import { render } from "@react-email/components";
 import type { EmailService } from "./EmailService";
 import type {
   EmailMessage,
@@ -16,6 +18,7 @@ import type {
   EmailCampaignStats,
   EmailTemplateData,
 } from "./types";
+import { getEmailTemplate } from "./templates";
 
 export interface ResendConfig {
   apiKey: string;
@@ -23,21 +26,124 @@ export interface ResendConfig {
   webhookSecret?: string;
 }
 
+/**
+ * Maximum batch size for Resend batch API
+ */
+const BATCH_SIZE = 100;
+
+/**
+ * Maps Resend email status to our internal EmailStatus type
+ */
+function mapResendStatus(
+  status:
+    | "queued"
+    | "sent"
+    | "delivered"
+    | "delivery_delayed"
+    | "bounced"
+    | "complained"
+    | "canceled"
+): EmailStatus {
+  switch (status) {
+    case "queued":
+      return "queued";
+    case "sent":
+      return "sent";
+    case "delivered":
+      return "delivered";
+    case "bounced":
+      return "bounced";
+    case "complained":
+      return "complained";
+    case "delivery_delayed":
+      return "queued";
+    case "canceled":
+      return "failed";
+    default:
+      return "queued";
+  }
+}
+
 export class ResendEmailService implements EmailService {
+  private client: Resend;
   private config: ResendConfig;
 
   constructor(config: ResendConfig) {
     this.config = config;
+    this.client = new Resend(config.apiKey);
+  }
+
+  /**
+   * Format a recipient for Resend API
+   */
+  private formatRecipient(recipient: EmailRecipient): string {
+    if (recipient.name) {
+      return `${recipient.name} <${recipient.email}>`;
+    }
+    return recipient.email;
+  }
+
+  /**
+   * Format recipients array for Resend API
+   */
+  private formatRecipients(
+    recipients: EmailRecipient | EmailRecipient[]
+  ): string[] {
+    const recipientArray = Array.isArray(recipients)
+      ? recipients
+      : [recipients];
+    return recipientArray.map((r) => this.formatRecipient(r));
+  }
+
+  /**
+   * Get the from address, using default if not specified
+   */
+  private getFromAddress(from?: EmailRecipient): string {
+    const sender = from || this.config.defaultFrom;
+    if (!sender) {
+      throw new Error("No from address specified and no default configured");
+    }
+    return this.formatRecipient(sender);
   }
 
   async sendEmail(message: EmailMessage): Promise<EmailResult> {
-    // TODO: Implement Resend API integration
-    // const resend = new Resend(this.config.apiKey);
-    // const result = await resend.emails.send({...});
+    const payload = {
+      from: this.getFromAddress(message.from),
+      to: this.formatRecipients(message.to),
+      subject: message.subject,
+      ...(message.replyTo && { reply_to: this.formatRecipient(message.replyTo) }),
+      ...(message.html && { html: message.html }),
+      ...(message.text && { text: message.text }),
+      ...(message.attachments && {
+        attachments: message.attachments.map((a) => ({
+          filename: a.filename,
+          content:
+            typeof a.content === "string"
+              ? a.content
+              : a.content.toString("base64"),
+          content_type: a.contentType,
+        })),
+      }),
+      ...(message.tags && { tags: Object.entries(message.tags).map(([name, value]) => ({ name, value })) }),
+    };
 
-    throw new Error(
-      "ResendEmailService.sendEmail not implemented. Install @resend/node and configure API key."
-    );
+    const { data, error } = await this.client.emails.send(payload);
+
+    if (error) {
+      return {
+        success: false,
+        status: "failed",
+        error: error.message,
+        timestamp: new Date(),
+      };
+    }
+
+    return {
+      success: true,
+      messageId: data?.id,
+      status: "queued",
+      timestamp: new Date(),
+    };
   }
 
   async sendTemplatedEmail(
@@ -45,38 +151,134 @@ export class ResendEmailService implements EmailService {
     recipient: EmailRecipient,
     data: EmailTemplateData
   ): Promise<EmailResult> {
-    // TODO: Implement template rendering and sending
-    throw new Error(
-      "ResendEmailService.sendTemplatedEmail not implemented."
-    );
+    const Template = getEmailTemplate(templateId);
+
+    if (!Template) {
+      return {
+        success: false,
+        status: "failed",
+        error: `Template not found: ${templateId}`,
+        timestamp: new Date(),
+      };
+    }
+
+    // Render the React Email template to HTML
+    const html = await render(Template(data));
+
+    // Extract subject from data or use default
+    const subject =
+      typeof data.subject === "string"
+        ? data.subject
+        : `Message from ${this.config.defaultFrom?.name || "ClubOS"}`;
+
+    return this.sendEmail({
+      to: recipient,
+      subject,
+      html,
+    });
   }
 
   async sendBulkEmail(messages: EmailMessage[]): Promise<BulkEmailResult> {
-    // TODO: Implement bulk sending with rate limiting
-    // Resend supports batch API for up to 100 emails per request
-    throw new Error("ResendEmailService.sendBulkEmail not implemented.");
+    const results: EmailResult[] = [];
+    let successful = 0;
+    let failed = 0;
+
+    // Process messages in batches of BATCH_SIZE
+    for (let i = 0; i < messages.length; i += BATCH_SIZE) {
+      const batch = messages.slice(i, i + BATCH_SIZE);
+
+      const batchRequests = batch.map((message) => ({
+        from: this.getFromAddress(message.from),
+        to: this.formatRecipients(message.to),
+        subject: message.subject,
+        ...(message.html && { html: message.html }),
+        ...(message.text && { text: message.text }),
+        ...(message.replyTo && { reply_to: this.formatRecipient(message.replyTo) }),
+      }));
+
+      const { data, error } = await this.client.batch.send(batchRequests);
+
+      if (error) {
+        // If entire batch fails, mark all as failed
+        for (const _ of batch) {
+          results.push({
+            success: false,
+            status: "failed",
+            error: error.message,
+            timestamp: new Date(),
+          });
+          failed++;
+        }
+      } else if (data) {
+        // Process individual results
+        for (const result of data.data) {
+          if ("id" in result) {
+            results.push({
+              success: true,
+              messageId: result.id,
+              status: "queued",
+              timestamp: new Date(),
+            });
+            successful++;
+          } else {
+            results.push({
+              success: false,
+              status: "failed",
+              error: "error" in result ? String(result.error) : "Unknown error",
+              timestamp: new Date(),
+            });
+            failed++;
+          }
+        }
+      }
+
+      // Rate limiting: pause between batches if there are more to process
+      if (i + BATCH_SIZE < messages.length) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+    }
+
+    return {
+      total: messages.length,
+      successful,
+      failed,
+      results,
+    };
   }
 
   async getEmailStatus(messageId: string): Promise<EmailStatus> {
-    // TODO: Implement status check via Resend API
-    throw new Error("ResendEmailService.getEmailStatus not implemented.");
+    const { data, error } = await this.client.emails.get(messageId);
+
+    if (error || !data) {
+      throw new Error(error?.message || "Failed to retrieve email status");
+    }
+
+    // Resend returns last_event which indicates the current status
+    const status = data.last_event;
+    if (!status) {
+      return "queued";
+    }
+
+    return mapResendStatus(status);
   }
 
-  async createCampaign(campaign: EmailCampaign): Promise<string> {
-    // TODO: Implement campaign creation
-    // Note: Resend doesn't have native campaigns - we'd need to implement
-    // scheduling ourselves or use a job queue
-    throw new Error("ResendEmailService.createCampaign not implemented.");
+  async createCampaign(_campaign: EmailCampaign): Promise<string> {
+    // Resend doesn't have native campaigns - would need job queue integration
+    throw new Error(
+      "ResendEmailService.createCampaign not implemented. Use sendBulkEmail for immediate sending or integrate a job queue for scheduling."
+    );
   }
 
-  async getCampaignStats(campaignId: string): Promise<EmailCampaignStats> {
-    // TODO: Aggregate stats from individual email events
-    throw new Error("ResendEmailService.getCampaignStats not implemented.");
+  async getCampaignStats(_campaignId: string): Promise<EmailCampaignStats> {
+    throw new Error(
+      "ResendEmailService.getCampaignStats not implemented. Campaign tracking requires database storage."
+    );
   }
 
-  async cancelCampaign(campaignId: string): Promise<boolean> {
-    // TODO: Implement campaign cancellation
-    throw new Error("ResendEmailService.cancelCampaign not implemented.");
+  async cancelCampaign(_campaignId: string): Promise<boolean> {
+    throw new Error(
+      "ResendEmailService.cancelCampaign not implemented. Campaign management requires database storage."
+    );
   }
 }
 
