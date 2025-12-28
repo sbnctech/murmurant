@@ -4,7 +4,7 @@
  */
 
 import type Stripe from "stripe";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 
 /**
  * Webhook event handler result
