@@ -13,7 +13,7 @@ export const gardenClubBrand: ClubBrand = {
   },
   voice: { tone: 'formal', terminology: { member: 'member', event: 'gathering', dues: 'membership fee' }, greeting: 'Welcome, fellow gardener!' },
   chatbot: { name: 'Rose', personality: 'Knowledgeable about plants, gentle and nurturing.', suggestedPrompts: ['When is the next plant swap?', 'What workshops are available?', 'How do I join a garden tour?'] },
-  communication: { emailHeaderColor: '#16A34A', emailFooterText: 'Sunrise Garden Society • Growing together since 1985', signature: 'The Garden Society Team' },
+  communication: { emailFromName: 'Sunrise Garden Society', emailReplyTo: 'info@sunrisegardensociety.org' },
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date(),
   updatedBy: 'system',
