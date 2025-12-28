@@ -14,13 +14,6 @@ import { Prisma } from "@prisma/client";
  *
  * List members with pagination, search, and filters.
  * Requires authentication.
- *
- * Query params:
- * - page: number (default 1)
- * - limit: number (default 20, max 100)
- * - search: string (searches firstName, lastName, email)
- * - status: string (filter by membership status code)
- * - tier: string (filter by membership tier name)
  */
 export async function GET(request: NextRequest) {
   const auth = await requireAuth(request);
@@ -32,7 +25,6 @@ export async function GET(request: NextRequest) {
   const { page, limit } = parsePaginationParams(searchParams);
   const search = searchParams.get("search");
   const status = searchParams.get("status");
-  const tier = searchParams.get("tier");
 
   const where: Prisma.MemberWhereInput = {};
 
@@ -46,10 +38,6 @@ export async function GET(request: NextRequest) {
 
   if (status) {
     where.membershipStatus = { code: status };
-  }
-
-  if (tier) {
-    where.membershipTier = { name: tier };
   }
 
   const [members, totalItems] = await Promise.all([
@@ -84,8 +72,7 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/v1/members
  *
- * Create a new member.
- * Requires members:view capability (admin access).
+ * Create a new member. Requires members:view capability.
  */
 export async function POST(request: NextRequest) {
   const auth = await requireCapability(request, "members:view");
@@ -98,13 +85,12 @@ export async function POST(request: NextRequest) {
     const { firstName, lastName, email, phone, membershipStatusId, membershipTierId } = body;
 
     if (!firstName || !lastName || !email || !membershipStatusId) {
-      return errors.validation("Missing required fields: firstName, lastName, email, membershipStatusId");
+      return errors.validation("Missing required fields");
     }
 
-    // Check for duplicate email
     const existing = await prisma.member.findUnique({ where: { email } });
     if (existing) {
-      return errors.conflict("A member with this email already exists");
+      return errors.conflict("Email already exists");
     }
 
     const member = await prisma.member.create({
@@ -123,19 +109,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return apiSuccess(
-      {
-        id: member.id,
-        firstName: member.firstName,
-        lastName: member.lastName,
-        email: member.email,
-        phone: member.phone,
-        joinedAt: member.joinedAt.toISOString(),
-        status: member.membershipStatus.label,
-        tier: member.membershipTier?.name ?? null,
-      },
-      201
-    );
+    return apiSuccess({
+      id: member.id,
+      firstName: member.firstName,
+      lastName: member.lastName,
+      email: member.email,
+      status: member.membershipStatus.label,
+    }, 201);
   } catch (error) {
     console.error("Error creating member:", error);
     return errors.internal("Failed to create member");

@@ -16,14 +16,7 @@ interface RouteParams {
 /**
  * GET /api/v1/members/:id/payments
  *
- * Get a member's payment history (via PaymentIntent).
- * Requires authentication.
- * Users can only view their own payments unless they are admin.
- *
- * Query params:
- * - page: number (default 1)
- * - limit: number (default 20, max 100)
- * - status: string (filter by payment status)
+ * Get a member's payment history.
  */
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const auth = await requireAuth(request);
@@ -34,13 +27,11 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   const { id } = await params;
   const { memberId, globalRole } = auth.context;
 
-  // Check authorization: own payments or admin
   const isAdmin = globalRole === "admin";
   if (memberId !== id && !isAdmin) {
     return errors.forbidden();
   }
 
-  // Verify member exists
   const member = await prisma.member.findUnique({ where: { id } });
   if (!member) {
     return errors.notFound("Member", id);
@@ -50,7 +41,6 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   const { page, limit } = parsePaginationParams(searchParams);
   const status = searchParams.get("status");
 
-  // Get payment intents via event registrations
   const registrations = await prisma.eventRegistration.findMany({
     where: { memberId: id },
     select: { id: true },

@@ -17,12 +17,6 @@ interface RouteParams {
  * GET /api/v1/members/:id/events
  *
  * Get a member's event registrations.
- * Requires authentication.
- *
- * Query params:
- * - page: number (default 1)
- * - limit: number (default 20, max 100)
- * - upcoming: boolean (filter to future events only)
  */
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const auth = await requireAuth(request);
@@ -32,7 +26,6 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
   const { id } = await params;
 
-  // Verify member exists
   const member = await prisma.member.findUnique({ where: { id } });
   if (!member) {
     return errors.notFound("Member", id);
@@ -47,9 +40,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   };
 
   if (upcoming) {
-    where.event = {
-      startTime: { gte: new Date() },
-    };
+    where.event = { startTime: { gte: new Date() } };
   }
 
   const [registrations, totalItems] = await Promise.all([
@@ -58,9 +49,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       skip: (page - 1) * limit,
       take: limit,
       orderBy: { registeredAt: "desc" },
-      include: {
-        event: true,
-      },
+      include: { event: true },
     }),
     prisma.eventRegistration.count({ where }),
   ]);
