@@ -32,6 +32,9 @@ export type {
   SyncWarning,
 } from "./types";
 
+// Exceptions
+export { WAApiException, WAAsyncQueryException, WATokenException } from "./types";
+
 // Transformers
 export {
   transformContact,
