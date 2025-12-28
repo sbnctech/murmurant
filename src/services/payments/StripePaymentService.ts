@@ -90,7 +90,7 @@ export class StripePaymentService implements PaymentService {
       throw new Error("STRIPE_SECRET_KEY is required");
     }
     this.stripe = new Stripe(key, {
-      apiVersion: "2024-12-18.acacia",
+      apiVersion: "2025-12-15.clover",
       typescript: true,
     });
   }
@@ -145,9 +145,9 @@ export class StripePaymentService implements PaymentService {
         };
       }
 
-      // Return current status
+      // Return current status (not succeeded since we handled that case above)
       return {
-        success: intent.status === "succeeded",
+        success: false,
         paymentId: intent.id,
         status: mapStripePaymentStatus(intent.status),
       };
@@ -197,7 +197,7 @@ export class StripePaymentService implements PaymentService {
     customerId: string,
     priceId: string
   ): Promise<Subscription> {
-    const subscription = await this.stripe.subscriptions.create({
+    const response = await this.stripe.subscriptions.create({
       customer: customerId,
       items: [{ price: priceId }],
       payment_behavior: "default_incomplete",
@@ -207,13 +207,24 @@ export class StripePaymentService implements PaymentService {
       expand: ["latest_invoice.payment_intent"],
     });
 
+    // Extract subscription data (handle both wrapped and unwrapped responses)
+    const subscription = "data" in response
+      ? (response as unknown as { data: Stripe.Subscription }).data
+      : response;
+
     return {
       id: subscription.id,
       customerId: subscription.customer as string,
       priceId: subscription.items.data[0]?.price.id ?? priceId,
       status: mapStripeSubscriptionStatus(subscription.status),
-      currentPeriodStart: new Date(subscription.current_period_start * 1000),
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+      currentPeriodStart: new Date(
+        (subscription as Stripe.Subscription & { current_period_start: number })
+          .current_period_start * 1000
+      ),
+      currentPeriodEnd: new Date(
+        (subscription as Stripe.Subscription & { current_period_end: number })
+          .current_period_end * 1000
+      ),
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
     };
   }
@@ -228,22 +239,35 @@ export class StripePaymentService implements PaymentService {
       limit: 100,
     });
 
-    return invoices.data.map((invoice) => ({
-      id: invoice.id,
-      customerId: invoice.customer as string,
-      subscriptionId:
-        typeof invoice.subscription === "string"
-          ? invoice.subscription
-          : invoice.subscription?.id,
-      amount: invoice.amount_due,
-      currency: invoice.currency,
-      status: mapStripeInvoiceStatus(invoice.status),
-      paidAt: invoice.status_transitions?.paid_at
-        ? new Date(invoice.status_transitions.paid_at * 1000)
-        : undefined,
-      createdAt: new Date(invoice.created * 1000),
-      description: invoice.description ?? undefined,
-    }));
+    return invoices.data.map((invoice) => {
+      // Extract subscription ID (handles both old and new API structures)
+      const invoiceAny = invoice as Stripe.Invoice & {
+        subscription_details?: { subscription?: string | { id: string } };
+        subscription?: string | { id: string };
+      };
+      const subFromDetails = invoiceAny.subscription_details?.subscription;
+      const subDirect = invoiceAny.subscription;
+      const sub = subFromDetails ?? subDirect;
+      const subscriptionId = sub
+        ? typeof sub === "string"
+          ? sub
+          : sub.id
+        : undefined;
+
+      return {
+        id: invoice.id,
+        customerId: invoice.customer as string,
+        subscriptionId,
+        amount: invoice.amount_due,
+        currency: invoice.currency,
+        status: mapStripeInvoiceStatus(invoice.status),
+        paidAt: invoice.status_transitions?.paid_at
+          ? new Date(invoice.status_transitions.paid_at * 1000)
+          : undefined,
+        createdAt: new Date(invoice.created * 1000),
+        description: invoice.description ?? undefined,
+      };
+    });
   }
 
   // Optional payment method management

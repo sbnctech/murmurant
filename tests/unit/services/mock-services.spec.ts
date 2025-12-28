@@ -196,7 +196,7 @@ describe("Mock Services", () => {
           { email: "a@example.com" },
           { email: "b@example.com" },
         ],
-        content: { text: "Campaign content" },
+        status: "draft",
       });
       expect(campaignId).toBeDefined();
 

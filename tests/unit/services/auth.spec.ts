@@ -172,7 +172,7 @@ describe("MockAuthService", () => {
         password: "password123",
       });
       const user = await auth.getUserById(registered.id);
-      expect((user as Record<string, unknown>).passwordHash).toBeUndefined();
+      expect((user as unknown as Record<string, unknown>).passwordHash).toBeUndefined();
     });
   });
 });

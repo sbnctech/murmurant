@@ -64,7 +64,7 @@ describe("Service Factory", () => {
       const service = new MockEmailService();
       const requiredMethods = ["sendEmail", "sendBulkEmail", "getEmailStatus"];
       for (const method of requiredMethods) {
-        expect(typeof (service as Record<string, unknown>)[method]).toBe("function");
+        expect(typeof (service as unknown as Record<string, unknown>)[method]).toBe("function");
       }
     });
 
@@ -73,7 +73,7 @@ describe("Service Factory", () => {
       const service = new MockPaymentService();
       const requiredMethods = ["createPaymentIntent", "confirmPayment", "refundPayment"];
       for (const method of requiredMethods) {
-        expect(typeof (service as Record<string, unknown>)[method]).toBe("function");
+        expect(typeof (service as unknown as Record<string, unknown>)[method]).toBe("function");
       }
     });
   });

@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     const paymentService = await getPaymentService();
     const subscription = await paymentService.createSubscription(
-      session.memberId,
+      session.userAccountId,
       priceId
     );
 

@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth/session";
+import { getSession, getCurrentSession } from "@/lib/auth/session";
 import { getSessionCookieName } from "@/lib/auth/cookies";
 import { getRoleCapabilitiesFromPolicy } from "@/lib/policies/roleCapabilities";
+
+// Re-export getCurrentSession for convenience
+export { getCurrentSession };
 
 /**
  * Authentication and authorization utilities for API routes.

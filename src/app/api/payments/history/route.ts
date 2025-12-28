@@ -16,7 +16,7 @@ export async function GET() {
     }
 
     const paymentService = await getPaymentService();
-    const invoices = await paymentService.getPaymentHistory(session.memberId);
+    const invoices = await paymentService.getPaymentHistory(session.userAccountId);
 
     return NextResponse.json({
       invoices: invoices.map((invoice) => ({

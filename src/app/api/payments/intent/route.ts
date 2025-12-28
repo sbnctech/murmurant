@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       currency,
       {
         ...metadata,
-        userId: session.memberId,
+        userId: session.userAccountId,
       }
     );
 
