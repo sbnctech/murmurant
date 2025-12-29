@@ -30,3 +30,11 @@ export {
   type NewsSource,
   type UseNewsPreferencesReturn,
 } from "./useNewsPreferences";
+
+export {
+  useMemberData,
+  useMembersData,
+  type UseMemberDataResult,
+  type UseMemberDataOptions,
+  type UseMembersDataResult,
+} from "./useMemberData";

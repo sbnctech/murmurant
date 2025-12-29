@@ -204,12 +204,13 @@ F2. ✅ COMPLETE - WA API proxy layer
 - Tests: tests/unit/wa/ (95 tests)
 - Docs: docs/ARCH/WA_API_SECURITY.md
 
-F3. 🔄 IN PROGRESS - Member data read-through
+F3. ✅ COMPLETE - Member data read-through
 - Goal: MM reads member data from WA, caches locally for performance.
 - Implemented: src/lib/wa/memberSync.ts (cache layer, read-through, background sync)
 - Features: TTL-based caching (5 min default), staleness indicators, manual refresh
+- UI Components: src/components/wa/ (StalenessIndicator, RefreshButton)
+- Hook: src/hooks/useMemberData.tsx (useMemberData, useMembersData)
 - Tests: tests/unit/wa/memberSync.spec.ts (35 tests)
-- Remaining: Staleness indicator UI components, integration with member pages
 
 F4. Event/registration write-through
 - Goal: Event registrations in MM UI write to WA as source of truth.
