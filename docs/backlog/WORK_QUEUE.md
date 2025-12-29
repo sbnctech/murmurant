@@ -149,11 +149,13 @@ E4. Disaster recovery exercise plan (restore drills with verification)
 Strategy: Use Murmurant UI while Wild Apricot remains the system of record.
 This enables gradual user migration with minimal risk.
 
-F1. Migration architecture spec
-- Goal: Define read-through/write-through patterns for WA integration.
-- Deliverables: Architecture doc covering data flow, caching, conflict handling.
-- Must define: Which entities remain WA-authoritative vs MM-authoritative.
-- Must define: Sync frequency, failure modes, reconciliation strategy.
+F1. ✅ COMPLETE - Migration architecture spec
+- Spec: docs/ARCH/MIGRATION_INTEGRATION_ARCHITECTURE.md
+- Defines: Read-through caching, write-through with confirmation, conflict resolution
+- Authority matrix: WA vs MM authoritative per entity per stage
+- Sync: Real-time (on-demand), near-real-time (5 min polling), nightly reconciliation
+- Failure handling: Retry, queue, graceful degradation
+- Cutover criteria: Technical, operational, stakeholder checklists
 
 F2. WA API proxy layer
 - Goal: Abstract WA API behind internal service interface.
