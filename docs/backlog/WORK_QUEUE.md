@@ -36,14 +36,23 @@ A2. ✅ COMPLETE - Editor Phase 2 - Drag-and-drop
 - Features: DragHandle, DragOverlay, keyboard accessibility
 - Tests: block-ordering.spec.ts includes DnD compatibility tests
 
-A3. Publishing lifecycle orchestration (draft -> preview -> publish) (spec then code)
-- Goal: Implement lifecycle state machine and enforcement at boundaries.
-- Must include: audit events and reversible transitions.
-- Must not: change reliability posture.
+A3. ✅ COMPLETE - Publishing lifecycle orchestration (draft -> preview -> publish)
+- Implemented: src/lib/publishing/pageLifecycle.ts (state machine: DRAFT → PUBLISHED → ARCHIVED)
+- Validation: isValidTransition() enforces allowed transitions
+- Controls: PageEditorClient.tsx with publish/unpublish/archive/discardDraft
+- API: POST /api/admin/content/pages/[id]?action=publish|unpublish|archive|discardDraft
+- Undo/Redo: 20-step stack, clears on publish boundaries
+- Audit: Full before/after logging on all lifecycle actions
+- Docs: docs/BIZ/PUBLISHING_AND_CONTENT_LIFECYCLE.md
 
-A4. Preview/publish plumbing beyond spec (code)
-- Goal: implement routing, fetch policies, and storage model per specs.
-- Must include: preview isolation tests and audience enforcement tests.
+A4. ✅ COMPLETE - Preview/publish plumbing
+- Preview route: /pages/{slug}/preview (auth + content admin required)
+- Preview isolation: Public route ONLY shows publishedContent, never draft
+- Audience enforcement: PUBLIC, MEMBERS_ONLY, ROLE_RESTRICTED (server-side)
+- Content selection: src/lib/publishing/contentSelection.ts
+- Visibility: src/lib/publishing/visibility.ts, audience.ts
+- Permissions: src/lib/publishing/permissions.ts
+- Tests: tests/unit/publishing/ (contentSelection, permissions, audience, pageLifecycle)
 
 A5. ✅ COMPLETE - Subset rollout for pages/copy (feature spec)
 - Spec: docs/publishing/SUBSET_ROLLOUT.md
