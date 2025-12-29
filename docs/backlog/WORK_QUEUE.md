@@ -26,14 +26,15 @@ Items are ordered. Do not reorder without explicit rationale.
 
 ## A. Editor and Publishing (Next)
 
-A1. Editor Phase 1 - Block ordering UI wiring (draft-only)
-- Goal: Wire Move Up/Move Down controls using reorderBlocks utility.
-- Out of scope: drag-and-drop, publish lifecycle, preview plumbing beyond spec.
-- Deliverables: UI wiring + component tests.
+A1. ✅ COMPLETE - Editor Phase 1 - Block ordering UI wiring (draft-only)
+- Implemented: src/lib/publishing/blockOrdering.ts (reorderBlocks, moveBlockUp, moveBlockDown)
+- Implemented: PageEditorClient.tsx with Move Up/Down buttons
+- Tests: tests/unit/publishing/block-ordering.spec.ts (14 tests)
 
-A2. Editor Phase 2 - Drag-and-drop (deferred until A1 complete)
-- Goal: DnD ordering with clear accessibility and deterministic order.
-- Must include: tests, keyboard fallback, no hidden side effects.
+A2. ✅ COMPLETE - Editor Phase 2 - Drag-and-drop
+- Implemented: src/components/publishing/SortableBlockList.tsx (@dnd-kit integration)
+- Features: DragHandle, DragOverlay, keyboard accessibility
+- Tests: block-ordering.spec.ts includes DnD compatibility tests
 
 A3. Publishing lifecycle orchestration (draft -> preview -> publish) (spec then code)
 - Goal: Implement lifecycle state machine and enforcement at boundaries.
