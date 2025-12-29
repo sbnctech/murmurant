@@ -69,21 +69,84 @@ These are the block types available in the page editor, organized by category.
 
 Widgets are dynamic blocks that display live data. All data access is RBAC-filtered server-side.
 
-### Public/Member Widgets
+### eventList
 
-| Widget Type | Audience | Description |
-|-------------|----------|-------------|
-| `eventList` | Public/Member | Upcoming events with filters |
-| `announcementList` | Member | Club announcements |
-| `quickLinks` | Public/Member | Configurable link grid |
-| `photoGallery` | Public/Member | Image gallery from assets |
+Displays upcoming events with optional filtering.
 
-### Admin Widgets
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `title` | string | No | Section heading |
+| `limit` | number | No | Max events to show (default: 5) |
+| `categories` | string[] | No | Filter by category slugs |
+| `showPastEvents` | boolean | No | Include past events (default: false) |
+| `layout` | enum | No | `list` | `cards` | `calendar` (default: list) |
+| `showRegistrationButton` | boolean | No | Show quick-register buttons (default: true) |
 
-| Widget Type | Required Role | Description |
-|-------------|---------------|-------------|
-| `adminQueueSummary` | Admin roles | Pending items dashboard |
-| `htmlEmbedWidget` | Tech Chair only | Raw HTML embed (restricted) |
+### announcementList
+
+Displays club announcements for members.
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `title` | string | No | Section heading |
+| `limit` | number | No | Max announcements (default: 3) |
+| `showDate` | boolean | No | Display post date (default: true) |
+| `categories` | string[] | No | Filter by announcement category |
+
+### quickLinks
+
+Configurable grid of navigation links.
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `title` | string | No | Section heading |
+| `columns` | number | No | Grid columns: 2, 3, or 4 (default: 3) |
+| `links` | array | **Yes** | Array of link objects |
+
+**Link object properties:**
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `label` | string | **Yes** | Link text |
+| `href` | string | **Yes** | Destination URL |
+| `icon` | string | No | Icon name (optional) |
+| `description` | string | No | Subtitle text |
+
+### photoGallery
+
+Image gallery with optional lightbox.
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `title` | string | No | Section heading |
+| `albumId` | string | No | Filter to specific album |
+| `limit` | number | No | Max images (default: 12) |
+| `columns` | number | No | Grid columns: 2, 3, or 4 (default: 4) |
+| `enableLightbox` | boolean | No | Click to enlarge (default: true) |
+
+### adminQueueSummary
+
+Dashboard widget showing pending admin tasks.
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `queues` | string[] | No | Which queues to show (default: all accessible) |
+| `showCounts` | boolean | No | Show item counts (default: true) |
+| `maxItems` | number | No | Max items per queue (default: 5) |
+
+**Available queues:** `membership_applications`, `pending_payments`, `event_approvals`, `content_review`
+
+### htmlEmbedWidget (Restricted)
+
+Raw HTML embed - **Tech Chair only**.
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `html` | string | **Yes** | HTML content |
+| `sandboxed` | boolean | No | Render in iframe sandbox (default: true) |
+| `allowScripts` | boolean | No | Allow script execution (default: false) |
+
+**Security:** Requires Tech Chair role. See `docs/pages/HTML_WIDGET_POLICY.md`.
 
 ### Planned/Future Widgets
 
@@ -99,15 +162,77 @@ Widgets are dynamic blocks that display live data. All data access is RBAC-filte
 
 ## Admin List Widgets
 
-These are specialized widgets for admin dashboards with full RBAC filtering.
+These are specialized widgets for admin dashboards with full RBAC filtering. All use the List Gadget Runtime.
 
-| Widget | Viewer Roles | Filters | Output |
-|--------|--------------|---------|--------|
-| **Members List** | Membership admin, Tech Chair, President | status, join date, tags, committee | name, status, contact (role-gated) |
-| **Events List** | Public/Member/Chair/Admin variants | date range, category, visibility, committee | title, date, visibility, metrics |
-| **Registrants List** | Event chair, VP Activities, President | status, waitlist, payment | name, status, counts |
-| **Payments List** | Finance roles, President | date range, status, event, payer | amounts, status, references |
-| **Committees List** | VP Activities, Tech Chair | committee, role type, active range | assignee, role, scope, dates |
+### Common Properties (All List Widgets)
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `template_id` | string | **Yes** | Server-side template identifier |
+| `params` | object | No | Template-specific filter parameters |
+| `page_size` | number | No | Items per page (server clamps to max 50) |
+| `cursor` | string | No | Pagination cursor from previous response |
+
+### Members List
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `params.status` | enum | No | `active` | `inactive` | `pending` | `alumni` |
+| `params.joinDateFrom` | date | No | Filter by join date (start) |
+| `params.joinDateTo` | date | No | Filter by join date (end) |
+| `params.tags` | string[] | No | Filter by member tags |
+| `params.committeeId` | string | No | Filter by committee assignment |
+
+**Roles:** Membership admin, Tech Chair, President
+**Output fields:** name, status, contact (role-gated), last activity
+
+### Events List
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `params.dateFrom` | date | No | Filter by start date |
+| `params.dateTo` | date | No | Filter by end date |
+| `params.category` | string | No | Filter by category slug |
+| `params.visibility` | enum | No | `public` | `members` | `draft` |
+| `params.committeeId` | string | No | Filter by sponsoring committee |
+
+**Roles:** Public/Member/Chair/Admin variants
+**Output fields:** title, date, visibility, registration metrics
+
+### Registrants List
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `params.eventId` | string | **Yes** | Event to show registrants for |
+| `params.status` | enum | No | `registered` | `waitlisted` | `cancelled` |
+| `params.paymentStatus` | enum | No | `paid` | `pending` | `refunded` |
+
+**Roles:** Event chair (own events), VP Activities, President
+**Output fields:** name, status, payment status, registration date
+
+### Payments List
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `params.dateFrom` | date | No | Filter by transaction date |
+| `params.dateTo` | date | No | Filter by transaction date |
+| `params.status` | enum | No | `completed` | `pending` | `failed` | `refunded` |
+| `params.eventId` | string | No | Filter by event |
+| `params.memberId` | string | No | Filter by payer |
+
+**Roles:** Finance roles, President
+**Output fields:** amount, status, reference, payer (role-gated)
+
+### Committees List
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `params.committeeId` | string | No | Filter to specific committee |
+| `params.roleType` | string | No | Filter by role type (chair, member) |
+| `params.activeOnly` | boolean | No | Only show active assignments (default: true) |
+
+**Roles:** VP Activities, Tech Chair
+**Output fields:** assignee, role, committee, effective dates
 
 **Spec:** `docs/widgets/ADMIN_LIST_WIDGETS_CATALOG.md`
 
@@ -117,15 +242,70 @@ These are specialized widgets for admin dashboards with full RBAC filtering.
 
 These are self-contained React components for member and admin home screens.
 
-### Implemented Gadgets
+### Common Gadget Properties
 
-| Gadget | Location | Description |
-|--------|----------|-------------|
-| `UpcomingEventsGadget` | `src/components/gadgets/` | Member's upcoming events |
-| `MyRegistrationsGadget` | `src/components/gadgets/` | Member's event registrations |
-| `GadgetHost` | `src/components/gadgets/` | Container/runtime for gadgets |
+All gadgets receive these props from `GadgetHost`:
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `slot` | string | No | Layout hint: `primary` | `secondary` | `sidebar` |
+
+### UpcomingEventsGadget
+
+Displays upcoming events with quick registration.
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `slot` | string | No | Layout slot hint |
+
+**Data fetched:** `/api/v1/events?limit=5`
+**Features:**
+- Shows next 5 upcoming events
+- Quick-register button for logged-in members
+- Registration status badges (Registered/Waitlisted)
+- Spots remaining indicator
+- Links to event detail pages
+
+**Output fields per event:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Event ID |
+| `title` | string | Event title |
+| `startTime` | datetime | Event start time |
+| `category` | string | Event category |
+| `spotsRemaining` | number | Available spots (null = unlimited) |
+| `isWaitlistOpen` | boolean | Whether waitlist is accepting |
+
+### MyRegistrationsGadget
+
+Displays member's event registrations.
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `slot` | string | No | Layout slot hint |
+
+**Data fetched:** `/api/v1/me/registrations`
+**Features:**
+- Shows up to 5 registrations
+- Color-coded status badges
+- Past event indication
+- Links to event detail pages
+
+**Output fields per registration:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Registration ID |
+| `eventId` | string | Event ID |
+| `eventTitle` | string | Event title |
+| `eventDate` | datetime | Event date |
+| `status` | enum | `CONFIRMED` | `PENDING` | `WAITLISTED` | `CANCELLED` |
+| `isPast` | boolean | Whether event has passed |
 
 ### Gadget Templates (Server-side)
+
+These are template IDs for the List Gadget Runtime:
 
 | Template ID | Audience | Use Case |
 |-------------|----------|----------|
