@@ -17,10 +17,61 @@
 # ClubOS - Work Queue (Backlog)
 
 Status: Canonical backlog
-Last updated: 2025-12-21
+Last updated: 2025-12-28
 
 This file is the system-of-record backlog for reliability, editor, and publishing work.
 Items are ordered. Do not reorder without explicit rationale.
+
+-------------------------------------------------------------------------------
+
+## P1 — Communications: Email Template Editor
+
+**Priority: HIGH** - Core operator capability for member communications.
+
+### P1.1 Email Template Editor UI
+
+- Goal: Visual editor for creating and editing email templates
+- Location: `/admin/comms/templates/`
+- Existing: `MessageTemplatesTable.tsx`, basic `page.tsx`
+- Needed:
+  - Template creation wizard
+  - WYSIWYG content editing (reuse block editor patterns)
+  - Variable/merge field insertion (member name, event details, etc.)
+  - Preview with sample data
+  - Mobile-responsive preview toggle
+
+### P1.2 Email Identity Management
+
+- Goal: Manage sender identities (From name/email) with proper authorization
+- Deliverables:
+  - EmailIdentity model in schema (if not present)
+  - Admin UI for identity CRUD
+  - Role-based access (who can send as whom)
+  - Verification status display
+
+### P1.3 Email Composer
+
+- Goal: Compose and send emails using templates
+- Deliverables:
+  - Template selection
+  - Recipient selection (individual, list, segment)
+  - Merge field population
+  - Send/schedule controls
+  - Audit logging for all sends
+
+### P1.4 Template Library
+
+- Goal: Pre-built templates for common use cases
+- Templates needed:
+  - Welcome email (new member)
+  - Event reminder
+  - Event confirmation
+  - Renewal reminder
+  - Password reset
+  - General announcement
+
+**Spec reference:** Salvage Plan 202 (archived) - PR #117
+**Related:** `src/lib/email/`, `src/lib/publishing/email.ts`
 
 -------------------------------------------------------------------------------
 
