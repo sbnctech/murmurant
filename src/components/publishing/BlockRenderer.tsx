@@ -437,6 +437,133 @@ function SpacerBlock({ block }: { block: Extract<Block, { type: "spacer" }> }) {
   );
 }
 
+function FlipCardBlock({ block }: { block: Extract<Block, { type: "flip-card" }> }) {
+  const columns = block.data.columns || 3;
+  const cardSize = columns === 2 ? "300px" : columns === 4 ? "200px" : "250px";
+
+  return (
+    <section
+      data-block-type="flip-card"
+      style={{ padding: "var(--spacing-lg, 24px) var(--spacing-md, 16px)" }}
+    >
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            .flip-card-container {
+              perspective: 1000px;
+            }
+            .flip-card-inner {
+              position: relative;
+              width: 100%;
+              height: 100%;
+              transition: transform 0.6s;
+              transform-style: preserve-3d;
+            }
+            .flip-card-container:hover .flip-card-inner,
+            .flip-card-container:focus-within .flip-card-inner {
+              transform: rotateY(180deg);
+            }
+            .flip-card-front,
+            .flip-card-back {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              backface-visibility: hidden;
+              border-radius: var(--border-radius-md, 4px);
+              overflow: hidden;
+            }
+            .flip-card-back {
+              transform: rotateY(180deg);
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              padding: var(--spacing-lg, 24px);
+              text-align: center;
+            }
+          `,
+        }}
+      />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${columns}, 1fr)`,
+          gap: "var(--spacing-lg, 24px)",
+          maxWidth: "1200px",
+          margin: "0 auto",
+        }}
+      >
+        {block.data.cards.map((card, idx) => (
+          <div
+            key={idx}
+            className="flip-card-container"
+            tabIndex={0}
+            role="button"
+            aria-label={`${card.backTitle}: ${card.backDescription}`}
+            style={{
+              width: "100%",
+              height: cardSize,
+            }}
+          >
+            <div className="flip-card-inner">
+              <div className="flip-card-front">
+                {/* eslint-disable-next-line @next/next/no-img-element -- user-provided dynamic src */}
+                <img
+                  src={card.frontImage || "/placeholder-card.svg"}
+                  alt={card.frontImageAlt}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
+              <div
+                className="flip-card-back"
+                style={{
+                  background: card.backGradient || "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                  color: card.backTextColor || "#ffffff",
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: "var(--font-size-lg, 18px)",
+                    fontWeight: 600,
+                    marginBottom: "var(--spacing-sm, 8px)",
+                  }}
+                >
+                  {card.backTitle}
+                </h3>
+                <p
+                  style={{
+                    fontSize: "var(--font-size-sm, 14px)",
+                    opacity: 0.9,
+                    marginBottom: card.linkUrl ? "var(--spacing-md, 16px)" : 0,
+                  }}
+                >
+                  {card.backDescription}
+                </p>
+                {card.linkUrl && (
+                  <a
+                    href={card.linkUrl}
+                    style={{
+                      color: card.backTextColor || "#ffffff",
+                      textDecoration: "underline",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {card.linkText || "Learn more"}
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function renderBlock(block: Block) {
   switch (block.type) {
     case "hero":
@@ -461,6 +588,8 @@ function renderBlock(block: Block) {
       return <DividerBlock key={block.id} block={block} />;
     case "spacer":
       return <SpacerBlock key={block.id} block={block} />;
+    case "flip-card":
+      return <FlipCardBlock key={block.id} block={block} />;
     default:
       return null;
   }
