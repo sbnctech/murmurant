@@ -203,6 +203,29 @@ export const contactDataSchema = z
   })
   .passthrough();
 
+/**
+ * FlipCard block data schema
+ * Interactive cards that flip on hover to reveal back content
+ * Uses passthrough to preserve existing data during read-only phase
+ */
+export const flipCardDataSchema = z
+  .object({
+    columns: z.union([z.literal(2), z.literal(3), z.literal(4)]).optional(),
+    cards: z.array(
+      z.object({
+        frontImage: z.string(),
+        frontImageAlt: z.string(),
+        backTitle: z.string(),
+        backDescription: z.string(),
+        backGradient: z.string().optional(),
+        backTextColor: z.string().optional(),
+        linkUrl: z.string().optional(),
+        linkText: z.string().optional(),
+      })
+    ),
+  })
+  .passthrough();
+
 // ============================================================================
 // Schema Registry
 // ============================================================================
@@ -222,6 +245,7 @@ export const BLOCK_DATA_SCHEMAS: Record<BlockType, z.ZodType> = {
   gallery: galleryDataSchema,
   faq: faqDataSchema,
   contact: contactDataSchema,
+  "flip-card": flipCardDataSchema,
 };
 
 /**
@@ -245,6 +269,7 @@ export const READONLY_BLOCK_TYPES: BlockType[] = [
   "gallery",
   "faq",
   "contact",
+  "flip-card",
 ];
 
 // ============================================================================
@@ -326,6 +351,20 @@ export function getDefaultBlockData(type: BlockType): Record<string, unknown> {
           { name: "message", label: "Message", type: "textarea", required: true },
         ],
         submitText: "Send Message",
+      };
+    case "flip-card":
+      return {
+        columns: 3,
+        cards: [
+          {
+            frontImage: "",
+            frontImageAlt: "Card image",
+            backTitle: "Card Title",
+            backDescription: "Description shown on hover",
+            backGradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            backTextColor: "#ffffff",
+          },
+        ],
       };
     default:
       return {};

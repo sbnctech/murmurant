@@ -1,8 +1,9 @@
 # Donation Tracking Requirements
+
 ## For Volunteer-Run Membership Clubs (300-2000 Members)
 
-> **Status**: Draft  
-> **Author**: Technology Committee  
+> **Status**: Draft
+> **Author**: Technology Committee
 > **Last Updated**: 2024-12-28
 
 ---
@@ -72,3 +73,17 @@ Lightweight donation tracking for volunteer-run membership organizations. Intent
 
 ## 7. Data Model
 
+```
+Donation: donor, amount, date, fund, paymentMethod, event?, inKind?, receipt status
+DonationFund: name, description, isActive
+DonationReceipt: donation, recipient snapshot, IRS fields, delivery method
+```
+
+---
+
+## 8. Success Metrics
+
+- Enter donation: <30 sec
+- Year-end statement: <1 min
+- Treasurer training: <30 min
+- Data always exportable

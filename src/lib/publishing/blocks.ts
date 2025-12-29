@@ -13,7 +13,8 @@ export type BlockType =
   | "contact"
   | "cta"
   | "divider"
-  | "spacer";
+  | "spacer"
+  | "flip-card";
 
 // Base block structure
 export type BaseBlock = {
@@ -160,6 +161,24 @@ export type SpacerBlock = BaseBlock & {
   };
 };
 
+// FlipCard block - 3D flip card with image front, text back
+export type FlipCardBlock = BaseBlock & {
+  type: "flip-card";
+  data: {
+    cards: Array<{
+      frontImage: string;
+      frontImageAlt: string;
+      backTitle: string;
+      backDescription: string;
+      backGradient?: string; // CSS gradient e.g. "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+      backTextColor?: string;
+      linkUrl?: string;
+      linkText?: string;
+    }>;
+    columns?: 2 | 3 | 4;
+  };
+};
+
 // Union type of all blocks
 export type Block =
   | HeroBlock
@@ -172,7 +191,8 @@ export type Block =
   | ContactBlock
   | CtaBlock
   | DividerBlock
-  | SpacerBlock;
+  | SpacerBlock
+  | FlipCardBlock;
 
 // Page content structure
 export type PageContent = {
@@ -255,6 +275,12 @@ export const BLOCK_METADATA: Record<
     description: "Vertical space",
     icon: "move-vertical",
     category: "layout",
+  },
+  "flip-card": {
+    label: "Flip Cards",
+    description: "Interactive cards that flip on hover",
+    icon: "layers",
+    category: "interactive",
   },
 };
 
@@ -339,6 +365,24 @@ export function createEmptyBlock(type: BlockType, order: number): Block {
         ...base,
         type: "spacer",
         data: { height: "medium" },
+      };
+    case "flip-card":
+      return {
+        ...base,
+        type: "flip-card",
+        data: {
+          columns: 3,
+          cards: [
+            {
+              frontImage: "",
+              frontImageAlt: "Card image",
+              backTitle: "Card Title",
+              backDescription: "Description shown on hover",
+              backGradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              backTextColor: "#ffffff",
+            },
+          ],
+        },
       };
   }
 }

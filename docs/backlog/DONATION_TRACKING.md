@@ -1,8 +1,8 @@
 # Donation Tracking Feature
 
-**Status**: Backlog  
-**Priority**: P2  
-**Epic**: Finance  
+**Status**: Backlog
+**Priority**: P2
+**Epic**: Finance
 **Created**: 2024-12-28
 
 ## Summary
@@ -16,6 +16,7 @@ See [docs/FINANCE/DONATION_TRACKING_REQUIREMENTS.md](../FINANCE/DONATION_TRACKIN
 ## Key Deliverables
 
 ### Phase 1 (MVP)
+
 - [ ] Prisma schema: Donation, DonationFund, DonationReceipt models
 - [ ] API: CRUD for donations
 - [ ] API: Generate tax receipt
@@ -25,12 +26,14 @@ See [docs/FINANCE/DONATION_TRACKING_REQUIREMENTS.md](../FINANCE/DONATION_TRACKIN
 - [ ] Export: CSV download
 
 ### Phase 2
+
 - [ ] Year-end statements (PDF generation)
 - [ ] LYBUNT report (gave last year, not this year)
 - [ ] Thank-you email templates
 - [ ] Batch import from CSV
 
 ### Phase 3
+
 - [ ] Fund/campaign management UI
 - [ ] Dashboard widget
 - [ ] QuickBooks export format
