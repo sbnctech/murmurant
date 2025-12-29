@@ -1,3 +1,8 @@
+<!--
+  Copyright © 2025 Murmurant, Inc. All rights reserved.
+-->
+
+
 # Editor/Publishing Sequencing Plan (Avoid PR Explosion)
 
 **Last updated:** 2025-12-22

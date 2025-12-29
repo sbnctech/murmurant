@@ -1,3 +1,8 @@
+<!--
+  Copyright © 2025 Murmurant, Inc. All rights reserved.
+-->
+
+
 <!-- MERGE NOTE: auto-resolved add/add by concatenating ours then theirs -->
 
 

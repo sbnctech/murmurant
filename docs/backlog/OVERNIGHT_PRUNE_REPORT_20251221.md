@@ -1,3 +1,8 @@
+<!--
+  Copyright © 2025 Murmurant, Inc. All rights reserved.
+-->
+
+
 # Overnight Prune Report - 2025-12-21
 
 ## Summary

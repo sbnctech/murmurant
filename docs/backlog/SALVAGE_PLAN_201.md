@@ -1,3 +1,8 @@
+<!--
+  Copyright © 2025 Murmurant, Inc. All rights reserved.
+-->
+
+
 # Salvage Plan: Issue #201 - Auth/RBAC/Security Wave
 
 **Status:** Parked

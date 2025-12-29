@@ -1,3 +1,8 @@
+<!--
+  Copyright © 2025 Murmurant, Inc. All rights reserved.
+-->
+
+
 # Editor Wave Followups Plan (Post-merge Micro-PR Salvage)
 
 Status

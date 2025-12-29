@@ -1,3 +1,8 @@
+<!--
+  Copyright © 2025 Murmurant, Inc. All rights reserved.
+-->
+
+
 
 
 ## V2 Backlog: Organizational Health Dashboard (Board KPI Widget)

@@ -1,3 +1,8 @@
+<!--
+  Copyright © 2025 Murmurant, Inc. All rights reserved.
+-->
+
+
 # Salvage Plan: Issue #203 - Eligibility Engine Wave
 
 **Status:** Parked

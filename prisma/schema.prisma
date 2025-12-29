@@ -1,3 +1,5 @@
+// Copyright © 2025 Murmurant, Inc. All rights reserved.
+
 generator client {
   provider = "prisma-client-js"
 }

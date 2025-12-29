@@ -1,3 +1,8 @@
+<!--
+  Copyright © 2025 Murmurant, Inc. All rights reserved.
+-->
+
+
 # PR Queue Hygiene
 
 Copyright (c) Santa Barbara Newcomers Club. All rights reserved.

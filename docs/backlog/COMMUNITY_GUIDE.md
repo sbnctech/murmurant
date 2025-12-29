@@ -1,9 +1,14 @@
+<!--
+  Copyright © 2025 Murmurant, Inc. All rights reserved.
+-->
+
+
 # Community Resource Guide ("clubguide")
 
 **Status**: Backlog
 **Priority**: P3
 **Epic**: Content & Engagement
-**Created**: 2024-12-28
+**Created**: 2025-12-28
 
 ## Summary
 
