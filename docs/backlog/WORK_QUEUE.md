@@ -93,6 +93,45 @@ A12. ✅ COMPLETE - Before/After image slider block type
 - Options: aspectRatio (16:9, 4:3, 1:1, 3:2), initialPosition (0-100)
 - Files: blocks.ts, blockSchemas.ts, BlockRenderer.tsx
 
+A13. ✅ COMPLETE - Before/After block editor (form-based)
+- Implemented: SchemaBlockEditor with number field type for initialPosition
+- Fields: beforeImage, afterImage, alt texts, labels, aspectRatio, initialPosition
+
+A14. ✅ COMPLETE - Stats block editor (first repeater pattern)
+- Implemented: RepeaterEditor component (reusable for all array-based blocks)
+- Features: Add/remove/reorder with collapsible cards, move up/down buttons
+- Fields: title, columns, stats array (value, label, prefix, suffix)
+
+A15. ✅ COMPLETE - Timeline block editor
+- Implemented: TimelineBlockEditor using RepeaterEditor
+- Fields: title, events array (date, title, description, image)
+
+A16. ✅ COMPLETE - Accordion block editor
+- Implemented: AccordionBlockEditor using RepeaterEditor
+- Fields: title, allowMultiple, items array (title, content HTML, defaultOpen)
+
+A17. ✅ COMPLETE - Tabs block editor
+- Implemented: TabsBlockEditor using RepeaterEditor
+- Fields: alignment, tabs array (label, content HTML)
+
+A18. ✅ COMPLETE - Cards/FlipCards block editors
+- Implemented: CardsBlockEditor, FlipCardsBlockEditor using RepeaterEditor
+- Cards: columns, cards array (title, description, image, linkUrl, linkText)
+- FlipCards: columns, cards array (front image/alt, back title/description/gradient, link)
+
+A19. ✅ COMPLETE - Testimonial block editor
+- Implemented: TestimonialBlockEditor using RepeaterEditor
+- Fields: title, autoRotate, rotateIntervalMs, testimonials array (quote, author, role, image)
+
+A20. ✅ COMPLETE - Gallery block editor
+- Implemented: GalleryBlockEditor using RepeaterEditor
+- Fields: columns, enableLightbox, images array (src, alt, caption)
+
+A21. ✅ COMPLETE - Contact form field editor
+- Implemented: ContactBlockEditor using RepeaterEditor
+- Fields: title, description, recipientEmail, submitText, fields array (name, label, type, required, options)
+- Conditional: options textarea appears only when type=select
+
 -------------------------------------------------------------------------------
 
 ## B. Reliability R3 (Stubs + CI Wiring) - Pre-deployment readiness

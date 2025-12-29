@@ -14,7 +14,7 @@ import {
   calculateRetryDelay,
   DEFAULT_WEBHOOK_RETRY,
 } from "@/lib/wa/webhooks";
-import type { WaWebhookPayload } from "@/lib/wa/types";
+import type { WaWebhookPayload } from "@/lib/wa/webhooks";
 
 describe("WA Webhooks - Signature Verification", () => {
   const secret = "test-secret-key";
