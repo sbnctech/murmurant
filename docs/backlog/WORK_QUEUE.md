@@ -221,10 +221,14 @@ F4. ✅ COMPLETE - Event/registration write-through
 - Tests: tests/unit/wa/registrationSync.spec.ts (21 tests)
 - Total WA tests: 116
 
-F5. Gradual cutover plan
+F5. ✅ COMPLETE - Gradual cutover plan
 - Goal: Define criteria and process for migrating entity types to MM-authoritative.
-- Deliverables: Cutover checklist, rollback procedures, data validation suite.
-- Must include: Per-entity migration (members, events, pages separate).
+- Spec: docs/ARCH/WA_CUTOVER_PLAN.md
+- Includes: Per-entity cutover order, technical/operational checklists
+- Rollback: Decision criteria, step-by-step procedures, testing requirements
+- Validation: Data validation suite spec with member/event/registration checks
+- Monitoring: Post-cutover monitoring schedule with alert thresholds
+- Communication: Pre/during/post cutover messaging templates
 
 -------------------------------------------------------------------------------
 
