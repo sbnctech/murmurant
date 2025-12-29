@@ -1,4 +1,4 @@
-# ClubOS Release Model and Field Testing
+# Murmurant Release Model and Field Testing
 
 Copyright (c) Santa Barbara Newcomers Club
 Status: Canonical Specification
@@ -8,7 +8,7 @@ Last Updated: 2025-12-21
 
 ## Purpose
 
-This document defines how ClubOS releases reach customers, from development
+This document defines how Murmurant releases reach customers, from development
 through production. It establishes gates, rollback strategies, and field
 testing protocols consistent with our solutions-first, safety-first posture.
 
@@ -20,7 +20,7 @@ This document is normative.
 
 ### 1.1 Architecture
 
-ClubOS is currently a **single-tenant deployment** serving SBNC.
+Murmurant is currently a **single-tenant deployment** serving SBNC.
 
 | Aspect | Current State |
 |--------|---------------|
@@ -147,7 +147,7 @@ DEV -> STAGING -> PILOT (field test) -> GA (general availability)
 - [ ] System Owner sign-off
 
 **What "field test" means for single-tenant:**
-Since ClubOS currently serves only SBNC, the pilot stage is SBNC operating
+Since Murmurant currently serves only SBNC, the pilot stage is SBNC operating
 the system under normal conditions. The field test validates:
 - Real user workflows work correctly
 - No edge cases missed in testing
@@ -202,7 +202,7 @@ Before STAGING -> PILOT:
 
 ### 3.2 Database Migration Rules (Expand/Contract)
 
-ClubOS uses the **expand/contract pattern** for schema changes:
+Murmurant uses the **expand/contract pattern** for schema changes:
 
 #### Phase 1: Expand (Safe)
 
@@ -252,7 +252,7 @@ DROP COLUMN "old_field"; -- MIGRATION_APPROVED: data migrated to new_field
 
 ### 3.3 Feature Flags (Minimal Approach)
 
-ClubOS does not currently have a feature flag system. Until one is built,
+Murmurant does not currently have a feature flag system. Until one is built,
 use this minimal approach:
 
 #### Environment Variable Flags
@@ -441,7 +441,7 @@ System Owner: _________________ Date: _____________
 
 ### Phase 4: Multi-tenant Considerations (Future)
 
-When/if ClubOS supports multiple tenants:
+When/if Murmurant supports multiple tenants:
 
 - Canary deployments to subset of tenants
 - Tenant-specific feature flags

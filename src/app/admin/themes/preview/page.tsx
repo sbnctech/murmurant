@@ -37,8 +37,8 @@ interface PreviewTheme {
 
 const THEMES: PreviewTheme[] = [
   {
-    id: "clubos-default",
-    name: "ClubOS Default",
+    id: "murmurant-default",
+    name: "Murmurant Default",
     colors: {
       primary: "#2563eb",
       primaryDark: "#1d4ed8",
@@ -405,7 +405,7 @@ export default function ThemePreviewPage(): React.ReactElement {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Theme Preview</h1>
         <p className="text-gray-600">
-          Preview and compare ClubOS themes before applying them.
+          Preview and compare Murmurant themes before applying them.
         </p>
       </div>
 

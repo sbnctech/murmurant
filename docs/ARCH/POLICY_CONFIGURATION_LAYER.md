@@ -1,8 +1,8 @@
 # Organization Policy Configuration Layer
 
-> **Related Issues:** [#263](https://github.com/sbnctech/clubos/issues/263) | [#232 - Policy Isolation Epic](https://github.com/sbnctech/clubos/issues/232) | [#248 - Business Model Epic](https://github.com/sbnctech/clubos/issues/248)
+> **Related Issues:** [#263](https://github.com/sbnctech/murmurant/issues/263) | [#232 - Policy Isolation Epic](https://github.com/sbnctech/murmurant/issues/232) | [#248 - Business Model Epic](https://github.com/sbnctech/murmurant/issues/248)
 
-This document defines the architecture for storing, versioning, and accessing organization-specific policy configuration in ClubOS.
+This document defines the architecture for storing, versioning, and accessing organization-specific policy configuration in Murmurant.
 
 ---
 
@@ -58,7 +58,7 @@ This document defines the architecture for storing, versioning, and accessing or
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
 │  1. Environment Override                                │
-│     CLUBOS_OVERRIDE_<category>_<key>=value              │
+│     MURMURANT_OVERRIDE_<category>_<key>=value              │
 │     (Escape hatch for incidents / testing)              │
 │                                                         │
 │  2. Organization Config (Database)                      │
@@ -81,7 +81,7 @@ async function getPolicy<K extends PolicyKey>(
   key: K
 ): Promise<PolicyValue<K>> {
   // 1. Environment override (emergency use only)
-  const envKey = `CLUBOS_OVERRIDE_${key.toUpperCase()}`;
+  const envKey = `MURMURANT_OVERRIDE_${key.toUpperCase()}`;
   if (process.env[envKey]) {
     return parseEnvValue(process.env[envKey], key);
   }
@@ -103,7 +103,7 @@ async function getPolicy<K extends PolicyKey>(
 
 ### Principle: Defaults, Never Required
 
-SBNC is the first organization deployed on ClubOS. Its configuration becomes the **default template**, not hard-coded requirements.
+SBNC is the first organization deployed on Murmurant. Its configuration becomes the **default template**, not hard-coded requirements.
 
 ### Implementation Strategy
 
@@ -320,7 +320,7 @@ describe('Policy Configuration Layer', () => {
   });
 
   test('environment override takes precedence', async () => {
-    process.env.CLUBOS_OVERRIDE_MEMBERSHIP_NEWBIEDAYS = '30';
+    process.env.MURMURANT_OVERRIDE_MEMBERSHIP_NEWBIEDAYS = '30';
     const days = await getPolicy('org_test', 'membership.newbieDays');
     expect(days).toBe(30);
   });
@@ -488,7 +488,7 @@ This document is **design only**. Implementation in child issues:
 3. **Library PR**: Implement `getPolicy()` and types
 4. **Migration PRs**: Convert hard-coded constants per category
 
-See [#232 - Policy Isolation Epic](https://github.com/sbnctech/clubos/issues/232) for tracking.
+See [#232 - Policy Isolation Epic](https://github.com/sbnctech/murmurant/issues/232) for tracking.
 
 ---
 
@@ -496,6 +496,6 @@ See [#232 - Policy Isolation Epic](https://github.com/sbnctech/clubos/issues/232
 
 - [PLATFORM_VS_POLICY.md](./PLATFORM_VS_POLICY.md) - What is platform vs policy
 - [ARCHITECTURAL_CHARTER.md](../ARCHITECTURAL_CHARTER.md) - Core principles
-- [Issue #263](https://github.com/sbnctech/clubos/issues/263) - This design
-- [Issue #232](https://github.com/sbnctech/clubos/issues/232) - Policy Isolation Epic
-- [Issue #248](https://github.com/sbnctech/clubos/issues/248) - Business Model Epic
+- [Issue #263](https://github.com/sbnctech/murmurant/issues/263) - This design
+- [Issue #232](https://github.com/sbnctech/murmurant/issues/232) - Policy Isolation Epic
+- [Issue #248](https://github.com/sbnctech/murmurant/issues/248) - Business Model Epic

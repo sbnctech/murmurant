@@ -1,6 +1,6 @@
 # Template and Theme Model
 
-This document details the template and theme system for ClubOS publishing.
+This document details the template and theme system for Murmurant publishing.
 It covers block types, theme tokens, CSS variable generation, and template
 structure.
 
@@ -20,7 +20,7 @@ structure.
 
 ## Overview
 
-The ClubOS publishing system uses three interconnected models:
+The Murmurant publishing system uses three interconnected models:
 
 - **Blocks** - Content building units (hero, text, cards, etc.)
 - **Templates** - Reusable page structures with preset blocks

@@ -33,7 +33,7 @@ describe("Business Rules: Client Zero Constants", () => {
   /**
    * Reference: docs/BIZ/DUAL_BUSINESS_MODEL.md Section 3.1
    *
-   * "SBNC is the founding customer of ClubOS."
+   * "SBNC is the founding customer of Murmurant."
    * "SBNC is 'Client Zero' - the founding customer."
    */
   it("defines SBNC as Client Zero", () => {

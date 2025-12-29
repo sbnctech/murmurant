@@ -8,15 +8,15 @@
 
 ## What This Is Actually About
 
-We pay Wild Apricot about $1,500 a year to manage our membership and events. It works, but it has friction points that volunteers complain about. Ed built something called ClubOS that might work better for us. He has a financial interest in its success, which creates a conflict of interest that he is disclosing upfront.
+We pay Wild Apricot about $1,500 a year to manage our membership and events. It works, but it has friction points that volunteers complain about. Ed built something called Murmurant that might work better for us. He has a financial interest in its success, which creates a conflict of interest that he is disclosing upfront.
 
-We are being asked to spend 30-45 days testing whether ClubOS actually works for our needs. This is not a vote to switch. It is a vote to gather information.
+We are being asked to spend 30-45 days testing whether Murmurant actually works for our needs. This is not a vote to switch. It is a vote to gather information.
 
 ---
 
 ## What We Would Be Testing
 
-During the evaluation, volunteer testers would try out ClubOS in a test environment:
+During the evaluation, volunteer testers would try out Murmurant in a test environment:
 
 - Can we add and renew members?
 - Can we set up events and take registrations?
@@ -32,7 +32,7 @@ We would document what works, what does not, and what is missing. At the end, th
 
 If the evaluation goes well and we decide to adopt:
 
-| Today (Wild Apricot) | After (ClubOS) |
+| Today (Wild Apricot) | After (Murmurant) |
 |----------------------|----------------|
 | Pay annual platform fee | No platform fee |
 | Email bundled but limited | Pay for email service directly |
@@ -50,13 +50,13 @@ The money savings from no platform fee would offset some new costs (email servic
 - Volunteers still do the same jobs
 - Board still makes governance decisions
 
-ClubOS is a different tool for the same work. It does not change what we do; it changes how the software supports what we do.
+Murmurant is a different tool for the same work. It does not change what we do; it changes how the software supports what we do.
 
 ---
 
 ## The Conflict of Interest, Plainly Stated
 
-Ed built ClubOS. If we use it and it becomes a commercial product, Ed benefits financially. He is not hiding this.
+Ed built Murmurant. If we use it and it becomes a commercial product, Ed benefits financially. He is not hiding this.
 
 The safeguard is that Ed does not run the evaluation or vote on the decision. Someone else leads the testing, someone else writes the report, and the board decides without his vote. If you think the safeguards are not sufficient, you can vote no on the evaluation.
 
@@ -68,7 +68,7 @@ The safeguard is that Ed does not run the evaluation or vote on the decision. So
 
 - The test system could have bugs. This does not affect our real operations.
 - Volunteers might find it confusing. That is valuable information.
-- We might discover ClubOS cannot do something we need. Also valuable.
+- We might discover Murmurant cannot do something we need. Also valuable.
 
 The evaluation is designed to surface problems in a safe environment. Finding problems is success, not failure.
 
@@ -78,7 +78,7 @@ The evaluation is designed to surface problems in a safe environment. Finding pr
 
 **Adoption risks (higher stakes):**
 
-- ClubOS might have bugs that affect real operations. Mitigation: We would run both systems in parallel during transition.
+- Murmurant might have bugs that affect real operations. Mitigation: We would run both systems in parallel during transition.
 - Ed might become unavailable (illness, burnout, other priorities). Mitigation: The code is documented and exportable. Another developer could take over, though finding one takes effort.
 - We might regret switching. Mitigation: Data can be exported. We could return to Wild Apricot or try something else. The sunk cost would be the transition effort.
 
@@ -115,7 +115,7 @@ At any point, the evaluation can be stopped. Starting does not require finishing
 
 **Voting yes on the evaluation means:**
 
-- You authorize spending volunteer time to test ClubOS
+- You authorize spending volunteer time to test Murmurant
 - You want more information before making a decision
 - You are curious but not committed
 
@@ -145,9 +145,9 @@ If the answer to any of these is "no," that is a legitimate reason to decline or
 
 ## What the Board Is Not Deciding Today
 
-- Whether to switch to ClubOS (that comes after the evaluation)
-- Whether ClubOS is better than Wild Apricot (that is what we would test)
-- How to handle any commercial relationship with ClubOS, Inc. (separate discussion)
+- Whether to switch to Murmurant (that comes after the evaluation)
+- Whether Murmurant is better than Wild Apricot (that is what we would test)
+- How to handle any commercial relationship with Murmurant, Inc. (separate discussion)
 - Whether Ed has done anything wrong (he has not; he is disclosing a conflict)
 
 Today is about whether to gather information. The bigger decisions come later.

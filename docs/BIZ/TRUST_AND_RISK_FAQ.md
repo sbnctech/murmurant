@@ -1,13 +1,13 @@
 # Trust and Risk FAQ
 
-**Audience**: Board members, operations directors, and organizational leaders evaluating ClubOS
+**Audience**: Board members, operations directors, and organizational leaders evaluating Murmurant
 **Last Updated**: 2025-12-25
 
 ---
 
 ## Overview
 
-This document answers common questions about risk, control, and trust during ClubOS adoption and migration. The answers reflect how the system actually works, not marketing aspirations.
+This document answers common questions about risk, control, and trust during Murmurant adoption and migration. The answers reflect how the system actually works, not marketing aspirations.
 
 ---
 
@@ -17,7 +17,7 @@ This document answers common questions about risk, control, and trust during Clu
 
 You will see exactly what the migration intends to do before it happens.
 
-Before any data moves, ClubOS generates a preview showing every record that would be created, updated, or skipped. You review this preview. If something looks wrong, you stop. No data has moved. You investigate, we correct the issue, and you preview again.
+Before any data moves, Murmurant generates a preview showing every record that would be created, updated, or skipped. You review this preview. If something looks wrong, you stop. No data has moved. You investigate, we correct the issue, and you preview again.
 
 Migration does not proceed until you explicitly approve.
 
@@ -35,9 +35,9 @@ We do not pressure you to proceed. Taking time to decide is expected.
 
 Yes, with one important distinction.
 
-**Before commit**: You can stop at any point. Stopping discards uncommitted work. Your source system and ClubOS both remain unchanged.
+**Before commit**: You can stop at any point. Stopping discards uncommitted work. Your source system and Murmurant both remain unchanged.
 
-**After commit**: Stopping depends on what has already been applied. ClubOS uses atomic operations where possible, but some multi-step processes may partially complete. If you need to reverse committed changes, that requires a rollback procedure, which may not be available for all operations.
+**After commit**: Stopping depends on what has already been applied. Murmurant uses atomic operations where possible, but some multi-step processes may partially complete. If you need to reverse committed changes, that requires a rollback procedure, which may not be available for all operations.
 
 The rule: aborting before commit is always safe. Reversing after commit depends on the specific operation.
 
@@ -45,7 +45,7 @@ The rule: aborting before commit is always safe. Reversing after commit depends 
 
 You are.
 
-ClubOS proposes. You decide. The system generates recommendations, previews, and migration plans. None of these take effect without your explicit approval.
+Murmurant proposes. You decide. The system generates recommendations, previews, and migration plans. None of these take effect without your explicit approval.
 
 Specifically:
 
@@ -73,7 +73,7 @@ We do not hide errors. If we cannot complete an operation, we tell you.
 
 You verify. We provide the tools.
 
-**Count comparisons**: The system shows record counts from your source system alongside what ClubOS received. You confirm the numbers match.
+**Count comparisons**: The system shows record counts from your source system alongside what Murmurant received. You confirm the numbers match.
 
 **Sample verification**: You spot-check individual records to confirm data transferred correctly. We provide tools to locate specific members, events, or transactions.
 
@@ -85,7 +85,7 @@ We do not certify accuracy. You do. We give you visibility to make that judgment
 
 We show you what will happen before it happens.
 
-Many systems apply changes and then show you the result. ClubOS shows you the intended result first. You approve or reject before anything changes.
+Many systems apply changes and then show you the result. Murmurant shows you the intended result first. You approve or reject before anything changes.
 
 Other differences:
 

@@ -1,10 +1,10 @@
-# ClubOS — Deployment Readiness Checklist
+# Murmurant — Deployment Readiness Checklist
 
 Status: Canonical Specification  
 Applies to: Any production deployment  
 Last updated: 2025-12-20
 
-This checklist defines the minimum conditions required before ClubOS
+This checklist defines the minimum conditions required before Murmurant
 may be deployed into a production environment.
 
 This document is normative.

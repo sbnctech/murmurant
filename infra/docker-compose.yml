@@ -1,6 +1,6 @@
-# ClubOS Local Development Stack
+# Murmurant Local Development Stack
 #
-# This file defines the services needed to run ClubOS locally:
+# This file defines the services needed to run Murmurant locally:
 #   - db: PostgreSQL database
 #   - web: Next.js web application
 #
@@ -14,17 +14,17 @@ services:
   # PostgreSQL Database
   db:
     image: postgres:15-alpine
-    container_name: clubos-db
+    container_name: murmurant-db
     environment:
-      POSTGRES_USER: clubos
-      POSTGRES_PASSWORD: clubos
-      POSTGRES_DB: clubos_dev
+      POSTGRES_USER: murmurant
+      POSTGRES_PASSWORD: murmurant
+      POSTGRES_DB: murmurant_dev
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U clubos -d clubos_dev"]
+      test: ["CMD-SHELL", "pg_isready -U murmurant -d murmurant_dev"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -34,9 +34,9 @@ services:
     build:
       context: ..
       dockerfile: infra/Dockerfile.web
-    container_name: clubos-web
+    container_name: murmurant-web
     environment:
-      DATABASE_URL: postgresql://clubos:clubos@db:5432/clubos_dev
+      DATABASE_URL: postgresql://murmurant:murmurant@db:5432/murmurant_dev
       NODE_ENV: development
     ports:
       - "3000:3000"

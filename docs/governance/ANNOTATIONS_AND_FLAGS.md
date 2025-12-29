@@ -1,6 +1,6 @@
 # Annotations and Review Flags
 
-This document describes the governance annotation and review flag systems in ClubOS.
+This document describes the governance annotation and review flag systems in Murmurant.
 
 ## Charter Principles
 

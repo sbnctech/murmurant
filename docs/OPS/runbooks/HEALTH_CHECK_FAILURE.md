@@ -21,7 +21,7 @@
 ### Step 1: Run Verbose Health Check
 
 ```bash
-cd /path/to/clubos
+cd /path/to/murmurant
 ./scripts/ops/health-checks/full-health.sh --verbose
 ```
 

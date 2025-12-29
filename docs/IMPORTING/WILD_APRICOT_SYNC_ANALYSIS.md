@@ -1,6 +1,6 @@
 # Wild Apricot Sync System Analysis
 
-This document provides a comprehensive analysis of the existing Wild Apricot (WA) data extraction pipeline in the chatbot repository, for the purpose of understanding what can be reused or adapted for ClubOS data ingestion.
+This document provides a comprehensive analysis of the existing Wild Apricot (WA) data extraction pipeline in the chatbot repository, for the purpose of understanding what can be reused or adapted for Murmurant data ingestion.
 
 ## 1. System Overview
 
@@ -369,7 +369,7 @@ The `wa_db_optimizer.py` creates:
 
 ## 9. Known Limitations
 
-1. **SQLite Only:** No support for PostgreSQL target (ClubOS uses Postgres)
+1. **SQLite Only:** No support for PostgreSQL target (Murmurant uses Postgres)
 2. **No Idempotency Keys:** Uses `INSERT OR REPLACE` which may lose audit history
 3. **No Soft Deletes:** Records removed from WA are not tracked
 4. **No Relational Integrity:** Foreign keys are integers (WA IDs), not UUIDs

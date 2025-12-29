@@ -1,4 +1,4 @@
-# ClubOS - Mechanism Stubs and Ownership
+# Murmurant - Mechanism Stubs and Ownership
 
 Status: Canonical Planning Specification
 Applies to: Pre-deployment readiness

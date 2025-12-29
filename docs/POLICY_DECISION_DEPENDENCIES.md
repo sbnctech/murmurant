@@ -1,6 +1,6 @@
 # Policy Decision Dependencies
 
-**Purpose:** Identify unresolved policy questions that block automation in ClubOS.
+**Purpose:** Identify unresolved policy questions that block automation in Murmurant.
 **Status:** Internal working document
 **Last Updated:** December 2025
 
@@ -51,7 +51,7 @@
 |----------|----------|----------------|-------------------|
 | F-001 | What is the reimbursement policy? (No policy text found) | Finance | No |
 | F-002 | What are the spending authority thresholds by role? (VP Activities, Committee Chair, Treasurer, Board) | Finance, Events | Yes |
-| F-003 | What payment provider will be used for ClubOS? (Stripe vs. other) | Finance | Yes |
+| F-003 | What payment provider will be used for Murmurant? (Stripe vs. other) | Finance | Yes |
 | F-004 | What is the refund policy for event cancellations by member? | Finance, Events | Yes |
 | F-005 | What is the refund policy for event cancellations by club? | Finance, Events | Yes |
 | F-006 | Does finance import from QuickBooks require VP Finance approval before committing? | Finance | No |

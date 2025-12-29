@@ -1,4 +1,4 @@
-# How ClubOS Is Built and Governed
+# How Murmurant Is Built and Governed
 
 **Audience**: Nonprofit leaders, board members, and executive directors
 
@@ -6,7 +6,7 @@
 
 ## Introduction
 
-This document explains how ClubOS is developed, how decisions are made about changes, and what you can rely on as a customer. It is written for people who use computers daily but do not have a background in software engineering.
+This document explains how Murmurant is developed, how decisions are made about changes, and what you can rely on as a customer. It is written for people who use computers daily but do not have a background in software engineering.
 
 We are not trying to impress you with technical sophistication. We are trying to explain, honestly, how we work and why it matters for your organization.
 
@@ -14,7 +14,7 @@ We are not trying to impress you with technical sophistication. We are trying to
 
 ## 1. Why Software Systems Often Fail Organizations
 
-Before explaining how ClubOS works, it helps to understand why software often causes problems for organizations like yours.
+Before explaining how Murmurant works, it helps to understand why software often causes problems for organizations like yours.
 
 **Systems change without warning.** Software companies update their products constantly. Sometimes these updates change how things work, remove features you depend on, or introduce problems. You often have no say in when or whether these changes happen.
 
@@ -48,11 +48,11 @@ We take these risks seriously because we have seen what happens when migrations 
 
 ---
 
-## 3. How ClubOS Is Intentionally Designed Differently
+## 3. How Murmurant Is Intentionally Designed Differently
 
-ClubOS is built around a set of principles that prioritize your control over our convenience. These principles are documented, binding, and enforced in how the system is developed.
+Murmurant is built around a set of principles that prioritize your control over our convenience. These principles are documented, binding, and enforced in how the system is developed.
 
-**The system proposes; humans decide.** ClubOS does not make consequential decisions on your behalf. It prepares options, shows you what will happen, and waits for your approval. The final decision is always yours.
+**The system proposes; humans decide.** Murmurant does not make consequential decisions on your behalf. It prepares options, shows you what will happen, and waits for your approval. The final decision is always yours.
 
 **Nothing happens in secret.** Every action that affects your data is recorded. You can see what changed, when it changed, and who authorized the change. There are no hidden processes that modify your information without your knowledge.
 
@@ -68,11 +68,11 @@ These are not aspirations. They are constraints we impose on ourselves.
 
 Many software systems try to be "smart" by making decisions automatically. This can seem helpful, but it comes at a cost: you lose visibility and control.
 
-ClubOS takes a different approach.
+Murmurant takes a different approach.
 
-**Automation handles mechanics, not judgment.** ClubOS automates tasks that require no discretion: displaying information, recording events, calculating totals. It does not automate decisions that require understanding your organization's intentions.
+**Automation handles mechanics, not judgment.** Murmurant automates tasks that require no discretion: displaying information, recording events, calculating totals. It does not automate decisions that require understanding your organization's intentions.
 
-**You approve before action.** For any action that matters—publishing content, sending communications, modifying records, committing a migration—ClubOS shows you what will happen and waits for your explicit approval.
+**You approve before action.** For any action that matters—publishing content, sending communications, modifying records, committing a migration—Murmurant shows you what will happen and waits for your explicit approval.
 
 **Ambiguity requires clarification.** When the system encounters a situation where multiple interpretations are possible, it asks for guidance rather than guessing. It does not infer your intent.
 
@@ -86,7 +86,7 @@ This approach requires more attention from you. We believe that trade-off is wor
 
 One of our core guarantees is that you see exactly what will happen before it happens.
 
-**Preview is not a summary.** When you preview a change in ClubOS, you are not seeing an estimate or a simplified version. You are seeing the actual change that will occur, using the same logic the system will use when it executes.
+**Preview is not a summary.** When you preview a change in Murmurant, you are not seeing an estimate or a simplified version. You are seeing the actual change that will occur, using the same logic the system will use when it executes.
 
 **Preview eliminates surprises.** The most damaging software failures are often not crashes or errors—they are changes that happen differently than expected. Preview ensures that what you approve is what you get.
 
@@ -104,11 +104,11 @@ Mistakes happen. Good systems are designed so that mistakes do not become perman
 
 **Abort before commit.** At any point before you explicitly commit to a change, you can stop. Aborting a process leaves your system unchanged. Your data, your settings, your operations—all remain exactly as they were.
 
-**Reversibility after commit.** For most actions, if you commit a change and then realize it was wrong, you can reverse it. ClubOS maintains the history needed to restore previous states.
+**Reversibility after commit.** For most actions, if you commit a change and then realize it was wrong, you can reverse it. Murmurant maintains the history needed to restore previous states.
 
-**Clear warnings for irreversible actions.** Some actions genuinely cannot be undone. For these, ClubOS tells you explicitly before you commit. You are never surprised to discover that something is permanent.
+**Clear warnings for irreversible actions.** Some actions genuinely cannot be undone. For these, Murmurant tells you explicitly before you commit. You are never surprised to discover that something is permanent.
 
-**No partial states.** Changes in ClubOS apply completely or not at all. You will not end up in a situation where half of an operation completed and half did not.
+**No partial states.** Changes in Murmurant apply completely or not at all. You will not end up in a situation where half of an operation completed and half did not.
 
 The goal is simple: give you the confidence to explore options, knowing that caution is free and mistakes are recoverable.
 
@@ -122,7 +122,7 @@ Most software is marketed based on features—what it can do. We believe this em
 
 **Guarantees are harder than features.** It is relatively easy to add a new capability. It is much harder to make that capability work correctly every time, under all conditions, without creating problems elsewhere. We prioritize the harder work.
 
-**Documentation is a contract.** When we document how ClubOS works, we are making a commitment. If the system behaves differently than the documentation says, that is a bug—not a feature you misunderstood.
+**Documentation is a contract.** When we document how Murmurant works, we are making a commitment. If the system behaves differently than the documentation says, that is a bug—not a feature you misunderstood.
 
 **Stability matters more than novelty.** Organizations depend on predictable systems. A system that works the same way today as it did last month is more valuable than a system that surprises you with changes.
 
@@ -134,13 +134,13 @@ We would rather do fewer things well than many things poorly.
 
 Software must evolve. Bugs must be fixed, security must be maintained, and improvements must be made. Here is what you can expect from how we handle change.
 
-**Implementation may change; guarantees will not regress.** We may change how ClubOS works internally to make it faster, more reliable, or easier to maintain. We will not weaken the guarantees we have made about your control, visibility, and safety.
+**Implementation may change; guarantees will not regress.** We may change how Murmurant works internally to make it faster, more reliable, or easier to maintain. We will not weaken the guarantees we have made about your control, visibility, and safety.
 
-**Documented behavior is stable.** If we document that ClubOS works a certain way, that behavior is protected. We will not silently change it.
+**Documented behavior is stable.** If we document that Murmurant works a certain way, that behavior is protected. We will not silently change it.
 
 **You will be informed of significant changes.** When changes affect how you use the system, we will tell you in advance. You will have time to understand and prepare.
 
-**Your feedback shapes priorities.** We cannot promise to implement every request, but we do promise to listen. Your experience of using ClubOS informs how we develop it.
+**Your feedback shapes priorities.** We cannot promise to implement every request, but we do promise to listen. Your experience of using Murmurant informs how we develop it.
 
 **Problems will be acknowledged.** No system is perfect. When something goes wrong, we will acknowledge it honestly rather than minimize or deflect.
 
@@ -150,7 +150,7 @@ We cannot promise perfection. We can promise a consistent approach to how we wor
 
 ## Summary
 
-ClubOS is built and governed according to principles that prioritize your control, visibility, and safety:
+Murmurant is built and governed according to principles that prioritize your control, visibility, and safety:
 
 - The system proposes; you decide
 - You see before you commit
@@ -161,7 +161,7 @@ ClubOS is built and governed according to principles that prioritize your contro
 
 These principles are not marketing. They are documented constraints that govern how the system is developed and maintained.
 
-If your experience of ClubOS differs from what is described here, we want to know. The purpose of this document is to create accountability—for us, to you.
+If your experience of Murmurant differs from what is described here, we want to know. The purpose of this document is to create accountability—for us, to you.
 
 ---
 
@@ -171,4 +171,4 @@ For the formal specification of customer guarantees, see the [Core Trust Surface
 
 ---
 
-*This document describes ClubOS's development methodology and governance commitments as of December 2025.*
+*This document describes Murmurant's development methodology and governance commitments as of December 2025.*

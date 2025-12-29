@@ -2,7 +2,7 @@
 
 ## For Nonprofit Leaders, Board Members, and Organizational Decision-Makers
 
-This document explains how ClubOS is built and why the development approach
+This document explains how Murmurant is built and why the development approach
 reduces risk compared to traditional software projects. It is written for
 readers who are not software engineers but who need to understand whether
 this system can be trusted with their organization's operations.
@@ -16,14 +16,14 @@ is not "Does this have impressive features?" but rather "Can we trust this
 system with our members, our data, and our operations?"
 
 This document addresses that question by explaining the methodology behind
-ClubOS development—not to convince you of its perfection, but to help you
+Murmurant development—not to convince you of its perfection, but to help you
 understand the specific ways risk is managed and where limitations remain.
 
 ---
 
 ## What Makes Software Projects Fail
 
-Before explaining what ClubOS does differently, it helps to understand why
+Before explaining what Murmurant does differently, it helps to understand why
 software projects typically go wrong. Most failures share common patterns:
 
 **Miscommunication**: The people building the software misunderstand what the
@@ -42,7 +42,7 @@ problems arise, there is no record of what the system is supposed to do.
 **Vendor dependency**: The organization becomes locked into a system it cannot
 leave, maintained by people who may not prioritize its interests.
 
-ClubOS methodology addresses each of these failure modes through specific
+Murmurant methodology addresses each of these failure modes through specific
 practices. None of these practices are novel—they are established principles
 that are often skipped due to time pressure or cost concerns.
 
@@ -54,7 +54,7 @@ Traditional software development often operates on an adversarial model: users
 request features, developers resist or delay, management mediates. This
 creates pressure to cut corners and hide problems.
 
-ClubOS uses a trust-based model with different assumptions:
+Murmurant uses a trust-based model with different assumptions:
 
 **Transparency over protection**: All decisions, tradeoffs, and known
 limitations are documented. There is no benefit to hiding problems because
@@ -76,7 +76,7 @@ limitations or recommend against certain approaches.
 
 ## Human-in-the-Loop Enforcement
 
-ClubOS development uses automated tools, including tools that employ
+Murmurant development uses automated tools, including tools that employ
 artificial intelligence. However, these tools operate under strict constraints
 that keep humans in control of all significant decisions.
 
@@ -105,10 +105,10 @@ of automation while preserving human judgment where it matters.
 
 ## Constrained Automation
 
-The use of AI-assisted development tools in ClubOS is deliberately limited.
+The use of AI-assisted development tools in Murmurant is deliberately limited.
 This section explains those constraints and why they exist.
 
-**What AI tools do in ClubOS development**:
+**What AI tools do in Murmurant development**:
 
 - Draft code based on documented requirements
 - Identify patterns in existing code that may indicate problems
@@ -143,7 +143,7 @@ first, and documentation (if it exists at all) is created later to explain
 what was already built. This leads to documentation that is incomplete,
 outdated, or wrong.
 
-ClubOS inverts this pattern: documentation comes first.
+Murmurant inverts this pattern: documentation comes first.
 
 **How this works**:
 
@@ -211,7 +211,7 @@ record prevents disputes and enables learning from past decisions.
 
 Software that works in controlled conditions often fails when real people use
 it. The gap between laboratory testing and operational reality is one of the
-most common sources of software failure. ClubOS methodology addresses this
+most common sources of software failure. Murmurant methodology addresses this
 through structured real-world testing that acknowledges this gap rather than
 assuming it away.
 
@@ -224,7 +224,7 @@ discover problems that were not visible in earlier, more controlled settings.
 
 **Client Zero participation**:
 
-The organization using ClubOS as Client Zero encounters new capabilities
+The organization using Murmurant as Client Zero encounters new capabilities
 before they are offered elsewhere. This is not beta testing in the sense of
 finding obvious bugs. It is observation of how features behave when used by
 real people for real purposes, with real organizational pressures and real
@@ -259,7 +259,7 @@ testing reveals these gaps before they become problems at scale.
 
 ## What This Methodology Cannot Guarantee
 
-Honest methodology documentation must acknowledge its limitations. ClubOS
+Honest methodology documentation must acknowledge its limitations. Murmurant
 development practices reduce risk but do not eliminate it. Any claim to the
 contrary would be misleading.
 
@@ -283,7 +283,7 @@ making attacks more difficult and limiting damage when attacks succeed—not
 about achieving invulnerability.
 
 **Vendor-proof continuity**: If the people and organizations maintaining
-ClubOS cease to exist, the system's future becomes uncertain. Documentation
+Murmurant cease to exist, the system's future becomes uncertain. Documentation
 and data export capabilities mitigate this risk but do not eliminate it.
 Organizations should consider what happens if support becomes unavailable,
 regardless of how unlikely that scenario may seem.
@@ -302,7 +302,7 @@ requires judgment and adaptation.
 
 ## Summary
 
-ClubOS development methodology rests on a few core principles:
+Murmurant development methodology rests on a few core principles:
 
 - Humans approve all significant actions
 - Documentation precedes implementation

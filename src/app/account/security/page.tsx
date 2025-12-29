@@ -17,7 +17,7 @@ import PasskeyManager from "@/components/auth/PasskeyManager";
 import { formatClubDateTime } from "@/lib/timezone";
 
 export const metadata = {
-  title: "Security Settings - ClubOS",
+  title: "Security Settings - Murmurant",
   description: "Manage your account security settings",
 };
 

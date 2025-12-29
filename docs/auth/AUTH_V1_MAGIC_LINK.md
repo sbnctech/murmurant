@@ -1,6 +1,6 @@
 # Magic Link Authentication - Implementation Guide
 
-ClubOS uses email-based magic link authentication with server-side DB-backed sessions.
+Murmurant uses email-based magic link authentication with server-side DB-backed sessions.
 
 ## Overview
 
@@ -146,7 +146,7 @@ Required environment variables for magic link auth:
 ADMIN_EMAIL=admin@yourclub.org
 
 # Database connection (required for session storage)
-DATABASE_URL=postgresql://user:pass@host:5432/clubos
+DATABASE_URL=postgresql://user:pass@host:5432/murmurant
 ```
 
 ## Database Schema
@@ -227,14 +227,14 @@ Tests cover:
 ### Local Development
 
 In development mode:
-- Cookie name: `clubos_session` (no `__Host-` prefix)
+- Cookie name: `murmurant_session` (no `__Host-` prefix)
 - `secure: false` (allows http://localhost)
 - Magic link URLs are logged to console (not sent via email)
 
 ### Production
 
 In production mode:
-- Cookie name: `__Host-clubos_session`
+- Cookie name: `__Host-murmurant_session`
 - `secure: true` (HTTPS required)
 - Magic links sent via configured email service
 

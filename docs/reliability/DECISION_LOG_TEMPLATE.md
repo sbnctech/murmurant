@@ -1,4 +1,4 @@
-# ClubOS - Decision Log Template
+# Murmurant - Decision Log Template
 
 Status: Canonical Template
 Applies to: All incidents and emergency actions

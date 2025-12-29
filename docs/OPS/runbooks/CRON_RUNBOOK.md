@@ -1,6 +1,6 @@
 # Cron Jobs Runbook
 
-Operational procedures for ClubOS scheduled tasks.
+Operational procedures for Murmurant scheduled tasks.
 
 **Charter Principles:**
 
@@ -12,7 +12,7 @@ Operational procedures for ClubOS scheduled tasks.
 
 ## Overview
 
-ClubOS uses scheduled jobs for:
+Murmurant uses scheduled jobs for:
 
 - **Membership transitions**: Auto-advancing membership states
 - **Sync jobs**: Wild Apricot data synchronization

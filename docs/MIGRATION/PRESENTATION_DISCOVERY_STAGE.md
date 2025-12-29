@@ -146,7 +146,7 @@ Contents:
 
 The discovery report feeds into the Suggestion Plan generator, which proposes:
 
-- Which pages to recreate in ClubOS
+- Which pages to recreate in Murmurant
 - Which widgets to auto-migrate
 - Which elements require manual rebuild
 - Which elements are unsupported

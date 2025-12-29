@@ -1,10 +1,10 @@
 # Security Invariants & CI Guardrails
 
-This document describes security invariants enforced by CI guardrails in ClubOS.
+This document describes security invariants enforced by CI guardrails in Murmurant.
 
 ## Overview
 
-ClubOS enforces three categories of security invariants:
+Murmurant enforces three categories of security invariants:
 
 | Category | Invariant | Check Location | CI Gate |
 |----------|-----------|----------------|---------|

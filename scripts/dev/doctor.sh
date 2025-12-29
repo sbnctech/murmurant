@@ -1,6 +1,6 @@
 #!/bin/zsh
 #
-# doctor.sh - Environment validation for ClubOS development
+# doctor.sh - Environment validation for Murmurant development
 # macOS/zsh compatible, ASCII only
 #
 # Checks that all required tools and files are present
@@ -10,7 +10,7 @@
 SCRIPT_DIR="${0:A:h}"
 PROJECT_ROOT="${SCRIPT_DIR}/../.."
 
-echo "=== ClubOS Environment Doctor ==="
+echo "=== Murmurant Environment Doctor ==="
 echo ""
 
 cd "${PROJECT_ROOT}"

@@ -1,4 +1,4 @@
-# ClubOS - A1 Block Ordering UI Wiring
+# Murmurant - A1 Block Ordering UI Wiring
 
 Status: Draft (implementation target)
 Applies to: Admin editor

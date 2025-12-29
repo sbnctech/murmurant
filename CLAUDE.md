@@ -1,4 +1,4 @@
-# Claude Code Rules for ClubOS
+# Claude Code Rules for Murmurant
 
 Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
@@ -33,7 +33,7 @@ npm run test:unit -- <pattern>  # Run specific unit tests
 
 ## Authority Model (Non-Negotiable)
 
-ClubOS operates under a single Merge Captain model.
+Murmurant operates under a single Merge Captain model.
 
 **Claude Code MAY:**
 
@@ -186,7 +186,7 @@ docs/
 
 ## State Machines
 
-ClubOS uses explicit state machines for workflows (per P3). Key domains:
+Murmurant uses explicit state machines for workflows (per P3). Key domains:
 
 - **Membership lifecycle**: application → review → active → alumni
 - **Event lifecycle**: draft → published → closed → archived

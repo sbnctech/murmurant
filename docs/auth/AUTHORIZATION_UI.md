@@ -1,6 +1,6 @@
 # Authorization UI Components
 
-ClubOS provides client-side components that reflect server-side authorization state. These components make authorization visible in the UI while never replacing server-side enforcement.
+Murmurant provides client-side components that reflect server-side authorization state. These components make authorization visible in the UI while never replacing server-side enforcement.
 
 ## Charter Compliance
 

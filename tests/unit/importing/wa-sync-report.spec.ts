@@ -245,7 +245,7 @@ describe("Skip Reason Tracking", () => {
 // ============================================================================
 
 describe("writeSyncReport", () => {
-  const testDir = "/tmp/clubos-test";
+  const testDir = "/tmp/murmurant-test";
   const testFile = path.join(testDir, "test_report.json");
 
   beforeEach(() => {

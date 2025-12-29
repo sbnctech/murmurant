@@ -1,6 +1,6 @@
 # Backups Runbook
 
-Operational procedures for ClubOS backup and recovery.
+Operational procedures for Murmurant backup and recovery.
 
 **Charter Principles:**
 
@@ -12,7 +12,7 @@ Operational procedures for ClubOS backup and recovery.
 
 ## Overview
 
-ClubOS uses Neon PostgreSQL which provides automatic backup capabilities:
+Murmurant uses Neon PostgreSQL which provides automatic backup capabilities:
 
 - **Point-in-Time Recovery (PITR)**: Restore to any point in retention window
 - **Branch-based architecture**: Instant database clones

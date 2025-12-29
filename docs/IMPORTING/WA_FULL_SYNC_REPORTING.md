@@ -7,7 +7,7 @@ This document describes the end-of-run reporting system for the WA full sync pro
 The WA full sync now produces:
 
 1. **Console Summary** - Structured output showing fetched counts, results, and diagnostics
-2. **JSON Report File** - Machine-readable report at `/tmp/clubos/wa_full_sync_report.json`
+2. **JSON Report File** - Machine-readable report at `/tmp/murmurant/wa_full_sync_report.json`
 3. **Prominent Warnings** - Visual warnings for suspicious conditions
 
 ## Console Output
@@ -41,13 +41,13 @@ The sync prints a structured summary at the end of each run:
   Duration:  300s
   Errors:    0
   Warnings:  0
-  Report:    /tmp/clubos/wa_full_sync_report.json
+  Report:    /tmp/murmurant/wa_full_sync_report.json
 ============================================================
 ```
 
 ## JSON Report File
 
-Location: `/tmp/clubos/wa_full_sync_report.json`
+Location: `/tmp/murmurant/wa_full_sync_report.json`
 
 ### Report Structure
 
@@ -142,7 +142,7 @@ npx tsx scripts/importing/wa_full_sync.ts --probe-event-id 12345
 Output includes:
 
 - Whether the event exists in WA
-- Whether the event is mapped to ClubOS
+- Whether the event is mapped to Murmurant
 - Registration count from WA
 - Sample registrations with their mapping status
 - Summary of what would be imported vs skipped
@@ -151,7 +151,7 @@ Output includes:
 
 If the sync reports 0 registrations upserted:
 
-1. **Check the JSON report** at `/tmp/clubos/wa_full_sync_report.json`
+1. **Check the JSON report** at `/tmp/murmurant/wa_full_sync_report.json`
 2. **Look at `topSkipReasons`** to see why registrations were skipped
 3. **Check `fetched.registrations`** to confirm registrations were fetched
 4. **Verify member sync** ran first (registrations require member mappings)
@@ -160,7 +160,7 @@ If the sync reports 0 registrations upserted:
 ### Common Causes
 
 1. **Members not synced** - Run full sync; members sync before registrations
-2. **Event not mapped** - Event may not exist in ClubOS yet
+2. **Event not mapped** - Event may not exist in Murmurant yet
 3. **API filter issue** - Check WA API credentials and filters
 4. **Transform errors** - Check `registrationsSkippedTransformError` count
 
@@ -181,25 +181,25 @@ DRY_RUN=1 npx tsx scripts/importing/wa_full_sync.ts
 ### View Report After Sync
 
 ```bash
-cat /tmp/clubos/wa_full_sync_report.json | jq .
+cat /tmp/murmurant/wa_full_sync_report.json | jq .
 ```
 
 ### Check for Warnings
 
 ```bash
-cat /tmp/clubos/wa_full_sync_report.json | jq '.warnings'
+cat /tmp/murmurant/wa_full_sync_report.json | jq '.warnings'
 ```
 
 ### Get Top Skip Reasons
 
 ```bash
-cat /tmp/clubos/wa_full_sync_report.json | jq '.registrationDiagnostics.topSkipReasons'
+cat /tmp/murmurant/wa_full_sync_report.json | jq '.registrationDiagnostics.topSkipReasons'
 ```
 
 ## What Changed (2025-12-18)
 
 - Added `SyncReport` type with full diagnostic breakdown
-- End-of-run JSON report written to `/tmp/clubos/wa_full_sync_report.json`
+- End-of-run JSON report written to `/tmp/murmurant/wa_full_sync_report.json`
 - Warning system for suspicious conditions (0 upserts, low counts)
 - Prominent visual warning box in console output
 - Enhanced console summary with fetched counts and diagnostics
@@ -208,7 +208,7 @@ cat /tmp/clubos/wa_full_sync_report.json | jq '.registrationDiagnostics.topSkipR
 
 1. Run a dry-run sync: `DRY_RUN=1 npx tsx scripts/importing/wa_full_sync.ts`
 2. Observe the structured summary output
-3. Check the JSON report: `cat /tmp/clubos/wa_full_sync_report.json | jq .`
+3. Check the JSON report: `cat /tmp/murmurant/wa_full_sync_report.json | jq .`
 4. If warnings appear, show the diagnostic information
 
 ## How to Rollback

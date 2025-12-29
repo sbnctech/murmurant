@@ -2,7 +2,7 @@ Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
 # Email Deliverability Monitoring (v1)
 
-This spec defines how ClubOS monitors deliverability and enforces rules around repeated non-deliverability (bounces, deferrals/blocks, complaints).
+This spec defines how Murmurant monitors deliverability and enforces rules around repeated non-deliverability (bounces, deferrals/blocks, complaints).
 
 Goals:
 - Detect deliverability problems quickly.

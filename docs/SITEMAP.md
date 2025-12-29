@@ -1,6 +1,6 @@
-# ClubOS Documentation Sitemap
+# Murmurant Documentation Sitemap
 
-This file provides a high level sitemap of the ClubOS project, focusing on documentation, tests, and developer tooling.
+This file provides a high level sitemap of the Murmurant project, focusing on documentation, tests, and developer tooling.
 
 ## Docs Root (docs/)
 

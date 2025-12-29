@@ -134,7 +134,7 @@ Line 2"`;
 
 describe("mapMemberRecord", () => {
   describe("field mapping", () => {
-    it("maps WA fields to ClubOS member fields", () => {
+    it("maps WA fields to Murmurant member fields", () => {
       const rows = parseCSV(MEMBERS_CSV);
       const member = mapMemberRecord(rows[0], 2, MINIMAL_CONFIG);
 
@@ -246,7 +246,7 @@ describe("mapMemberRecord", () => {
 
 describe("mapEventRecord", () => {
   describe("field mapping", () => {
-    it("maps WA fields to ClubOS event fields", () => {
+    it("maps WA fields to Murmurant event fields", () => {
       const rows = parseCSV(EVENTS_CSV);
       const event = mapEventRecord(rows[0], 2, MINIMAL_CONFIG);
 
@@ -384,7 +384,7 @@ describe("mapEventRecord", () => {
 
 describe("mapRegistrationRecord", () => {
   describe("field mapping", () => {
-    it("maps WA fields to ClubOS registration fields", () => {
+    it("maps WA fields to Murmurant registration fields", () => {
       const rows = parseCSV(REGISTRATIONS_CSV);
       const reg = mapRegistrationRecord(rows[0], 2, MINIMAL_CONFIG);
 

@@ -1,15 +1,15 @@
 #!/usr/bin/env npx tsx
 /**
- * ClubOS Migration CLI Entry Point
+ * Murmurant Migration CLI Entry Point
  *
- * Invokes the migration engine to import data from Wild Apricot to ClubOS.
+ * Invokes the migration engine to import data from Wild Apricot to Murmurant.
  *
  * Usage:
  *   npx tsx scripts/migration/migrate.ts [options]
  *
  * Options:
  *   --source-org <name>     Source organization identifier (default: "wild-apricot")
- *   --target-org <name>     Target organization identifier (default: "clubos")
+ *   --target-org <name>     Target organization identifier (default: "murmurant")
  *   --dry-run               Run without making changes (default: true)
  *   --live                  Run with actual database writes (sets dry-run=false)
  *   --output-report <path>  Output directory for reports (default: scripts/migration/reports)
@@ -47,9 +47,9 @@ import type { MigrationRunOptions } from "./lib/types";
 // =============================================================================
 
 const VALID_SOURCES = ["wild-apricot", "wa", "wildapricot"];
-const VALID_TARGETS = ["clubos"];
+const VALID_TARGETS = ["murmurant"];
 const DEFAULT_SOURCE = "wild-apricot";
-const DEFAULT_TARGET = "clubos";
+const DEFAULT_TARGET = "murmurant";
 const DEFAULT_REPORTS_DIR = path.join(__dirname, "reports");
 const DEFAULT_DATA_DIR = path.join(__dirname, "sample-pack");
 const DEFAULT_MEMBERS_FILE = "members/wa-members-export.csv";
@@ -297,7 +297,7 @@ export function printExecutionPlan(args: CLIArgs): void {
   const divider = "=".repeat(60);
 
   console.log(`\n${divider}`);
-  console.log("ClubOS Migration - Execution Plan");
+  console.log("Murmurant Migration - Execution Plan");
   console.log(divider);
 
   console.log(`\nMode:        ${args.dryRun ? "DRY RUN (no database changes)" : "LIVE (will modify database)"}`);
@@ -330,16 +330,16 @@ export function printExecutionPlan(args: CLIArgs): void {
 
 export function printHelp(): void {
   console.log(`
-ClubOS Migration CLI
+Murmurant Migration CLI
 
-Imports data from Wild Apricot to ClubOS.
+Imports data from Wild Apricot to Murmurant.
 
 USAGE
   npx tsx scripts/migration/migrate.ts [options]
 
 OPTIONS
   --source-org <name>     Source organization (default: "wild-apricot")
-  --target-org <name>     Target organization (default: "clubos")
+  --target-org <name>     Target organization (default: "murmurant")
   --dry-run               Run without making changes (default)
   --live                  Run with actual database writes
   --output-report <path>  Output directory for reports

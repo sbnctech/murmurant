@@ -1,11 +1,11 @@
-# ClubOS — Incident Response and Runbooks
+# Murmurant — Incident Response and Runbooks
 
 Status: Canonical Specification  
 Applies to: Production operations  
 Last updated: 2025-12-20
 
 This document defines how incidents are detected, classified, responded to,
-and documented in ClubOS.
+and documented in Murmurant.
 
 This document is normative.
 

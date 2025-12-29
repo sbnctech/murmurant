@@ -14,7 +14,7 @@ test.describe("Demo Dashboard", () => {
     // Navigate to demo page with admin auth via cookie
     await page.context().addCookies([
       {
-        name: "clubos_dev_session",
+        name: "murmurant_dev_session",
         value: "test-admin-token",
         domain: "localhost",
         path: "/",

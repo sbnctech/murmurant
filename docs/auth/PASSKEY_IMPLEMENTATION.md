@@ -1,6 +1,6 @@
 # Passkey Authentication Implementation
 
-ClubOS supports passwordless authentication using WebAuthn/FIDO2 passkeys. This document describes the implementation, configuration, and usage.
+Murmurant supports passwordless authentication using WebAuthn/FIDO2 passkeys. This document describes the implementation, configuration, and usage.
 
 ## Overview
 
@@ -129,7 +129,7 @@ model AuthChallenge {
 |----------|-------------|----------|---------|
 | `PASSKEY_RP_ID` | Relying party ID (domain) | Production | `localhost` |
 | `PASSKEY_ORIGIN` | Expected origin URL | Production | `http://localhost:3000` |
-| `PASSKEY_RP_NAME` | Display name for authenticator prompts | No | `ClubOS` |
+| `PASSKEY_RP_NAME` | Display name for authenticator prompts | No | `Murmurant` |
 
 ### Example Configuration
 

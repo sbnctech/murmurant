@@ -4,7 +4,7 @@ Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
 ## Purpose
 
-This document defines the canonical merge policy for ClubOS.
+This document defines the canonical merge policy for Murmurant.
 The goal is to prevent merge churn, reduce PR queue chaos, and ensure
 that main remains stable and deployable at all times.
 

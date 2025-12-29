@@ -61,7 +61,7 @@ const POLICY_DEFAULTS: PolicyValueMap = {
   "display.memberTermPlural": "members",
 
   // Membership Tiers (Issue #276)
-  // WA level names → ClubOS tier codes for SBNC
+  // WA level names → Murmurant tier codes for SBNC
   "membership.tiers.enabled": false,
   "membership.tiers.defaultCode": "GENERAL",
   "membership.tiers.waMapping": {

@@ -1,6 +1,6 @@
-# Wild Apricot vs ClubOS Cost Comparison
+# Wild Apricot vs Murmurant Cost Comparison
 
-Initial framework for comparing total cost of ownership between Wild Apricot and ClubOS.
+Initial framework for comparing total cost of ownership between Wild Apricot and Murmurant.
 
 **Status**: Draft - Some values are placeholders pending validation.
 
@@ -44,9 +44,9 @@ These costs exist because WA does not provide:
 - File storage beyond WA limits
 - Custom application hosting
 
-### 4. ClubOS Cloud Hosting (Projected)
+### 4. Murmurant Cloud Hosting (Projected)
 
-Placeholder for production ClubOS infrastructure:
+Placeholder for production Murmurant infrastructure:
 
 | Item | Monthly | Annual | Notes |
 |------|---------|--------|-------|
@@ -57,9 +57,9 @@ Placeholder for production ClubOS infrastructure:
 | Monitoring/logging | $TBD | $TBD | Optional |
 | **Subtotal Hosting** | $TBD | $TBD | |
 
-Detailed analysis: See CLUBOS_HOSTING_COST_MODEL.md (pending)
+Detailed analysis: See MURMURANT_HOSTING_COST_MODEL.md (pending)
 
-### 5. ClubOS Payment Processing (Projected)
+### 5. Murmurant Payment Processing (Projected)
 
 | Item | Rate | Notes |
 |------|------|-------|
@@ -73,7 +73,7 @@ Any cost difference comes from infrastructure, not payment fees.
 
 ## Summary Comparison
 
-| Category | WA Current | ClubOS Projected | Delta |
+| Category | WA Current | Murmurant Projected | Delta |
 |----------|------------|------------------|-------|
 | Subscription/hosting | $TBD | $TBD | $TBD |
 | Payment processing | $TBD | ~Same | ~$0 |
@@ -113,7 +113,7 @@ Before presenting these numbers:
 - [ ] Verify WA subscription tier and invoice amount
 - [ ] Run payment analysis script with full year data
 - [ ] Obtain Hosting.com invoice for VPS cost
-- [ ] Estimate ClubOS hosting (see CLUBOS_HOSTING_COST_MODEL.md)
+- [ ] Estimate Murmurant hosting (see MURMURANT_HOSTING_COST_MODEL.md)
 - [ ] Confirm Stripe nonprofit eligibility
 
 ---
@@ -122,4 +122,4 @@ Before presenting these numbers:
 
 - PERSONIFY_PAYMENTS_COST_MODEL.md - Payment fee analysis
 - INFRASTRUCTURE_COST_OFFSETS.md - VPS/mail costs (pending)
-- CLUBOS_HOSTING_COST_MODEL.md - Cloud infrastructure (pending)
+- MURMURANT_HOSTING_COST_MODEL.md - Cloud infrastructure (pending)

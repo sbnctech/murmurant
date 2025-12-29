@@ -30,7 +30,7 @@ function createMockReport(overrides: Partial<MigrationReport> = {}): MigrationRe
     startedAt: new Date("2024-01-15T10:00:00Z"),
     completedAt: new Date("2024-01-15T10:01:00Z"),
     dryRun: true,
-    config: { source: "wild-apricot", target: "clubos", version: "1.0.0" },
+    config: { source: "wild-apricot", target: "murmurant", version: "1.0.0" },
     summary: {
       totalRecords: 10,
       created: 5,
@@ -47,10 +47,10 @@ function createMockReport(overrides: Partial<MigrationReport> = {}): MigrationRe
       skipped: 1,
       errors: 0,
       records: [
-        { _sourceRow: 2, _waId: "wa-m1", _clubosId: "co-m1", _action: "create" },
-        { _sourceRow: 3, _waId: "wa-m2", _clubosId: "co-m2", _action: "create" },
-        { _sourceRow: 4, _waId: "wa-m3", _clubosId: "co-m3", _action: "create" },
-        { _sourceRow: 5, _waId: "wa-m4", _clubosId: "co-m4", _action: "update" },
+        { _sourceRow: 2, _waId: "wa-m1", _murmurantId: "co-m1", _action: "create" },
+        { _sourceRow: 3, _waId: "wa-m2", _murmurantId: "co-m2", _action: "create" },
+        { _sourceRow: 4, _waId: "wa-m3", _murmurantId: "co-m3", _action: "create" },
+        { _sourceRow: 5, _waId: "wa-m4", _murmurantId: "co-m4", _action: "update" },
         { _sourceRow: 6, _waId: "wa-m5", _action: "skip" },
       ],
     },
@@ -62,8 +62,8 @@ function createMockReport(overrides: Partial<MigrationReport> = {}): MigrationRe
       skipped: 1,
       errors: 0,
       records: [
-        { _sourceRow: 2, _waId: "wa-e1", _clubosId: "co-e1", _action: "create" },
-        { _sourceRow: 3, _waId: "wa-e2", _clubosId: "co-e2", _action: "create" },
+        { _sourceRow: 2, _waId: "wa-e1", _murmurantId: "co-e1", _action: "create" },
+        { _sourceRow: 3, _waId: "wa-e2", _murmurantId: "co-e2", _action: "create" },
         { _sourceRow: 4, _waId: "wa-e3", _action: "skip" },
       ],
     },
@@ -79,14 +79,14 @@ function createMockReport(overrides: Partial<MigrationReport> = {}): MigrationRe
     errors: [],
     idMapping: {
       members: [
-        { waId: "wa-m1", clubosId: "co-m1", email: "m1@test.com" },
-        { waId: "wa-m2", clubosId: "co-m2", email: "m2@test.com" },
-        { waId: "wa-m3", clubosId: "co-m3", email: "m3@test.com" },
-        { waId: "wa-m4", clubosId: "co-m4", email: "m4@test.com" },
+        { waId: "wa-m1", murmurantId: "co-m1", email: "m1@test.com" },
+        { waId: "wa-m2", murmurantId: "co-m2", email: "m2@test.com" },
+        { waId: "wa-m3", murmurantId: "co-m3", email: "m3@test.com" },
+        { waId: "wa-m4", murmurantId: "co-m4", email: "m4@test.com" },
       ],
       events: [
-        { waId: "wa-e1", clubosId: "co-e1", title: "Event 1" },
-        { waId: "wa-e2", clubosId: "co-e2", title: "Event 2" },
+        { waId: "wa-e1", murmurantId: "co-e1", title: "Event 1" },
+        { waId: "wa-e2", murmurantId: "co-e2", title: "Event 2" },
       ],
     },
     ...overrides,
@@ -116,7 +116,7 @@ describe("generateIdMappingReport", () => {
     expect(result.members.mappings).toHaveLength(4);
     expect(result.members.mappings[0]).toEqual({
       waId: "wa-m1",
-      clubosId: "co-m1",
+      murmurantId: "co-m1",
       identifier: "m1@test.com",
     });
   });
@@ -128,7 +128,7 @@ describe("generateIdMappingReport", () => {
     expect(result.events.mappings).toHaveLength(2);
     expect(result.events.mappings[0]).toEqual({
       waId: "wa-e1",
-      clubosId: "co-e1",
+      murmurantId: "co-e1",
       identifier: "Event 1",
     });
   });
@@ -200,16 +200,16 @@ describe("generateIdMappingReport", () => {
 describe("analyzeIdMappings", () => {
   it("detects duplicate WA IDs", () => {
     const mappings = [
-      { waId: "wa-1", clubosId: "co-1" },
-      { waId: "wa-2", clubosId: "co-2" },
-      { waId: "wa-1", clubosId: "co-3" }, // duplicate
-      { waId: "wa-3", clubosId: "co-4" },
-      { waId: "wa-2", clubosId: "co-5" }, // duplicate
+      { waId: "wa-1", murmurantId: "co-1" },
+      { waId: "wa-2", murmurantId: "co-2" },
+      { waId: "wa-1", murmurantId: "co-3" }, // duplicate
+      { waId: "wa-3", murmurantId: "co-4" },
+      { waId: "wa-2", murmurantId: "co-5" }, // duplicate
     ];
     const records = mappings.map((m, i) => ({
       _sourceRow: i + 2,
       _waId: m.waId,
-      _clubosId: m.clubosId,
+      _murmurantId: m.murmurantId,
     }));
 
     const result = analyzeIdMappings(mappings, records);
@@ -221,12 +221,12 @@ describe("analyzeIdMappings", () => {
 
   it("returns sorted duplicate list", () => {
     const mappings = [
-      { waId: "wa-z", clubosId: "co-1" },
-      { waId: "wa-a", clubosId: "co-2" },
-      { waId: "wa-z", clubosId: "co-3" },
-      { waId: "wa-a", clubosId: "co-4" },
+      { waId: "wa-z", murmurantId: "co-1" },
+      { waId: "wa-a", murmurantId: "co-2" },
+      { waId: "wa-z", murmurantId: "co-3" },
+      { waId: "wa-a", murmurantId: "co-4" },
     ];
-    const records: { _waId?: string; _clubosId?: string }[] = [];
+    const records: { _waId?: string; _murmurantId?: string }[] = [];
 
     const result = analyzeIdMappings(mappings, records);
 
@@ -235,12 +235,12 @@ describe("analyzeIdMappings", () => {
 
   it("detects missing IDs (records with waId but no mapping)", () => {
     const mappings = [
-      { waId: "wa-1", clubosId: "co-1" },
-      { waId: "wa-2", clubosId: "co-2" },
+      { waId: "wa-1", murmurantId: "co-1" },
+      { waId: "wa-2", murmurantId: "co-2" },
     ];
     const records = [
-      { _sourceRow: 2, _waId: "wa-1", _clubosId: "co-1" },
-      { _sourceRow: 3, _waId: "wa-2", _clubosId: "co-2" },
+      { _sourceRow: 2, _waId: "wa-1", _murmurantId: "co-1" },
+      { _sourceRow: 3, _waId: "wa-2", _murmurantId: "co-2" },
       { _sourceRow: 4, _waId: "wa-3" }, // missing mapping
       { _sourceRow: 5, _waId: "wa-4" }, // missing mapping
     ];
@@ -253,7 +253,7 @@ describe("analyzeIdMappings", () => {
   });
 
   it("returns unique missing IDs", () => {
-    const mappings: { waId: string; clubosId: string }[] = [];
+    const mappings: { waId: string; murmurantId: string }[] = [];
     const records = [
       { _sourceRow: 2, _waId: "wa-1" },
       { _sourceRow: 3, _waId: "wa-1" }, // same WA ID appears twice
@@ -267,11 +267,11 @@ describe("analyzeIdMappings", () => {
   });
 
   it("handles records without waId", () => {
-    const mappings = [{ waId: "wa-1", clubosId: "co-1" }];
+    const mappings = [{ waId: "wa-1", murmurantId: "co-1" }];
     const records = [
-      { _sourceRow: 2, _waId: "wa-1", _clubosId: "co-1" },
-      { _sourceRow: 3, _clubosId: "co-2" }, // no _waId
-      { _sourceRow: 4 }, // no _waId or _clubosId
+      { _sourceRow: 2, _waId: "wa-1", _murmurantId: "co-1" },
+      { _sourceRow: 3, _murmurantId: "co-2" }, // no _waId
+      { _sourceRow: 4 }, // no _waId or _murmurantId
     ];
 
     const result = analyzeIdMappings(mappings, records);
@@ -384,7 +384,7 @@ describe("writeIdMappingReport", () => {
       generatedAt: "2024-01-15T10:00:00.000Z",
       dryRun: true,
       members: {
-        mappings: [{ waId: "wa-1", clubosId: "co-1", identifier: "test@test.com" }],
+        mappings: [{ waId: "wa-1", murmurantId: "co-1", identifier: "test@test.com" }],
         counts: { total: 1, mapped: 1, missing: 0, duplicates: 0 },
         duplicateWaIds: [],
         missingWaIds: [],
@@ -411,15 +411,15 @@ describe("writeIdMappingReport", () => {
       dryRun: true,
       members: {
         mappings: [
-          { waId: "wa-1", clubosId: "co-1", identifier: "a@test.com" },
-          { waId: "wa-2", clubosId: "co-2", identifier: "b@test.com" },
+          { waId: "wa-1", murmurantId: "co-1", identifier: "a@test.com" },
+          { waId: "wa-2", murmurantId: "co-2", identifier: "b@test.com" },
         ],
         counts: { total: 2, mapped: 2, missing: 0, duplicates: 0 },
         duplicateWaIds: [],
         missingWaIds: [],
       },
       events: {
-        mappings: [{ waId: "wa-e1", clubosId: "co-e1", identifier: "Event" }],
+        mappings: [{ waId: "wa-e1", murmurantId: "co-e1", identifier: "Event" }],
         counts: { total: 1, mapped: 1, missing: 0, duplicates: 0 },
         duplicateWaIds: [],
         missingWaIds: [],

@@ -1,6 +1,6 @@
 # Production Migration Runbook
 
-Operator-grade runbook for migrating Wild Apricot data to ClubOS in production.
+Operator-grade runbook for migrating Wild Apricot data to Murmurant in production.
 
 **Status:** Production-Ready
 **Last Updated:** 2025-12-25
@@ -10,7 +10,7 @@ Operator-grade runbook for migrating Wild Apricot data to ClubOS in production.
 
 ## Overview
 
-This runbook covers the complete end-to-end migration process from Wild Apricot to ClubOS. It supports two execution modes:
+This runbook covers the complete end-to-end migration process from Wild Apricot to Murmurant. It supports two execution modes:
 
 | Mode | Database Writes | Artifacts | Use Case |
 |------|-----------------|-----------|----------|
@@ -28,8 +28,8 @@ This runbook covers the complete end-to-end migration process from Wild Apricot 
 | System | Access Level | Purpose |
 |--------|--------------|---------|
 | Wild Apricot | Admin | Export CSV data |
-| ClubOS Production DB | Read/Write | Execute migration |
-| ClubOS Server | SSH | Run migration scripts |
+| Murmurant Production DB | Read/Write | Execute migration |
+| Murmurant Server | SSH | Run migration scripts |
 | Backup System | Read | Verify backups exist |
 
 ### Environment Setup

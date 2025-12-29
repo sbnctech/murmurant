@@ -1,10 +1,10 @@
-# ClubOS — Write Safety and Transactional Guarantees
+# Murmurant — Write Safety and Transactional Guarantees
 
 Status: Canonical Specification  
 Applies to: All write paths  
 Last updated: 2025-12-20
 
-This document defines when ClubOS is permitted to perform writes,
+This document defines when Murmurant is permitted to perform writes,
 how writes are validated, and how uncertainty is handled.
 
 This document is normative.
@@ -24,7 +24,7 @@ If write safety cannot be guaranteed:
 
 ## 2. Preconditions for Any Write
 
-Before performing a write, ClubOS MUST verify:
+Before performing a write, Murmurant MUST verify:
 
 - Authentication is valid
 - Authorization is explicit and sufficient
@@ -106,7 +106,7 @@ When any dependency required for safe writes is unavailable:
 
 ## 10. Explicit Non-Guarantees
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Automatic conflict resolution
 - Best-effort writes under failure
 - Eventual correction of bad writes

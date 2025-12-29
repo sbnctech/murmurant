@@ -1,10 +1,10 @@
-# ClubOS Monitoring Guide
+# Murmurant Monitoring Guide
 
-This guide explains how to monitor ClubOS for a volunteer-run organization.
+This guide explains how to monitor Murmurant for a volunteer-run organization.
 
 ## Health Endpoints
 
-ClubOS provides three health check endpoints for monitoring system status:
+Murmurant provides three health check endpoints for monitoring system status:
 
 | Endpoint | Purpose | Auth Required |
 |----------|---------|---------------|

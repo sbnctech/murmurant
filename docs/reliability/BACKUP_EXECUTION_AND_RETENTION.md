@@ -1,10 +1,10 @@
-# ClubOS — Backup Execution and Retention
+# Murmurant — Backup Execution and Retention
 
 Status: Canonical Specification  
 Applies to: All environments (dev, staging, production)  
 Last updated: 2025-12-20
 
-This document defines how ClubOS executes, stores, verifies, and governs backups
+This document defines how Murmurant executes, stores, verifies, and governs backups
 of authoritative data. Backups are the final defense against irreversible failure.
 
 This document is normative.
@@ -50,7 +50,7 @@ Derived data MAY be excluded from backups.
 
 ## 3. Backup Types
 
-ClubOS uses multiple backup layers:
+Murmurant uses multiple backup layers:
 
 ### 3.1 Full Backups
 - Snapshot of all authoritative data
@@ -206,4 +206,4 @@ Backups guarantee **recoverability**, not convenience.
 - Missing backup coverage is a merge blocker
 - Backup specs supersede developer assumptions
 
-This document is the authoritative source for backup behavior in ClubOS.
+This document is the authoritative source for backup behavior in Murmurant.

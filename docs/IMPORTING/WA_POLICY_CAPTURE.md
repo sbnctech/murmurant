@@ -1,12 +1,12 @@
 # WA Policy Capture
 
-This document describes the policy capture process for Wild Apricot migrations to ClubOS.
+This document describes the policy capture process for Wild Apricot migrations to Murmurant.
 
 **Related Issues:** #275 (Policy Capture), #202 (WA Migration Epic), #263 (Policy Layer)
 
 ## Overview
 
-Before migrating data from Wild Apricot to ClubOS, you must capture and configure organization policies. These policies control how ClubOS behaves for membership lifecycle, event scheduling, governance, and more.
+Before migrating data from Wild Apricot to Murmurant, you must capture and configure organization policies. These policies control how Murmurant behaves for membership lifecycle, event scheduling, governance, and more.
 
 The policy capture script generates a **policy bundle** that:
 
@@ -127,7 +127,7 @@ These policies have sensible defaults (SBNC-based) but can be customized:
 
 > **Important:** The WA membership level API may not be available or reliable. Manual mapping is acceptable and often necessary.
 
-If you want to map WA membership levels to ClubOS membership tiers during migration, you need to configure:
+If you want to map WA membership levels to Murmurant membership tiers during migration, you need to configure:
 
 ```json
 {
@@ -152,7 +152,7 @@ Since the WA API for membership levels may be unavailable, try these approaches:
 
 ### Tier Code Reference
 
-ClubOS supports these standard tier codes (seed with `seed-membership-tiers.ts`):
+Murmurant supports these standard tier codes (seed with `seed-membership-tiers.ts`):
 
 | Tier Code | Description |
 |-----------|-------------|

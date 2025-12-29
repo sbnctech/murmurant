@@ -9,7 +9,7 @@
 
 ## Overview
 
-This document defines how ClubOS proposes, reviews, accepts, or rejects presentation suggestions. Suggestions are a mechanism for surfacing recommendations without overstepping human authority.
+This document defines how Murmurant proposes, reviews, accepts, or rejects presentation suggestions. Suggestions are a mechanism for surfacing recommendations without overstepping human authority.
 
 **A suggestion is not an action.** It is a proposal awaiting human decision.
 
@@ -17,7 +17,7 @@ This document defines how ClubOS proposes, reviews, accepts, or rejects presenta
 
 ## Why Suggestions Exist
 
-ClubOS may observe patterns, detect inconsistencies, or identify opportunities for improvement in organizational presentation (content, structure, branding, member-facing language). Rather than silently correcting or auto-applying changes, ClubOS surfaces these observations as suggestions.
+Murmurant may observe patterns, detect inconsistencies, or identify opportunities for improvement in organizational presentation (content, structure, branding, member-facing language). Rather than silently correcting or auto-applying changes, Murmurant surfaces these observations as suggestions.
 
 ### Suggestions vs. Automation
 
@@ -202,7 +202,7 @@ This aligns with **P5**: reversibility must be supported, not assumed.
 
 ## Failure Modes and Visibility Guarantees
 
-ClubOS must fail visibly. Silent failures are not acceptable.
+Murmurant must fail visibly. Silent failures are not acceptable.
 
 ### Failure Modes
 

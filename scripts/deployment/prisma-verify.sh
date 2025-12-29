@@ -4,7 +4,7 @@
 
 set -e
 
-echo "ClubOS Prisma Verification"
+echo "Murmurant Prisma Verification"
 echo "=========================="
 echo ""
 

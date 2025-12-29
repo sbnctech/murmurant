@@ -4,7 +4,7 @@ This index organizes all architecture documentation by category.
 
 ## Core Trust and Safety
 
-These documents define the guarantees ClubOS makes to customers.
+These documents define the guarantees Murmurant makes to customers.
 
 - [Core Trust Surface](./CORE_TRUST_SURFACE.md) - The five locked guarantees for migration and preview
 - [Reversibility Contract](./REVERSIBILITY_CONTRACT.md) - Migration safety and abort guarantees
@@ -13,7 +13,7 @@ These documents define the guarantees ClubOS makes to customers.
 
 ## Preview and Suggestion
 
-Documents governing how ClubOS shows customers what will happen before it happens.
+Documents governing how Murmurant shows customers what will happen before it happens.
 
 - [Preview Surface Contract](./PREVIEW_SURFACE_CONTRACT.md) - Preview fidelity and uncertainty markers
 - [Preview Surface Abuse Cases](./PREVIEW_SURFACE_ABUSE_CASES.md) - How previews can be misused
@@ -61,7 +61,7 @@ Documents for developers implementing features.
 - [Implementation Guardrails](./IMPLEMENTATION_GUARDRAILS.md) - Safety rails for implementation
 - [Adversarial Trust Review](./ADVERSARIAL_TRUST_REVIEW.md) - Security review checklist
 - [Methodology to Guarantee Map](./METHODOLOGY_TO_GUARANTEE_MAP.md) - How methods map to guarantees
-- [ClubOS Page Builder Primitives](./CLUBOS_PAGE_BUILDER_PRIMITIVES.md) - Page builder components
+- [Murmurant Page Builder Primitives](./MURMURANT_PAGE_BUILDER_PRIMITIVES.md) - Page builder components
 
 ---
 

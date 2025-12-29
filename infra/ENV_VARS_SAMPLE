@@ -1,8 +1,8 @@
-# ClubOS Environment Variables
+# Murmurant Environment Variables
 #
 # Copy this file to .env in the project root and adjust values as needed.
 #
-# These variables configure how ClubOS connects to the database
+# These variables configure how Murmurant connects to the database
 # and other services.
 
 # -----------------------------------------------------------------------------
@@ -12,13 +12,13 @@
 #
 # When running with docker-compose:
 #   - Use "db" as the host (the container name)
-#   - Example: postgresql://clubos:clubos@db:5432/clubos_dev
+#   - Example: postgresql://murmurant:murmurant@db:5432/murmurant_dev
 #
 # When running outside docker (directly on your machine):
 #   - Use "localhost" as the host
-#   - Example: postgresql://clubos:clubos@localhost:5432/clubos_dev
+#   - Example: postgresql://murmurant:murmurant@localhost:5432/murmurant_dev
 #
-DATABASE_URL=postgresql://clubos:clubos@localhost:5432/clubos_dev
+DATABASE_URL=postgresql://murmurant:murmurant@localhost:5432/murmurant_dev
 
 # -----------------------------------------------------------------------------
 # NODE_ENV

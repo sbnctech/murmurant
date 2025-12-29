@@ -1,5 +1,5 @@
 /**
- * Prisma Seed Script for ClubOS
+ * Prisma Seed Script for Murmurant
  *
  * Creates minimal, coherent seed data for local development and testing.
  * See docs/schema/SEED_DATA_PLAN.md for the full seed data specification.
@@ -222,11 +222,11 @@ interface DemoUser {
 }
 
 const DEMO_USERS: DemoUser[] = [
-  { email: "president@demo.clubos.test", firstName: "Pat", lastName: "President", roleSlug: "president" },
-  { email: "secretary@demo.clubos.test", firstName: "Sam", lastName: "Secretary", roleSlug: "secretary" },
-  { email: "parliamentarian@demo.clubos.test", firstName: "Parker", lastName: "Parliamentarian", roleSlug: "parliamentarian" },
-  { email: "eventchair@demo.clubos.test", firstName: "Evelyn", lastName: "EventChair", roleSlug: "chair" }, // Activities chair
-  { email: "member@demo.clubos.test", firstName: "Morgan", lastName: "Member" }, // No special role
+  { email: "president@demo.murmurant.test", firstName: "Pat", lastName: "President", roleSlug: "president" },
+  { email: "secretary@demo.murmurant.test", firstName: "Sam", lastName: "Secretary", roleSlug: "secretary" },
+  { email: "parliamentarian@demo.murmurant.test", firstName: "Parker", lastName: "Parliamentarian", roleSlug: "parliamentarian" },
+  { email: "eventchair@demo.murmurant.test", firstName: "Evelyn", lastName: "EventChair", roleSlug: "chair" }, // Activities chair
+  { email: "member@demo.murmurant.test", firstName: "Morgan", lastName: "Member" }, // No special role
 ];
 
 async function seedDemoUsers(
@@ -708,7 +708,7 @@ async function seedTerms(): Promise<Map<string, string>> {
 }
 
 async function main(): Promise<void> {
-  console.log("=== ClubOS Seed Script ===\n");
+  console.log("=== Murmurant Seed Script ===\n");
 
   checkEnvironment();
 
@@ -737,14 +737,14 @@ async function main(): Promise<void> {
     console.log("  - 4 events (3 published, 1 draft)");
     console.log("  - 4 event registrations (3 confirmed, 1 waitlisted)");
     console.log("  - 5 demo users with role-based access:");
-    console.log("    - president@demo.clubos.test (President)");
-    console.log("    - secretary@demo.clubos.test (Secretary)");
-    console.log("    - parliamentarian@demo.clubos.test (Parliamentarian)");
-    console.log("    - eventchair@demo.clubos.test (Event Chair)");
-    console.log("    - member@demo.clubos.test (Member)");
+    console.log("    - president@demo.murmurant.test (President)");
+    console.log("    - secretary@demo.murmurant.test (Secretary)");
+    console.log("    - parliamentarian@demo.murmurant.test (Parliamentarian)");
+    console.log("    - eventchair@demo.murmurant.test (Event Chair)");
+    console.log("    - member@demo.murmurant.test (Member)");
     console.log("\nDemo Login Instructions:");
     console.log("  1. Go to /login");
-    console.log("  2. Enter demo email (e.g., president@demo.clubos.test)");
+    console.log("  2. Enter demo email (e.g., president@demo.murmurant.test)");
     console.log("  3. Click 'Send sign-in link'");
     console.log("  4. Check console for magic link (in dev mode)");
   } catch (error) {

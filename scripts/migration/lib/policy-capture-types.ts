@@ -2,7 +2,7 @@
  * Policy Capture Types
  *
  * Types for capturing organization policies from Wild Apricot
- * and mapping them to ClubOS configuration.
+ * and mapping them to Murmurant configuration.
  */
 
 // ============================================================================
@@ -79,16 +79,16 @@ export interface MembershipLevelMappingFile {
 export interface MembershipLevelMapping {
   waId: number;
   waName: string;
-  clubosTier?: ClubOSTierCode;
+  murmurantTier?: MurmurantTierCode;
   ignore?: boolean;
   reason?: string;
   notes?: string;
 }
 
 /**
- * Valid ClubOS membership tier codes.
+ * Valid Murmurant membership tier codes.
  */
-export type ClubOSTierCode =
+export type MurmurantTierCode =
   | "active"
   | "lapsed"
   | "pending_new"
@@ -99,7 +99,7 @@ export type ClubOSTierCode =
 /**
  * All valid tier codes for validation.
  */
-export const VALID_TIER_CODES: ClubOSTierCode[] = [
+export const VALID_TIER_CODES: MurmurantTierCode[] = [
   "active",
   "lapsed",
   "pending_new",
@@ -168,7 +168,7 @@ export interface MembershipLevelReportEntry {
   waId: number;
   waName: string;
   status: "mapped" | "ignored" | "unmapped";
-  clubosTier?: string;
+  murmurantTier?: string;
   reason?: string;
 }
 
@@ -177,7 +177,7 @@ export interface MembershipLevelReportEntry {
  */
 export interface PolicyCaptureSummary {
   totalWaLevels: number;
-  mappedToClubos: number;
+  mappedToMurmurant: number;
   ignoredWithReason: number;
   unmappedBlocking: number;
 }

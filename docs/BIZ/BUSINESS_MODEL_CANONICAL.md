@@ -1,4 +1,4 @@
-# ClubOS Business Model - Canonical Specification
+# Murmurant Business Model - Canonical Specification
 
 ```
 Status: DRAFT - Pending stakeholder review
@@ -12,7 +12,7 @@ Related: Epic #248
 
 ## Overview
 
-This document defines the canonical business model rules for ClubOS.
+This document defines the canonical business model rules for Murmurant.
 It separates **decisions** (what we will do) from **rationale** (why).
 
 For rationale, see: [ChatGPT Working Notes](./_ARCHIVE/CHATGPT_BUSINESS_MODEL_WORKING_NOTES.md)
@@ -21,7 +21,7 @@ For rationale, see: [ChatGPT Working Notes](./_ARCHIVE/CHATGPT_BUSINESS_MODEL_WO
 
 ## Value Proposition
 
-ClubOS offers **migration-first, safety-first adoption** for organizations
+Murmurant offers **migration-first, safety-first adoption** for organizations
 moving from Wild Apricot (or similar platforms) to a modern, self-hostable
 club management system.
 
@@ -42,9 +42,9 @@ before firmly grasping the next:
 | Stage | Description |
 |-------|-------------|
 | 1. Observe/Export | Extract data from Wild Apricot via CSV exports |
-| 2. Import | Load data into ClubOS using migration tooling |
+| 2. Import | Load data into Murmurant using migration tooling |
 | 3. Verify | Run verification scripts; operator spot-checks |
-| 4. Shadow | Run ClubOS in parallel; compare behavior |
+| 4. Shadow | Run Murmurant in parallel; compare behavior |
 | 5. Decide | Organization makes go/no-go decision |
 | 6. Cutover | Switch production traffic; decommission WA |
 
@@ -59,7 +59,7 @@ See [MIGRATION_PHILOSOPHY.md](./MIGRATION_PHILOSOPHY.md) for details.
 
 | Aspect | Specification |
 |--------|---------------|
-| Deployment model | One ClubOS instance per organization |
+| Deployment model | One Murmurant instance per organization |
 | Database | Separate database per organization |
 | Infrastructure | Per-org deployment (not shared compute) |
 | Status | **DECIDED** for Phase 1 |
@@ -86,7 +86,7 @@ See: #232, #263
 |--------|---------------|
 | Migration approach | Assisted (platform team helps), not self-service |
 | Data source | Wild Apricot (primary), others TBD |
-| Direction | One-way (WA -> ClubOS) |
+| Direction | One-way (WA -> Murmurant) |
 | Sync mode | Explicit import operations, not continuous |
 | Status | **DECIDED** |
 
@@ -121,7 +121,7 @@ See: #202
 
 ### Platform vs Policy Separation
 
-ClubOS is a **platform** that supports multiple organizations with
+Murmurant is a **platform** that supports multiple organizations with
 different policies. SBNC (Santa Barbara Newcomers Club) is "Tenant Zero":
 
 - SBNC provides seed data, templates, and real-world validation
@@ -142,7 +142,7 @@ This separation is mandatory for commercialization. See Epic #232.
 
 ## Scope Boundaries
 
-### In Scope for ClubOS
+### In Scope for Murmurant
 
 | Capability | Description |
 |------------|-------------|

@@ -1,6 +1,6 @@
 # Wild Apricot Migration Runbook
 
-Production runbook for migrating data from Wild Apricot to ClubOS using the CSV-based migration pipeline.
+Production runbook for migrating data from Wild Apricot to Murmurant using the CSV-based migration pipeline.
 
 **Related Issues:**
 
@@ -20,7 +20,7 @@ Complete ALL preconditions before proceeding. Do not skip any step.
 | Access | Purpose | Who Grants |
 |--------|---------|------------|
 | Wild Apricot Admin | Export CSV data | WA Account Owner |
-| ClubOS Database | Production access | Merge Captain |
+| Murmurant Database | Production access | Merge Captain |
 | SSH/Server Access | Run migration scripts | DevOps |
 | Backup Access | Verify/restore backups | DevOps |
 
@@ -119,7 +119,7 @@ Create or verify `scripts/migration/config/migration.yaml`:
 
 ```yaml
 source: wild-apricot
-target: clubos
+target: murmurant
 version: "1.0"
 
 # Source organization details
@@ -277,7 +277,7 @@ Verify 5-10 random records manually:
 
 ```bash
 # Pick random WA IDs from CSV
-# Look up in ClubOS database
+# Look up in Murmurant database
 psql "$DATABASE_URL" -c "
   SELECT m.id, m.email, m.\"firstName\", m.\"lastName\"
   FROM \"Member\" m
@@ -327,7 +327,7 @@ psql "$DATABASE_URL" -c "
 
 After database verification:
 
-- [ ] ClubOS admin dashboard loads
+- [ ] Murmurant admin dashboard loads
 - [ ] Member list shows imported members
 - [ ] Event list shows imported events
 - [ ] Member detail page works for imported member
@@ -412,14 +412,14 @@ If rollback script is insufficient:
 
 ```bash
 # Drop and recreate database
-dropdb clubos_production
-createdb clubos_production
+dropdb murmurant_production
+createdb murmurant_production
 
 # Restore from backup
-psql clubos_production < backup-pre-migration-YYYYMMDD-HHMMSS.sql
+psql murmurant_production < backup-pre-migration-YYYYMMDD-HHMMSS.sql
 
 # Verify
-psql clubos_production -c "SELECT COUNT(*) FROM \"Member\";"
+psql murmurant_production -c "SELECT COUNT(*) FROM \"Member\";"
 ```
 
 **Warning:** This removes ALL data since backup, not just migration data.

@@ -209,7 +209,7 @@ Annotations can be attached to various governance document types:
 
 ## Charter Compliance
 
-These components follow the ClubOS Architectural Charter:
+These components follow the Murmurant Architectural Charter:
 
 - **P1 (Identity Provable)**: All actions require authenticated session via HttpOnly cookies
 - **P2 (Default Deny)**: Dashboard returns `visible: false` for unauthorized users

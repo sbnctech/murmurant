@@ -1,6 +1,6 @@
 # Mail System Runbook
 
-Operational procedures for ClubOS email functionality.
+Operational procedures for Murmurant email functionality.
 
 **Charter Principles:**
 
@@ -12,7 +12,7 @@ Operational procedures for ClubOS email functionality.
 
 ## Overview
 
-ClubOS email capabilities:
+Murmurant email capabilities:
 
 - **Transactional emails**: Membership confirmations, password resets
 - **Notification emails**: Event reminders, status changes

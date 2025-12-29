@@ -6,7 +6,7 @@
 
 ## Overview
 
-ClubOS implements a payment abstraction layer that supports multiple payment providers while ensuring correctness through:
+Murmurant implements a payment abstraction layer that supports multiple payment providers while ensuring correctness through:
 
 - **Explicit state machines** for both registration and payment lifecycles
 - **Server-side idempotency** to prevent duplicate charges

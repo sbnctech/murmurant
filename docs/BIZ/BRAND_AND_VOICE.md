@@ -1,4 +1,4 @@
-# ClubOS Brand and Customer-Facing Voice
+# Murmurant Brand and Customer-Facing Voice
 
 ```
 Status: Living Document
@@ -13,7 +13,7 @@ Authority: Normative for customer-facing materials
 
 ### Why This Document Exists
 
-ClubOS is not a generic SaaS product. The product experience, migration process, and customer trust model are inseparable from the business model itself. Brand and voice are not marketing concerns to be addressed later; they are product requirements that shape every interaction.
+Murmurant is not a generic SaaS product. The product experience, migration process, and customer trust model are inseparable from the business model itself. Brand and voice are not marketing concerns to be addressed later; they are product requirements that shape every interaction.
 
 This document formalizes the brand and voice that emerged implicitly during extensive design work. The goal is to make that intent durable, reviewable, and enforceable.
 
@@ -25,17 +25,17 @@ How the system behaves is a brand statement:
 - If the system refuses to explain itself, that breaks trust
 - If the system traps customers, that breaks trust
 
-Every interaction, every message, every default choice communicates who ClubOS is.
+Every interaction, every message, every default choice communicates who Murmurant is.
 
 ---
 
-## 2. Who ClubOS Is to the Customer
+## 2. Who Murmurant Is to the Customer
 
 ### Relationship Model
 
-ClubOS is a **steward**, not a vendor.
+Murmurant is a **steward**, not a vendor.
 
-| ClubOS Is | ClubOS Is Not |
+| Murmurant Is | Murmurant Is Not |
 |-----------|---------------|
 | A careful partner | A feature factory |
 | An assistant that waits for instructions | An optimizer that acts autonomously |
@@ -44,21 +44,21 @@ ClubOS is a **steward**, not a vendor.
 
 ### Authority Posture
 
-ClubOS operates under **operator authority**. The customer controls:
+Murmurant operates under **operator authority**. The customer controls:
 
 - When migration happens
 - What data is committed
 - Whether to proceed or abort
 - What policies apply to their organization
 
-ClubOS provides:
+Murmurant provides:
 
 - Recommendations with reasoning
 - Tools with visibility
 - Defaults that can be overridden
 - Warnings before irreversible actions
 
-### How ClubOS Earns Trust
+### How Murmurant Earns Trust
 
 Trust is not claimed; it is demonstrated through behavior:
 
@@ -87,7 +87,7 @@ Write for intelligent, busy people who have limited time but care deeply about g
 
 ### Explicit About Risk and Limits
 
-ClubOS does not pretend to be smarter than it is:
+Murmurant does not pretend to be smarter than it is:
 
 - Acknowledge what we cannot determine
 - State assumptions explicitly
@@ -105,7 +105,7 @@ The tone should reflect how a careful professional explains a consequential proc
 
 ### Zero "AI Magic" Framing
 
-ClubOS uses automation, but never frames it as intelligence:
+Murmurant uses automation, but never frames it as intelligence:
 
 - We do not say the system "understands" or "knows"
 - We do not attribute judgment to algorithms
@@ -150,7 +150,7 @@ ClubOS uses automation, but never frames it as intelligence:
 
 ---
 
-## 5. What ClubOS Refuses to Do (Brand Non-Negotiables)
+## 5. What Murmurant Refuses to Do (Brand Non-Negotiables)
 
 These are not limitations to apologize for. They are design choices that protect customers.
 
@@ -172,11 +172,11 @@ Migration preserves organizational identity:
 - We ask for approval, we do not assume
 - We show the customer what they will look like
 
-If the customer cannot recognize their organization in ClubOS, the migration is not complete.
+If the customer cannot recognize their organization in Murmurant, the migration is not complete.
 
 ### No Forced "Best Practices"
 
-ClubOS provides defaults, not mandates:
+Murmurant provides defaults, not mandates:
 
 - SBNC policy is Tenant Zero, not the template for all customers
 - Every policy value must be changeable without code changes
@@ -217,7 +217,7 @@ The customer is the authority on what their organization should look like.
 At any point before final commit:
 
 - Wild Apricot remains unchanged
-- ClubOS preview can be discarded
+- Murmurant preview can be discarded
 - No harm done
 
 This is not a feature. This is the foundation of trust.
@@ -228,7 +228,7 @@ This is not a feature. This is the foundation of trust.
 
 ### On-Brand Explanation
 
-> Before migrating your event registrations, ClubOS will show you a preview of how they will appear. You will see which members are matched, which require manual review, and which cannot be imported. Nothing will be committed to your live site until you explicitly confirm. If you decide not to proceed, your Wild Apricot data remains unchanged.
+> Before migrating your event registrations, Murmurant will show you a preview of how they will appear. You will see which members are matched, which require manual review, and which cannot be imported. Nothing will be committed to your live site until you explicitly confirm. If you decide not to proceed, your Wild Apricot data remains unchanged.
 
 Why this works:
 
@@ -294,4 +294,4 @@ Before publishing any customer-facing material, verify:
 
 ---
 
-_This document formalizes the brand and voice that emerged during ClubOS design. It is a living reference for maintaining consistency across all customer-facing materials._
+_This document formalizes the brand and voice that emerged during Murmurant design. It is a living reference for maintaining consistency across all customer-facing materials._

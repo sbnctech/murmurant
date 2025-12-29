@@ -1,11 +1,11 @@
 # Claude Code Task: Membership Lifecycle State Machine (No UI)
 
 Goal
-- Implement membership lifecycle transitions as a state machine in ClubOS without building any UI.
+- Implement membership lifecycle transitions as a state machine in Murmurant without building any UI.
 - The state machine must encode SBNC rules, be testable, and be safe to run in production.
 
 Business rules to encode
-- Contacts and members are stored as the same entity in WA; ClubOS stores one person record and derives membership behavior from status + tier.
+- Contacts and members are stored as the same entity in WA; Murmurant stores one person record and derives membership behavior from status + tier.
 - New joiners receive newbie_member for 90 days, then member until the 2-year mark.
 - At the 2-year mark, extended_member requires offer + acceptance + payment; otherwise membership ends.
 - New rule: when membership ends due to end of member tier time or end of extended member tier time, MembershipStatus becomes lapsed.
@@ -67,5 +67,5 @@ Acceptance criteria
 - Documentation explains the policy choices (especially 2-year definition)
 
 Notes
-- WA membership level mapping exists but is not authoritative long-term; lifecycle logic should use ClubOS fields and rules.
+- WA membership level mapping exists but is not authoritative long-term; lifecycle logic should use Murmurant fields and rules.
 - Membership ending must set MembershipStatus to lapsed (new rule).

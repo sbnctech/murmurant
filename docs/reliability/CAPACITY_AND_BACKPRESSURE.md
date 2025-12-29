@@ -1,10 +1,10 @@
-# ClubOS — Capacity, Load, and Backpressure Guarantees
+# Murmurant — Capacity, Load, and Backpressure Guarantees
 
 Status: Canonical Specification  
 Applies to: All production environments  
 Last updated: 2025-12-20
 
-This document defines how ClubOS behaves under load, contention,
+This document defines how Murmurant behaves under load, contention,
 and resource exhaustion. Overload MUST NOT cause data loss
 or undefined behavior.
 
@@ -25,7 +25,7 @@ Overload is a normal condition, not an exception.
 
 ## 2. Load Classes
 
-ClubOS recognizes the following load classes:
+Murmurant recognizes the following load classes:
 
 - Public read traffic
 - Authenticated member actions
@@ -101,7 +101,7 @@ Capacity exhaustion:
 
 ## 9. Explicit Non-Guarantees
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Infinite throughput
 - Zero latency spikes
 - No request rejection

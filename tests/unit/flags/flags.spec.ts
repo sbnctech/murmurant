@@ -34,15 +34,15 @@ describe("flags", () => {
 
   describe("flagKeyToEnvVar", () => {
     it("converts lowercase key to uppercase with prefix", () => {
-      expect(flagKeyToEnvVar("my_feature")).toBe("CLUBOS_FLAG_MY_FEATURE");
+      expect(flagKeyToEnvVar("my_feature")).toBe("MURMURANT_FLAG_MY_FEATURE");
     });
 
     it("handles already uppercase keys", () => {
-      expect(flagKeyToEnvVar("MY_FEATURE")).toBe("CLUBOS_FLAG_MY_FEATURE");
+      expect(flagKeyToEnvVar("MY_FEATURE")).toBe("MURMURANT_FLAG_MY_FEATURE");
     });
 
     it("handles mixed case keys", () => {
-      expect(flagKeyToEnvVar("myFeature")).toBe("CLUBOS_FLAG_MYFEATURE");
+      expect(flagKeyToEnvVar("myFeature")).toBe("MURMURANT_FLAG_MYFEATURE");
     });
   });
 
@@ -70,22 +70,22 @@ describe("flags", () => {
     });
 
     it("returns true when env var is '1'", () => {
-      process.env.CLUBOS_FLAG_GOVERNANCE_ANNOTATIONS_UI = "1";
+      process.env.MURMURANT_FLAG_GOVERNANCE_ANNOTATIONS_UI = "1";
       expect(isEnabled("governance_annotations_ui")).toBe(true);
     });
 
     it("returns true when env var is 'true'", () => {
-      process.env.CLUBOS_FLAG_GOVERNANCE_ANNOTATIONS_UI = "true";
+      process.env.MURMURANT_FLAG_GOVERNANCE_ANNOTATIONS_UI = "true";
       expect(isEnabled("governance_annotations_ui")).toBe(true);
     });
 
     it("returns false when env var is '0'", () => {
-      process.env.CLUBOS_FLAG_EVENT_POSTMORTEM_ENABLED = "0";
+      process.env.MURMURANT_FLAG_EVENT_POSTMORTEM_ENABLED = "0";
       expect(isEnabled("event_postmortem_enabled")).toBe(false);
     });
 
     it("returns false when env var is 'false'", () => {
-      process.env.CLUBOS_FLAG_EVENT_POSTMORTEM_ENABLED = "false";
+      process.env.MURMURANT_FLAG_EVENT_POSTMORTEM_ENABLED = "false";
       expect(isEnabled("event_postmortem_enabled")).toBe(false);
     });
 
@@ -116,7 +116,7 @@ describe("flags", () => {
     });
 
     it("override takes precedence over env var", () => {
-      process.env.CLUBOS_FLAG_GOVERNANCE_ANNOTATIONS_UI = "1";
+      process.env.MURMURANT_FLAG_GOVERNANCE_ANNOTATIONS_UI = "1";
 
       // Env says true, but override says false
       expect(
@@ -134,14 +134,14 @@ describe("flags", () => {
         key: "governance_annotations_ui",
         enabled: false,
         source: "default",
-        envVar: "CLUBOS_FLAG_GOVERNANCE_ANNOTATIONS_UI",
+        envVar: "MURMURANT_FLAG_GOVERNANCE_ANNOTATIONS_UI",
         envValue: undefined,
         defaultValue: false,
       });
     });
 
     it("returns source 'env' when env var is set", () => {
-      process.env.CLUBOS_FLAG_GOVERNANCE_ANNOTATIONS_UI = "1";
+      process.env.MURMURANT_FLAG_GOVERNANCE_ANNOTATIONS_UI = "1";
       const result = evaluateFlag("governance_annotations_ui");
       expect(result.source).toBe("env");
       expect(result.enabled).toBe(true);
@@ -171,7 +171,7 @@ describe("flags", () => {
       expect(isKillSwitchActive("email_sending_enabled")).toBe(true);
 
       // Disable it
-      process.env.CLUBOS_FLAG_EMAIL_SENDING_ENABLED = "0";
+      process.env.MURMURANT_FLAG_EMAIL_SENDING_ENABLED = "0";
       expect(isKillSwitchActive("email_sending_enabled")).toBe(false);
     });
   });

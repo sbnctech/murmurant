@@ -1,16 +1,16 @@
-# ClubOS Demo Narrative
+# Murmurant Demo Narrative
 
-**Purpose:** A leadership-ready walkthrough explaining why ClubOS reduces cognitive load.
+**Purpose:** A leadership-ready walkthrough explaining why Murmurant reduces cognitive load.
 
 **Audience:** Board members, prospective adopters, stakeholders evaluating the system.
 
 ---
 
-## The Core Problem ClubOS Solves
+## The Core Problem Murmurant Solves
 
 Club volunteers manage complex operations—events, memberships, communications, finances—while juggling day jobs and personal commitments. The tools they use should reduce mental overhead, not add to it.
 
-ClubOS is designed around three observable principles:
+Murmurant is designed around three observable principles:
 
 1. **Single system of record** — No sync lag, no "which system is right?" questions
 2. **Deterministic lifecycle logic** — States and transitions are explicit, not inferred
@@ -72,9 +72,9 @@ Navigate to any member → Lifecycle Explainer panel shows:
 
 ## What This Replaces
 
-This section documents observed behaviors in the current system that ClubOS addresses. These are factual observations, not criticisms.
+This section documents observed behaviors in the current system that Murmurant addresses. These are factual observations, not criticisms.
 
-| Current Behavior | ClubOS Approach |
+| Current Behavior | Murmurant Approach |
 |-----------------|-----------------|
 | Member status derived from payment date calculations | Explicit lifecycle states with transition history |
 | Event registrations require page refresh to see updates | Real-time registration counts and status |
@@ -89,19 +89,19 @@ This section documents observed behaviors in the current system that ClubOS addr
 
 **Membership transitions:**
 - Current: VP Membership manually tracks 90-day newbie expirations using a spreadsheet
-- ClubOS: System displays countdown, surfaces members approaching transition, logs all status changes
+- Murmurant: System displays countdown, surfaces members approaching transition, logs all status changes
 
 **Event registration edge cases:**
 - Current: If someone cancels during an event, waitlist promotion requires manual check
-- ClubOS: Cancellation triggers automatic waitlist promotion with notification
+- Murmurant: Cancellation triggers automatic waitlist promotion with notification
 
 **Communication sends:**
 - Current: "Who will receive this?" requires running a separate report
-- ClubOS: Audience preview shows exact recipients before send, with explanation of selection criteria
+- Murmurant: Audience preview shows exact recipients before send, with explanation of selection criteria
 
 **Volunteer handoffs:**
 - Current: Incoming chair must learn where data lives, which reports to run, what's in progress
-- ClubOS: Role-scoped dashboard shows relevant work queue; audit log shows recent activity
+- Murmurant: Role-scoped dashboard shows relevant work queue; audit log shows recent activity
 
 ---
 

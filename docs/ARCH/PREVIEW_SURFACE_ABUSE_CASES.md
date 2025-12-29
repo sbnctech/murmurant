@@ -25,9 +25,9 @@ The Preview Surface is explicitly **NOT** the following:
 
 ### Preview Is Not a CMS Publishing Workflow
 
-Content management systems often have "preview" modes that show how content will look before publishing. ClubOS preview is fundamentally different:
+Content management systems often have "preview" modes that show how content will look before publishing. Murmurant preview is fundamentally different:
 
-| CMS Preview | ClubOS Preview |
+| CMS Preview | Murmurant Preview |
 |-------------|----------------|
 | Shows rendering of authored content | Shows intended actions for a migration or operation |
 | Author controls content | System proposes based on source data |
@@ -35,7 +35,7 @@ Content management systems often have "preview" modes that show how content will
 | Publishing is immediate and reversible | Execution may involve irreversible changes |
 | Author can edit preview directly | Preview is read-only; changes require new source data |
 
-**Why this matters**: Customers familiar with CMS workflows may expect to "edit" a preview or assume "publish" is low-stakes. ClubOS preview requires understanding that what follows is potentially irreversible transformation, not content styling.
+**Why this matters**: Customers familiar with CMS workflows may expect to "edit" a preview or assume "publish" is low-stakes. Murmurant preview requires understanding that what follows is potentially irreversible transformation, not content styling.
 
 ### Preview Is Not a Test Environment
 
@@ -97,7 +97,7 @@ The Preview Surface Contract explicitly lists non-guarantees. Experience shows t
 |------------|-------------|
 | "Preview tested the external system" | Customer assumes third-party will behave identically |
 | "If preview succeeded, execution will succeed" | External service goes down between preview and execution |
-| "ClubOS controls the entire pipeline" | Blame misdirected when external failure occurs |
+| "Murmurant controls the entire pipeline" | Blame misdirected when external failure occurs |
 
 **Protective language required**: External systems are outside our control. Re-preview before consequential operations.
 

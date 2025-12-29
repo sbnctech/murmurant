@@ -14,14 +14,14 @@ type Brand = {
 };
 
 const brands: Record<string, Brand> = {
-  clubos: {
-    id: "clubos",
-    name: "ClubOS Default",
-    logo: "/brand/clubos-logo.svg",
-    bug: "/brand/clubos-bug.svg",
+  murmurant: {
+    id: "murmurant",
+    name: "Murmurant Default",
+    logo: "/brand/murmurant-logo.svg",
+    bug: "/brand/murmurant-bug.svg",
     colors: { primary: "#4F46E5", primaryHover: "#4338CA", secondary: "#8B5CF6", accent: "#F59E0B" },
     fonts: { heading: "system-ui, sans-serif", body: "system-ui, sans-serif" },
-    voice: { tone: "friendly", greeting: "Welcome to ClubOS!" },
+    voice: { tone: "friendly", greeting: "Welcome to Murmurant!" },
     chatbot: { name: "Claude", personality: "Helpful and knowledgeable assistant." },
   },
   sbnc: {
@@ -186,7 +186,7 @@ function BrandColumn({ brand, otherBrand }: { brand: Brand; otherBrand: Brand })
 }
 
 export default function BrandComparisonPage() {
-  const [leftBrand, setLeftBrand] = useState<string>("clubos");
+  const [leftBrand, setLeftBrand] = useState<string>("murmurant");
   const [rightBrand, setRightBrand] = useState<string>("sbnc");
 
   const brandOptions = Object.values(brands);

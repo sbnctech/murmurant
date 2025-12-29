@@ -1,6 +1,6 @@
-# ClubOS Environment Configuration
+# Murmurant Environment Configuration
 
-This document describes environment variables for configuring ClubOS in native mode vs Wild Apricot integration mode.
+This document describes environment variables for configuring Murmurant in native mode vs Wild Apricot integration mode.
 
 ## Feature Flags
 
@@ -25,7 +25,7 @@ Required when `FEATURE_NATIVE_AUTH=true`:
 | `JWT_SECRET` | Yes | Secret for signing JWTs (min 32 chars) |
 | `SESSION_DURATION` | No | Session duration in seconds (default: 86400) |
 | `PASSKEY_RP_ID` | No | WebAuthn relying party ID (default: hostname) |
-| `PASSKEY_RP_NAME` | No | WebAuthn relying party name (default: "ClubOS") |
+| `PASSKEY_RP_NAME` | No | WebAuthn relying party name (default: "Murmurant") |
 
 ### Email (Resend)
 
@@ -35,7 +35,7 @@ Required when `FEATURE_NATIVE_EMAIL=true`:
 |----------|----------|-------------|
 | `RESEND_API_KEY` | Yes | Resend API key from dashboard |
 | `EMAIL_FROM_ADDRESS` | Yes | Default from address (must be verified domain) |
-| `EMAIL_FROM_NAME` | No | Default from name (default: "ClubOS") |
+| `EMAIL_FROM_NAME` | No | Default from name (default: "Murmurant") |
 | `EMAIL_REPLY_TO` | No | Default reply-to address |
 
 ### Payments (Stripe)
@@ -146,11 +146,11 @@ Create `.env.local` from this template:
 
 ```bash
 # =============================================================================
-# ClubOS Environment Configuration
+# Murmurant Environment Configuration
 # =============================================================================
 
 # Database
-DATABASE_URL="postgresql://user:pass@localhost:5432/clubos"
+DATABASE_URL="postgresql://user:pass@localhost:5432/murmurant"
 
 # Application
 NODE_ENV="development"

@@ -8,7 +8,7 @@
 
 ## Purpose
 
-This glossary defines terms used across ClubOS trust and migration documentation. Consistent terminology reduces ambiguity and supports clear communication between operators, customers, and systems.
+This glossary defines terms used across Murmurant trust and migration documentation. Consistent terminology reduces ambiguity and supports clear communication between operators, customers, and systems.
 
 ---
 
@@ -24,7 +24,7 @@ The irreversible application of an approved change to the target system. Commit 
 
 ### Customer
 
-The organization using ClubOS. Customers are the ultimate authority over their data and presentation. The system proposes; customers decide.
+The organization using Murmurant. Customers are the ultimate authority over their data and presentation. The system proposes; customers decide.
 
 ### Determinism
 
@@ -90,7 +90,7 @@ An explicit indicator that the system cannot make a confident prediction. Marker
 
 ## Language Rules
 
-These rules govern how ClubOS documentation describes system behavior.
+These rules govern how Murmurant documentation describes system behavior.
 
 ### Preferred Phrasing
 
@@ -109,9 +109,9 @@ These rules govern how ClubOS documentation describes system behavior.
 
 - **Operator-approved**: Automation proposes; humans authorize. If an action occurs without human review, the documentation must state this explicitly and explain why.
 
-- **Explicit over seamless**: "Seamless" implies hidden complexity. ClubOS values transparency. Customers should see what will happen before it happens.
+- **Explicit over seamless**: "Seamless" implies hidden complexity. Murmurant values transparency. Customers should see what will happen before it happens.
 
-- **No magic**: Magic implies unpredictability. ClubOS behavior should be explainable in plain English.
+- **No magic**: Magic implies unpredictability. Murmurant behavior should be explainable in plain English.
 
 ### When "Automatic" Is Acceptable
 

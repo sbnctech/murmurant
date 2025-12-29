@@ -1,10 +1,10 @@
-# ClubOS — Operational Ownership and On-Call Guarantees
+# Murmurant — Operational Ownership and On-Call Guarantees
 
 Status: Canonical Specification  
 Applies to: Production operations  
 Last updated: 2025-12-20
 
-This document defines human operational ownership in ClubOS.
+This document defines human operational ownership in Murmurant.
 Reliability is meaningless without clear authority and responsibility.
 
 This document is normative.
@@ -24,7 +24,7 @@ Ambiguous ownership is a reliability failure.
 
 ## 2. Operational Roles
 
-ClubOS defines the following roles:
+Murmurant defines the following roles:
 
 ### System Owner
 - Ultimately accountable for system integrity
@@ -46,11 +46,11 @@ One person may hold multiple roles, but roles remain distinct.
 
 ## 3. On-Call Expectations
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - 24/7 immediate response
 - Sub-minute recovery
 
-ClubOS DOES guarantee:
+Murmurant DOES guarantee:
 - A defined on-call rotation or fallback
 - A documented response expectation window
 - Visibility when no one is available
@@ -95,7 +95,7 @@ Missing decision logs invalidate the action.
 
 ## 7. Burnout and Sustainability
 
-ClubOS prioritizes:
+Murmurant prioritizes:
 - Predictable load
 - Bounded responsibility
 - Sustainable operations
@@ -106,7 +106,7 @@ Heroics are considered a failure mode.
 
 ## 8. Explicit Non-Guarantees
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Immediate human response
 - Expert availability at all times
 - Perfect judgment under stress
@@ -121,4 +121,4 @@ The system is designed to survive imperfect humans.
 - Runbooks without owners are invalid
 - Authority ambiguity is a SEV-1 risk
 
-This document defines how humans safely operate ClubOS.
+This document defines how humans safely operate Murmurant.

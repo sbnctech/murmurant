@@ -1,6 +1,6 @@
 # Minutes Workflow
 
-This document describes the state machine for governance meeting minutes in ClubOS.
+This document describes the state machine for governance meeting minutes in Murmurant.
 
 ## Charter Principles
 

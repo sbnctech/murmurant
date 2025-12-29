@@ -2,16 +2,16 @@
 
 ```
 Audience: Board members with no technical background
-Purpose: Explain how ClubOS earns and maintains trust during migration
+Purpose: Explain how Murmurant earns and maintains trust during migration
 ```
 
 ---
 
-## What Problem ClubOS Solves
+## What Problem Murmurant Solves
 
 Your organization runs on Wild Apricot today. Wild Apricot stores your member records, event history, and registration data. It works, but it may not fit your needs going forward.
 
-ClubOS is a membership management system designed for clubs like yours. Moving from Wild Apricot to ClubOS means transferring your organization's data and operations to a new home.
+Murmurant is a membership management system designed for clubs like yours. Moving from Wild Apricot to Murmurant means transferring your organization's data and operations to a new home.
 
 This transfer is called **migration**. It is the most consequential thing we will do together.
 
@@ -34,7 +34,7 @@ These failures cause real harm. Members cannot log in. Event history vanishes. R
 
 ---
 
-## How ClubOS Reduces Risk
+## How Murmurant Reduces Risk
 
 We reduce risk through structure, not promises. The migration process has four deliberate constraints:
 
@@ -69,7 +69,7 @@ If anything goes wrong—at any point before the final switch—your Wild Aprico
 
 ### 4. You Must Explicitly Authorize the Switch
 
-The final switch to ClubOS (called **cutover**) requires your explicit authorization. It does not happen automatically. It does not happen on a timer. It does not happen because a deadline passed.
+The final switch to Murmurant (called **cutover**) requires your explicit authorization. It does not happen automatically. It does not happen on a timer. It does not happen because a deadline passed.
 
 You say when. You say if.
 
@@ -91,7 +91,7 @@ The system proposes. You decide.
 
 ---
 
-## What ClubOS Explicitly Does Not Do
+## What Murmurant Explicitly Does Not Do
 
 We want to be clear about our limits:
 
@@ -120,12 +120,12 @@ Migration involves decisions that belong to your leadership, not to us:
 ### Before Migration Begins
 
 - **Authorize proceeding** — Should the organization pursue this migration?
-- **Designate a coordinator** — Who will work with ClubOS staff during the process?
+- **Designate a coordinator** — Who will work with Murmurant staff during the process?
 - **Set expectations** — What does success look like for your organization?
 
 ### During Migration
 
-- **Approve policy mappings** — How should your membership rules translate to ClubOS?
+- **Approve policy mappings** — How should your membership rules translate to Murmurant?
 - **Review rehearsal results** — Does the practice run meet your expectations?
 - **Decide timing** — When is the right moment to switch?
 

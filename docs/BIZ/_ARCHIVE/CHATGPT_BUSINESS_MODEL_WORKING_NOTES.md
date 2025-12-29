@@ -121,12 +121,12 @@ Default deny                  Default varies                Default high
 
 ---
 
-## 3. Why Continuous WA <-> ClubOS Sync Is Explicitly Dangerous
+## 3. Why Continuous WA <-> Murmurant Sync Is Explicitly Dangerous
 
 ### The Temptation
 
 It's tempting to want "bidirectional sync" where changes in WA automatically
-flow to ClubOS and vice versa. This seems convenient.
+flow to Murmurant and vice versa. This seems convenient.
 
 ### Why It's Dangerous
 
@@ -150,12 +150,12 @@ flow to ClubOS and vice versa. This seems convenient.
 Migration is **staged and one-directional**:
 
 ```
-WA (read-only source) --> ClubOS (destination, becomes authoritative)
+WA (read-only source) --> Murmurant (destination, becomes authoritative)
 ```
 
 After migration:
 - WA is frozen or deprecated
-- ClubOS is the single source of truth
+- Murmurant is the single source of truth
 - No sync back to WA
 
 During transition:
@@ -169,7 +169,7 @@ During transition:
 
 ### The Customer Promise
 
-Organizations migrating to ClubOS are trusting us with their membership data.
+Organizations migrating to Murmurant are trusting us with their membership data.
 This is existential for them - losing member data could destroy a club.
 
 ### Therefore: Rollback Is Non-Negotiable
@@ -209,7 +209,7 @@ Each stage has explicit human checkpoints. This builds trust.
 
 ### The Problem
 
-ClubOS was built for SBNC. SBNC's policies are embedded throughout:
+Murmurant was built for SBNC. SBNC's policies are embedded throughout:
 
 - 90-day "newbie" period
 - 730-day "extended member" threshold
@@ -219,7 +219,7 @@ ClubOS was built for SBNC. SBNC's policies are embedded throughout:
 
 ### Why This Blocks Commercialization
 
-Another organization adopting ClubOS would inherit SBNC governance by accident:
+Another organization adopting Murmurant would inherit SBNC governance by accident:
 
 - "Why does our club have a 90-day newbie period? We don't have that."
 - "What's a 'VP Activities'? We have a 'Social Chair'."
@@ -248,7 +248,7 @@ Platform invariants are in code. Organization policy is in configuration.
 
 ### The Philosophy
 
-ClubOS is opinionated: **humans must remain in the loop** for consequential
+Murmurant is opinionated: **humans must remain in the loop** for consequential
 operations. Full automation is explicitly NOT a goal.
 
 ### What This Means in Practice
@@ -292,11 +292,11 @@ The following were discussed and explicitly rejected:
 
 ### Non-Goal: Wild Apricot Feature Parity
 
-ClubOS is NOT a WA clone. Many WA features are intentionally not replicated:
+Murmurant is NOT a WA clone. Many WA features are intentionally not replicated:
 - Widget-based page builder
 - Event registration payment processing (use Stripe directly)
 - Email campaign builder (use external tools)
-- Website hosting (ClubOS is member management, not CMS)
+- Website hosting (Murmurant is member management, not CMS)
 
 ### Non-Goal: Multi-Tenant SaaS (Initial Phase)
 
@@ -343,7 +343,7 @@ These questions were raised but explicitly deferred:
 ### Payment Processing
 
 - Stripe only, or other processors?
-- Handle payments in ClubOS or via integration?
+- Handle payments in Murmurant or via integration?
 - PCI compliance approach?
 
 **Deferred because:** Depends on pricing model.
@@ -360,7 +360,7 @@ These questions were raised but explicitly deferred:
 
 - Can organizations customize branding?
 - Custom domains?
-- Removal of ClubOS branding?
+- Removal of Murmurant branding?
 
 **Deferred because:** Not needed for early adopters.
 

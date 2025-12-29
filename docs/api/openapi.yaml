@@ -1,16 +1,16 @@
 openapi: 3.1.0
 info:
-  title: ClubOS Internal API Documentation
+  title: Murmurant Internal API Documentation
   version: 1.0.0
   description: |
-    **Internal Developer Documentation for ClubOS API**
+    **Internal Developer Documentation for Murmurant API**
 
-    This documentation covers ALL ClubOS APIs including public, member, admin, officer, and internal endpoints.
+    This documentation covers ALL Murmurant APIs including public, member, admin, officer, and internal endpoints.
     It is intended for developers, tech leads, reviewers, and future maintainers.
 
     ## Authentication
 
-    ClubOS uses session-based authentication with HttpOnly cookies. For local development and testing:
+    Murmurant uses session-based authentication with HttpOnly cookies. For local development and testing:
 
     - **Cookie-based auth**: The primary method. Session cookies are set after login.
     - **Test tokens (dev only)**: Use headers like `x-admin-test-token: dev-admin-token` for E2E tests.
@@ -35,7 +35,7 @@ info:
     - `500` - Internal server error
 
   contact:
-    name: ClubOS Development Team
+    name: Murmurant Development Team
   license:
     name: Proprietary
     identifier: Proprietary
@@ -43,7 +43,7 @@ info:
 servers:
   - url: http://localhost:3000
     description: Local development server
-  - url: https://clubos.example.com
+  - url: https://murmurant.example.com
     description: Production (replace with actual URL)
 
 tags:
@@ -3420,10 +3420,10 @@ components:
     cookieAuth:
       type: apiKey
       in: cookie
-      name: clubos_session
+      name: murmurant_session
       description: |
         Session cookie set after authentication.
-        In development, you can also use `clubos_dev_session`.
+        In development, you can also use `murmurant_dev_session`.
 
     testToken:
       type: apiKey

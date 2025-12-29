@@ -16,7 +16,7 @@ interface WorkflowComparison {
   id: string;
   title: string;
   waSteps: WorkflowStep[];
-  clubosSteps: WorkflowStep[];
+  murmurantSteps: WorkflowStep[];
   notes?: string;
 }
 
@@ -43,7 +43,7 @@ const workflows: WorkflowComparison[] = [
       { step: 12, description: "Wait for email response", timeMinutes: 60 },
       { step: 13, description: "Return to WA to publish", timeMinutes: 2 },
     ],
-    clubosSteps: [
+    murmurantSteps: [
       { step: 1, description: "Open event creation form", timeMinutes: 0.5 },
       { step: 2, description: "Fill in event details", timeMinutes: 5 },
       { step: 3, description: "Configure registration and pricing", timeMinutes: 3 },
@@ -51,7 +51,7 @@ const workflows: WorkflowComparison[] = [
       { step: 5, description: "VP notified automatically, approves in-app", timeMinutes: 5 },
       { step: 6, description: "Event publishes automatically", timeMinutes: 0 },
     ],
-    notes: "ClubOS eliminates email-based approval workflow and manual publishing",
+    notes: "Murmurant eliminates email-based approval workflow and manual publishing",
   },
   {
     id: "member-application",
@@ -66,7 +66,7 @@ const workflows: WorkflowComparison[] = [
       { step: 7, description: "Send welcome email manually", timeMinutes: 3 },
       { step: 8, description: "Add to interest groups manually", timeMinutes: 5 },
     ],
-    clubosSteps: [
+    murmurantSteps: [
       { step: 1, description: "View pending application in dashboard", timeMinutes: 0.5 },
       { step: 2, description: "Review details (payment status visible)", timeMinutes: 1 },
       { step: 3, description: "Approve with one click", timeMinutes: 0.5 },
@@ -87,7 +87,7 @@ const workflows: WorkflowComparison[] = [
       { step: 7, description: "Submit and wait for confirmation", timeMinutes: 1 },
       { step: 8, description: "Receive confirmation email", timeMinutes: 1 },
     ],
-    clubosSteps: [
+    murmurantSteps: [
       { step: 1, description: "View event in calendar", timeMinutes: 0.5 },
       { step: 2, description: "Click 'Register' (already logged in)", timeMinutes: 0.5 },
       { step: 3, description: "Add guests if needed", timeMinutes: 1 },
@@ -108,7 +108,7 @@ const workflows: WorkflowComparison[] = [
       { step: 7, description: "VP reviews and responds via email", timeMinutes: 30 },
       { step: 8, description: "File in shared drive", timeMinutes: 2 },
     ],
-    clubosSteps: [
+    murmurantSteps: [
       { step: 1, description: "Open postmortem form (pre-filled stats)", timeMinutes: 0.5 },
       { step: 2, description: "Add notes and learnings", timeMinutes: 5 },
       { step: 3, description: "Submit for review", timeMinutes: 0.5 },
@@ -128,7 +128,7 @@ const workflows: WorkflowComparison[] = [
       { step: 6, description: "Track who renewed manually", timeMinutes: 10 },
       { step: 7, description: "Send follow-up to non-renewers", timeMinutes: 5 },
     ],
-    clubosSteps: [
+    murmurantSteps: [
       { step: 1, description: "View expiring members dashboard", timeMinutes: 0.5 },
       { step: 2, description: "Automated reminders already sent", timeMinutes: 0 },
       { step: 3, description: "Review renewal status in real-time", timeMinutes: 1 },
@@ -145,9 +145,9 @@ function calculateTotalTime(steps: WorkflowStep[]): number {
   return steps.reduce((sum, step) => sum + (step.timeMinutes ?? 0), 0);
 }
 
-function calculateTimeSavings(waMinutes: number, clubosMinutes: number): number {
+function calculateTimeSavings(waMinutes: number, murmurantMinutes: number): number {
   if (waMinutes === 0) return 0;
-  return Math.round(((waMinutes - clubosMinutes) / waMinutes) * 100);
+  return Math.round(((waMinutes - murmurantMinutes) / waMinutes) * 100);
 }
 
 function formatTime(minutes: number): string {
@@ -166,7 +166,7 @@ function formatTime(minutes: number): string {
 // Step Badge Component
 // -----------------------------------------------------------------------------
 
-function StepBadge({ count, variant }: { count: number; variant: "wa" | "clubos" }) {
+function StepBadge({ count, variant }: { count: number; variant: "wa" | "murmurant" }) {
   const colors =
     variant === "wa"
       ? "bg-orange-100 text-orange-800 border-orange-200"
@@ -204,8 +204,8 @@ function TimeSavingsBadge({ percentage }: { percentage: number }) {
 
 function WorkflowCard({ workflow }: { workflow: WorkflowComparison }) {
   const waTime = calculateTotalTime(workflow.waSteps);
-  const clubosTime = calculateTotalTime(workflow.clubosSteps);
-  const savings = calculateTimeSavings(waTime, clubosTime);
+  const murmurantTime = calculateTotalTime(workflow.murmurantSteps);
+  const savings = calculateTimeSavings(waTime, murmurantTime);
 
   return (
     <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
@@ -241,17 +241,17 @@ function WorkflowCard({ workflow }: { workflow: WorkflowComparison }) {
           </ol>
         </div>
 
-        {/* ClubOS Column */}
+        {/* Murmurant Column */}
         <div className="p-4">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-green-700">ClubOS</span>
+            <span className="text-sm font-medium text-green-700">Murmurant</span>
             <div className="flex items-center gap-2">
-              <StepBadge count={workflow.clubosSteps.length} variant="clubos" />
-              <span className="text-xs text-gray-500">{formatTime(clubosTime)}</span>
+              <StepBadge count={workflow.murmurantSteps.length} variant="murmurant" />
+              <span className="text-xs text-gray-500">{formatTime(murmurantTime)}</span>
             </div>
           </div>
           <ol className="space-y-2">
-            {workflow.clubosSteps.map((step) => (
+            {workflow.murmurantSteps.map((step) => (
               <li key={step.step} className="flex items-start gap-2 text-sm">
                 <span className="flex-shrink-0 w-5 h-5 bg-green-100 text-green-700 rounded-full text-xs flex items-center justify-center font-medium">
                   {step.step}
@@ -272,10 +272,10 @@ function WorkflowCard({ workflow }: { workflow: WorkflowComparison }) {
 
 function SummaryStats() {
   const totalWaSteps = workflows.reduce((sum, w) => sum + w.waSteps.length, 0);
-  const totalClubosSteps = workflows.reduce((sum, w) => sum + w.clubosSteps.length, 0);
+  const totalMurmurantSteps = workflows.reduce((sum, w) => sum + w.murmurantSteps.length, 0);
   const totalWaTime = workflows.reduce((sum, w) => sum + calculateTotalTime(w.waSteps), 0);
-  const totalClubosTime = workflows.reduce((sum, w) => sum + calculateTotalTime(w.clubosSteps), 0);
-  const avgSavings = calculateTimeSavings(totalWaTime, totalClubosTime);
+  const totalMurmurantTime = workflows.reduce((sum, w) => sum + calculateTotalTime(w.murmurantSteps), 0);
+  const avgSavings = calculateTimeSavings(totalWaTime, totalMurmurantTime);
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -284,12 +284,12 @@ function SummaryStats() {
         <div className="text-2xl font-bold text-orange-600">{totalWaSteps}</div>
       </div>
       <div className="bg-white rounded-lg shadow p-4">
-        <div className="text-sm text-gray-500">Total ClubOS Steps</div>
-        <div className="text-2xl font-bold text-green-600">{totalClubosSteps}</div>
+        <div className="text-sm text-gray-500">Total Murmurant Steps</div>
+        <div className="text-2xl font-bold text-green-600">{totalMurmurantSteps}</div>
       </div>
       <div className="bg-white rounded-lg shadow p-4">
         <div className="text-sm text-gray-500">Steps Eliminated</div>
-        <div className="text-2xl font-bold text-blue-600">{totalWaSteps - totalClubosSteps}</div>
+        <div className="text-2xl font-bold text-blue-600">{totalWaSteps - totalMurmurantSteps}</div>
       </div>
       <div className="bg-white rounded-lg shadow p-4">
         <div className="text-sm text-gray-500">Avg Time Savings</div>
@@ -309,7 +309,7 @@ export default function WorkflowComparisonSection() {
       <div className="border-b border-gray-200 pb-4">
         <h2 className="text-2xl font-bold text-gray-900">Workflow Comparison</h2>
         <p className="text-gray-500 mt-1">
-          Side-by-side comparison of Wild Apricot vs ClubOS workflows
+          Side-by-side comparison of Wild Apricot vs Murmurant workflows
         </p>
       </div>
 

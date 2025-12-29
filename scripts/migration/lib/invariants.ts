@@ -49,9 +49,9 @@ export interface InvariantCheckResult {
 export const VIOLATION_CODES = {
   // ID Mapping violations
   MISSING_WA_ID: "MISSING_WA_ID",
-  MISSING_CLUBOS_ID: "MISSING_CLUBOS_ID",
+  MISSING_MURMURANT_ID: "MISSING_MURMURANT_ID",
   DUPLICATE_WA_ID: "DUPLICATE_WA_ID",
-  DUPLICATE_CLUBOS_ID: "DUPLICATE_CLUBOS_ID",
+  DUPLICATE_MURMURANT_ID: "DUPLICATE_MURMURANT_ID",
   ORPHANED_MAPPING: "ORPHANED_MAPPING",
   EMPTY_MAPPING: "EMPTY_MAPPING",
 
@@ -103,8 +103,8 @@ export function assertNoViolations(violations: InvariantViolation[]): void {
  *
  * Checks:
  * - No duplicate WA IDs within an entity type
- * - No duplicate ClubOS IDs within an entity type
- * - All entries have both waId and clubosId
+ * - No duplicate Murmurant IDs within an entity type
+ * - All entries have both waId and murmurantId
  * - Counts are consistent with mapping arrays
  */
 export function validateIdMapping(
@@ -178,7 +178,7 @@ function validateIdMappingEntries(
   }
 
   const seenWaIds = new Map<string, number>();
-  const seenClubosIds = new Map<string, number>();
+  const seenMurmurantIds = new Map<string, number>();
 
   mappings.forEach((entry, index) => {
     const path = `${entityType}.mappings[${index}]`;
@@ -206,26 +206,26 @@ function validateIdMappingEntries(
       }
     }
 
-    // Check for missing ClubOS ID
-    if (!entry.clubosId || typeof entry.clubosId !== "string") {
+    // Check for missing Murmurant ID
+    if (!entry.murmurantId || typeof entry.murmurantId !== "string") {
       violations.push({
-        code: VIOLATION_CODES.MISSING_CLUBOS_ID,
-        message: "Mapping entry missing clubosId",
+        code: VIOLATION_CODES.MISSING_MURMURANT_ID,
+        message: "Mapping entry missing murmurantId",
         path,
         details: { entry },
       });
     } else {
       // Track for duplicates
-      const prevIndex = seenClubosIds.get(entry.clubosId);
+      const prevIndex = seenMurmurantIds.get(entry.murmurantId);
       if (prevIndex !== undefined) {
         violations.push({
-          code: VIOLATION_CODES.DUPLICATE_CLUBOS_ID,
-          message: `Duplicate ClubOS ID: ${entry.clubosId}`,
+          code: VIOLATION_CODES.DUPLICATE_MURMURANT_ID,
+          message: `Duplicate Murmurant ID: ${entry.murmurantId}`,
           path,
-          details: { clubosId: entry.clubosId, firstIndex: prevIndex, secondIndex: index },
+          details: { murmurantId: entry.murmurantId, firstIndex: prevIndex, secondIndex: index },
         });
       } else {
-        seenClubosIds.set(entry.clubosId, index);
+        seenMurmurantIds.set(entry.murmurantId, index);
       }
     }
   });

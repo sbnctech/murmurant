@@ -14,7 +14,7 @@ Related: Epic #248, Issue #249
 
 ### 1.1 The Three-Layer Model
 
-ClubOS separates access control into three distinct layers:
+Murmurant separates access control into three distinct layers:
 
 ```
 +-------------------+     +-------------------+     +-------------------+
@@ -198,7 +198,7 @@ Entitlement checks should be:
 ### 6.3 Migration Considerations
 
 When migrating from WA:
-- Map WA membership levels to ClubOS tiers
+- Map WA membership levels to Murmurant tiers
 - Operator validates mapping before import
 - No automatic entitlement assignment (requires explicit configuration)
 

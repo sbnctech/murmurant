@@ -1,4 +1,4 @@
-# ClubOS - Runbook: Backup Verification (Paper Drill)
+# Murmurant - Runbook: Backup Verification (Paper Drill)
 
 Status: Canonical Runbook
 Applies to: Pre-deployment readiness and incidents

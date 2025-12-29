@@ -1,4 +1,4 @@
-# Just-in-Time Training System Spec (ClubOS)
+# Just-in-Time Training System Spec (Murmurant)
 
 Worker 4 — JIT Training Spec — Report
 

@@ -1,7 +1,7 @@
 /**
  * Feature Flag Registry
  *
- * Central registry of all feature flags and kill switches in ClubOS.
+ * Central registry of all feature flags and kill switches in Murmurant.
  * Each flag must be defined here with its metadata before use.
  *
  * See docs/reliability/FEATURE_FLAGS.md for usage documentation.
@@ -40,7 +40,7 @@ export interface FlagDefinition {
  * Adding a flag:
  * 1. Add entry here with all required fields
  * 2. Use isEnabled("key") in code
- * 3. Set CLUBOS_FLAG_KEY=1 or 0 in environment
+ * 3. Set MURMURANT_FLAG_KEY=1 or 0 in environment
  *
  * Conventions:
  * - Kill switches: default to true (ON), set to false to disable

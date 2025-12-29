@@ -1,6 +1,6 @@
 # Methodology to Guarantee Map
 
-This document traces how ClubOS development practices translate into customer-facing guarantees. Each practice exists to prevent a specific class of risk, which in turn enables a promise we can make to customers.
+This document traces how Murmurant development practices translate into customer-facing guarantees. Each practice exists to prevent a specific class of risk, which in turn enables a promise we can make to customers.
 
 ---
 
@@ -33,7 +33,7 @@ This document traces how ClubOS development practices translate into customer-fa
 
 ## Relationship to Other Documents
 
-This map shows the "why" behind ClubOS development constraints. For the formal contract definitions, see:
+This map shows the "why" behind Murmurant development constraints. For the formal contract definitions, see:
 
 - [Core Trust Surface](../ARCHITECTURAL_CHARTER.md#core-trust-surface) — Normative contract list
 - [Preview Surface Contract](./PREVIEW_SURFACE_CONTRACT.md) — What preview promises

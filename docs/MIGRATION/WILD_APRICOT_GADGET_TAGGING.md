@@ -15,7 +15,7 @@ All intake checklists and migration manifests reference this table.
 | Member data | Migrates automatically | Review for accuracy after migration |
 | Event data | Migrates automatically | Verify events display correctly |
 | Payment history | Migrates automatically | Confirm transaction records |
-| Page content | Operator rebuilds in ClubOS | Approve new page layouts |
+| Page content | Operator rebuilds in Murmurant | Approve new page layouts |
 | Custom embeds | Reviewed case-by-case | Decide what's essential |
 | Tracking code | Not migrated (privacy) | Discuss analytics needs separately |
 
@@ -37,7 +37,7 @@ Use these three questions to classify any WA feature:
 - **Yes** (events, members, payments, registrations) → Probably **AUTO**
 - **No** (just shows content or layout) → Probably **MANUAL**
 
-### Question 2: Does ClubOS have a matching feature?
+### Question 2: Does Murmurant have a matching feature?
 
 - **Yes, exact match** → Definitely **AUTO**
 - **Yes, similar** → Likely **MANUAL** (operator adapts)
@@ -65,8 +65,8 @@ Use these three questions to classify any WA feature:
 
 | Tag | Meaning | What Happens |
 |-----|---------|--------------|
-| AUTO | Data-backed; maps to ClubOS model | Script migrates it automatically |
-| MANUAL | Presentation-only; no data | Operator recreates in ClubOS |
+| AUTO | Data-backed; maps to Murmurant model | Script migrates it automatically |
+| MANUAL | Presentation-only; no data | Operator recreates in Murmurant |
 | UNSUPPORTED | Security or maintenance risk | Excluded from migration scope |
 
 ---
@@ -76,14 +76,14 @@ Use these three questions to classify any WA feature:
 ### AUTO applies when:
 
 - WA stores structured data (events, members, registrations)
-- ClubOS has a direct model equivalent
+- Murmurant has a direct model equivalent
 - Script can map fields without human judgment
 
 ### MANUAL applies when:
 
 - Content is presentation-only (layout, styling, static text)
 - No structured data to migrate
-- Operator must recreate using ClubOS primitives
+- Operator must recreate using Murmurant primitives
 
 ### UNSUPPORTED applies when:
 
@@ -97,7 +97,7 @@ Use these three questions to classify any WA feature:
 
 ### Events and Registration
 
-| WA Item | Purpose | Data Needed | Tag | ClubOS Equivalent | Operator Notes |
+| WA Item | Purpose | Data Needed | Tag | Murmurant Equivalent | Operator Notes |
 |---------|---------|-------------|-----|-------------------|----------------|
 | Event list gadget | Shows upcoming events on a page | Events CSV export | AUTO | Event list component | Filters preserved |
 | Event calendar gadget | Calendar view (month/week) | Events CSV export | AUTO | Calendar view | Views configurable |
@@ -108,7 +108,7 @@ Use these three questions to classify any WA feature:
 
 ### Members and Directory
 
-| WA Item | Purpose | Data Needed | Tag | ClubOS Equivalent | Operator Notes |
+| WA Item | Purpose | Data Needed | Tag | Murmurant Equivalent | Operator Notes |
 |---------|---------|-------------|-----|-------------------|----------------|
 | Member directory | Searchable member list | Members CSV export | AUTO | Directory component | Privacy levels kept |
 | Profile view | Shows member details | Members CSV export | AUTO | Profile route | Custom fields mapped |
@@ -119,7 +119,7 @@ Use these three questions to classify any WA feature:
 
 ### Payments and Donations
 
-| WA Item | Purpose | Data Needed | Tag | ClubOS Equivalent | Operator Notes |
+| WA Item | Purpose | Data Needed | Tag | Murmurant Equivalent | Operator Notes |
 |---------|---------|-------------|-----|-------------------|----------------|
 | Membership dues | Collects annual/monthly fees | Member levels + payment history | AUTO | Dues component | Tier preserved |
 | Donation form | Accepts contributions | Donation records | AUTO | Donation component | Fund tracking kept |
@@ -129,7 +129,7 @@ Use these three questions to classify any WA feature:
 
 ### Website and Presentation
 
-| WA Item | Purpose | Data Needed | Tag | ClubOS Equivalent | Operator Notes |
+| WA Item | Purpose | Data Needed | Tag | Murmurant Equivalent | Operator Notes |
 |---------|---------|-------------|-----|-------------------|----------------|
 | Content gadget | Static text/HTML block | None (content recreated) | MANUAL | Block editor | Operator types content |
 | Image gallery | Photo collection display | Image files (download) | MANUAL | Gallery component | Re-upload images |
@@ -141,11 +141,11 @@ Use these three questions to classify any WA feature:
 
 ### Embeds and Custom Code
 
-| WA Item | Purpose | Data Needed | Tag | ClubOS Equivalent | Operator Notes |
+| WA Item | Purpose | Data Needed | Tag | Murmurant Equivalent | Operator Notes |
 |---------|---------|-------------|-----|-------------------|----------------|
 | Arbitrary HTML block | Raw HTML content | None (not migrated) | UNSUPPORTED | None | Security risk |
 | Inline JavaScript | Custom scripts | None (not migrated) | UNSUPPORTED | None | XSS risk |
-| Google Calendar embed | External calendar | None | MANUAL | Native calendar | Use ClubOS calendar |
+| Google Calendar embed | External calendar | None | MANUAL | Native calendar | Use Murmurant calendar |
 | Google Docs embed | Document display | None | MANUAL | Link or PDF | Convert or link |
 | Google Forms embed | Survey/form | None | MANUAL | Form builder | Rebuild form |
 | YouTube embed | Video player | Video URL | MANUAL | Video component | Allowlisted |
@@ -156,14 +156,14 @@ Use these three questions to classify any WA feature:
 
 ### Automations and Integrations
 
-| WA Item | Purpose | Data Needed | Tag | ClubOS Equivalent | Operator Notes |
+| WA Item | Purpose | Data Needed | Tag | Murmurant Equivalent | Operator Notes |
 |---------|---------|-------------|-----|-------------------|----------------|
 | ICS calendar feed | Calendar subscription | None (auto-generated) | AUTO | ICS export | URL will change |
 | Email templates | Notification messages | Template text (copy) | MANUAL | Email builder | Recreate content |
 | Zapier integration | Workflow automation | Zap configuration notes | MANUAL | Webhook config | Rebuild triggers |
 | Make integration | Workflow automation | Scenario notes | MANUAL | Webhook config | Rebuild triggers |
 | Google Sheets export | Data export | None | MANUAL | CSV/API export | New format |
-| Custom API usage | Direct API calls | API usage notes | MANUAL | ClubOS API | New endpoints |
+| Custom API usage | Direct API calls | API usage notes | MANUAL | Murmurant API | New endpoints |
 
 ---
 
@@ -173,7 +173,7 @@ When you encounter a WA feature not listed:
 
 1. Ask the three questions from "How to Decide Quickly"
 2. Determine what data (if any) needs to be exported
-3. Check if ClubOS has equivalent functionality
+3. Check if Murmurant has equivalent functionality
 4. Evaluate security/maintenance risk
 5. Add to appropriate table above with all columns filled
 6. Update intake checklist if new category needed
@@ -183,7 +183,7 @@ When you encounter a WA feature not listed:
 ## Related Documents
 
 - [Operator Decision Tree](./OPERATOR_DECISION_TREE.md) - quick classification flowchart for operators
-- [ClubOS Page Builder Primitives](../ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md) - ClubOS equivalents and migration behavior
+- [Murmurant Page Builder Primitives](../ARCH/MURMURANT_PAGE_BUILDER_PRIMITIVES.md) - Murmurant equivalents and migration behavior
 - [Migration Intake Checklist](./WILD_APRICOT_MIGRATION_INTAKE_CHECKLIST.md) - step-by-step discovery
 - [Presentation Discovery Stage](./PRESENTATION_DISCOVERY_STAGE.md) - automated site crawling
 - [Widgets vs Gadgets](./WILD_APRICOT_WIDGETS_VS_GADGETS.md) - terminology guide
@@ -195,8 +195,8 @@ When you encounter a WA feature not listed:
 
 For calendar widget replacement, see the ClubCalendar inline engine documentation:
 
-- **Location**: `clubcalendar_sbnc/` (separate from ClubOS repo)
-- **Handoff Doc**: `CLUBOS_HANDOFF.md` - integration surface for ClubOS
+- **Location**: `clubcalendar_sbnc/` (separate from Murmurant repo)
+- **Handoff Doc**: `MURMURANT_HANDOFF.md` - integration surface for Murmurant
 - **Config Contract**: `CONFIG_FETCH_CONTRACT.md` - locked config format
 - **Security**: `ClubCalendar_SECURITY_AND_WA_CONSTRAINTS.md` - WA embedding constraints
 

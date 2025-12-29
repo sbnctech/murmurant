@@ -21,4 +21,4 @@
 - API surface is documented and considered stable for frontend work
 
 ## Rationale
-Day 3 closes the integration gap between schema, API, and tests. Once complete, ClubOS moves from scaffolding to a reliable application core that other contributors (frontend, automation, reporting) can safely build on.
+Day 3 closes the integration gap between schema, API, and tests. Once complete, Murmurant moves from scaffolding to a reliable application core that other contributors (frontend, automation, reporting) can safely build on.

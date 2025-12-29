@@ -1,6 +1,6 @@
 #!/bin/bash
 # make-install-pack.sh
-# Creates a distributable install pack for ClubOS.
+# Creates a distributable install pack for Murmurant.
 #
 # Usage:
 #   ./scripts/make-install-pack.sh [--skip-build]
@@ -9,8 +9,8 @@
 #   --skip-build    Skip the build step (use existing .next)
 #
 # Output:
-#   dist/clubos-pack/           - Unpacked artifacts
-#   dist/clubos-pack.zip        - Zipped pack ready for distribution
+#   dist/murmurant-pack/           - Unpacked artifacts
+#   dist/murmurant-pack.zip        - Zipped pack ready for distribution
 #
 # Pack contents:
 #   - .next/                    - Compiled Next.js application
@@ -28,8 +28,8 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
-PACK_DIR="$DIST_DIR/clubos-pack"
-PACK_ZIP="$DIST_DIR/clubos-pack.zip"
+PACK_DIR="$DIST_DIR/murmurant-pack"
+PACK_ZIP="$DIST_DIR/murmurant-pack.zip"
 
 # Colors
 RED='\033[0;31m'
@@ -49,7 +49,7 @@ for arg in "$@"; do
 done
 
 echo "========================================"
-echo "ClubOS Install Pack Generator"
+echo "Murmurant Install Pack Generator"
 echo "========================================"
 echo ""
 
@@ -133,9 +133,9 @@ fi
 
 # Create INSTALL.md
 cat > "$PACK_DIR/INSTALL.md" << 'EOF'
-# ClubOS Install Pack
+# Murmurant Install Pack
 
-This pack contains a pre-built ClubOS application ready for deployment.
+This pack contains a pre-built Murmurant application ready for deployment.
 
 ## Contents
 
@@ -212,11 +212,11 @@ echo ""
 echo "Step 5: Creating zip archive..."
 
 cd "$DIST_DIR"
-zip -rq "clubos-pack.zip" "clubos-pack"
+zip -rq "murmurant-pack.zip" "murmurant-pack"
 
 # Get file size
 PACK_SIZE=$(du -h "$PACK_ZIP" | cut -f1)
-echo -e "${GREEN}[OK]${NC} Created clubos-pack.zip ($PACK_SIZE)"
+echo -e "${GREEN}[OK]${NC} Created murmurant-pack.zip ($PACK_SIZE)"
 echo ""
 
 # -----------------------------------------------------------------------------

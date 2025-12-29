@@ -1,6 +1,6 @@
-# ClubOS API Reference
+# Murmurant API Reference
 
-Internal API documentation for ClubOS endpoints.
+Internal API documentation for Murmurant endpoints.
 
 Copyright (c) Santa Barbara Newcomers Club
 
@@ -12,7 +12,7 @@ All API routes are located under `/api/v1/`. Authentication is required for most
 
 ### Authentication
 
-- **Session-based**: Cookie authentication via `clubos_session` token
+- **Session-based**: Cookie authentication via `murmurant_session` token
 - **Capability-based authorization**: Endpoints check for specific capabilities
 
 ### Response Format

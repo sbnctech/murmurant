@@ -1,4 +1,4 @@
-# ClubOS - Tabletop Scenarios (Pre-Deployment)
+# Murmurant - Tabletop Scenarios (Pre-Deployment)
 
 Status: Canonical Tabletop Set
 Applies to: Pre-deployment readiness and incident rehearsal

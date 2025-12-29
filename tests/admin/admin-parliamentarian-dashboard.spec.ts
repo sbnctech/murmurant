@@ -260,7 +260,7 @@ test.describe("Parliamentarian Dashboard", () => {
       // Set auth cookie for parliamentarian
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-parliamentarian-token",
           domain: new URL(BASE).hostname,
           path: "/",
@@ -291,7 +291,7 @@ test.describe("Parliamentarian Dashboard", () => {
       // Set auth cookie for webmaster
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-webmaster-token",
           domain: new URL(BASE).hostname,
           path: "/",
@@ -313,7 +313,7 @@ test.describe("Parliamentarian Dashboard", () => {
     }) => {
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-parliamentarian-token",
           domain: new URL(BASE).hostname,
           path: "/",
@@ -348,7 +348,7 @@ test.describe("Parliamentarian Dashboard", () => {
     test("policy questions section shows count badge", async ({ page }) => {
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-parliamentarian-token",
           domain: new URL(BASE).hostname,
           path: "/",
@@ -380,7 +380,7 @@ test.describe("Parliamentarian Dashboard", () => {
     test("audit trail links are present for flag items", async ({ page }) => {
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-parliamentarian-token",
           domain: new URL(BASE).hostname,
           path: "/",
@@ -409,7 +409,7 @@ test.describe("Parliamentarian Dashboard", () => {
     test("quick links to governance pages exist", async ({ page }) => {
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-parliamentarian-token",
           domain: new URL(BASE).hostname,
           path: "/",

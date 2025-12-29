@@ -11,7 +11,7 @@
  * Environment:
  *   DATABASE_URL - Prisma database connection
  *   DRY_RUN=1    - Preview changes without writing
- *   CLUBOS_FLAG_MEMBERSHIP_TIERS_ENABLED=1 - Enable tier functionality
+ *   MURMURANT_FLAG_MEMBERSHIP_TIERS_ENABLED=1 - Enable tier functionality
  *
  * Related: Issue #276, #275, #202
  */
@@ -223,14 +223,14 @@ async function main() {
   const dryRun = process.env.DRY_RUN === "1";
 
   console.log("\n" + "=".repeat(60));
-  console.log("ClubOS Membership Tier Seeding");
+  console.log("Murmurant Membership Tier Seeding");
   console.log(`Mode: ${dryRun ? "DRY RUN" : "LIVE"}`);
   console.log("=".repeat(60) + "\n");
 
   // Check feature flag first
   if (!isTierSeedingEnabled()) {
     console.log("[seed-tiers] Feature flag membership_tiers_enabled is OFF");
-    console.log("[seed-tiers] Set CLUBOS_FLAG_MEMBERSHIP_TIERS_ENABLED=1 to enable");
+    console.log("[seed-tiers] Set MURMURANT_FLAG_MEMBERSHIP_TIERS_ENABLED=1 to enable");
     process.exit(0);
   }
 

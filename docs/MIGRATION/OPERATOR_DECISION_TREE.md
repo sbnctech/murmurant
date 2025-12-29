@@ -1,6 +1,6 @@
 # Migration Operator Decision Tree
 
-**Purpose**: Help operators make quick, consistent decisions during WA-to-ClubOS migration.
+**Purpose**: Help operators make quick, consistent decisions during WA-to-Murmurant migration.
 
 **Audience**: Board members, tech chairs, migration coordinators.
 
@@ -34,13 +34,13 @@ Is this feature backed by data that WA stores?
     NO  → Probably MANUAL (operator rebuilds it)
 ```
 
-### Question 2: Does ClubOS have something similar?
+### Question 2: Does Murmurant have something similar?
 
 ```
-Does ClubOS have a matching feature?
+Does Murmurant have a matching feature?
 
     EXACT MATCH   → AUTO (direct migration)
-    SIMILAR       → MANUAL (adapt to ClubOS)
+    SIMILAR       → MANUAL (adapt to Murmurant)
     NO EQUIVALENT → UNSUPPORTED (skip or replace)
 ```
 
@@ -168,19 +168,19 @@ Payment-related feature?
 Website content feature?
     |
     +-- Text/content blocks
-    |       → MANUAL: Re-type in ClubOS editor
+    |       → MANUAL: Re-type in Murmurant editor
     |
     +-- Images
     |       → MANUAL: Re-upload files
     |
     +-- Photo galleries
-    |       → MANUAL: Recreate with ClubOS gallery
+    |       → MANUAL: Recreate with Murmurant gallery
     |
     +-- Navigation menus
     |       → MANUAL: Rebuild menu structure
     |
     +-- Custom CSS
-            → MANUAL: Translate to ClubOS theme
+            → MANUAL: Translate to Murmurant theme
 ```
 
 ### Embeds and Custom Code
@@ -195,10 +195,10 @@ Embed or code feature?
     |       → MANUAL: Allowlisted, re-add in editor
     |
     +-- Google Calendar
-    |       → MANUAL: Use ClubOS native calendar
+    |       → MANUAL: Use Murmurant native calendar
     |
     +-- Google Forms
-    |       → MANUAL: Rebuild with ClubOS forms
+    |       → MANUAL: Rebuild with Murmurant forms
     |
     +-- Custom HTML (no scripts)
     |       → MANUAL: Review content, recreate if safe
@@ -222,13 +222,13 @@ Integration feature?
     |       → AUTO: New URL, same data
     |
     +-- Zapier/Make workflows
-    |       → MANUAL: Rebuild with ClubOS webhooks
+    |       → MANUAL: Rebuild with Murmurant webhooks
     |
     +-- Email templates
-    |       → MANUAL: Recreate in ClubOS editor
+    |       → MANUAL: Recreate in Murmurant editor
     |
     +-- API integrations
-            → MANUAL: Update to ClubOS API
+            → MANUAL: Update to Murmurant API
 ```
 
 ---
@@ -239,7 +239,7 @@ Integration feature?
 
 **Answer**: MANUAL - Allowlisted and safe.
 
-**Action**: After migration, add a Video block in ClubOS and paste the YouTube URL.
+**Action**: After migration, add a Video block in Murmurant and paste the YouTube URL.
 
 ---
 
@@ -247,7 +247,7 @@ Integration feature?
 
 **Answer**: UNSUPPORTED - Privacy risk.
 
-**Action**: ClubOS has built-in analytics. If you need GA, configure it through ClubOS admin settings (not page embeds).
+**Action**: Murmurant has built-in analytics. If you need GA, configure it through Murmurant admin settings (not page embeds).
 
 ---
 
@@ -255,7 +255,7 @@ Integration feature?
 
 **Answer**: MANUAL - Rebuild needed.
 
-**Action**: Use ClubOS form builder to create the form. Configure email notifications in settings.
+**Action**: Use Murmurant form builder to create the form. Configure email notifications in settings.
 
 ---
 
@@ -263,7 +263,7 @@ Integration feature?
 
 **Answer**: MANUAL - Use native calendar instead.
 
-**Action**: ClubOS has a native event calendar. Your events migrate automatically and display in ClubOS calendar.
+**Action**: Murmurant has a native event calendar. Your events migrate automatically and display in Murmurant calendar.
 
 ---
 
@@ -271,7 +271,7 @@ Integration feature?
 
 **Answer**: UNSUPPORTED - XSS risk.
 
-**Action**: Skip this feature. Consider ClubOS native announcements if needed.
+**Action**: Skip this feature. Consider Murmurant native announcements if needed.
 
 ---
 
@@ -279,7 +279,7 @@ Integration feature?
 
 **Answer**: MANUAL - Different export format.
 
-**Action**: ClubOS provides CSV exports. Workflow may need adjustment for new format.
+**Action**: Murmurant provides CSV exports. Workflow may need adjustment for new format.
 
 ---
 
@@ -324,7 +324,7 @@ PHASE 5: Verification
     - Verify payments work
 
 PHASE 6: Cutover
-    - Point DNS to ClubOS
+    - Point DNS to Murmurant
     - Disable WA login
     - Monitor for issues
 ```

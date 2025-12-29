@@ -21,8 +21,8 @@ import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 // Cookie name with __Host- prefix for production security
 // In development, use simpler name for localhost compatibility
-const PRODUCTION_COOKIE_NAME = "__Host-clubos_session";
-const DEVELOPMENT_COOKIE_NAME = "clubos_session";
+const PRODUCTION_COOKIE_NAME = "__Host-murmurant_session";
+const DEVELOPMENT_COOKIE_NAME = "murmurant_session";
 
 // Session durations
 export const SESSION_MAX_AGE_SECONDS = 30 * 24 * 60 * 60; // 30 days

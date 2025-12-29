@@ -79,7 +79,7 @@ This document inventories SBNC-specific policy constants, strings, and business 
 | OI-008 | `src/app/api/v1/policies/[id]/export-pdf/route.ts` | 381 | `"Santa Barbara Newcomers Club - Club Policy"` | Organization Identity | PDF footer | `tenant.name` | PDF export |
 | OI-009 | `src/app/api/v1/policies/export-pdf/route.ts` | 145, 430, 450 | Club name in PDF | Organization Identity | PDF header/footer | `tenant.name` | PDF export |
 | OI-010 | `src/app/api/v1/docs/openapi/route.ts` | 21 | `"Santa Barbara Newcomers Club"` | Organization Identity | API docs | `tenant.name` | OpenAPI spec |
-| OI-011 | `src/app/api/v1/docs/openapi/route.ts` | 25 | `"github.com/sbnewcomers/clubos"` | Organization Identity | GitHub URL | `tenant.sourceRepo` | OpenAPI spec |
+| OI-011 | `src/app/api/v1/docs/openapi/route.ts` | 25 | `"github.com/sbnewcomers/murmurant"` | Organization Identity | GitHub URL | `tenant.sourceRepo` | OpenAPI spec |
 | OI-012 | `src/lib/passkey/config.ts` | 8-10 | SBNC domain examples | Organization Identity | Config comments | Documentation | Comments |
 | OI-013 | `src/lib/passkey/config.ts` | 63, 102 | `"sbnc.club"` examples | Organization Identity | Config comments | Documentation | Comments |
 | OI-014 | `src/lib/config/externalLinks.ts` | 16, 23 | `"sbnewcomers.org"` URLs | Organization Identity | External links | `tenant.externalLinks` | Gift certificates, etc. |

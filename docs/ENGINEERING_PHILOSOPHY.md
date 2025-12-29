@@ -1,4 +1,4 @@
-# ClubOS - Engineering Philosophy
+# Murmurant - Engineering Philosophy
 
 Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
@@ -7,7 +7,7 @@ Last updated: 2025-12-21
 
 ## Purpose
 
-ClubOS is a system of record for a real organization.
+Murmurant is a system of record for a real organization.
 We optimize for correctness, authorization safety, recoverability, and trust.
 We do not optimize for raw feature velocity.
 

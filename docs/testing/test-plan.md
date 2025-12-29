@@ -1,4 +1,4 @@
-# ClubOS Test Plan
+# Murmurant Test Plan
 
 **Version:** 1.0
 **Last Updated:** Day 2 Sprint
@@ -8,13 +8,13 @@
 
 ## Overview
 
-This document outlines the integration testing strategy for ClubOS. It defines integration surfaces, failure modes, test priorities, and a Day-2 through Day-7 roadmap for building a robust test harness.
+This document outlines the integration testing strategy for Murmurant. It defines integration surfaces, failure modes, test priorities, and a Day-2 through Day-7 roadmap for building a robust test harness.
 
 ---
 
 ## Integration Surfaces
 
-ClubOS has four primary integration surfaces that require coordinated testing:
+Murmurant has four primary integration surfaces that require coordinated testing:
 
 ### 1. Schema Layer (Session 1)
 

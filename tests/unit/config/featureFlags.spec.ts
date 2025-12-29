@@ -21,44 +21,44 @@ describe("isAchEnabled", () => {
     process.env = originalEnv;
   });
 
-  test("returns false when CLUBOS_ACH_ENABLED is not set", () => {
-    delete process.env.CLUBOS_ACH_ENABLED;
+  test("returns false when MURMURANT_ACH_ENABLED is not set", () => {
+    delete process.env.MURMURANT_ACH_ENABLED;
     expect(isAchEnabled()).toBe(false);
   });
 
-  test("returns false when CLUBOS_ACH_ENABLED is empty", () => {
-    process.env.CLUBOS_ACH_ENABLED = "";
+  test("returns false when MURMURANT_ACH_ENABLED is empty", () => {
+    process.env.MURMURANT_ACH_ENABLED = "";
     expect(isAchEnabled()).toBe(false);
   });
 
-  test("returns false when CLUBOS_ACH_ENABLED is '0'", () => {
-    process.env.CLUBOS_ACH_ENABLED = "0";
+  test("returns false when MURMURANT_ACH_ENABLED is '0'", () => {
+    process.env.MURMURANT_ACH_ENABLED = "0";
     expect(isAchEnabled()).toBe(false);
   });
 
-  test("returns false when CLUBOS_ACH_ENABLED is 'false'", () => {
-    process.env.CLUBOS_ACH_ENABLED = "false";
+  test("returns false when MURMURANT_ACH_ENABLED is 'false'", () => {
+    process.env.MURMURANT_ACH_ENABLED = "false";
     expect(isAchEnabled()).toBe(false);
   });
 
-  test("returns true when CLUBOS_ACH_ENABLED is '1'", () => {
-    process.env.CLUBOS_ACH_ENABLED = "1";
+  test("returns true when MURMURANT_ACH_ENABLED is '1'", () => {
+    process.env.MURMURANT_ACH_ENABLED = "1";
     expect(isAchEnabled()).toBe(true);
   });
 
-  test("returns true when CLUBOS_ACH_ENABLED is 'true'", () => {
-    process.env.CLUBOS_ACH_ENABLED = "true";
+  test("returns true when MURMURANT_ACH_ENABLED is 'true'", () => {
+    process.env.MURMURANT_ACH_ENABLED = "true";
     expect(isAchEnabled()).toBe(true);
   });
 
   test("returns false for case-sensitive 'TRUE'", () => {
-    process.env.CLUBOS_ACH_ENABLED = "TRUE";
+    process.env.MURMURANT_ACH_ENABLED = "TRUE";
     expect(isAchEnabled()).toBe(false);
   });
 });
 
 describe("FEATURE_FLAGS", () => {
   test("exports ACH_ENABLED constant", () => {
-    expect(FEATURE_FLAGS.ACH_ENABLED).toBe("CLUBOS_ACH_ENABLED");
+    expect(FEATURE_FLAGS.ACH_ENABLED).toBe("MURMURANT_ACH_ENABLED");
   });
 });

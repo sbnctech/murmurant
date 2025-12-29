@@ -10,7 +10,7 @@
 
 | ID | Guarantee | Canonical Phrasing | Where Defined | Status |
 |----|-----------|-------------------|---------------|--------|
-| G-ABORT-01 | Abort discards all intentions | "Abort discards all ClubOS intentions. ClubOS returns to pre-rehearsal state." | REVERSIBILITY_CONTRACT §3 G2 | **Canonical** |
+| G-ABORT-01 | Abort discards all intentions | "Abort discards all Murmurant intentions. Murmurant returns to pre-rehearsal state." | REVERSIBILITY_CONTRACT §3 G2 | **Canonical** |
 | G-ABORT-02 | Abort is unconditional | "Abort requires no justification. The option exists to be used." | CUTOVER_REHEARSAL §Commit vs Abort | **Canonical** |
 | G-ABORT-03 | Abort is always safe | "Abort is always safe." | REVERSIBILITY_CONTRACT §2.3, PREVIEW_SURFACE_CONTRACT §6.3 | **Canonical** |
 | G-ABORT-04 | No limit on rehearsals | "There is no limit to rehearsal attempts." | CUTOVER_REHEARSAL §After Abort | **Canonical** |
@@ -25,7 +25,7 @@
 | G-COMMIT-01 | Commit is explicit | "Commit requires explicit operator action (not passive timeout)." | REVERSIBILITY_CONTRACT §3 G4 | **Canonical** |
 | G-COMMIT-02 | Commit is logged | "Audit log entry with operator identity, timestamp, and manifest version." | REVERSIBILITY_CONTRACT §3 G4 | **Canonical** |
 | G-COMMIT-03 | Commit applies exact manifest | "The system applies exactly the manifest version you rehearsed." | CUTOVER_REHEARSAL §Preview Equivalence | **Canonical** |
-| G-WA-01 | WA unchanged during rehearsal | "No ClubOS action modifies Wild Apricot data." | REVERSIBILITY_CONTRACT §3 G1 | **Canonical** |
+| G-WA-01 | WA unchanged during rehearsal | "No Murmurant action modifies Wild Apricot data." | REVERSIBILITY_CONTRACT §3 G1 | **Canonical** |
 | G-WA-02 | WA remains authoritative | "Wild Apricot remains the authoritative system during cutover rehearsal." | CUTOVER_REHEARSAL §Overview, REVERSIBILITY_CONTRACT §2.1 | **Canonical** |
 
 ---
@@ -37,7 +37,7 @@
 | Issue | Document A | Document B | Resolution |
 |-------|------------|------------|------------|
 | "Same logic path" vs "Same code path" | PREVIEW_SURFACE_CONTRACT: "Same logic path" | MIGRATION_CUSTOMER_JOURNEY: "Same code path" | **Normalize to "Same logic path"** — code path implies identical implementation; logic path is the correct claim |
-| "Zero data loss" scope | CUTOVER_REHEARSAL: "abort with zero data loss" | REVERSIBILITY_CONTRACT: "return to WA without data loss" | **Clarify scope** — abort means no ClubOS data persists; WA unchanged means source untouched |
+| "Zero data loss" scope | CUTOVER_REHEARSAL: "abort with zero data loss" | REVERSIBILITY_CONTRACT: "return to WA without data loss" | **Clarify scope** — abort means no Murmurant data persists; WA unchanged means source untouched |
 | "Deterministic" variations | Multiple documents use: "deterministic replay", "deterministic outcome", "deterministic within snapshot", "deterministic diff" | — | **Normalize to "Deterministic within snapshot"** for preview/rehearsal context |
 
 ### 2.2 Implied Guarantees Not Backed by Mechanisms
@@ -76,7 +76,7 @@
 
 | Location | Original | Recommended | Reason |
 |----------|----------|-------------|--------|
-| Overview | "You can abort with zero data loss" | "You can abort safely — ClubOS discards all intentions; Wild Apricot remains unchanged" | Clarify scope of "zero data loss" |
+| Overview | "You can abort with zero data loss" | "You can abort safely — Murmurant discards all intentions; Wild Apricot remains unchanged" | Clarify scope of "zero data loss" |
 
 ### 3.3 No Changes Required
 

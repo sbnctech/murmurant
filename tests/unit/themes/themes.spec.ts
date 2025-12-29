@@ -26,8 +26,8 @@ import {
 describe("Theme System", () => {
   describe("Default Theme", () => {
     it("has required id and name", () => {
-      expect(defaultTheme.id).toBe("clubos-default");
-      expect(defaultTheme.name).toBe("ClubOS Default");
+      expect(defaultTheme.id).toBe("murmurant-default");
+      expect(defaultTheme.name).toBe("Murmurant Default");
     });
 
     it("has logo configuration", () => {

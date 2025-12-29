@@ -1,10 +1,10 @@
-# ClubOS — Incident Lifecycle, Review, and Learning Loop
+# Murmurant — Incident Lifecycle, Review, and Learning Loop
 
 Status: Canonical Specification
 Applies to: All incidents, all environments
 Last updated: 2025-12-21
 
-This document defines the required lifecycle of an incident in ClubOS:
+This document defines the required lifecycle of an incident in Murmurant:
 from detection through resolution, review, and system learning.
 
 This document is normative.
@@ -189,5 +189,5 @@ The goal is resilience over time.
 - Repeated incidents without learning is a SEV-1 risk
 - Features that complicate incident handling MUST NOT merge
 
-This document defines how ClubOS learns from failure.
+This document defines how Murmurant learns from failure.
 

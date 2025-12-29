@@ -1,6 +1,6 @@
 # Build and Pack
 
-Documentation for building distributable packages from ClubOS.
+Documentation for building distributable packages from Murmurant.
 
 ---
 
@@ -19,10 +19,10 @@ The evaluation packet is a curated collection of documentation for board review.
 The script creates a ZIP file in `~/Downloads/`:
 
 ```
-ClubOS_Evaluation_Packet_<SHA>_<YYYYMMDD>.zip
+Murmurant_Evaluation_Packet_<SHA>_<YYYYMMDD>.zip
 ```
 
-Example: `ClubOS_Evaluation_Packet_abc1234_20251226.zip`
+Example: `Murmurant_Evaluation_Packet_abc1234_20251226.zip`
 
 ### Contents
 
@@ -91,13 +91,13 @@ No GNU coreutils required.
 List contents without extracting:
 
 ```bash
-unzip -l ~/Downloads/ClubOS_Evaluation_Packet_*.zip
+unzip -l ~/Downloads/Murmurant_Evaluation_Packet_*.zip
 ```
 
 Extract to verify:
 
 ```bash
-unzip ~/Downloads/ClubOS_Evaluation_Packet_*.zip -d /tmp/eval-verify
+unzip ~/Downloads/Murmurant_Evaluation_Packet_*.zip -d /tmp/eval-verify
 ```
 
 ---
@@ -106,10 +106,10 @@ unzip ~/Downloads/ClubOS_Evaluation_Packet_*.zip -d /tmp/eval-verify
 
 ### Script fails with "Not inside a git repository"
 
-Run from within the ClubOS repository:
+Run from within the Murmurant repository:
 
 ```bash
-cd /path/to/clubos
+cd /path/to/murmurant
 ./scripts/pkg/build-eval-zip.zsh
 ```
 

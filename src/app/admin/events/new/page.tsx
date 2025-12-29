@@ -89,7 +89,7 @@ export default function NewEventPage() {
           Create New Event
         </h1>
         <p style={{ margin: 0, color: "#6b7280", fontSize: "14px" }}>
-          Fill in the required fields. ClubOS will calculate status, availability, and urgency automatically.
+          Fill in the required fields. Murmurant will calculate status, availability, and urgency automatically.
         </p>
       </div>
 

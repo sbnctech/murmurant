@@ -274,7 +274,7 @@ test.describe("Secretary Dashboard", () => {
       // Set auth cookie for secretary
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-secretary-token",
           domain: new URL(BASE).hostname,
           path: "/",
@@ -303,7 +303,7 @@ test.describe("Secretary Dashboard", () => {
       // Set auth cookie for webmaster
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-webmaster-token",
           domain: new URL(BASE).hostname,
           path: "/",
@@ -321,7 +321,7 @@ test.describe("Secretary Dashboard", () => {
     test("drafts section shows count badge", async ({ page }) => {
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-secretary-token",
           domain: new URL(BASE).hostname,
           path: "/",
@@ -353,7 +353,7 @@ test.describe("Secretary Dashboard", () => {
     }) => {
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-secretary-token",
           domain: new URL(BASE).hostname,
           path: "/",
@@ -389,7 +389,7 @@ test.describe("Secretary Dashboard", () => {
     }) => {
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-secretary-token",
           domain: new URL(BASE).hostname,
           path: "/",
@@ -418,7 +418,7 @@ test.describe("Secretary Dashboard", () => {
     }) => {
       await page.context().addCookies([
         {
-          name: "clubos_session",
+          name: "murmurant_session",
           value: "test-secretary-token",
           domain: new URL(BASE).hostname,
           path: "/",

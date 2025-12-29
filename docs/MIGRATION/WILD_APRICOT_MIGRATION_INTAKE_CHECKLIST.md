@@ -259,7 +259,7 @@ Check all external connections and automated workflows. This is critical for mig
   - Ask: "Roughly how many subscribers?"
   - Ask: "One main calendar or separate per activity group?"
   - Ask: "Have you had issues with events showing wrong times or duplicating?"
-  - **ClubOS note**: Calendar feeds are P0 for migration
+  - **Murmurant note**: Calendar feeds are P0 for migration
 
 ### Email Marketing
 
@@ -384,7 +384,7 @@ Copy this block and fill it out for each customer. This becomes the migration sc
 
 - [Operator Decision Tree](./OPERATOR_DECISION_TREE.md) - quick classification guidance for operators
 - [Canonical Gadget Matrix](./WILD_APRICOT_GADGET_TAGGING.md) - single source of truth for migration tags
-- [ClubOS Page Builder Primitives](../ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md) - ClubOS equivalents and migration behavior
+- [Murmurant Page Builder Primitives](../ARCH/MURMURANT_PAGE_BUILDER_PRIMITIVES.md) - Murmurant equivalents and migration behavior
 - [Presentation Discovery Stage](./PRESENTATION_DISCOVERY_STAGE.md) - automated site crawling
 - [Widgets vs Gadgets](./WILD_APRICOT_WIDGETS_VS_GADGETS.md) - terminology guide
 
@@ -394,20 +394,20 @@ Copy this block and fill it out for each customer. This becomes the migration sc
 
 For calendar widget replacement during migration, ClubCalendar provides an inline-only engine that runs on WA sites without external server dependencies.
 
-**Location**: `clubcalendar_sbnc/` (separate from ClubOS repo)
+**Location**: `clubcalendar_sbnc/` (separate from Murmurant repo)
 
 **Key documents**:
 
 | Document | Purpose |
 |----------|---------|
 | `README.md` | Quick start and file manifest |
-| `CLUBOS_HANDOFF.md` | What ClubOS needs to know (answer: nothing - fully decoupled) |
+| `MURMURANT_HANDOFF.md` | What Murmurant needs to know (answer: nothing - fully decoupled) |
 | `CONFIG_FETCH_CONTRACT.md` | Locked contract for config page format |
 | `inline-engine/` | Ready-to-paste templates for WA pages |
 
 **Architecture**: Config page stores JSON config; events page fetches config and renders calendar using WA API directly.
 
-**No ClubOS dependencies**: ClubCalendar runs independently. ClubOS does not need to host, serve, or manage it.
+**No Murmurant dependencies**: ClubCalendar runs independently. Murmurant does not need to host, serve, or manage it.
 
 ## External Automation Discovery
 
@@ -419,4 +419,4 @@ For calendar widget replacement during migration, ClubCalendar provides an inlin
 - [ ] Who maintains them?
 - [ ] Can we review the code/logic?
 
-**Risk:** External automation rules won't be captured in data export and must be manually reimplemented in ClubOS.
+**Risk:** External automation rules won't be captured in data export and must be manually reimplemented in Murmurant.

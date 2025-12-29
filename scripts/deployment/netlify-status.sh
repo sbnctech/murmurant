@@ -2,7 +2,7 @@
 # netlify-status.sh
 # Shows current Netlify site configurations and recent deploy status.
 
-echo "ClubOS Netlify Status"
+echo "Murmurant Netlify Status"
 echo "====================="
 echo ""
 
@@ -16,7 +16,7 @@ fi
 STAGING_SITE="404d918d-1fe9-4c4a-ba3c-5a6e727a44f5"
 PROD_SITE="5b615a0d-e4d9-47f0-894a-88770c5f5bb0"
 
-echo "Staging Site (clubos-staging-sbnc):"
+echo "Staging Site (murmurant-staging-sbnc):"
 echo "-----------------------------------"
 netlify api getSite --data "{\"site_id\": \"$STAGING_SITE\"}" 2>&1 | \
     jq '{url, branch: .build_settings.repo_branch, cmd: .build_settings.cmd}' 2>/dev/null || \
@@ -29,7 +29,7 @@ netlify api listSiteDeploys --data "{\"site_id\": \"$STAGING_SITE\"}" 2>&1 | \
     echo "[ERROR] Could not fetch staging deploys"
 
 echo ""
-echo "Production Site (clubos-prod-sbnc):"
+echo "Production Site (murmurant-prod-sbnc):"
 echo "-----------------------------------"
 netlify api getSite --data "{\"site_id\": \"$PROD_SITE\"}" 2>&1 | \
     jq '{url, branch: .build_settings.repo_branch, cmd: .build_settings.cmd}' 2>/dev/null || \
@@ -46,17 +46,17 @@ echo "Quick Health Checks:"
 echo "--------------------"
 
 # Staging health
-STAGING_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://clubos-staging-sbnc.netlify.app/api/health 2>/dev/null)
+STAGING_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://murmurant-staging-sbnc.netlify.app/api/health 2>/dev/null)
 if [ "$STAGING_STATUS" = "200" ]; then
-    echo "[OK]  Staging API: https://clubos-staging-sbnc.netlify.app/api/health"
+    echo "[OK]  Staging API: https://murmurant-staging-sbnc.netlify.app/api/health"
 else
     echo "[!!]  Staging API returned: $STAGING_STATUS"
 fi
 
 # Production health
-PROD_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://clubos-prod-sbnc.netlify.app/api/health 2>/dev/null)
+PROD_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://murmurant-prod-sbnc.netlify.app/api/health 2>/dev/null)
 if [ "$PROD_STATUS" = "200" ]; then
-    echo "[OK]  Production API: https://clubos-prod-sbnc.netlify.app/api/health"
+    echo "[OK]  Production API: https://murmurant-prod-sbnc.netlify.app/api/health"
 else
     echo "[!!]  Production API returned: $PROD_STATUS"
 fi

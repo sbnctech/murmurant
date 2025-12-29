@@ -1,6 +1,6 @@
 # Database Seed Instructions
 
-This document explains how to seed the ClubOS development database with sample data.
+This document explains how to seed the Murmurant development database with sample data.
 
 ## Quick Start
 
@@ -97,7 +97,7 @@ To add more seed data, edit `prisma/seed.ts` following the existing patterns:
 Ensure `.env` file exists with a valid PostgreSQL connection string:
 
 ```
-DATABASE_URL="postgresql://user:pass@localhost:5432/clubos_dev"
+DATABASE_URL="postgresql://user:pass@localhost:5432/murmurant_dev"
 ```
 
 ### "Production environment detected"

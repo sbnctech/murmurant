@@ -1,6 +1,6 @@
 # Membership Truth Surfaces - Demo Script
 
-**Purpose:** Walk through the membership clarity features in ClubOS
+**Purpose:** Walk through the membership clarity features in Murmurant
 **Duration:** 5-7 minutes
 **Prerequisites:** Server running at localhost:3000, database seeded with members
 
@@ -34,7 +34,7 @@ Ensure you have at least 10-20 members in the database with varied:
 
 **What to say:**
 
-> "This is the demo dashboard - a purpose-built view for showing stakeholders what ClubOS can do. The system status shows we're connected and have X members in the database. Let's look at how we've solved the membership visibility problem."
+> "This is the demo dashboard - a purpose-built view for showing stakeholders what Murmurant can do. The system status shows we're connected and have X members in the database. Let's look at how we've solved the membership visibility problem."
 
 ---
 
@@ -69,7 +69,7 @@ Ensure you have at least 10-20 members in the database with varied:
 
 **What to say:**
 
-> "Unlike Wild Apricot, ClubOS shows membership status AND tier at a glance. The 'Lifecycle' column is derived data - we calculate where each member is in their journey. See this newbie with 'expires in 12 days'? The system knows their 90-day orientation period is ending soon. This is the kind of visibility the membership committee has been asking for."
+> "Unlike Wild Apricot, Murmurant shows membership status AND tier at a glance. The 'Lifecycle' column is derived data - we calculate where each member is in their journey. See this newbie with 'expires in 12 days'? The system knows their 90-day orientation period is ending soon. This is the kind of visibility the membership committee has been asking for."
 
 ---
 
@@ -178,4 +178,4 @@ Have ready examples of:
 
 ---
 
-*Demo script created December 2024 for ClubOS stakeholder review*
+*Demo script created December 2024 for Murmurant stakeholder review*

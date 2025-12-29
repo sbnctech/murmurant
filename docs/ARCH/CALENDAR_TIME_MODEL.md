@@ -1,6 +1,6 @@
 # Calendar and Time Model
 
-Defines how ClubOS stores, computes, and displays dates, times, and timezones.
+Defines how Murmurant stores, computes, and displays dates, times, and timezones.
 
 **Last Updated:** 2025-12-25
 **Charter Reference:** P4 (No hidden rules), P6 (Human-first terminology)
@@ -12,7 +12,7 @@ Copyright (c) Santa Barbara Newcomers Club
 
 ## Overview
 
-ClubOS handles three categories of temporal data:
+Murmurant handles three categories of temporal data:
 
 1. **Instant Events** - Events with specific start/end times (most club events)
 2. **All-Day Events** - Date-only events without specific times (future capability)
@@ -109,7 +109,7 @@ Recurrence MUST be calculated in the event's timezone to handle DST correctly. A
 
 ### IANA Timezone IDs
 
-ClubOS uses IANA timezone identifiers (e.g., `America/Los_Angeles`). These are:
+Murmurant uses IANA timezone identifiers (e.g., `America/Los_Angeles`). These are:
 
 - Unambiguous (unlike "PST" which some systems interpret differently)
 - DST-aware (include DST transitions for spring forward / fall back)
@@ -128,7 +128,7 @@ ClubOS uses IANA timezone identifiers (e.g., `America/Los_Angeles`). These are:
 
 ### Day Boundaries
 
-When determining "what day is it?" for scheduling purposes, ClubOS uses the organization's timezone:
+When determining "what day is it?" for scheduling purposes, Murmurant uses the organization's timezone:
 
 ```typescript
 // Midnight Pacific determines club day boundaries
@@ -168,7 +168,7 @@ See: `src/lib/policy/getPolicy.ts`
 
 ## iCalendar Interoperability
 
-ClubOS generates iCalendar (.ics) files compatible with:
+Murmurant generates iCalendar (.ics) files compatible with:
 
 - Google Calendar
 - Apple Calendar (macOS/iOS)
@@ -177,13 +177,13 @@ ClubOS generates iCalendar (.ics) files compatible with:
 
 ---
 
-### Pattern 1: Timed Event in UTC (Current ClubOS Output)
+### Pattern 1: Timed Event in UTC (Current Murmurant Output)
 
 Use UTC instants with Z suffix. This is the most interoperable format.
 
 ```
 BEGIN:VEVENT
-UID:evt_abc123@sbnc.clubos
+UID:evt_abc123@sbnc.murmurant
 DTSTAMP:20251215T120000Z
 DTSTART:20251215T180000Z
 DTEND:20251215T200000Z
@@ -200,7 +200,7 @@ END:VEVENT
 - Client software converts to local time for display
 - No ambiguity about which instant in time is meant
 
-**When to use:** Single events without recurrence (ClubOS current model).
+**When to use:** Single events without recurrence (Murmurant current model).
 
 ---
 
@@ -210,7 +210,7 @@ Use TZID when wall-clock time matters across DST transitions.
 
 ```
 BEGIN:VEVENT
-UID:evt_recurring_456@sbnc.clubos
+UID:evt_recurring_456@sbnc.murmurant
 DTSTAMP:20251215T120000Z
 DTSTART;TZID=America/Los_Angeles:20251215T100000
 DTEND;TZID=America/Los_Angeles:20251215T120000
@@ -237,7 +237,7 @@ All-day events use date-only values with exclusive end dates.
 
 ```
 BEGIN:VEVENT
-UID:evt_allday_789@sbnc.clubos
+UID:evt_allday_789@sbnc.murmurant
 DTSTAMP:20251215T120000Z
 DTSTART;VALUE=DATE:20251225
 DTEND;VALUE=DATE:20251226
@@ -356,11 +356,11 @@ Different calendar clients handle ICS data with minor variations. These observat
 ```
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Santa Barbara Newcomers Club//ClubOS//EN
+PRODID:-//Santa Barbara Newcomers Club//Murmurant//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-UID:evt_abc123@sbnc.clubos
+UID:evt_abc123@sbnc.murmurant
 DTSTAMP:20251215T120000Z
 DTSTART:20251215T180000Z
 DTEND:20251215T200000Z

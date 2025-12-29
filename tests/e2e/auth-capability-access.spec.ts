@@ -90,8 +90,8 @@ test.describe("Auth + Capability E2E", () => {
       const cookies = await page.evaluate(() => document.cookie);
 
       // Session cookie (if present) should NOT be visible due to httpOnly
-      expect(cookies).not.toContain("clubos_session");
-      expect(cookies).not.toContain("__Host-clubos_session");
+      expect(cookies).not.toContain("murmurant_session");
+      expect(cookies).not.toContain("__Host-murmurant_session");
     });
   });
 

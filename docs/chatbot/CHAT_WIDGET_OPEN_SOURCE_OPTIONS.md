@@ -18,15 +18,15 @@ UI:
 - Accessible
 - Works as a widget and as a full page
 
-Application layer (ClubOS-owned):
+Application layer (Murmurant-owned):
 - Chatbot safety contract (already documented)
 - RBAC-gated retrieval and responses
 - Audit logging for queries and access
 
 ## OSS Strategy
 
-Option A (Recommended): ClubOS-native widget using proven UI primitives
-- Implement the widget directly in ClubOS using existing component primitives.
+Option A (Recommended): Murmurant-native widget using proven UI primitives
+- Implement the widget directly in Murmurant using existing component primitives.
 - Keep ALL tool use / retrieval on the server behind our safety contract.
 - Treat the UI as a thin shell.
 
@@ -46,7 +46,7 @@ Pros:
 
 Cons:
 - Large dependency surface
-- Difficult to align with ClubOS RBAC/audit/deny-first design
+- Difficult to align with Murmurant RBAC/audit/deny-first design
 - Likely forces their data model and operational footprint
 
 Guidance:
@@ -55,6 +55,6 @@ Guidance:
 ## Recommendation
 
 Proceed with Option A:
-- Build a ClubOS-native ChatWidget.
+- Build a Murmurant-native ChatWidget.
 - Keep the “brains” and all data access server-side.
 - Integrate with Help Widget by passing prefilled question + server context bundle.

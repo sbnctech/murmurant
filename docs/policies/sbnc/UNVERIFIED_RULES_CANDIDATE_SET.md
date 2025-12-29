@@ -128,7 +128,7 @@ Each candidate rule includes:
 > "Membership term (2 years)"
 
 **Source:** SBNC_Policy_Registry.md
-**Section:** ClubOS enforcement notes
+**Section:** Murmurant enforcement notes
 
 **Quote (Version B):**
 > "two_year_mark_reached: joinDate + 730 days <= now (or calendar 2 years; TBD)"
@@ -148,7 +148,7 @@ Each candidate rule includes:
 > "Third-year extension criteria → Policies and Procedures (not in bylaws)"
 
 **Source:** SBNC_Policy_Registry.md
-**Section:** ClubOS enforcement notes
+**Section:** Murmurant enforcement notes
 **Category:** Membership
 **Confidence:** Low
 **Blocking Issue:** Criteria deferred to "Policies and Procedures" document which failed OCR extraction. Actual criteria unknown.
@@ -317,7 +317,7 @@ Each candidate rule includes:
 > "Officer terms (6 months) → role assignment logic"
 
 **Source:** SBNC_Policy_Registry.md
-**Section:** ClubOS enforcement notes
+**Section:** Murmurant enforcement notes
 **Category:** Corporate
 **Confidence:** Medium
 **Blocking Issue:** Secondary source. Original bylaws not extractable.
@@ -450,7 +450,7 @@ Each candidate rule includes:
 **Section:** States table
 **Category:** Membership
 **Confidence:** Medium
-**Blocking Issue:** This is ClubOS implementation, not policy source. Need bylaws confirmation of 90-day period.
+**Blocking Issue:** This is Murmurant implementation, not policy source. Need bylaws confirmation of 90-day period.
 
 ---
 
@@ -463,7 +463,7 @@ Each candidate rule includes:
 **Section:** Validation Rules
 **Category:** Finance
 **Confidence:** Low
-**Blocking Issue:** This is a ClubOS system specification, NOT an SBNC policy document. Do not treat as authoritative.
+**Blocking Issue:** This is a Murmurant system specification, NOT an SBNC policy document. Do not treat as authoritative.
 
 ---
 
@@ -476,7 +476,7 @@ Each candidate rule includes:
 **Section:** Routing
 **Category:** Authority
 **Confidence:** Low
-**Blocking Issue:** ClubOS specification, NOT SBNC policy. Actual approval authority not confirmed by policy document.
+**Blocking Issue:** Murmurant specification, NOT SBNC policy. Actual approval authority not confirmed by policy document.
 
 ---
 
@@ -515,7 +515,7 @@ Each candidate rule includes:
 **Section:** Validation Rules
 **Category:** Liability
 **Confidence:** Low
-**Blocking Issue:** References "guest policy" but actual policy text not found. ClubOS spec, not policy source.
+**Blocking Issue:** References "guest policy" but actual policy text not found. Murmurant spec, not policy source.
 
 ---
 
@@ -588,7 +588,7 @@ The word "Draft" and phrase "If All Amendments Approved" suggest this is a propo
 | RULE-010 | Dues Authority | SBNC_Policy_Registry.md | Current dollar amount unknown; only authority documented | **Blocking** |
 | RULE-011A | Member Termination (No Appeal) | Bylaw Commentary | Described as "current" but amendment status unknown | **Blocking** |
 | RULE-011B | Member Termination (With Appeal) | SBNC_Policy_Registry.md | Conflicts with RULE-011A; adoption status unknown | **Blocking** |
-| RULE-025 | Newbie Window Duration | MEMBERSHIP_LIFECYCLE_STATE_MACHINE.md | ClubOS implementation, not policy source; needs bylaws confirmation | **Blocking** |
+| RULE-025 | Newbie Window Duration | MEMBERSHIP_LIFECYCLE_STATE_MACHINE.md | Murmurant implementation, not policy source; needs bylaws confirmation | **Blocking** |
 
 **Membership Rules Summary:**
 - rules_indexed: 8
@@ -603,7 +603,7 @@ The word "Draft" and phrase "If All Amendments Approved" suggest this is a propo
 |---------|------------|--------|----------------|-------------------|
 | RULE-004 | Private Inurement Prohibition | Articles of Inc. SBNC.txt | None - foundational legal document | Non-blocking |
 | RULE-010 | Dues Authority | SBNC_Policy_Registry.md | Current dollar amount unknown; only authority documented | **Blocking** |
-| RULE-026 | Event Budget Requirement | EVENT_SUBMISSION_PHASE2_SPEC.md | ClubOS spec, NOT SBNC policy document | **Blocking** |
+| RULE-026 | Event Budget Requirement | EVENT_SUBMISSION_PHASE2_SPEC.md | Murmurant spec, NOT SBNC policy document | **Blocking** |
 
 **Finance Rules Summary:**
 - rules_indexed: 3
@@ -632,7 +632,7 @@ The word "Draft" and phrase "If All Amendments Approved" suggest this is a propo
 | Ambiguous definition | RULE-007, RULE-008 | Board clarification |
 | Conflicting versions | RULE-011A, RULE-011B | Board confirms which is adopted |
 | Missing source document | RULE-009 | Locate and extract "Policies and Procedures" |
-| ClubOS spec, not policy | RULE-025, RULE-026 | Obtain authoritative SBNC policy source |
+| Murmurant spec, not policy | RULE-025, RULE-026 | Obtain authoritative SBNC policy source |
 | Unknown current value | RULE-010 | Board provides current dues amount |
 
 ---

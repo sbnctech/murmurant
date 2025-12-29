@@ -2,7 +2,7 @@
 
 Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
-This document audits all time, timezone, and day-of-week logic in ClubOS
+This document audits all time, timezone, and day-of-week logic in Murmurant
 against the canonical calendar time model defined in:
 - `docs/ARCH/CALENDAR_TIME_MODEL.md`
 - `docs/CI/TIME_AND_TIMEZONE_RULES.md`

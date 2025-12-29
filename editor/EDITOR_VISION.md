@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Create a minimal, safe, non-magical editor that lets non-technical volunteers publish new ClubOS-native pages without engineering help.
+Create a minimal, safe, non-magical editor that lets non-technical volunteers publish new Murmurant-native pages without engineering help.
 
 This is not a site builder. It is a disciplined publishing tool.
 

@@ -1,8 +1,8 @@
-# Automation Compatibility: Wild Apricot to ClubOS
+# Automation Compatibility: Wild Apricot to Murmurant
 
 ```
 Audience: Operators, Migration Coordinators, Product
-Purpose: Map WA automation patterns to ClubOS equivalents
+Purpose: Map WA automation patterns to Murmurant equivalents
 Classification: Migration Documentation
 ```
 
@@ -10,10 +10,10 @@ Classification: Migration Documentation
 
 ## Overview
 
-This document inventories automation and integration patterns used with Wild Apricot and maps them to ClubOS equivalents. For each pattern, we specify:
+This document inventories automation and integration patterns used with Wild Apricot and maps them to Murmurant equivalents. For each pattern, we specify:
 
 - What it is and how WA customers use it
-- ClubOS v1 equivalent (if any)
+- Murmurant v1 equivalent (if any)
 - Planned v2 support (if applicable)
 - Explicit non-goals
 - Migration risks and operator expectations
@@ -28,7 +28,7 @@ The following assumptions inform this document:
 
 1. **WA API access**: We assume publicly documented WA API behavior. We do not have access to private WA documentation or internal trigger mechanisms.
 
-2. **Webhook semantics**: Where webhook behavior is specified, we document what ClubOS intends to provide. Exact delivery guarantees (at-least-once vs exactly-once) are stated where known; ambiguities are flagged.
+2. **Webhook semantics**: Where webhook behavior is specified, we document what Murmurant intends to provide. Exact delivery guarantees (at-least-once vs exactly-once) are stated where known; ambiguities are flagged.
 
 3. **Automation platform behavior**: Zapier and Make behaviors are based on their public documentation. Platform-specific quirks may require testing during migration.
 
@@ -68,13 +68,13 @@ Wild Apricot provides a Zapier integration with the following triggers and actio
 - Updated contact -> Sync to HubSpot/Salesforce
 - New donation -> Post to accounting system
 
-### ClubOS v1 Equivalent
+### Murmurant v1 Equivalent
 
 **Status: Partial (webhook foundation only)**
 
-ClubOS v1 does not include a native Zapier integration. However, the webhook infrastructure provides the foundation for automation platform connectivity.
+Murmurant v1 does not include a native Zapier integration. However, the webhook infrastructure provides the foundation for automation platform connectivity.
 
-**What ClubOS v1 Provides:**
+**What Murmurant v1 Provides:**
 
 | Capability | Status | Notes |
 |------------|--------|-------|
@@ -113,7 +113,7 @@ The following webhook behaviors are not yet fully specified:
 | Event ordering | Not guaranteed; consumers must handle out-of-order |
 | Replay capability | Under consideration; not confirmed for v1 |
 
-**Operator action required**: Organizations with Zapier workflows must rebuild them using ClubOS webhooks. Direct Zapier app connectivity is not available in v1.
+**Operator action required**: Organizations with Zapier workflows must rebuild them using Murmurant webhooks. Direct Zapier app connectivity is not available in v1.
 
 ### Planned v2 Support
 
@@ -139,7 +139,7 @@ Organizations with established Zapier workflows cannot migrate until they can re
 
 **Mitigation:**
 
-- Document webhook event mapping from WA triggers to ClubOS events
+- Document webhook event mapping from WA triggers to Murmurant events
 - Provide sample Zapier webhook configurations
 - Include automation inventory in migration intake checklist
 
@@ -148,7 +148,7 @@ Organizations with established Zapier workflows cannot migrate until they can re
 Before cutover, operators should:
 
 1. Inventory all existing Zaps connected to WA
-2. Map each Zap trigger to equivalent ClubOS webhook event
+2. Map each Zap trigger to equivalent Murmurant webhook event
 3. Rebuild Zaps using webhook trigger (not native WA trigger)
 4. Test rebuilt Zaps in parallel before cutover
 5. Accept that some WA-specific triggers may not have direct equivalents
@@ -176,13 +176,13 @@ Make (formerly Integromat) provides similar functionality to Zapier with differe
 - Generate reports in Google Sheets weekly
 - Send custom SMS via Twilio on registration
 
-### ClubOS v1 Equivalent
+### Murmurant v1 Equivalent
 
 **Status: Via webhook (same as Zapier)**
 
-Make supports webhook triggers. Organizations can connect Make to ClubOS using the same webhook infrastructure.
+Make supports webhook triggers. Organizations can connect Make to Murmurant using the same webhook infrastructure.
 
-**What ClubOS v1 Provides:**
+**What Murmurant v1 Provides:**
 
 | Capability | Status |
 |------------|--------|
@@ -239,13 +239,13 @@ WA customers export data to Google Sheets in two ways:
 | Volunteer roster | Activity participants | On demand |
 | Donation tracking | Donation amounts | Ongoing |
 
-### ClubOS v1 Equivalent
+### Murmurant v1 Equivalent
 
 **Status: Export only (no automated sync)**
 
-ClubOS v1 provides manual data exports. Automated Google Sheets sync requires webhook + Zapier/Make.
+Murmurant v1 provides manual data exports. Automated Google Sheets sync requires webhook + Zapier/Make.
 
-**What ClubOS v1 Provides:**
+**What Murmurant v1 Provides:**
 
 | Capability | Status | Notes |
 |------------|--------|-------|
@@ -292,7 +292,7 @@ Most organizations can adapt to manual exports. Risk increases for organizations
 
 **Mitigation:**
 
-- Document export column schema changes from WA to ClubOS
+- Document export column schema changes from WA to Murmurant
 - Provide column mapping guide for common fields
 - Rebuild automated pipelines using webhook + Sheets action
 
@@ -300,7 +300,7 @@ Most organizations can adapt to manual exports. Risk increases for organizations
 
 1. Review current WA export workflows
 2. Note any column dependencies in downstream tools
-3. Test ClubOS exports for compatibility with existing Sheets
+3. Test Murmurant exports for compatibility with existing Sheets
 4. Rebuild any automated export -> Sheets pipelines using webhooks
 
 ---
@@ -331,13 +331,13 @@ Wild Apricot provides ICS (iCalendar) feeds for event subscriptions:
 - Refresh delays (Google Calendar: 12-24 hours)
 - Personal feeds require member auth
 
-### ClubOS v1 Equivalent
+### Murmurant v1 Equivalent
 
 **Status: Planned (with improvements)**
 
-ClubOS v1 includes ICS calendar feed support with explicit timezone handling.
+Murmurant v1 includes ICS calendar feed support with explicit timezone handling.
 
-**What ClubOS v1 Provides:**
+**What Murmurant v1 Provides:**
 
 | Capability | Status | Notes |
 |------------|--------|-------|
@@ -373,7 +373,7 @@ See [Calendar Interoperability Guide](../ARCH/CALENDAR_INTEROP_GUIDE.md) for det
 | Capability | Why Excluded |
 |------------|--------------|
 | Real-time push to calendars | ICS is pull-based; refresh is client-controlled |
-| CalDAV write access | Read-only feeds; ClubOS is source of truth |
+| CalDAV write access | Read-only feeds; Murmurant is source of truth |
 | Meeting invitations (iTIP) | Adds complexity; standard subscription is sufficient |
 
 ### Migration Risk
@@ -399,11 +399,11 @@ Calendar sync is a core member expectation. If ICS feeds break, members cannot s
 
 ### Operator Expectations
 
-1. Obtain new ClubOS ICS feed URL
+1. Obtain new Murmurant ICS feed URL
 2. Test subscription in target calendar clients
 3. Verify event times display correctly (especially around DST)
 4. Communicate URL change to members before cutover
-5. Expect refresh delay (not a ClubOS issue)
+5. Expect refresh delay (not a Murmurant issue)
 
 ---
 
@@ -437,13 +437,13 @@ Wild Apricot sends emails in two categories:
 - Filter by status, tier, activity membership
 - Import to external email marketing platform
 
-### ClubOS v1 Equivalent
+### Murmurant v1 Equivalent
 
 **Status: Transactional only; marketing via export**
 
-ClubOS v1 handles transactional email natively. Marketing email uses external platforms.
+Murmurant v1 handles transactional email natively. Marketing email uses external platforms.
 
-**What ClubOS v1 Provides:**
+**What Murmurant v1 Provides:**
 
 | Capability | Status | Notes |
 |------------|--------|-------|
@@ -455,7 +455,7 @@ ClubOS v1 handles transactional email natively. Marketing email uses external pl
 | Email list export | Planned | CSV with email + consent status |
 | Unsubscribe handling | Planned | With audit trail |
 
-**What ClubOS v1 Does NOT Provide:**
+**What Murmurant v1 Does NOT Provide:**
 
 | Capability | Status |
 |------------|--------|
@@ -494,21 +494,21 @@ Transactional email is straightforward. Risk is higher for organizations that:
 - Inventory all WA email templates and triggers
 - Set up external email platform (Mailchimp, etc.) before migration
 - Configure list sync workflow (export -> import or webhook -> add)
-- Test transactional emails in ClubOS before cutover
+- Test transactional emails in Murmurant before cutover
 
 ### Operator Expectations
 
 1. Identify all WA email templates in use
 2. Set up external email marketing platform if not already in use
 3. Configure member list sync (manual export or webhook automation)
-4. Test transactional email delivery from ClubOS
+4. Test transactional email delivery from Murmurant
 5. Communicate any email sender address changes to members
 
 ---
 
 ## Summary Matrix
 
-| Pattern | WA Feature | ClubOS v1 | v2 Planned | Non-Goal |
+| Pattern | WA Feature | Murmurant v1 | v2 Planned | Non-Goal |
 |---------|------------|-----------|------------|----------|
 | Zapier triggers | Native app | Webhook | Native app | WA emulation |
 | Zapier actions | Native app | None | API | Bidirectional sync |
@@ -563,7 +563,7 @@ During policy capture, ask the customer:
 
 The following items require further specification:
 
-1. **Webhook exactly-once delivery**: Is idempotency the consumer's responsibility, or does ClubOS provide deduplication keys?
+1. **Webhook exactly-once delivery**: Is idempotency the consumer's responsibility, or does Murmurant provide deduplication keys?
 
 2. **Webhook event schema versioning**: How are breaking changes to payload structure communicated?
 
@@ -571,7 +571,7 @@ The following items require further specification:
 
 4. **Personal ICS feeds**: How does member authentication work for personal calendar feeds?
 
-5. **Email sender domain**: What domain does ClubOS send transactional email from? Does organization get custom sender?
+5. **Email sender domain**: What domain does Murmurant send transactional email from? Does organization get custom sender?
 
 ---
 

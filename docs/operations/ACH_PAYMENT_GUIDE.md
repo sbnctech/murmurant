@@ -1,6 +1,6 @@
 # ACH Payment Option Guide
 
-This guide covers the ACH (Automated Clearing House) payment option for ClubOS, which reduces transaction fees for the club.
+This guide covers the ACH (Automated Clearing House) payment option for Murmurant, which reduces transaction fees for the club.
 
 Copyright (c) Santa Barbara Newcomers Club
 
@@ -35,12 +35,12 @@ ACH is controlled by a feature flag and is **OFF by default**.
 
 ```bash
 # Enable ACH payment option
-CLUBOS_ACH_ENABLED=true
+MURMURANT_ACH_ENABLED=true
 ```
 
 ### What Gets Enabled
 
-When `CLUBOS_ACH_ENABLED=true`:
+When `MURMURANT_ACH_ENABLED=true`:
 
 1. **Member Features**
    - "Add Bank Account (ACH)" button in payment methods
@@ -241,7 +241,7 @@ The checkout flow includes automatic prompts:
 
 ### ACH Not Showing
 
-1. Check `CLUBOS_ACH_ENABLED=true` in environment
+1. Check `MURMURANT_ACH_ENABLED=true` in environment
 2. Restart server after changing env
 3. Clear browser cache
 

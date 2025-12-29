@@ -255,7 +255,7 @@ interface PaymentHistoryEntry {
       "fromStatus": "PENDING",
       "toStatus": "ACTIVE",
       "reason": "Application approved",
-      "changedBy": "admin@clubos.example",
+      "changedBy": "admin@murmurant.example",
       "timestamp": "2024-01-15T00:00:00Z"
     }
   ]

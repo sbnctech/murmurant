@@ -1,17 +1,17 @@
-# ClubOS Authorization Guide
+# Murmurant Authorization Guide
 
 **Audience**: SBNC Tech Chair and club administrators
 **Last Updated**: December 2024
 
 ## What This Document Covers
 
-This guide explains how ClubOS controls who can access what data. It's written in plain English for non-technical readers.
+This guide explains how Murmurant controls who can access what data. It's written in plain English for non-technical readers.
 
 ---
 
 ## Quick Summary
 
-ClubOS has two types of access control:
+Murmurant has two types of access control:
 
 1. **Role-Based Access Control (RBAC)** - Controls what *actions* you can perform based on your role (Admin vs Member)
 2. **Data Ownership** - Controls what *data* you can see based on who owns it
@@ -53,7 +53,7 @@ Members can:
 ## How It Works: A Visual Guide
 
 ```
-                    ClubOS Authorization Model
+                    Murmurant Authorization Model
                     ==========================
 
     ┌─────────────────────────────────────────────────────────┐
@@ -277,4 +277,4 @@ For local development:
 
 ---
 
-*This document is maintained by the ClubOS development team. For questions, contact the Tech Chair.*
+*This document is maintained by the Murmurant development team. For questions, contact the Tech Chair.*

@@ -3,7 +3,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
 declare global {
-  var __clubosPrisma: PrismaClient | undefined;
+  var __murmurantPrisma: PrismaClient | undefined;
 }
 
 function createPrismaClient(): PrismaClient {
@@ -20,8 +20,8 @@ function createPrismaClient(): PrismaClient {
 }
 
 export const prisma: PrismaClient =
-  global.__clubosPrisma ?? createPrismaClient();
+  global.__murmurantPrisma ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
-  global.__clubosPrisma = prisma;
+  global.__murmurantPrisma = prisma;
 }

@@ -7,7 +7,7 @@ const RED = "\x1b[31m", GREEN = "\x1b[32m", YELLOW = "\x1b[33m", CYAN = "\x1b[36
 
 const DISALLOWED_PHRASES = [
   { pattern: /\bautomatically\s+(?:handles?|manages?|decides?|processes?|deletes?|removes?)\b/i, description: "Implies hidden automation", suggestion: 'Use "system proposes, operator approves"' },
-  { pattern: /\b(?:system|ClubOS)\s+decides?\b/i, description: "Implies system authority over human", suggestion: 'Use "system proposes" or "operator decides"' },
+  { pattern: /\b(?:system|Murmurant)\s+decides?\b/i, description: "Implies system authority over human", suggestion: 'Use "system proposes" or "operator decides"' },
   { pattern: /\bmagic(?:ally)?\b/i, description: '"Magic" implies unpredictable behavior', suggestion: "Describe mechanism explicitly" },
   { pattern: /\bseamless(?:ly)?\s+(?:migrat|transition|convert|transform|handl)/i, description: '"Seamless" hides complexity', suggestion: 'Use "explicit" or "reviewable"' },
   { pattern: /\bwill\s+auto-?(?:delete|remove|archive|purge|clean|fix|correct|heal)\b/i, description: "Auto-actions without authorization", suggestion: "Describe trigger mechanism" },

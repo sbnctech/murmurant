@@ -18,8 +18,8 @@ import { ThemeContext } from "./useTheme";
 interface ThemeProviderProps {
   children: React.ReactNode;
   initialTheme?: ClubTheme;
-  /** True for admin/login pages that should use ClubOS branding */
-  isClubOSContext?: boolean;
+  /** True for admin/login pages that should use Murmurant branding */
+  isMurmurantContext?: boolean;
 }
 
 /**
@@ -33,7 +33,7 @@ interface ThemeProviderProps {
  * </ThemeProvider>
  *
  * // For admin pages
- * <ThemeProvider isClubOSContext>
+ * <ThemeProvider isMurmurantContext>
  *   {children}
  * </ThemeProvider>
  * ```
@@ -41,7 +41,7 @@ interface ThemeProviderProps {
 export function ThemeProvider({
   children,
   initialTheme,
-  isClubOSContext = false,
+  isMurmurantContext = false,
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<ClubTheme>(initialTheme || defaultTheme);
 
@@ -50,7 +50,7 @@ export function ThemeProvider({
   }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, isClubOSContext }}>
+    <ThemeContext.Provider value={{ theme, setTheme, isMurmurantContext }}>
       {children}
     </ThemeContext.Provider>
   );

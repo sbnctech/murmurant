@@ -1,20 +1,20 @@
 # Wild Apricot Importer System Specification
 
-This document defines the data sources, invariants, idempotency rules, and failure handling for the ClubOS Wild Apricot importer.
+This document defines the data sources, invariants, idempotency rules, and failure handling for the Murmurant Wild Apricot importer.
 
 ## 1. Overview
 
-The WA Importer synchronizes data from Wild Apricot (WA) into ClubOS using a hybrid approach:
+The WA Importer synchronizes data from Wild Apricot (WA) into Murmurant using a hybrid approach:
 
 - **WA API Client**: TypeScript port of proven Python patterns (OAuth, pagination, async polling)
 - **Prisma Import Layer**: Fresh implementation for PostgreSQL with proper audit integration
-- **ID Mapping**: Deterministic WA integer ID to ClubOS UUID mapping
+- **ID Mapping**: Deterministic WA integer ID to Murmurant UUID mapping
 
 ## 2. Data Sources
 
 ### 2.1 Wild Apricot API
 
-| Endpoint | Entity | ClubOS Target |
+| Endpoint | Entity | Murmurant Target |
 |----------|--------|---------------|
 | `/v2.2/accounts/{id}/contacts` | Contacts | Member |
 | `/v2.2/accounts/{id}/events` | Events | Event |
@@ -45,9 +45,9 @@ Entities must be imported in dependency order:
 
 | Invariant | Description | Enforcement |
 |-----------|-------------|-------------|
-| INV-1 | Every ClubOS entity from WA has a WaIdMapping record | Transaction: create mapping before entity |
+| INV-1 | Every Murmurant entity from WA has a WaIdMapping record | Transaction: create mapping before entity |
 | INV-2 | WA ID + entityType is unique | Database unique constraint |
-| INV-3 | Member.email is unique in ClubOS | Upsert by email, not by WA ID |
+| INV-3 | Member.email is unique in Murmurant | Upsert by email, not by WA ID |
 | INV-4 | EventRegistration is unique per (eventId, memberId) | Database unique constraint |
 | INV-5 | All imported records have audit trail | Batch audit on each sync run |
 
@@ -72,12 +72,12 @@ Entities must be imported in dependency order:
 For each WA entity:
   1. Lookup WaIdMapping by (entityType, waId)
   2. If exists:
-     - Fetch ClubOS entity by clubosId
+     - Fetch Murmurant entity by murmurantId
      - Compare fields (excluding updatedAt, createdAt)
      - If changed: UPDATE (Prisma upsert)
      - If unchanged: SKIP
   3. If not exists:
-     - CREATE ClubOS entity
+     - CREATE Murmurant entity
      - CREATE WaIdMapping record
      - Both in same transaction
 ```
@@ -86,7 +86,7 @@ For each WA entity:
 
 | Entity | Idempotency Key | Rationale |
 |--------|-----------------|-----------|
-| Member | email | WA allows duplicates, ClubOS doesn't |
+| Member | email | WA allows duplicates, Murmurant doesn't |
 | Event | WA ID | No natural key, use WA ID mapping |
 | EventRegistration | (eventId, memberId) | Business unique constraint |
 
@@ -96,7 +96,7 @@ For each WA entity:
 |----------|------------|
 | Same WA contact, different email | Update email (WA is source of truth) |
 | Same email, different WA contact | Use first WA contact, log warning |
-| Event chair not in ClubOS | Set eventChairId to null, log warning |
+| Event chair not in Murmurant | Set eventChairId to null, log warning |
 | Registration for unknown member | Skip registration, log error |
 | Registration for unknown event | Skip registration, log error |
 
@@ -108,14 +108,14 @@ For each WA entity:
 
 **Behavior**:
 - Fetch ALL records from WA
-- Upsert ALL records in ClubOS
-- Detect orphans (ClubOS records with no WA counterpart)
+- Upsert ALL records in Murmurant
+- Detect orphans (Murmurant records with no WA counterpart)
 - Mark orphans as soft-deleted (deletedAt timestamp)
 
 **Duration**: 15-30 minutes (depends on data volume)
 
 **When to use**:
-- Initial ClubOS deployment
+- Initial Murmurant deployment
 - After WA data recovery
 - Monthly reconciliation
 
@@ -143,10 +143,10 @@ For each WA entity:
 
 ### 7.1 Tombstone Strategy
 
-Records deleted from WA should not be hard-deleted from ClubOS.
+Records deleted from WA should not be hard-deleted from Murmurant.
 
 ```
-For each ClubOS entity with WaIdMapping:
+For each Murmurant entity with WaIdMapping:
   If WA API returns 404 or entity not in full fetch:
     1. Set deletedAt = NOW() (soft delete)
     2. Create audit log entry (action: DELETE)
@@ -157,7 +157,7 @@ For each ClubOS entity with WaIdMapping:
 
 If a "deleted" WA record reappears:
 ```
-If ClubOS entity has deletedAt AND WA record exists:
+If Murmurant entity has deletedAt AND WA record exists:
   1. Set deletedAt = NULL (restore)
   2. Update fields from WA
   3. Create audit log entry (action: UPDATE, metadata: {restored: true})
@@ -343,12 +343,12 @@ model WaIdMapping {
   id         String   @id @default(uuid()) @db.Uuid
   entityType String   // "Member", "Event", "EventRegistration"
   waId       Int      // Wild Apricot integer ID
-  clubosId   String   @db.Uuid // ClubOS entity UUID
+  murmurantId   String   @db.Uuid // Murmurant entity UUID
   syncedAt   DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   @@unique([entityType, waId])
-  @@index([entityType, clubosId])
+  @@index([entityType, murmurantId])
   @@index([syncedAt])
 }
 ```

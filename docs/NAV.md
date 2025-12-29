@@ -1,6 +1,6 @@
 # Documentation Navigation
 
-This file provides a structured navigation index for all ClubOS documentation.
+This file provides a structured navigation index for all Murmurant documentation.
 
 ## Developer Onboarding
 - ONBOARDING.md

@@ -1,10 +1,10 @@
-# ClubOS Development Workflow
+# Murmurant Development Workflow
 
-This document describes the development workflow for contributors working on ClubOS.
+This document describes the development workflow for contributors working on Murmurant.
 
 ## Project Overview
 
-ClubOS is a membership and event management system built with:
+Murmurant is a membership and event management system built with:
 
 - **Next.js 16** with the App Router
 - **TypeScript** for type safety
@@ -30,7 +30,7 @@ All three follow the same pattern with list and detail pages backed by admin-onl
 
 ## Multi-Session Development Model
 
-ClubOS development uses multiple parallel sessions, each focused on a specific domain. This prevents merge conflicts and allows faster iteration.
+Murmurant development uses multiple parallel sessions, each focused on a specific domain. This prevents merge conflicts and allows faster iteration.
 
 ### Session Responsibilities
 
@@ -221,7 +221,7 @@ make test                  # Run all tests
 
 ## Writing UI Tests for Server Components
 
-ClubOS uses Next.js App Router with React Server Components. This affects how UI tests work.
+Murmurant uses Next.js App Router with React Server Components. This affects how UI tests work.
 
 ### What Playwright Can and Cannot Mock
 

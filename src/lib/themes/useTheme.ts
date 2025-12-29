@@ -15,7 +15,7 @@ import { defaultTheme } from "./defaults";
 interface ThemeContextValue {
   theme: ClubTheme;
   setTheme: (theme: ClubTheme) => void;
-  isClubOSContext: boolean;
+  isMurmurantContext: boolean;
 }
 
 export const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -31,7 +31,7 @@ export function useTheme(): ThemeContextValue {
     return {
       theme: defaultTheme,
       setTheme: () => {},
-      isClubOSContext: false,
+      isMurmurantContext: false,
     };
   }
   return context;
@@ -53,11 +53,11 @@ export function usePrimaryColor(): string {
 }
 
 /**
- * Check if currently in ClubOS admin/system context.
+ * Check if currently in Murmurant admin/system context.
  */
-export function useIsClubOSContext(): boolean {
-  const { isClubOSContext } = useTheme();
-  return isClubOSContext;
+export function useIsMurmurantContext(): boolean {
+  const { isMurmurantContext } = useTheme();
+  return isMurmurantContext;
 }
 
 /**

@@ -1,4 +1,4 @@
-# Delegated Administration Model: Activities (ClubOS)
+# Delegated Administration Model: Activities (Murmurant)
 
 Worker 3 -- Delegated Admin Activities Model -- Report
 

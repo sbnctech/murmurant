@@ -31,7 +31,7 @@ const CYAN = "\x1b[36m";
 const NC = "\x1b[0m"; // No Color
 
 // GitHub issue URL pattern for this repo
-const ISSUE_PATTERN = /https:\/\/github\.com\/sbnctech\/clubos\/issues\/\d+/;
+const ISSUE_PATTERN = /https:\/\/github\.com\/sbnctech\/murmurant\/issues\/\d+/;
 const FLAKY_TAG_PATTERN = /@flaky/gi;
 
 interface FlakyTest {
@@ -143,7 +143,7 @@ function main(): void {
     console.log(`${RED}=== FAILED ===${NC}\n`);
     console.log(`Every @flaky test must have a GitHub issue link for tracking.`);
     console.log(`Add a comment with the issue URL near the @flaky tag:\n`);
-    console.log(`  // Flaky: https://github.com/sbnctech/clubos/issues/XXX`);
+    console.log(`  // Flaky: https://github.com/sbnctech/murmurant/issues/XXX`);
     console.log(`  test('@flaky: description', async () => { ... });\n`);
     process.exit(1);
   }

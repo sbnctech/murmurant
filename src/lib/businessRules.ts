@@ -61,7 +61,7 @@ export interface EngagedUserCriteria {
  * Determines if a member counts as an "engaged user" for billing purposes.
  *
  * Business Rule: Billing is based on engaged users, not total member count.
- * This aligns ClubOS revenue with customer outcomes.
+ * This aligns Murmurant revenue with customer outcomes.
  */
 export function isEngagedUser(criteria: EngagedUserCriteria): boolean {
   return criteria.hasLoggedIn || criteria.hasParticipated;
@@ -103,7 +103,7 @@ export type TransactionType =
  *
  * From EXHIBIT_B_FIRST_PRINCIPLES.md:
  * > Transaction fees on event registrations align the company with event success.
- * > When events are well-attended and financially healthy, ClubOS shares in
+ * > When events are well-attended and financially healthy, Murmurant shares in
  * > that success proportionally.
  *
  * @param transactionType - Type of transaction

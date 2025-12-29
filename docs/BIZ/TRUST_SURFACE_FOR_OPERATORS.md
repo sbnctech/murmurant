@@ -1,6 +1,6 @@
 # Core Trust Surface for Operators
 
-How ClubOS protects your organization from mistakes, surprises, and harm.
+How Murmurant protects your organization from mistakes, surprises, and harm.
 
 **Audience:** Club presidents, board members, and administrators
 **Last Updated:** 2025-12-25
@@ -11,7 +11,7 @@ How ClubOS protects your organization from mistakes, surprises, and harm.
 
 When you use software to run your organization, you are trusting it with important things: your members' information, your events, your money, and your reputation.
 
-This document explains five promises ClubOS makes to protect you. These are not marketing claims. They are design principles that affect every feature in the system.
+This document explains five promises Murmurant makes to protect you. These are not marketing claims. They are design principles that affect every feature in the system.
 
 ---
 
@@ -29,7 +29,7 @@ Systems that make consequential decisions on their own create chaos when they ma
 
 **What you see instead:**
 
-ClubOS shows you what it proposes to do and waits for your approval:
+Murmurant shows you what it proposes to do and waits for your approval:
 
 - Before a migration runs, you review exactly what will be imported
 - Before an email sends, you see the recipient list and content
@@ -61,14 +61,14 @@ Previews that lie are worse than no preview at all. They create false confidence
 
 **What you see instead:**
 
-ClubOS previews use the exact same logic as execution:
+Murmurant previews use the exact same logic as execution:
 
 - The preview reads the same data you will use
 - The preview applies the same policies
 - The preview shows you counts, mappings, and decisions
 - If the preview shows 200 members affected, 200 members will be affected
 
-If something changes between preview and execution (another admin made changes, time passed), ClubOS tells you and asks you to re-preview.
+If something changes between preview and execution (another admin made changes, time passed), Murmurant tells you and asks you to re-preview.
 
 **Real examples:**
 
@@ -93,7 +93,7 @@ Systems that cannot be safely stopped trap you. Once you start, you must finish,
 
 **What you see instead:**
 
-ClubOS keeps your source of truth unchanged until you commit:
+Murmurant keeps your source of truth unchanged until you commit:
 
 - During migration, Wild Apricot remains authoritative until final commit
 - During event setup, nothing is visible to members until you publish
@@ -106,7 +106,7 @@ Abort is always safe. You never have to finish something that is going wrong.
 
 | Scenario | Without Abortability | With Abortability |
 |----------|---------------------|-------------------|
-| Migration | "Partially complete. Please continue to avoid data loss." | "Aborted. Wild Apricot unchanged. ClubOS draft discarded. Try again when ready." |
+| Migration | "Partially complete. Please continue to avoid data loss." | "Aborted. Wild Apricot unchanged. Murmurant draft discarded. Try again when ready." |
 | Event creation | "Event created but hidden. Delete manually if unwanted." | "Aborted. No event exists. No one saw anything." |
 | Email campaign | "Email queued. Cannot stop delivery in progress." | "Campaign aborted before send. No emails delivered." |
 | Payment refund | "Refund initiated. Cannot undo." | "Refund requested. Confirm to proceed. Cancel to keep charge." |
@@ -125,7 +125,7 @@ Systems without audit trails turn disputes into mysteries. When something goes w
 
 **What you see instead:**
 
-ClubOS records administrative actions:
+Murmurant records administrative actions:
 
 - Role changes include who assigned them and when
 - Membership status changes include who approved and the reason
@@ -157,7 +157,7 @@ Non-deterministic systems are impossible to trust. You can never be confident th
 
 **What you see instead:**
 
-ClubOS uses the same logic every time:
+Murmurant uses the same logic every time:
 
 - Preview runs the same code as execution
 - Small tests predict large runs
@@ -193,7 +193,7 @@ Without all five, trust breaks down. A system that previews accurately but canno
 
 ## When Uncertainty Exists
 
-Sometimes the system cannot make a confident prediction. When this happens, ClubOS marks the uncertainty explicitly:
+Sometimes the system cannot make a confident prediction. When this happens, Murmurant marks the uncertainty explicitly:
 
 | Marker | What It Means |
 |--------|---------------|
@@ -206,7 +206,7 @@ Uncertainty markers are not failures. They are honest communication. We do not g
 
 ---
 
-## What ClubOS Does NOT Promise
+## What Murmurant Does NOT Promise
 
 We want to be clear about limits:
 
@@ -220,7 +220,7 @@ If someone with legitimate access makes a mistake or acts maliciously, the syste
 
 ### No Instant Undo for External Effects
 
-If ClubOS sends an email, the email is sent. We cannot unsend it. If ClubOS charges a credit card, the charge happened. We can refund, but we cannot erase the transaction.
+If Murmurant sends an email, the email is sent. We cannot unsend it. If Murmurant charges a credit card, the charge happened. We can refund, but we cannot erase the transaction.
 
 ### No Immunity from Your Own Decisions
 
@@ -246,7 +246,7 @@ If any answer is unclear, ask before proceeding. The system should be able to an
 
 - [System Guarantees](../reliability/SYSTEM_GUARANTEES.md) - Technical specification of what the system guarantees
 - [Preview Surface Contract](../ARCH/PREVIEW_SURFACE_CONTRACT.md) - How previews work in detail
-- [Organizational Presentation Philosophy](ORGANIZATIONAL_PRESENTATION_PHILOSOPHY.md) - How ClubOS handles your organization's identity
+- [Organizational Presentation Philosophy](ORGANIZATIONAL_PRESENTATION_PHILOSOPHY.md) - How Murmurant handles your organization's identity
 - [SBNC Operator Checklist](../OPS/SBNC_OPERATOR_CHECKLIST.md) - Pre-publish, publish, verify, rollback procedures
 - [Inline Widget Troubleshooting](../OPS/INLINE_WIDGET_TROUBLESHOOTING.md) - Problem diagnosis and resolution
 
@@ -254,7 +254,7 @@ If any answer is unclear, ask before proceeding. The system should be able to an
 
 ## Summary
 
-ClubOS is designed so you can trust it with your organization. The five guarantees - Human Authority, Preview Fidelity, Abortability, Auditability, and Determinism - are not features you can turn off or options you can configure. They are how the system works.
+Murmurant is designed so you can trust it with your organization. The five guarantees - Human Authority, Preview Fidelity, Abortability, Auditability, and Determinism - are not features you can turn off or options you can configure. They are how the system works.
 
 When something matters, you decide. Before you decide, you see what will happen. If you change your mind, you can stop. Everything is recorded. Testing means something.
 

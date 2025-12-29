@@ -1,11 +1,11 @@
-# ClubOS CI and Merge Policy
+# Murmurant CI and Merge Policy
 
 Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
 ## Overview
 
 This directory contains the canonical policies and procedures for merging
-code into the ClubOS repository. The goal is to prevent merge churn, reduce
+code into the Murmurant repository. The goal is to prevent merge churn, reduce
 PR queue chaos, and ensure that main remains stable and deployable.
 
 ## Quick Start
@@ -56,7 +56,7 @@ PR queue chaos, and ensure that main remains stable and deployable.
 
 ```bash
 # Run merge captain script (dry run)
-cd "$HOME/clubos" && DRY_RUN=1 zsh ./MERGE_CAPTAIN.zsh
+cd "$HOME/murmurant" && DRY_RUN=1 zsh ./MERGE_CAPTAIN.zsh
 
 # Check open PRs
 gh pr list --state open

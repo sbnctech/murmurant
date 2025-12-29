@@ -2,7 +2,7 @@
 
 ## Overview
 
-ClubOS supports ACH (Automated Clearing House) bank transfers as an alternative to credit card payments. This feature is positioned as "Help Save the Club Money" because ACH transactions have significantly lower processing fees than credit cards.
+Murmurant supports ACH (Automated Clearing House) bank transfers as an alternative to credit card payments. This feature is positioned as "Help Save the Club Money" because ACH transactions have significantly lower processing fees than credit cards.
 
 ## Business Case
 
@@ -16,14 +16,14 @@ For a club processing $10,000/year in event registrations:
 
 ## Feature Flag
 
-ACH is controlled by the `CLUBOS_ACH_ENABLED` environment variable:
+ACH is controlled by the `MURMURANT_ACH_ENABLED` environment variable:
 
 ```bash
 # Enable ACH
-CLUBOS_ACH_ENABLED=1
+MURMURANT_ACH_ENABLED=1
 
 # Disable ACH (default)
-# CLUBOS_ACH_ENABLED is not set or set to anything other than "1" or "true"
+# MURMURANT_ACH_ENABLED is not set or set to anything other than "1" or "true"
 ```
 
 When disabled:

@@ -1,6 +1,6 @@
-# ClubOS Business Model Documentation
+# Murmurant Business Model Documentation
 
-This folder contains the canonical business model documentation for ClubOS,
+This folder contains the canonical business model documentation for Murmurant,
 synthesized from design discussions and strategic planning sessions.
 
 ---

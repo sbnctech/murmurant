@@ -84,7 +84,7 @@ export default function ApiDocsClient() {
         >
           <div>
             <h1 style={{ margin: 0, fontSize: "20px", fontWeight: 600 }}>
-              ClubOS API Documentation
+              Murmurant API Documentation
             </h1>
             <p
               style={{

@@ -191,7 +191,7 @@ async function main(): Promise<void> {
       console.log("Remove DRY_RUN=1 to write data.");
     } else {
       console.log("Note: This script only pulls data for inspection.");
-      console.log("Use wa_full_sync.ts to import data into ClubOS.");
+      console.log("Use wa_full_sync.ts to import data into Murmurant.");
     }
 
     console.log("");

@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# ClubOS Full System Health Check
+# Murmurant Full System Health Check
 # =============================================================================
 # Purpose: Run all health checks and produce summary report
 # Usage: ./full-health.sh [--verbose] [--json]
@@ -70,7 +70,7 @@ main() {
     if [[ -z "$JSON_OUTPUT" ]]; then
         echo ""
         log_info "╔════════════════════════════════════════════════════════════╗"
-        log_info "║           ClubOS Full System Health Check                  ║"
+        log_info "║           Murmurant Full System Health Check                  ║"
         log_info "╚════════════════════════════════════════════════════════════╝"
         log_info "Timestamp: $timestamp"
         echo ""

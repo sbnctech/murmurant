@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# ClubOS Database Health Check
+# Murmurant Database Health Check
 # =============================================================================
 # Purpose: Verify database connectivity and basic health metrics
 # Usage: ./db-health.sh [--verbose]
@@ -127,7 +127,7 @@ check_audit_log() {
 
 # Main health check
 main() {
-    log_info "=== ClubOS Database Health Check ==="
+    log_info "=== Murmurant Database Health Check ==="
     log_info "Timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 
     local exit_code=0

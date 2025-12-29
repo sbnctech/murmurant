@@ -1,6 +1,6 @@
 # Policy Key Catalog
 
-This document provides a complete reference for all configurable policy keys in ClubOS.
+This document provides a complete reference for all configurable policy keys in Murmurant.
 
 **Related Issues:** #263 (Policy Configuration Layer), #232 (SBNC as Tenant Zero)
 
@@ -10,7 +10,7 @@ This document provides a complete reference for all configurable policy keys in 
 
 ## Overview
 
-ClubOS separates **platform invariants** (hard-coded, non-negotiable) from **policy keys**
+Murmurant separates **platform invariants** (hard-coded, non-negotiable) from **policy keys**
 (organization-configurable). This catalog documents all policy keys that organizations can
 customize to match their operating model.
 
@@ -213,7 +213,7 @@ tiers are enabled.
 | **Default** | See below |
 | **Scope** | Organization |
 
-**Description**: Mapping from Wild Apricot membership level names to ClubOS
+**Description**: Mapping from Wild Apricot membership level names to Murmurant
 tier codes. Used during WA migration to translate levels.
 
 **Default Value (SBNC)**:
@@ -660,4 +660,4 @@ Migration to `getPolicy()` enables future multi-tenant support.
 ---
 
 *Last updated: 2025-12-24*
-*Maintainer: ClubOS Development Team*
+*Maintainer: Murmurant Development Team*

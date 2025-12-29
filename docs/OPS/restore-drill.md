@@ -1,6 +1,6 @@
 # Database Restore Drill
 
-This document describes ClubOS backup strategy, restore procedures, and when to test them.
+This document describes Murmurant backup strategy, restore procedures, and when to test them.
 
 **Charter Principles:**
 
@@ -12,7 +12,7 @@ This document describes ClubOS backup strategy, restore procedures, and when to 
 
 ## Neon Backup Strategy
 
-ClubOS uses [Neon](https://neon.tech) for PostgreSQL hosting. Neon provides:
+Murmurant uses [Neon](https://neon.tech) for PostgreSQL hosting. Neon provides:
 
 ### Automatic Backups
 

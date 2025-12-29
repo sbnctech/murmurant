@@ -1,4 +1,4 @@
-# ClubOS - R4-B Tabletop Index
+# Murmurant - R4-B Tabletop Index
 
 Status: Canonical Index
 Last updated: 2025-12-21

@@ -1,6 +1,6 @@
 WORKER A: Member Narrative Builder + API (server-side, test-first)
 
-Implement a new feature in ClubOS: generate a prose-style personal history for each member, intended for the President (and Membership VP). Not public-facing and not member-facing.
+Implement a new feature in Murmurant: generate a prose-style personal history for each member, intended for the President (and Membership VP). Not public-facing and not member-facing.
 
 Hard requirements:
 - ASCII only in all code/comments/docs.

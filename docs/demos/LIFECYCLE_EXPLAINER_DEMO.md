@@ -4,7 +4,7 @@ This guide walks through demonstrating the membership lifecycle state machine us
 
 ## Overview
 
-The lifecycle explainer shows how ClubOS tracks member status through time-based and administrative state transitions. Demo members are created with specific join dates and membership attributes to represent each lifecycle state.
+The lifecycle explainer shows how Murmurant tracks member status through time-based and administrative state transitions. Demo members are created with specific join dates and membership attributes to represent each lifecycle state.
 
 ## Prerequisites
 
@@ -203,31 +203,31 @@ Wild Apricot's architecture makes deterministic lifecycle tracking difficult or 
 
 WA treats membership levels as independent categories (e.g., "Newcomer", "Extended Newcomer") without explicit relationships. There is no way to express "Extended Newcomer follows Newcomer after 2 years" in the data model.
 
-**ClubOS approach:** Explicit `MembershipTier` with `code` field enables programmatic transitions. The state machine is defined in code, not implied by naming conventions.
+**Murmurant approach:** Explicit `MembershipTier` with `code` field enables programmatic transitions. The state machine is defined in code, not implied by naming conventions.
 
 ### 2. No Native Time-Based Transitions
 
 WA has no built-in support for "after 90 days, change tier" rules. Operators must manually track milestones or build external automations.
 
-**ClubOS approach:** `joinedAt` + deterministic inference. The system computes lifecycle state on-read, so time-based transitions happen automatically without cron jobs or manual intervention.
+**Murmurant approach:** `joinedAt` + deterministic inference. The system computes lifecycle state on-read, so time-based transitions happen automatically without cron jobs or manual intervention.
 
 ### 3. Hidden State in Renewal Workflows
 
 WA's renewal system conflates payment status, membership status, and renewal offers. A member can be "active" but past their renewal window, or "pending" without clear indication why.
 
-**ClubOS approach:** Explicit state separation. `MembershipStatus` (administrative state) is separate from lifecycle inference (computed state). No hidden renewal flags.
+**Murmurant approach:** Explicit state separation. `MembershipStatus` (administrative state) is separate from lifecycle inference (computed state). No hidden renewal flags.
 
 ### 4. No Audit Trail for Lifecycle Changes
 
 WA provides limited visibility into why a member's status changed. Manual changes are logged inconsistently.
 
-**ClubOS approach:** All state changes produce audit log entries with actor ID, timestamp, and reason. Lifecycle inference is deterministic and inspectable.
+**Murmurant approach:** All state changes produce audit log entries with actor ID, timestamp, and reason. Lifecycle inference is deterministic and inspectable.
 
 ---
 
 ## Failures This Design Prevents
 
-| Failure Mode | Wild Apricot Risk | ClubOS Prevention |
+| Failure Mode | Wild Apricot Risk | Murmurant Prevention |
 |--------------|-------------------|-------------------|
 | **Silent expiry** | Members lapse without notification | Explicit `lapsed` state with transition tracking |
 | **Missed 2-year offers** | Manual tracking required | Automatic `offer_extended` state at 730 days |

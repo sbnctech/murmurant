@@ -2,7 +2,7 @@ Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
 # Pages System Specs (v1)
 
-This folder defines the **page runtime**, **editor model**, **widget model**, and **navigation model** for ClubOS.
+This folder defines the **page runtime**, **editor model**, **widget model**, and **navigation model** for Murmurant.
 
 These documents are intended to be the implementation contract for the first production-grade publishing system.
 

@@ -1,4 +1,4 @@
-You are Worker B in the ClubOS repo.
+You are Worker B in the Murmurant repo.
 
 Goal: Finalize the Term Transition dashboard widget behavior and make it configurable and test-protected.
 

@@ -1,7 +1,7 @@
-# ClubOS Policy Registry
+# Murmurant Policy Registry
 # Copyright (c) Santa Barbara Newcomers Club
 #
-# This is the canonical source of truth for all club policies enforced by ClubOS.
+# This is the canonical source of truth for all club policies enforced by Murmurant.
 # Each policy has a unique ID (POL-XXX) that can be referenced in code using requirePolicy().
 #
 # Policy IDs must be unique and follow the format: POL-{CATEGORY}-{NUMBER}
@@ -15,7 +15,7 @@
 
 version: "1.0"
 lastUpdated: "2024-12-20"
-maintainer: "ClubOS Development Team"
+maintainer: "Murmurant Development Team"
 
 policies:
   # ===========================================================================
@@ -54,7 +54,7 @@ policies:
 
       ## Enforcement
 
-      ClubOS automatically calculates and enforces the 48-hour announcement window.
+      Murmurant automatically calculates and enforces the 48-hour announcement window.
     enforcementLevel: automatic
     enforcementPoints:
       - src/lib/events/scheduling.ts
@@ -103,7 +103,7 @@ policies:
 
       ## Enforcement
 
-      ClubOS automatically generates the eNews event listing from published events.
+      Murmurant automatically generates the eNews event listing from published events.
     enforcementLevel: automatic
     enforcementPoints:
       - src/lib/communications/enews-generator.ts
@@ -154,7 +154,7 @@ policies:
 
       ## Enforcement
 
-      ClubOS membership status engine automatically calculates classifications
+      Murmurant membership status engine automatically calculates classifications
       and triggers outreach based on expiration dates.
     enforcementLevel: automatic
     enforcementPoints:
@@ -214,7 +214,7 @@ policies:
 
       ## Enforcement
 
-      ClubOS enforces these rules at the API layer. Directory endpoints filter
+      Murmurant enforces these rules at the API layer. Directory endpoints filter
       based on member privacy preferences.
     enforcementLevel: automatic
     enforcementPoints:
@@ -263,7 +263,7 @@ policies:
          ```
 
       2. **DKIM**: Sign outgoing emails
-         - Selector: `clubos._domainkey.sbnewcomers.org`
+         - Selector: `murmurant._domainkey.sbnewcomers.org`
 
       3. **DMARC**: Policy for handling failures
          ```
@@ -280,7 +280,7 @@ policies:
 
       ## Enforcement
 
-      ClubOS email sending module validates domain configuration before
+      Murmurant email sending module validates domain configuration before
       allowing email campaigns to be sent.
     enforcementLevel: automatic
     enforcementPoints:

@@ -1,6 +1,6 @@
 # The Green Gate
 
-ClubOS CI uses a **three-lane model** to keep builds fast, deterministic, and comprehensive.
+Murmurant CI uses a **three-lane model** to keep builds fast, deterministic, and comprehensive.
 
 ---
 
@@ -114,7 +114,7 @@ Managed isolation for intermittently failing tests.
 
 ```typescript
 // REQUIRED format - must include issue link
-// Flaky: https://github.com/sbnctech/clubos/issues/XXX
+// Flaky: https://github.com/sbnctech/murmurant/issues/XXX
 test('@flaky: sometimes fails due to timing', async () => {
   // ...
 });
@@ -185,7 +185,7 @@ test('@quarantine: strict assertion not yet implemented', async () => {
 Tests that pass most of the time but occasionally fail. **Must have issue link.**
 
 ```typescript
-// Flaky: https://github.com/sbnctech/clubos/issues/123
+// Flaky: https://github.com/sbnctech/murmurant/issues/123
 test('@flaky: timing-sensitive operation', async () => {
   // ...
 });

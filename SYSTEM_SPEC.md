@@ -2,7 +2,7 @@ Copyright (c) Santa Barbara Newcomers Club
 All rights reserved.
 
 SYSTEM SPECIFICATION
-ClubOS Platform
+Murmurant Platform
 ASCII Only
 No external branding references
 
@@ -10,7 +10,7 @@ No external branding references
 
 1. System Overview
 
-ClubOS is the membership, events, communication, and operations platform
+Murmurant is the membership, events, communication, and operations platform
 for SBNC. It replaces legacy systems and provides a unified, modern,
 API-first foundation. The system must support the following domains:
 
@@ -56,7 +56,7 @@ Testing:
 
 2a. Timezone Policy
 
-All DateTime handling in ClubOS follows these rules:
+All DateTime handling in Murmurant follows these rules:
 
 - All DateTime values are stored in UTC at rest (Prisma default).
 - The system's canonical business timezone is America/Los_Angeles.
@@ -134,7 +134,7 @@ Registrations include:
   - success/failure state
 
 5.2 SMS (Outbound Baseline)
-ClubOS must support outbound SMS broadcasts using a dedicated local
+Murmurant must support outbound SMS broadcasts using a dedicated local
 number. Requirements:
 
 - 10 digit local number
@@ -166,15 +166,15 @@ waitlist actions, surveys, and member assistance.
 - Exportable message history
 
 6.3 Outbound Flow
-- ClubOS triggers outbound SMS:
+- Murmurant triggers outbound SMS:
   - Event reminders
   - Registration status changes
   - Manual campaign sends
 - Provider returns message IDs and delivery status for logging.
 
 6.4 Inbound Flow
-- Provider posts inbound SMS to a ClubOS webhook.
-- ClubOS parses message and applies rules:
+- Provider posts inbound SMS to a Murmurant webhook.
+- Murmurant parses message and applies rules:
   - Y or YES: confirm attendance
   - N or NO: cancel and promote next from waitlist
   - Numeric ratings for surveys
@@ -469,7 +469,7 @@ Testing:
 
 ## Development Stages Checklist
 
-This section tracks implementation stages for ClubOS at the system level.
+This section tracks implementation stages for Murmurant at the system level.
 It should stay consistent with PROJECT_PLAN.md.
 
 Stage 0: Repo and tooling baseline
@@ -514,7 +514,7 @@ Stage 4: Member and admin facing UX
 - Status: Not started
 - Build minimal authenticated admin view for recent email logs.
 - Add simple filters (by recipient or time range) to verify that the log is usable for debugging.
-- Wire this into the broader ClubOS admin shell as it comes online.
+- Wire this into the broader Murmurant admin shell as it comes online.
 
 Notes
 - The current implementation intentionally favors simplicity and green tests over early database complexity.
@@ -598,7 +598,7 @@ Implementation Notes
 
 Member definition
 
-- A "member" in ClubOS is defined as:
+- A "member" in Murmurant is defined as:
   - Any Contact that has at least one ACTIVE Membership record.
 - This aligns the UI concept of "member" with the underlying data model:
   - Contact: person-level record (name, email, household, etc.).
@@ -665,7 +665,7 @@ Event registration delegation (partner signups)
 
 ### Goals
 
-- ClubOS must be able to host and manage the club's public website and member portal.
+- Murmurant must be able to host and manage the club's public website and member portal.
 - Every visitor should see content appropriate to their authentication state, role, and group membership.
 - Editors must be able to create, edit, and publish pages without directly editing code.
 - Site branding should be controlled via themes and templates, with modern CSS and design tokens.
@@ -1371,7 +1371,7 @@ Rules:
 
 ### Overview
 
-ClubOS uses a layered permission model:
+Murmurant uses a layered permission model:
 
 1. Role-Based Access Control (RBAC): Global roles with predefined capabilities
 2. Group Membership: Access to group-specific resources
@@ -2011,7 +2011,7 @@ When v1 auth is implemented:
 
 ### Overview
 
-ClubOS pages are rendered in two distinct view contexts: public (unauthenticated
+Murmurant pages are rendered in two distinct view contexts: public (unauthenticated
 visitors) and member (authenticated users with active membership). Each context
 has different layout requirements, navigation menus, and available blocks.
 

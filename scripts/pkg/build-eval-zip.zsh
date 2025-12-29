@@ -9,7 +9,7 @@
 #   ./scripts/pkg/build-eval-zip.zsh
 #
 # Output:
-#   ~/Downloads/ClubOS_Evaluation_Packet_<SHA>_<DATE>.zip
+#   ~/Downloads/Murmurant_Evaluation_Packet_<SHA>_<DATE>.zip
 #
 # Copyright (c) Santa Barbara Newcomers Club
 #
@@ -39,7 +39,7 @@ COMMIT_FULL=$(git rev-parse HEAD)
 COMMIT_DATE=$(git log -1 --format=%ci HEAD)
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-ZIP_NAME="ClubOS_Evaluation_Packet_${COMMIT_SHA}_${DATE_STAMP}.zip"
+ZIP_NAME="Murmurant_Evaluation_Packet_${COMMIT_SHA}_${DATE_STAMP}.zip"
 ZIP_PATH="${OUTPUT_DIR}/${ZIP_NAME}"
 
 # --- Curated file list (hardcoded for reliability) ---
@@ -60,7 +60,7 @@ EVAL_DOCS=(
 BIZ_DOCS=(
   "docs/BIZ/BUSINESS_MODEL_CANONICAL.md"
   "docs/BIZ/COMMERCIALIZATION_AND_GOVERNANCE.md"
-  "docs/BIZ/HOW_CLUBOS_IS_BUILT_AND_GOVERNED.md"
+  "docs/BIZ/HOW_MURMURANT_IS_BUILT_AND_GOVERNED.md"
 )
 
 # Architecture (high-level only)
@@ -86,11 +86,11 @@ ALL_FILES=(
 # --- Create staging directory ---
 
 TEMP_BASE=$(mktemp -d)
-STAGING_DIR="${TEMP_BASE}/ClubOS_Evaluation_Packet"
+STAGING_DIR="${TEMP_BASE}/Murmurant_Evaluation_Packet"
 mkdir -p "${STAGING_DIR}"
 trap "rm -rf ${TEMP_BASE}" EXIT
 
-echo "=== ClubOS Evaluation Packet Builder ==="
+echo "=== Murmurant Evaluation Packet Builder ==="
 echo ""
 echo "Repository: ${REPO_ROOT}"
 echo "Branch:     ${BRANCH}"
@@ -128,9 +128,9 @@ fi
 # --- Generate README.md ---
 
 cat > "${STAGING_DIR}/README.md" << EOF
-# ClubOS Board Evaluation Packet
+# Murmurant Board Evaluation Packet
 
-This ZIP contains curated documentation for board review of ClubOS.
+This ZIP contains curated documentation for board review of Murmurant.
 
 ## Build Information
 
@@ -146,7 +146,7 @@ This ZIP contains curated documentation for board review of ClubOS.
 This packet includes:
 
 ### Board Evaluation Documents
-Documents specifically prepared for board review of the ClubOS evaluation proposal.
+Documents specifically prepared for board review of the Murmurant evaluation proposal.
 
 ### Business Model
 Core business model and commercialization documentation.
@@ -155,7 +155,7 @@ Core business model and commercialization documentation.
 Key architectural contracts that define system guarantees.
 
 ### Operator Trust
-Documentation explaining how ClubOS protects organizational data.
+Documentation explaining how Murmurant protects organizational data.
 
 ## How to Use This Packet
 
@@ -179,7 +179,7 @@ echo "Generated README.md"
 # --- Generate INCLUDED_FILES.txt ---
 
 {
-  echo "# ClubOS Evaluation Packet - Included Files"
+  echo "# Murmurant Evaluation Packet - Included Files"
   echo "#"
   echo "# Generated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
   echo "# Commit: ${COMMIT_SHA}"

@@ -1,6 +1,6 @@
 # Wild Apricot Integration: Reuse Recommendations
 
-This document evaluates components from the existing WA sync system and recommends an integration strategy for ClubOS.
+This document evaluates components from the existing WA sync system and recommends an integration strategy for Murmurant.
 
 ## 1. Component Reusability Assessment
 
@@ -16,9 +16,9 @@ This document evaluates components from the existing WA sync system and recommen
 | Contact Fetcher | wa_full_sync.py:463-491 | - | Yes | - | Needs field mapping changes |
 | Event Fetcher | wa_full_sync.py:493-498 | - | Yes | - | Simple, port to TypeScript |
 | Registration Fetcher | wa_full_sync.py:500-538 | - | Yes | - | Per-event pattern is correct |
-| SQLite Save Methods | wa_full_sync.py:572-1114 | - | - | Yes | ClubOS uses PostgreSQL/Prisma |
+| SQLite Save Methods | wa_full_sync.py:572-1114 | - | - | Yes | Murmurant uses PostgreSQL/Prisma |
 | Retry Wrapper | cron/run_incremental_sync_with_retry.sh | Yes | - | - | Shell script, use directly |
-| Config Schema | wa_config.json | - | Yes | - | Add ClubOS-specific fields |
+| Config Schema | wa_config.json | - | Yes | - | Add Murmurant-specific fields |
 | Email Change Detection | wa_incremental_sync.py:199-241 | - | Yes | - | Useful for sync validation |
 | Committee Derivation | wa_full_sync.py:897-1014 | - | Yes | - | Regex patterns, port to TS |
 | Database Indexes | wa_db_optimizer.py | - | - | Yes | Different DB, different schema |
@@ -30,11 +30,11 @@ This document evaluates components from the existing WA sync system and recommen
 - **Reusable With Changes:** 11 components (core API logic)
 - **Not Reusable:** 3 components (SQLite-specific)
 
-## 2. Gap Analysis: Chatbot Sync vs ClubOS Requirements
+## 2. Gap Analysis: Chatbot Sync vs Murmurant Requirements
 
-### 2.1 What ClubOS Needs (Beyond Chatbot)
+### 2.1 What Murmurant Needs (Beyond Chatbot)
 
-| Requirement | Chatbot Sync | ClubOS Needs | Gap |
+| Requirement | Chatbot Sync | Murmurant Needs | Gap |
 |-------------|--------------|--------------|-----|
 | Target Database | SQLite | PostgreSQL | Major |
 | ORM | None (raw SQL) | Prisma | Major |
@@ -44,7 +44,7 @@ This document evaluates components from the existing WA sync system and recommen
 | Audit Logging | None | AuditLog model | Moderate |
 | Historical Snapshots | Daily DB backup | Git or versioned tables | Minor |
 | Soft Deletes | None | Detect WA deletions | Minor |
-| Governance Roles | Not tracked | RoleAssignment, ServiceHistory | N/A (ClubOS-only) |
+| Governance Roles | Not tracked | RoleAssignment, ServiceHistory | N/A (Murmurant-only) |
 | Officer Assignments | Parsed from text | Structured data | Moderate |
 
 ### 2.2 What Can Be Reused
@@ -58,17 +58,17 @@ This document evaluates components from the existing WA sync system and recommen
 ### 2.3 What Must Be Rebuilt
 
 1. **Database Layer** - Prisma instead of raw SQLite
-2. **ID Mapping System** - WA integer → ClubOS UUID translation
+2. **ID Mapping System** - WA integer → Murmurant UUID translation
 3. **Field Transformers** - TypeScript functions with proper typing
 4. **Validation Layer** - Zod schemas for WA API responses
-5. **Audit Trail** - Integration with ClubOS AuditLog
+5. **Audit Trail** - Integration with Murmurant AuditLog
 
 ### 2.4 What Should NOT Be Reused
 
 1. **SQLite Schema** - Incompatible with PostgreSQL
 2. **Raw SQL Queries** - Use Prisma instead
 3. **View Definitions** - Different schema structure
-4. **Python Runtime** - ClubOS is TypeScript/Node.js
+4. **Python Runtime** - Murmurant is TypeScript/Node.js
 
 ## 3. Integration Strategy Recommendation
 
@@ -81,7 +81,7 @@ This document evaluates components from the existing WA sync system and recommen
 | Option | Description | Pros | Cons |
 |--------|-------------|------|------|
 | 1. Direct Reuse | Use chatbot Python code directly | Fast initial setup | Wrong language, no Prisma |
-| 2. Fork Modules | Copy chatbot files into ClubOS | Known working code | Maintenance burden, Python in TS codebase |
+| 2. Fork Modules | Copy chatbot files into Murmurant | Known working code | Maintenance burden, Python in TS codebase |
 | 3. Fresh Build | Build importer from scratch | Clean architecture | Reinvent wheel, miss edge cases |
 | **4. Hybrid** | Port API client, fresh DB layer | Best of both worlds | Moderate effort |
 
@@ -89,10 +89,10 @@ This document evaluates components from the existing WA sync system and recommen
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    ClubOS WA Importer                       │
+│                    Murmurant WA Importer                       │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │   @clubos/wa-api-client (TypeScript port)           │   │
+│  │   @murmurant/wa-api-client (TypeScript port)           │   │
 │  │   ────────────────────────────────────────────────  │   │
 │  │   - WildApricotClient class                         │   │
 │  │   - OAuth token management                          │   │
@@ -113,7 +113,7 @@ This document evaluates components from the existing WA sync system and recommen
 │                           │                                 │
 │                           ▼                                 │
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │   Transformers (NEW - ClubOS specific)              │   │
+│  │   Transformers (NEW - Murmurant specific)              │   │
 │  │   ────────────────────────────────────────────────  │   │
 │  │   - transformMember(WAContact) → MemberCreateInput  │   │
 │  │   - transformEvent(WAEvent) → EventCreateInput      │   │
@@ -164,7 +164,7 @@ This document evaluates components from the existing WA sync system and recommen
 
 ### Phase 1: Foundation (Week 1)
 
-1. Create `@clubos/wa-api-client` module
+1. Create `@murmurant/wa-api-client` module
 2. Port OAuth authentication to TypeScript
 3. Port pagination and async polling
 4. Add Zod schemas for API responses
@@ -193,7 +193,7 @@ This document evaluates components from the existing WA sync system and recommen
 4. Write operational documentation
 5. Production deployment
 
-## 5. Files to Create in ClubOS
+## 5. Files to Create in Murmurant
 
 ```
 src/
@@ -233,22 +233,22 @@ prisma/
 
 ```prisma
 // Wild Apricot ID Mapping for data import
-// Tracks correspondence between WA integer IDs and ClubOS UUIDs
+// Tracks correspondence between WA integer IDs and Murmurant UUIDs
 model WaIdMapping {
   id         String   @id @default(uuid()) @db.Uuid
   entityType String   // "member", "event", "registration"
   waId       Int      // Wild Apricot integer ID
-  clubosId   String   @db.Uuid // ClubOS entity UUID
+  murmurantId   String   @db.Uuid // Murmurant entity UUID
   syncedAt   DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   @@unique([entityType, waId])
-  @@index([entityType, clubosId])
+  @@index([entityType, murmurantId])
   @@index([syncedAt])
 }
 ```
 
-## 7. Configuration for ClubOS
+## 7. Configuration for Murmurant
 
 ```typescript
 // src/lib/wa/config.ts
@@ -295,7 +295,7 @@ WA_SYNC_ENABLED=true
 1. The chatbot sync has proven patterns for WA API interaction that should not be reinvented
 2. The database layer is incompatible and must be rebuilt for Prisma/PostgreSQL
 3. TypeScript provides type safety that Python lacks
-4. ClubOS architectural requirements (audit logs, UUIDs, relational integrity) require fresh implementation
+4. Murmurant architectural requirements (audit logs, UUIDs, relational integrity) require fresh implementation
 5. Porting core API logic reduces risk of missing edge cases the chatbot team discovered
 
 **Next Step:** If approved, proceed with Phase 1 implementation of the TypeScript WA API client.

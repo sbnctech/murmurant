@@ -1,6 +1,6 @@
 # Developer Onboarding
 
-This guide helps new contributors get productive with ClubOS quickly.
+This guide helps new contributors get productive with Murmurant quickly.
 
 ## Who This Is For
 

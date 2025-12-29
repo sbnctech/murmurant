@@ -1,7 +1,7 @@
 #!/bin/zsh
 set -euo pipefail
 
-echo "Installing Git hooks for ClubOS..."
+echo "Installing Git hooks for Murmurant..."
 mkdir -p .git/hooks
 
 cat << 'HOOK' > .git/hooks/pre-push

@@ -1,10 +1,10 @@
-# ClubOS — Data Protection and Backups
+# Murmurant — Data Protection and Backups
 
 Status: Canonical Specification  
 Applies to: All environments (dev, staging, production)  
 Last updated: 2025-12-20
 
-This document defines how ClubOS protects, backs up, restores, and governs
+This document defines how Murmurant protects, backs up, restores, and governs
 all critical data. Data loss is the single highest-risk failure mode for the
 organization.
 
@@ -14,7 +14,7 @@ This document is normative.
 
 ## 1. Core Principle
 
-All data in ClubOS is classified as either:
+All data in Murmurant is classified as either:
 
 - **Authoritative** (system of record)
 - **Derived** (rebuildable)
@@ -147,7 +147,7 @@ All restores MUST:
 
 ## 7. Explicit Non-Guarantees
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Zero data loss in all scenarios
 - Continuous availability during restore
 - Automatic restore without human intervention

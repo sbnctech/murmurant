@@ -47,7 +47,7 @@ There is no Member table.
 - PostgreSQL 16 runs locally via Homebrew:
   - Data directory: /opt/homebrew/var/postgresql@16
 - Prisma is configured with a single datasource "db" pointing at:
-  - postgresql://clubos:clubos@localhost:5432/clubos
+  - postgresql://murmurant:murmurant@localhost:5432/murmurant
 - Migration:
   - Managed via "prisma migrate dev".
   - Migration history is stored in the _prisma_migrations table and in prisma/migrations on disk.
@@ -530,7 +530,7 @@ A debug endpoint for webmaster support was added:
 
 ### Term Boundaries
 
-ClubOS operates on a semi-annual term cycle:
+Murmurant operates on a semi-annual term cycle:
 
 - **Winter term**: August 1 through January 31
 - **Summer term**: February 1 through July 31
@@ -584,7 +584,7 @@ All service records include:
 
 ## Timezone Policy
 
-All DateTime handling in ClubOS follows these rules:
+All DateTime handling in Murmurant follows these rules:
 
 - **Storage**: All DateTime values are stored in UTC at rest (Prisma default).
 - **Canonical timezone**: The system's canonical business timezone is `America/Los_Angeles`.

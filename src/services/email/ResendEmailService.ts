@@ -183,7 +183,7 @@ export class ResendEmailService implements EmailService {
     const subject =
       typeof data.subject === "string"
         ? data.subject
-        : `Message from ${this.config.defaultFrom?.name || "ClubOS"}`;
+        : `Message from ${this.config.defaultFrom?.name || "Murmurant"}`;
 
     return this.sendEmail({
       to: recipient,
@@ -301,7 +301,7 @@ export function createResendEmailService(): ResendEmailService {
     apiKey,
     defaultFrom: {
       email: process.env.EMAIL_FROM_ADDRESS || "noreply@example.com",
-      name: process.env.EMAIL_FROM_NAME || "ClubOS",
+      name: process.env.EMAIL_FROM_NAME || "Murmurant",
     },
   });
 }

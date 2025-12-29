@@ -1,10 +1,10 @@
-# ClubOS — Release Safety and Change Control
+# Murmurant — Release Safety and Change Control
 
 Status: Canonical Specification  
 Applies to: Production deployments  
 Last updated: 2025-12-20
 
-This document defines how changes are introduced into ClubOS safely.
+This document defines how changes are introduced into Murmurant safely.
 Uncontrolled change is a primary cause of operational failure.
 
 This document is normative.

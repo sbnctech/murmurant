@@ -1,7 +1,7 @@
-# ClubOS Environment Variables (Names Only)
+# Murmurant Environment Variables (Names Only)
 Copyright (c) Santa Barbara Newcomers Club
 
-This file lists environment variable names used by ClubOS.
+This file lists environment variable names used by Murmurant.
 Do not store secrets here.
 
 Required:

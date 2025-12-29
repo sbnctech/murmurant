@@ -1,15 +1,15 @@
 ## Intellectual Property & Clean-Room Development
 
-ClubOS is an independently designed and implemented system.
+Murmurant is an independently designed and implemented system.
 
-Although the project is informed by real-world operational experience using third-party membership platforms (including Wild Apricot), **no proprietary source code, internal documentation, schemas, or non-public APIs from any third-party system have been used** in the development of ClubOS.
+Although the project is informed by real-world operational experience using third-party membership platforms (including Wild Apricot), **no proprietary source code, internal documentation, schemas, or non-public APIs from any third-party system have been used** in the development of Murmurant.
 
 All architecture, data models, permission systems, and enforcement logic are:
 - Independently designed
 - Based on general software engineering best practices
 - Derived from first-principles threat modeling and governance requirements
 
-ClubOS does not reproduce or attempt to mirror the internal implementation of any proprietary system. Where similar functionality exists, it reflects common industry patterns rather than copied behavior.
+Murmurant does not reproduce or attempt to mirror the internal implementation of any proprietary system. Where similar functionality exists, it reflects common industry patterns rather than copied behavior.
 
 This repository intentionally avoids:
 - Copying third-party naming conventions

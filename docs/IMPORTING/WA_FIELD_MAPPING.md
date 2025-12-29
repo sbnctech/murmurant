@@ -1,12 +1,12 @@
-# Wild Apricot to ClubOS Field Mapping
+# Wild Apricot to Murmurant Field Mapping
 
-This document maps Wild Apricot (WA) data fields to ClubOS Prisma schema fields, identifying transformations required for data migration.
+This document maps Wild Apricot (WA) data fields to Murmurant Prisma schema fields, identifying transformations required for data migration.
 
 ## 1. Member Mapping
 
 ### 1.1 Core Fields
 
-| WA Field | WA Type | ClubOS Field | ClubOS Type | Transformation |
+| WA Field | WA Type | Murmurant Field | Murmurant Type | Transformation |
 |----------|---------|--------------|-------------|----------------|
 | Id | INTEGER | (external ID) | - | Store as metadata or lookup table |
 | FirstName | TEXT | firstName | String | Direct |
@@ -18,7 +18,7 @@ This document maps Wild Apricot (WA) data fields to ClubOS Prisma schema fields,
 
 ### 1.2 Status Mapping
 
-| WA Status | ClubOS MembershipStatus.code | Notes |
+| WA Status | Murmurant MembershipStatus.code | Notes |
 |-----------|------------------------------|-------|
 | Active | active | Default active status |
 | Lapsed | lapsed | Membership expired |
@@ -28,17 +28,17 @@ This document maps Wild Apricot (WA) data fields to ClubOS Prisma schema fields,
 
 ### 1.3 Fields NOT Mapped (WA-specific)
 
-- `DisplayName` - Computed in ClubOS from firstName + lastName
+- `DisplayName` - Computed in Murmurant from firstName + lastName
 - `Organization` - Not applicable to club membership
-- `MembershipLevelId` / `MembershipLevelName` - Different concept in ClubOS
+- `MembershipLevelId` / `MembershipLevelName` - Different concept in Murmurant
 - `IsSuspended` - Represented via membershipStatusId
-- `ProfileLastUpdated` - ClubOS uses `updatedAt`
-- `IsAccountAdministrator` - ClubOS uses RoleAssignment
+- `ProfileLastUpdated` - Murmurant uses `updatedAt`
+- `IsAccountAdministrator` - Murmurant uses RoleAssignment
 - `FieldValues` (JSON) - Custom fields need individual mapping
 
 ### 1.4 Custom Fields Mapping
 
-| WA Custom Field | ClubOS Handling | Notes |
+| WA Custom Field | Murmurant Handling | Notes |
 |-----------------|-----------------|-------|
 | PreviousResidence | Not mapped | Could add to Member if needed |
 | Age | Not mapped | Privacy concern |
@@ -61,7 +61,7 @@ This document maps Wild Apricot (WA) data fields to ClubOS Prisma schema fields,
 
 ### 2.1 Core Fields
 
-| WA Field | WA Type | ClubOS Field | ClubOS Type | Transformation |
+| WA Field | WA Type | Murmurant Field | Murmurant Type | Transformation |
 |----------|---------|--------------|-------------|----------------|
 | Id | INTEGER | (external ID) | - | Store as metadata |
 | Name | TEXT | title | String | Direct |
@@ -76,7 +76,7 @@ This document maps Wild Apricot (WA) data fields to ClubOS Prisma schema fields,
 
 ### 2.2 Fields NOT Mapped
 
-- `RegistrationEnabled` - Derived from capacity/dates in ClubOS
+- `RegistrationEnabled` - Derived from capacity/dates in Murmurant
 - `ConfirmedRegistrationsCount` - Computed from EventRegistration
 - `PendingRegistrationsCount` - Computed from EventRegistration
 - `MinPrice` / `MaxPrice` / `IsFree` - Different pricing model
@@ -86,7 +86,7 @@ This document maps Wild Apricot (WA) data fields to ClubOS Prisma schema fields,
 
 ### 2.3 Category Derivation
 
-ClubOS uses `category` as a simple string. WA uses Tags (JSON array) and derived Committee name.
+Murmurant uses `category` as a simple string. WA uses Tags (JSON array) and derived Committee name.
 
 **Strategy:** Use Committee name as category, fallback to first Tag:
 
@@ -103,7 +103,7 @@ else:
 
 ### 3.1 Core Fields
 
-| WA Field | WA Type | ClubOS Field | ClubOS Type | Transformation |
+| WA Field | WA Type | Murmurant Field | Murmurant Type | Transformation |
 |----------|---------|--------------|-------------|----------------|
 | Id | INTEGER | (external ID) | - | Store as metadata |
 | EventId | INTEGER | eventId | UUID (FK) | Lookup Event by WA ID |
@@ -115,7 +115,7 @@ else:
 
 ### 3.2 Status Mapping
 
-| WA Status | ClubOS RegistrationStatus | Notes |
+| WA Status | Murmurant RegistrationStatus | Notes |
 |-----------|---------------------------|-------|
 | Confirmed | CONFIRMED | Direct |
 | Cancelled | CANCELLED | Direct |
@@ -126,22 +126,22 @@ else:
 ### 3.3 Fields NOT Mapped
 
 - `RegistrationTypeId` / `RegistrationType` - Different pricing model
-- `IsCheckedIn` - Not tracked in current ClubOS schema
+- `IsCheckedIn` - Not tracked in current Murmurant schema
 
 ## 4. Membership Level Mapping
 
 WA uses "Membership Levels" as tiers (NewbieNewcomer, NewcomerMember, ExtendedNewcomer, Admins).
 
-ClubOS uses `MembershipStatus` with codes like: active, lapsed, pending_new, etc.
+Murmurant uses `MembershipStatus` with codes like: active, lapsed, pending_new, etc.
 
 **These are different concepts:**
 
 - WA Membership Level = Tier/pricing (NewbieNewcomer pays $150, ExtendedNewcomer pays $85)
-- ClubOS MembershipStatus = State (active, lapsed, suspended)
+- Murmurant MembershipStatus = State (active, lapsed, suspended)
 
 **Mapping Strategy:**
 
-| WA Level | WA Status | ClubOS MembershipStatus.code |
+| WA Level | WA Status | Murmurant MembershipStatus.code |
 |----------|-----------|------------------------------|
 | NewbieNewcomer | Active | active |
 | NewcomerMember | Active | active |
@@ -158,7 +158,7 @@ WA stores committee participation as custom fields (text):
 - `ChairParticipation`: "Games! 2023-2024"
 - `CommitteeMemberParticipation`: "Wine Appreciation, Happy Hikers"
 
-ClubOS has structured models:
+Murmurant has structured models:
 
 - `Committee` - The committee entity
 - `CommitteeRole` - Roles within a committee (Chair, Member)
@@ -174,7 +174,7 @@ ClubOS has structured models:
 
 ## 6. Governance Mapping
 
-WA does not have governance features. ClubOS governance models are:
+WA does not have governance features. Murmurant governance models are:
 
 - GovernanceMeeting
 - GovernanceMinutes
@@ -182,11 +182,11 @@ WA does not have governance features. ClubOS governance models are:
 - GovernanceAnnotation
 - GovernanceReviewFlag
 
-**No mapping required** - these are ClubOS-only features.
+**No mapping required** - these are Murmurant-only features.
 
 ## 7. ID Mapping Strategy
 
-WA uses integer IDs. ClubOS uses UUIDs.
+WA uses integer IDs. Murmurant uses UUIDs.
 
 **Recommended Approach:**
 
@@ -196,7 +196,7 @@ Create a mapping table (could be temporary for migration):
 CREATE TABLE wa_id_mapping (
   entity_type TEXT NOT NULL,  -- 'member', 'event', 'registration'
   wa_id INTEGER NOT NULL,
-  clubos_id UUID NOT NULL,
+  murmurant_id UUID NOT NULL,
   migrated_at TIMESTAMP DEFAULT now(),
   PRIMARY KEY (entity_type, wa_id)
 );
@@ -204,7 +204,7 @@ CREATE TABLE wa_id_mapping (
 
 This allows:
 
-- Looking up ClubOS records from WA IDs
+- Looking up Murmurant records from WA IDs
 - Detecting duplicates during incremental imports
 - Audit trail of migration
 
@@ -215,7 +215,7 @@ This allows:
 WA emails may be:
 
 - Invalid format (need validation)
-- Duplicates (WA allows, ClubOS @unique)
+- Duplicates (WA allows, Murmurant @unique)
 - Empty strings (treat as null)
 
 ### 8.2 Date Parsing
@@ -230,7 +230,7 @@ Parse with timezone awareness and store as UTC.
 
 ### 8.3 Missing Required Fields
 
-ClubOS requires:
+Murmurant requires:
 
 - `Member.firstName` - Error if missing
 - `Member.lastName` - Error if missing
@@ -298,7 +298,7 @@ function transformRegistration(waReg: WARegistration): Partial<PrismaEventRegist
 
 ## 10. Unmapped Data (Potential Loss)
 
-The following WA data has no direct ClubOS equivalent:
+The following WA data has no direct Murmurant equivalent:
 
 | WA Data | Risk Level | Notes |
 |---------|------------|-------|
@@ -308,6 +308,6 @@ The following WA data has no direct ClubOS equivalent:
 | Custom field JSON | Low | Most fields not needed |
 | Registration types | Medium | Pricing tiers - different model |
 | Tags (beyond first) | Low | Multiple tags not supported |
-| Check-in status | Low | Not tracked in ClubOS |
+| Check-in status | Low | Not tracked in Murmurant |
 
 **Recommendation:** Export full WA database snapshot before migration for audit purposes.

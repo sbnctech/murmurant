@@ -2,12 +2,12 @@
 
 ## Overview
 
-This document specifies the Transition Widget feature for ClubOS, which helps
+This document specifies the Transition Widget feature for Murmurant, which helps
 leadership manage the semi-annual transition of committee roles.
 
 ## Term Boundaries
 
-ClubOS operates on a semi-annual term cycle:
+Murmurant operates on a semi-annual term cycle:
 - Winter term: August 1 through January 31
 - Summer term: February 1 through July 31
 

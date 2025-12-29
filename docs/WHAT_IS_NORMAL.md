@@ -1,4 +1,4 @@
-# What Is Normal (SBNC + ClubOS)
+# What Is Normal (SBNC + Murmurant)
 A short guide for leaders and volunteers
 
 ## Why this exists
@@ -51,7 +51,7 @@ Signals that should be normal in the system:
 - Volunteer load concentrates on a few people.
 - Third-year membership grows faster than volunteer capacity.
 
-## How ClubOS should help
+## How Murmurant should help
 - Provide "what happens next" guidance at the moment it matters.
 - Provide safe modes, previews, and reversibility when appropriate.
 - Provide action logs that make leadership decisions auditable and calm.

@@ -1,6 +1,6 @@
 # Outside Counsel Sanity Check (Informal)
 
-This memo reflects a 30-minute, issue-spotting review of ClubOS from an intellectual property and licensing perspective.
+This memo reflects a 30-minute, issue-spotting review of Murmurant from an intellectual property and licensing perspective.
 
 ## Summary Assessment
 

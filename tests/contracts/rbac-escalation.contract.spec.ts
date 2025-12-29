@@ -299,7 +299,7 @@ test.describe("RBAC Escalation: No Admin Bypass Paths", () => {
   test("cannot bypass via cookie injection without proper session", async ({ request }) => {
     const response = await request.get(`${BASE}/api/v1/admin/members`, {
       headers: {
-        Cookie: "clubos_session=fake-session-token",
+        Cookie: "murmurant_session=fake-session-token",
       },
     });
     // Should still require valid session

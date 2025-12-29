@@ -70,11 +70,11 @@ model EventTag {
 
 **Description:**
 
-Add table to track mapping between WA IDs and ClubOS UUIDs for each migration run. Enables rollback and reconciliation.
+Add table to track mapping between WA IDs and Murmurant UUIDs for each migration run. Enables rollback and reconciliation.
 
 **Acceptance Criteria:**
 
-- [ ] `MigrationIdMap` model added with `runId`, `entityType`, `waId`, `clubosId`
+- [ ] `MigrationIdMap` model added with `runId`, `entityType`, `waId`, `murmurantId`
 - [ ] Unique constraint on `(runId, entityType, waId)`
 - [ ] Index on `runId` for rollback queries
 - [ ] Migration runs cleanly
@@ -88,7 +88,7 @@ model MigrationIdMap {
   runId      String
   entityType String
   waId       String
-  clubosId   String   @db.Uuid
+  murmurantId   String   @db.Uuid
   createdAt  DateTime @default(now())
 
   @@unique([runId, entityType, waId])
@@ -137,11 +137,11 @@ model EventRegistration {
 
 **Description:**
 
-Build service to manage WA-to-ClubOS ID mappings during import. Supports lookup, insert, and rollback operations.
+Build service to manage WA-to-Murmurant ID mappings during import. Supports lookup, insert, and rollback operations.
 
 **Acceptance Criteria:**
 
-- [ ] `IdMappingService` class with `recordMapping()`, `lookupClubosId()`, `lookupWaId()`
+- [ ] `IdMappingService` class with `recordMapping()`, `lookupMurmurantId()`, `lookupWaId()`
 - [ ] Batch insert support for performance
 - [ ] Transaction support (rollback on failure)
 - [ ] Query by run ID for rollback
@@ -151,10 +151,10 @@ Build service to manage WA-to-ClubOS ID mappings during import. Supports lookup,
 
 ```typescript
 interface IdMappingService {
-  recordMapping(runId: string, entityType: string, waId: string, clubosId: string): Promise<void>;
+  recordMapping(runId: string, entityType: string, waId: string, murmurantId: string): Promise<void>;
   recordMappingBatch(runId: string, mappings: Mapping[]): Promise<void>;
-  lookupClubosId(entityType: string, waId: string): Promise<string | null>;
-  lookupWaId(entityType: string, clubosId: string): Promise<string | null>;
+  lookupMurmurantId(entityType: string, waId: string): Promise<string | null>;
+  lookupWaId(entityType: string, murmurantId: string): Promise<string | null>;
   getRunMappings(runId: string): Promise<Mapping[]>;
   deleteRunMappings(runId: string): Promise<number>;
 }
@@ -170,7 +170,7 @@ interface IdMappingService {
 
 **Description:**
 
-Build service to normalize WA tags to ClubOS categories and preserve original tags in EventTag table.
+Build service to normalize WA tags to Murmurant categories and preserve original tags in EventTag table.
 
 **Acceptance Criteria:**
 
@@ -331,7 +331,7 @@ For each imported committee, seed standard roles (chair, co-chair, secretary, me
 
 **Description:**
 
-Import WA group memberships as ClubOS role assignments, mapping WA roles to committee roles.
+Import WA group memberships as Murmurant role assignments, mapping WA roles to committee roles.
 
 **Acceptance Criteria:**
 
@@ -459,12 +459,12 @@ Build automated verification that runs data quality checks after import.
 
 **Description:**
 
-Generate report comparing WA export totals to ClubOS import totals.
+Generate report comparing WA export totals to Murmurant import totals.
 
 **Acceptance Criteria:**
 
 - [ ] Counts WA records by type
-- [ ] Counts ClubOS records by type
+- [ ] Counts Murmurant records by type
 - [ ] Calculates difference (should be 0 or explained)
 - [ ] Lists skipped records with reasons
 - [ ] Human-readable format for review
@@ -648,6 +648,6 @@ Each backlog item must:
 **Priority:** High (migration blocker)
 **Added:** 2025-12-27
 
-External cron jobs that modify WA data via API represent hidden business logic. We have no way of knowing about them without asking. They must be documented during intake and reimplemented in ClubOS.
+External cron jobs that modify WA data via API represent hidden business logic. We have no way of knowing about them without asking. They must be documented during intake and reimplemented in Murmurant.
 
 **Action:** Ensure intake checklist includes cron job discovery questions.

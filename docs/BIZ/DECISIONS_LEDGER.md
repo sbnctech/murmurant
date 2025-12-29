@@ -1,6 +1,6 @@
 # Decisions Ledger
 
-A dated log of key business and product decisions for ClubOS.
+A dated log of key business and product decisions for Murmurant.
 
 ---
 

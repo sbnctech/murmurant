@@ -1,5 +1,5 @@
 /**
- * ClubOS Templates
+ * Murmurant Templates
  *
  * Canonical page templates for member and admin surfaces.
  */

@@ -1,6 +1,6 @@
-# ClubOS Project History
+# Murmurant Project History
 
-This file captures the factual history of the ClubOS project:
+This file captures the factual history of the Murmurant project:
 what was built, when it was built, and roughly how much effort it
 took in days and hours.
 
@@ -33,7 +33,7 @@ Project motivation came from three converging forces:
 
 3. A rehearsal for a more complex future system  
    There is a separate, more ambitious SaaS system under
-   consideration. ClubOS serves as a proving ground where the
+   consideration. Murmurant serves as a proving ground where the
    domain is deeply understood and user needs are well known,
    making it an ideal environment to test AI driven development.
 
@@ -73,7 +73,7 @@ cycle primarily on a single day.
   - Conception of the idea for a modern club platform.
 - Estimated hours: Many spread over months and years.
 - Notes: This experience provides the domain knowledge that
-  makes rapid progress on ClubOS possible.
+  makes rapid progress on Murmurant possible.
 
 ### Day 1: Foundation and Admin System (Initial build)
 - Date: 2025 12 11 (approximate for this cycle)
@@ -186,7 +186,7 @@ cycle primarily on a single day.
 - Estimated incremental hours (Ed): 0.5 1
 - Estimated AI development hours (equivalent): 3 5
 - Notes: The project gains a human readable history and a
-  narrative record that can grow as ClubOS evolves.
+  narrative record that can grow as Murmurant evolves.
 
 ----------------------------------------------------------------
 
@@ -199,7 +199,7 @@ For the "Admin and Internal Platform" milestone:
 - Tooling and tests: about 80 percent complete
 - Documentation: about 70 percent complete
 
-For the full long term ClubOS vision (database, auth, external
+For the full long term Murmurant vision (database, auth, external
 APIs, production deployment), the project is intentionally open
 ended. This first build cycle is roughly:
 - 60 70 percent of a solid internal prototype
@@ -234,13 +234,13 @@ Status: Complete
 Scope: Tooling, CI/CD validation, no production activation
 
 ### Summary
-Day 2 focused on validating deployment tooling and ensuring the ClubOS codebase builds and deploys cleanly in a hosted environment without introducing runtime configuration, data migrations, or production credentials.
+Day 2 focused on validating deployment tooling and ensuring the Murmurant codebase builds and deploys cleanly in a hosted environment without introducing runtime configuration, data migrations, or production credentials.
 
 ### Completed
 - Git repository clean and synced with main
 - ASCII documentation checks passing
 - Pre-push hooks verified
-- Vercel project connected to GitHub repo sbnctech/clubos
+- Vercel project connected to GitHub repo sbnctech/murmurant
 - Next.js framework auto-detected by Vercel
 - Root Directory confirmed empty (repo-root app)
 - Full production build succeeded on Vercel
@@ -328,7 +328,7 @@ Day 2 closes with a clean, reproducible, deployable baseline.
 
 
 ### Day 2 Closeout - DB Migration Baseline
-- Confirmed local dev DB had ClubOS tables but no _prisma_migrations history (likely created via db push)
+- Confirmed local dev DB had Murmurant tables but no _prisma_migrations history (likely created via db push)
 - Archived prior migration folders to prisma/migrations_archive/
 - Removed non-baseline migrations from prisma/migrations/
 - Marked 00000000000000_init as applied using prisma migrate resolve (no schema changes)

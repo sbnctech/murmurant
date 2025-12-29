@@ -1,6 +1,6 @@
 # Neon Database Configuration
 
-This document explains how ClubOS uses Neon for PostgreSQL database hosting.
+This document explains how Murmurant uses Neon for PostgreSQL database hosting.
 
 ---
 
@@ -19,7 +19,7 @@ Website: https://neon.tech
 
 ## Current State
 
-ClubOS currently uses one Neon project for staging. Target architecture is two separate projects.
+Murmurant currently uses one Neon project for staging. Target architecture is two separate projects.
 
 ### Current Setup
 
@@ -34,8 +34,8 @@ ClubOS currently uses one Neon project for staging. Target architecture is two s
 
 | Environment | Neon Project | Branch | Endpoint |
 |-------------|--------------|--------|----------|
-| Staging | clubos-staging | main | (staging endpoint) |
-| Production | clubos-prod | main | (production endpoint) |
+| Staging | murmurant-staging | main | (staging endpoint) |
+| Production | murmurant-prod | main | (production endpoint) |
 
 ---
 
@@ -73,7 +73,7 @@ postgresql://user:pass@ep-xxx.region.aws.neon.tech/dbname?sslmode=require
 1. Go to https://console.neon.tech
 2. Click **New Project**
 3. Configure:
-   - **Name**: `clubos-prod` or `clubos-staging`
+   - **Name**: `murmurant-prod` or `murmurant-staging`
    - **Postgres version**: 17 (latest)
    - **Region**: US East (Ohio) - matches Netlify region
 4. Click **Create Project**
@@ -89,7 +89,7 @@ npm install -g neonctl
 neonctl auth
 
 # Create project
-neonctl projects create --name clubos-prod --region aws-us-east-2
+neonctl projects create --name murmurant-prod --region aws-us-east-2
 
 # Get connection string
 neonctl connection-string --project-id <project-id>
@@ -99,7 +99,7 @@ neonctl connection-string --project-id <project-id>
 
 ## Prisma and Migrations
 
-ClubOS uses Prisma as its database toolkit. Migrations are stored in `prisma/migrations/`.
+Murmurant uses Prisma as its database toolkit. Migrations are stored in `prisma/migrations/`.
 
 ### Running Migrations on Staging
 
@@ -177,7 +177,7 @@ For local development, use either:
 Use Docker Compose (see `docs/infra/LOCAL_DEV_ENV.md`):
 
 ```
-DATABASE_URL="postgresql://clubos:clubos@localhost:5432/clubos_dev"
+DATABASE_URL="postgresql://murmurant:murmurant@localhost:5432/murmurant_dev"
 ```
 
 ### Option B: Neon Dev Branch

@@ -1,8 +1,8 @@
 # Platform vs Policy Separation
 
-> **Related Issues:** [#232 - Policy Isolation Epic](https://github.com/sbnctech/clubos/issues/232) | [#263 - Policy Configuration Layer](https://github.com/sbnctech/clubos/issues/263)
+> **Related Issues:** [#232 - Policy Isolation Epic](https://github.com/sbnctech/murmurant/issues/232) | [#263 - Policy Configuration Layer](https://github.com/sbnctech/murmurant/issues/263)
 
-This document defines what belongs in ClubOS core platform code versus what must be configurable organization policy.
+This document defines what belongs in Murmurant core platform code versus what must be configurable organization policy.
 
 ---
 
@@ -23,7 +23,7 @@ This document defines what belongs in ClubOS core platform code versus what must
 
 A **platform invariant** is a capability, behavior, or constraint that:
 
-1. **Must be identical** across all organizations using ClubOS
+1. **Must be identical** across all organizations using Murmurant
 2. **Cannot be disabled** without compromising security, correctness, or auditability
 3. **Is architectural** — changing it requires code changes and deployment
 
@@ -113,7 +113,7 @@ When reviewing code that adds a new constant, threshold, name, or behavior:
 
 ### Allowed but Never Required
 
-SBNC is the **first organization** (Tenant Zero) on ClubOS. This means:
+SBNC is the **first organization** (Tenant Zero) on Murmurant. This means:
 
 1. **SBNC values are defaults** — New orgs get SBNC's configuration as a starting template
 2. **SBNC values are examples** — Documentation may reference SBNC practices as illustrations
@@ -146,7 +146,7 @@ SBNC-derived materials (committee structures, job descriptions, governance examp
 - Importable but not required
 - Never referenced in core logic
 
-See: [#264 - Canonical Governance Templates](https://github.com/sbnctech/clubos/issues/264)
+See: [#264 - Canonical Governance Templates](https://github.com/sbnctech/murmurant/issues/264)
 
 ---
 
@@ -161,7 +161,7 @@ See: [#264 - Canonical Governance Templates](https://github.com/sbnctech/clubos/
 
 ### For Existing Code
 
-1. **Audit SBNC coupling** — See [#262](https://github.com/sbnctech/clubos/issues/262)
+1. **Audit SBNC coupling** — See [#262](https://github.com/sbnctech/murmurant/issues/262)
 2. **Prioritize by risk** — Start with customer-facing policies
 3. **Migrate incrementally** — One policy area at a time
 4. **Maintain backwards compatibility** — SBNC deployment must continue working
@@ -235,5 +235,5 @@ const tiers = await getMembershipTiers(orgId);
 
 - [Architectural Charter](../ARCHITECTURAL_CHARTER.md) — Core principles (P1-P10)
 - [INVARIANTS.md](../CI/INVARIANTS.md) — Security invariants enforced by CI
-- [Issue #232](https://github.com/sbnctech/clubos/issues/232) — Policy Isolation Epic
-- [Issue #263](https://github.com/sbnctech/clubos/issues/263) — Policy Configuration Layer
+- [Issue #232](https://github.com/sbnctech/murmurant/issues/232) — Policy Isolation Epic
+- [Issue #263](https://github.com/sbnctech/murmurant/issues/263) — Policy Configuration Layer

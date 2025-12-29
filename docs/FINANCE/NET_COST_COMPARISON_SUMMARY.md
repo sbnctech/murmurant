@@ -1,6 +1,6 @@
 # Net Cost Comparison Summary
 
-Total cost of ownership comparison: Wild Apricot vs ClubOS.
+Total cost of ownership comparison: Wild Apricot vs Murmurant.
 
 **Status**: Draft - Placeholder values marked as $TBD require validation.
 
@@ -8,7 +8,7 @@ Total cost of ownership comparison: Wild Apricot vs ClubOS.
 
 ## Executive Summary
 
-| Category | Wild Apricot | ClubOS | Delta |
+| Category | Wild Apricot | Murmurant | Delta |
 |----------|--------------|--------|-------|
 | Platform subscription/hosting | $TBD | ~$720 | TBD |
 | Payment processing | ~$800 | ~$800 | ~$0 |
@@ -17,8 +17,8 @@ Total cost of ownership comparison: Wild Apricot vs ClubOS.
 
 **Key Insight**: Payment processing fees are roughly equivalent between platforms. The cost comparison is primarily about:
 
-1. WA subscription vs ClubOS hosting
-2. WA infrastructure offsets (VPS, mail server) vs ClubOS integrated services
+1. WA subscription vs Murmurant hosting
+2. WA infrastructure offsets (VPS, mail server) vs Murmurant integrated services
 
 ---
 
@@ -67,7 +67,7 @@ WA Subscription:     $TBD
 
 ---
 
-### ClubOS Costs
+### Murmurant Costs
 
 #### 1. Hosting (Production Config)
 
@@ -79,7 +79,7 @@ WA Subscription:     $TBD
 | Cloudflare R2 | ~$12 | File storage |
 | **Subtotal** | **~$720** | |
 
-See: `CLUBOS_HOSTING_COST_MODEL.md` for tier options.
+See: `MURMURANT_HOSTING_COST_MODEL.md` for tier options.
 
 #### 2. Payment Processing (Stripe)
 
@@ -95,14 +95,14 @@ See: `CLUBOS_HOSTING_COST_MODEL.md` for tier options.
 |------|--------|-------|
 | None required | $0 | Email, storage integrated |
 
-#### ClubOS Total
+#### Murmurant Total
 
 ```
 Hosting:             ~$720
 + Payment fees:      ~$800
 + Infrastructure:    $0
 ─────────────────────────
-= ClubOS Total:      ~$1,520/year
+= Murmurant Total:      ~$1,520/year
 ```
 
 ---
@@ -116,7 +116,7 @@ Both platforms use standard card processing rates:
 | Platform | Standard Rate | Flat Fee |
 |----------|---------------|----------|
 | WA (Personify) | 2.9% | $0.30 |
-| ClubOS (Stripe) | 2.9% | $0.30 |
+| Murmurant (Stripe) | 2.9% | $0.30 |
 
 **Conclusion**: Payment fees are a wash. The comparison hinges on platform and infrastructure costs.
 
@@ -139,7 +139,7 @@ Social clubs may not qualify. Assume standard rate for conservative estimate.
 ### Platform Costs: Where Comparison Matters
 
 ```
-                    WA                      ClubOS
+                    WA                      Murmurant
                     ──                      ──────
 Subscription:       $TBD                    $0
 Hosting:            (included)              $720
@@ -161,21 +161,21 @@ The comparison depends on:
 
 If WA subscription + infrastructure < $720/year:
 
-- ClubOS costs more purely on dollars
+- Murmurant costs more purely on dollars
 - Value proposition shifts to capabilities, risk reduction, volunteer time
 
-### Scenario B: WA Costs Match ClubOS
+### Scenario B: WA Costs Match Murmurant
 
 If WA subscription + infrastructure ≈ $720/year:
 
 - Financial parity
 - Decision based on capabilities and operational factors
 
-### Scenario C: WA Costs Exceed ClubOS
+### Scenario C: WA Costs Exceed Murmurant
 
 If WA subscription + infrastructure > $720/year:
 
-- ClubOS is cheaper AND more capable
+- Murmurant is cheaper AND more capable
 - Clear financial + operational win
 
 ---
@@ -199,7 +199,7 @@ These affect total value but are not monetized:
 
 ### Volunteer Time Savings
 
-| Task | WA Hours/Year | ClubOS Hours/Year |
+| Task | WA Hours/Year | Murmurant Hours/Year |
 |------|---------------|-------------------|
 | VPS maintenance | 10-20 | 0 |
 | Mail server admin | 5-10 | 0 |
@@ -209,7 +209,7 @@ These affect total value but are not monetized:
 
 ### Risk Reduction
 
-| Risk | WA | ClubOS |
+| Risk | WA | Murmurant |
 |------|-----|--------|
 | Single-point-of-failure (VPS admin) | High | Eliminated |
 | Mail deliverability | Volunteer-managed | Managed service |
@@ -222,14 +222,14 @@ See: `../GOVERNANCE/TECH_LEAD_COGNITIVE_LOAD.md` for detailed risk analysis.
 
 ## Summary Table
 
-| Factor | WA | ClubOS | Winner |
+| Factor | WA | Murmurant | Winner |
 |--------|-----|--------|--------|
 | Payment fees | ~$800 | ~$800 | Tie |
 | Platform costs | $TBD | $720 | TBD |
-| External infrastructure | $TBD | $0 | ClubOS |
-| Volunteer time | 30-60 hrs | ~0 hrs | ClubOS |
-| Single-point-of-failure risk | High | Low | ClubOS |
-| Capability ceiling | Limited | Extensible | ClubOS |
+| External infrastructure | $TBD | $0 | Murmurant |
+| Volunteer time | 30-60 hrs | ~0 hrs | Murmurant |
+| Single-point-of-failure risk | High | Low | Murmurant |
+| Capability ceiling | Limited | Extensible | Murmurant |
 
 ---
 
@@ -237,5 +237,5 @@ See: `../GOVERNANCE/TECH_LEAD_COGNITIVE_LOAD.md` for detailed risk analysis.
 
 - `PERSONIFY_PAYMENTS_COST_MODEL.md` - Payment fee calculation methodology
 - `INFRASTRUCTURE_COST_OFFSETS.md` - VPS and mail server costs
-- `CLUBOS_HOSTING_COST_MODEL.md` - ClubOS infrastructure pricing
-- `WA_VS_CLUBOS_COST_COMPARISON.md` - Detailed comparison framework
+- `MURMURANT_HOSTING_COST_MODEL.md` - Murmurant infrastructure pricing
+- `WA_VS_MURMURANT_COST_COMPARISON.md` - Detailed comparison framework

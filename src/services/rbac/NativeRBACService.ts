@@ -1,7 +1,7 @@
 /**
  * Native RBAC Service Implementation
  *
- * Provides an abstraction layer over ClubOS's existing auth system.
+ * Provides an abstraction layer over Murmurant's existing auth system.
  * This service bridges the existing role/capability system with a
  * service-oriented interface for future extensibility.
  *
@@ -31,7 +31,7 @@ import { SystemRoles } from "./types";
  * Native RBAC Service Implementation
  *
  * This implementation provides the RBACService interface while
- * delegating to ClubOS's existing auth infrastructure.
+ * delegating to Murmurant's existing auth infrastructure.
  *
  * Current Status: Stub implementation with interface contract.
  * Full implementation will integrate with Prisma and existing auth.

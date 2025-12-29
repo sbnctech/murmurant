@@ -1,4 +1,4 @@
-# ClubOS Constitutional Audit Report
+# Murmurant Constitutional Audit Report
 
 **Audit Date**: 2025-12-16
 **Auditor**: Constitutional Audit Task
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-This audit evaluated the ClubOS codebase against the Architectural Charter principles (P1-P10) and anti-patterns (N1-N8). The audit identified **23 violations** across **6 categories** that require remediation.
+This audit evaluated the Murmurant codebase against the Architectural Charter principles (P1-P10) and anti-patterns (N1-N8). The audit identified **23 violations** across **6 categories** that require remediation.
 
 | Severity | Count | Description |
 |----------|-------|-------------|

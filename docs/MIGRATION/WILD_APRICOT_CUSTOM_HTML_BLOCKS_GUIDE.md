@@ -18,7 +18,7 @@ Wild Apricot allows website administrators to insert raw HTML code into pages us
 - Display social media feeds
 - Add custom JavaScript for interactive features
 
-This flexibility creates migration challenges because ClubOS cannot blindly execute arbitrary HTML from an external source.
+This flexibility creates migration challenges because Murmurant cannot blindly execute arbitrary HTML from an external source.
 
 ---
 
@@ -120,7 +120,7 @@ Based on publicly available WA community discussions and typical organization we
 
 ## Why Custom HTML Breaks in Migration
 
-ClubOS cannot execute arbitrary HTML from Wild Apricot for three reasons:
+Murmurant cannot execute arbitrary HTML from Wild Apricot for three reasons:
 
 ### 1. Security Boundary
 
@@ -132,9 +132,9 @@ Custom HTML can contain:
 - Cryptocurrency miners
 - Redirect scripts
 
-ClubOS cannot verify that HTML written for Wild Apricot is safe. Even well-intentioned code may have vulnerabilities.
+Murmurant cannot verify that HTML written for Wild Apricot is safe. Even well-intentioned code may have vulnerabilities.
 
-**Principle:** ClubOS does not execute untrusted code.
+**Principle:** Murmurant does not execute untrusted code.
 
 ### 2. Maintenance Burden
 
@@ -144,9 +144,9 @@ Custom HTML often:
 - Uses deprecated APIs
 - Breaks when third parties update their embed formats
 - Contains hardcoded dimensions that do not work on mobile
-- Conflicts with ClubOS styling
+- Conflicts with Murmurant styling
 
-**Principle:** ClubOS surfaces are maintainable.
+**Principle:** Murmurant surfaces are maintainable.
 
 ### 3. Privacy Compliance
 
@@ -157,17 +157,17 @@ Third-party tracking code may:
 - Violate GDPR/CCPA requirements
 - Leak email addresses to advertisers
 
-**Principle:** ClubOS controls what data leaves the platform.
+**Principle:** Murmurant controls what data leaves the platform.
 
 ---
 
-## How to Replace Custom HTML in ClubOS
+## How to Replace Custom HTML in Murmurant
 
-ClubOS provides three mechanisms to replace common custom HTML patterns:
+Murmurant provides three mechanisms to replace common custom HTML patterns:
 
 ### Option 1: SafeEmbed (Allowlisted Iframes)
 
-**What it is:** ClubOS maintains an allowlist of trusted iframe sources. Embeds from these sources render normally. Embeds from other sources are blocked.
+**What it is:** Murmurant maintains an allowlist of trusted iframe sources. Embeds from these sources render normally. Embeds from other sources are blocked.
 
 **Allowlisted sources (initial set):**
 
@@ -184,7 +184,7 @@ ClubOS provides three mechanisms to replace common custom HTML patterns:
 
 **How operators use it:**
 
-1. In ClubOS editor, add an "Embed" block
+1. In Murmurant editor, add an "Embed" block
 2. Paste the original iframe URL
 3. If source is allowlisted, embed renders
 4. If source is not allowlisted, editor shows warning
@@ -192,15 +192,15 @@ ClubOS provides three mechanisms to replace common custom HTML patterns:
 **Operator action for unlisted sources:**
 
 - Request source addition via support ticket
-- ClubOS team evaluates security/privacy
+- Murmurant team evaluates security/privacy
 - If approved, source added to allowlist
 - If denied, operator uses alternative approach
 
-### Option 2: Native ClubOS Blocks
+### Option 2: Native Murmurant Blocks
 
-**What it is:** ClubOS provides native components for common needs.
+**What it is:** Murmurant provides native components for common needs.
 
-| Instead of... | Use ClubOS... |
+| Instead of... | Use Murmurant... |
 |---------------|---------------|
 | Google Calendar iframe | Native calendar view (synced via ICS) |
 | Google Maps iframe | Native map block (address-based) |
@@ -242,7 +242,7 @@ Instead of embedding a Google Form, add a button that links to the form URL.
 
 **Operator action:**
 
-- If analytics needed, configure ClubOS analytics settings
+- If analytics needed, configure Murmurant analytics settings
 - If third-party analytics required, add via admin settings (not page content)
 - Marketing pixels should be evaluated for GDPR compliance before adding
 
@@ -255,7 +255,7 @@ Instead of embedding a Google Form, add a button that links to the form URL.
 **Operator action:**
 
 - Identify what the script accomplishes
-- Find ClubOS native equivalent
+- Find Murmurant native equivalent
 - If no equivalent exists, file feature request
 - Custom interactivity may require external page
 
@@ -267,7 +267,7 @@ Instead of embedding a Google Form, add a button that links to the form URL.
 
 **Operator action:**
 
-- Review suggested embed in ClubOS editor
+- Review suggested embed in Murmurant editor
 - Verify content displays correctly
 - Approve or adjust
 
@@ -280,7 +280,7 @@ Instead of embedding a Google Form, add a button that links to the form URL.
 **Operator action:**
 
 - Identify what the iframe displays
-- Determine if ClubOS has native equivalent
+- Determine if Murmurant has native equivalent
 - If not, request source evaluation
 - If denied, use external link approach
 
@@ -344,7 +344,7 @@ RULE 6: Style-only HTML
   AND no external resources
   THEN classify as AUTO
   REASON: Safe static content
-  ACTION: Convert to ClubOS rich text block
+  ACTION: Convert to Murmurant rich text block
 
 RULE 7: Images
   IF element is <img>
@@ -407,7 +407,7 @@ The discovery report includes a dedicated section for custom HTML findings:
         "elementType": "script",
         "sourceUrl": "https://www.googletagmanager.com/gtag/js",
         "proposedAction": "Not migrated - tracking script",
-        "operatorNotes": "Configure analytics in ClubOS admin if needed."
+        "operatorNotes": "Configure analytics in Murmurant admin if needed."
       }
     ]
   }
@@ -420,7 +420,7 @@ The discovery report includes a dedicated section for custom HTML findings:
 2. **Report generated**: Classification and proposed actions documented
 3. **Operator reviews**: Each MANUAL item requires decision
 4. **Suggestions updated**: Operator decisions recorded in migration manifest
-5. **Preview generated**: ClubOS preview reflects approved changes
+5. **Preview generated**: Murmurant preview reflects approved changes
 6. **Final review**: Operator verifies presentation before cutover
 
 ---
@@ -431,10 +431,10 @@ When reviewing MANUAL items, use this decision tree:
 
 ```
 Is the content essential to member experience?
-|-- No --> Skip migration, remove from ClubOS
+|-- No --> Skip migration, remove from Murmurant
 +-- Yes --> Continue
     |
-    Does ClubOS have a native equivalent?
+    Does Murmurant have a native equivalent?
     |-- Yes --> Use native block (calendar, map, video, form)
     +-- No --> Continue
         |
@@ -451,21 +451,21 @@ Is the content essential to member experience?
 
 ## Frequently Asked Questions
 
-### Q: Why can't ClubOS just copy my HTML exactly?
+### Q: Why can't Murmurant just copy my HTML exactly?
 
-ClubOS cannot verify that HTML written for Wild Apricot is safe. Even if your HTML is harmless, we cannot distinguish it from malicious code without manual review. The SafeEmbed allowlist lets us permit known-safe sources while blocking unknown risks.
+Murmurant cannot verify that HTML written for Wild Apricot is safe. Even if your HTML is harmless, we cannot distinguish it from malicious code without manual review. The SafeEmbed allowlist lets us permit known-safe sources while blocking unknown risks.
 
 ### Q: My tracking pixel is important. How do I keep it?
 
-Contact support to discuss analytics requirements. ClubOS may offer native analytics or approved third-party integrations configured through admin settings rather than inline HTML.
+Contact support to discuss analytics requirements. Murmurant may offer native analytics or approved third-party integrations configured through admin settings rather than inline HTML.
 
 ### Q: What if my iframe source gets approved later?
 
-Once a source is added to the SafeEmbed allowlist, you can add the embed through the ClubOS editor. Previously blocked embeds do not auto-migrate; you add them manually after approval.
+Once a source is added to the SafeEmbed allowlist, you can add the embed through the Murmurant editor. Previously blocked embeds do not auto-migrate; you add them manually after approval.
 
 ### Q: Can I get a custom exception?
 
-ClubOS does not support per-organization allowlist exceptions. All approved sources are available to all organizations. This ensures consistent security evaluation.
+Murmurant does not support per-organization allowlist exceptions. All approved sources are available to all organizations. This ensures consistent security evaluation.
 
 ---
 

@@ -1,11 +1,11 @@
 # Membership Model Truth Table (SBNC)
 
 Purpose
-- Provide a single-page reference for how ClubOS interprets membership status, membership tier, and lifecycle transitions.
+- Provide a single-page reference for how Murmurant interprets membership status, membership tier, and lifecycle transitions.
 
 Core entities
 - Wild Apricot (WA) has one entity: Contact.
-- ClubOS mirrors this by storing people in one entity (Member), which corresponds to a WA Contact.
+- Murmurant mirrors this by storing people in one entity (Member), which corresponds to a WA Contact.
 - Whether a person is "a member" is derived from MembershipStatus (and related rules), not from a separate Contact vs Member table.
 
 Key fields
@@ -55,11 +55,11 @@ SBNC lifecycle rules (business rules)
   - MembershipTier may remain as the last known tier for history, but "treat as member" becomes No.
 
 Wild Apricot membership level mapping (import)
-- WA Level: ExtendedNewcomer -> ClubOS Tier: extended_member
-- WA Level: NewbieNewcomer  -> ClubOS Tier: newbie_member
-- WA Level: NewcomerMember  -> ClubOS Tier: member
-- WA Level: Admins          -> ClubOS Tier: unknown (Admins is a role concept, not a membership tier)
-- Missing/unknown WA level  -> ClubOS Tier: unknown + warning for admin review
+- WA Level: ExtendedNewcomer -> Murmurant Tier: extended_member
+- WA Level: NewbieNewcomer  -> Murmurant Tier: newbie_member
+- WA Level: NewcomerMember  -> Murmurant Tier: member
+- WA Level: Admins          -> Murmurant Tier: unknown (Admins is a role concept, not a membership tier)
+- Missing/unknown WA level  -> Murmurant Tier: unknown + warning for admin review
 
 Open policy items (to confirm)
 - Definition of "2 years" (730 days vs calendar years).

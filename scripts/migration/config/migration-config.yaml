@@ -1,7 +1,7 @@
-# ClubOS Migration Configuration - WA -> ClubOS
+# Murmurant Migration Configuration - WA -> Murmurant
 version: "1.0"
 source: "wild-apricot"
-target: "clubos"
+target: "murmurant"
 
 membership_status_mapping:
   "New Member": "NEWCOMER"

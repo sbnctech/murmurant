@@ -6,7 +6,7 @@ A navigational guide to the ChatGPT design studio archive.
 
 ## What This Is
 
-ChatGPT served as a design studio for exploring ClubOS business model concepts.
+ChatGPT served as a design studio for exploring Murmurant business model concepts.
 This document is a curated index into the full transcript archive.
 
 - **Canonical docs** = the rules (what we decided)
@@ -22,7 +22,7 @@ Full transcript: [CHATGPT_BUSINESS_MODEL_TRANSCRIPT_2025-12-24.md](./_ARCHIVE/CH
 ### 1. Business Model Framing
 
 **Summary:**
-- ClubOS is not competing on features; it competes on migration safety
+- Murmurant is not competing on features; it competes on migration safety
 - The value proposition: "We are the safe way to leave Wild Apricot"
 - Clubs switch because of WA pricing, support frustration, or feature gaps
 - But fear of migration failure trumps all those reasons
@@ -51,7 +51,7 @@ not optional nicety.
 
 ---
 
-### 3. Why No Continuous WA <-> ClubOS Sync
+### 3. Why No Continuous WA <-> Murmurant Sync
 
 **Summary:**
 - Continuous sync creates two sources of truth (conflict nightmare)
@@ -59,7 +59,7 @@ not optional nicety.
 - Debugging explodes when two live systems are involved
 - Sync delays the migration decision - it's a crutch
 - Bi-directional sync is even worse (merge conflicts, authority confusion)
-- Decision: Data flows one direction (WA -> ClubOS), once
+- Decision: Data flows one direction (WA -> Murmurant), once
 
 **Why it mattered:** Explicitly rejected a common pattern that would have added massive
 complexity without clear benefit.

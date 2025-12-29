@@ -1,10 +1,10 @@
-# ClubOS — Data Invariants
+# Murmurant — Data Invariants
 
 Status: Canonical Specification  
 Applies to: All environments  
 Last updated: 2025-12-20
 
-This document defines the non-negotiable data invariants of ClubOS.
+This document defines the non-negotiable data invariants of Murmurant.
 Any violation of these invariants constitutes data corruption.
 
 This document is normative.
@@ -13,7 +13,7 @@ This document is normative.
 
 ## 1. Core Principle
 
-ClubOS is a system of record.
+Murmurant is a system of record.
 
 If data integrity is in doubt:
 - Writes MUST stop
@@ -98,7 +98,7 @@ If any invariant cannot be guaranteed:
 
 ## 9. Explicit Non-Guarantees
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Automatic repair of corrupted data
 - Best-effort recovery that violates invariants
 - Silent correction of inconsistent states

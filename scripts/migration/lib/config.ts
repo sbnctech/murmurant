@@ -1,5 +1,5 @@
 /**
- * ClubOS Migration Pipeline - Configuration Loader
+ * Murmurant Migration Pipeline - Configuration Loader
  */
 
 import * as fs from 'fs';

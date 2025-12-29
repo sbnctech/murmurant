@@ -1,6 +1,6 @@
 # Email Infrastructure Guide
 
-This guide covers the DNS, authentication, and deliverability configuration for ClubOS email communications.
+This guide covers the DNS, authentication, and deliverability configuration for Murmurant email communications.
 
 Copyright (c) Santa Barbara Newcomers Club
 
@@ -8,7 +8,7 @@ Copyright (c) Santa Barbara Newcomers Club
 
 ## Overview
 
-ClubOS sends transactional and marketing emails on behalf of SBNC. To ensure deliverability and protect the club's reputation, email authentication must be properly configured.
+Murmurant sends transactional and marketing emails on behalf of SBNC. To ensure deliverability and protect the club's reputation, email authentication must be properly configured.
 
 ### Email Types
 
@@ -224,7 +224,7 @@ Use [mail-tester.com](https://www.mail-tester.com/) to verify:
 
 ---
 
-## ClubOS Integration
+## Murmurant Integration
 
 ### Environment Variables
 
@@ -257,7 +257,7 @@ AUTO_SUPPRESS_COMPLAINT=true
 
 ### Database Models
 
-ClubOS uses these models for email tracking:
+Murmurant uses these models for email tracking:
 
 - `EmailLog` - Individual email send records
 - `EmailSuppressionList` - Addresses that should not receive email

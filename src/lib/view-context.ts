@@ -70,7 +70,7 @@ export interface ViewContext {
 // Constants
 // ============================================================================
 
-export const VIEW_AS_COOKIE_NAME = "clubos_view_as";
+export const VIEW_AS_COOKIE_NAME = "murmurant_view_as";
 
 /**
  * View mode configurations.

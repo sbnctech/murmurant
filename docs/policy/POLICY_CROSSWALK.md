@@ -1,6 +1,6 @@
 # Policy Crosswalk Document
 
-Comprehensive mapping of embedded policies in the ClubOS codebase to formal Policy IDs.
+Comprehensive mapping of embedded policies in the Murmurant codebase to formal Policy IDs.
 
 **Last Updated:** 2025-12-25
 **Charter Reference:** docs/ARCHITECTURAL_CHARTER.md
@@ -30,7 +30,7 @@ This document maps each policy from [INDEX.md](./INDEX.md) to its enforcement lo
 | AUTH-005 | VP Activities Role Scope | src/lib/auth.ts:186-201 | VP of Activities can: view/edit ALL events (peer trust model), approve events, view transitions. Cannot delete events. | Two VPs trusted as peers with mutual override capability. |
 | AUTH-006 | Event Chair Role Scope | src/lib/auth.ts:215-225 | Event chairs can: view/edit/submit only their own events (eventChairId=memberId). Cannot approve or delete. | Single owner model. VP and Admin can override. |
 | AUTH-007 | Impersonation Blocking | src/lib/auth.ts:639-645 | Capabilities blocked during impersonation: finance:manage, comms:send, users:manage, events:delete, admin:full. | BLOCKED_WHILE_IMPERSONATING list. |
-| AUTH-008 | Session Token Validation | src/lib/auth.ts:369-405 | Sessions stored in HttpOnly cookies. Production: clubos_session. Development: clubos_dev_session fallback. | Session validation in getSession(). |
+| AUTH-008 | Session Token Validation | src/lib/auth.ts:369-405 | Sessions stored in HttpOnly cookies. Production: murmurant_session. Development: murmurant_dev_session fallback. | Session validation in getSession(). |
 | AUTH-009 | Test Token Format | src/lib/auth.ts:849-1014 | Development test tokens: "test-{role}-{memberId}". Legacy tokens ("admin-token", "test-admin") also supported. | Two formats maintained for backward compatibility. |
 | AUTH-010 | President Capability Set | src/lib/auth.ts:156-174 | President: members:view/history, registrations:view, events:view/edit, exports:access, finance:view (read-only), transitions:view/approve. NO finance:manage, users:manage, events:delete. | Separation of powers enforced. |
 
@@ -77,7 +77,7 @@ This document maps each policy from [INDEX.md](./INDEX.md) to its enforcement lo
 | FINANCE-003 | Payment Idempotency | src/lib/payments/index.ts:8 | All payment operations are idempotent (Charter N5). | Implementation in provider. |
 | FINANCE-004 | Finance View Capability | src/lib/auth.ts:65, 147, 163 | finance:view: Admin, President only. VP Activities, Webmaster excluded. | Restricted to leadership. |
 | FINANCE-005 | Finance Manage Capability | src/lib/auth.ts:66, 148 | finance:manage: ONLY admin. Blocked during impersonation. | Treasurer role not yet implemented. |
-| FINANCE-006 | ACH Feature Flag | src/lib/config/featureFlags.ts | CLUBOS_ACH_ENABLED controls ACH availability. | Demo-only implementation. |
+| FINANCE-006 | ACH Feature Flag | src/lib/config/featureFlags.ts | MURMURANT_ACH_ENABLED controls ACH availability. | Demo-only implementation. |
 
 ---
 

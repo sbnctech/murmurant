@@ -1,20 +1,20 @@
-# Wild Apricot to ClubOS Events Migration
+# Wild Apricot to Murmurant Events Migration
 
-This document provides guidance for migrating events from Wild Apricot (WA) to ClubOS.
+This document provides guidance for migrating events from Wild Apricot (WA) to Murmurant.
 
 ## Data Model Mapping
 
 ### Event Core Fields
 
-| Wild Apricot Field | ClubOS Field | Notes |
+| Wild Apricot Field | Murmurant Field | Notes |
 |--------------------|--------------|-------|
-| `Id` | `id` | WA uses integer IDs; ClubOS uses UUIDs. Store WA ID in migration metadata. |
+| `Id` | `id` | WA uses integer IDs; Murmurant uses UUIDs. Store WA ID in migration metadata. |
 | `Name` | `title` | Direct mapping |
 | `Description` | `description` | WA may include HTML; sanitize before import |
 | `Location` | `location` | Direct mapping |
 | `StartDate` | `startTime` | WA returns ISO 8601; store as UTC DateTime |
 | `EndDate` | `endTime` | Nullable in both systems |
-| `EventType` / `Tags` | `category` | Map WA event types to ClubOS categories |
+| `EventType` / `Tags` | `category` | Map WA event types to Murmurant categories |
 | `RegistrationEnabled` | `requiresRegistration` | Direct boolean mapping |
 | `IsEnabled` + `AccessLevel` | `status` | See status mapping below |
 
@@ -22,21 +22,21 @@ This document provides guidance for migrating events from Wild Apricot (WA) to C
 
 Wild Apricot uses a combination of fields to determine visibility:
 
-| WA State | ClubOS `EventStatus` |
+| WA State | Murmurant `EventStatus` |
 |----------|---------------------|
 | `IsEnabled=false` | `DRAFT` |
 | `IsEnabled=true, AccessLevel=Public` | `PUBLISHED` |
-| `IsEnabled=true, AccessLevel=Restricted` | `PUBLISHED` (ClubOS handles visibility via auth) |
+| `IsEnabled=true, AccessLevel=Restricted` | `PUBLISHED` (Murmurant handles visibility via auth) |
 | Past event (`EndDate < now`) | `COMPLETED` (derived, not stored) |
 
-**Important**: ClubOS uses an explicit state machine (P3). Import all WA events as:
+**Important**: Murmurant uses an explicit state machine (P3). Import all WA events as:
 
 - **Future events**: `APPROVED` (requires VP to publish)
 - **Past events**: `PUBLISHED` (with `publishedAt` set to `startTime`)
 
 ### Registration/Capacity Mapping
 
-| Wild Apricot | ClubOS | Notes |
+| Wild Apricot | Murmurant | Notes |
 |--------------|--------|-------|
 | `RegistrationTypes[]` | `TicketTier[]` | Each WA registration type becomes a tier |
 | `RegistrationType.Name` | `TicketTier.name` | e.g., "Member", "Guest" |
@@ -48,17 +48,17 @@ Wild Apricot uses a combination of fields to determine visibility:
 
 ### Registration Records
 
-| Wild Apricot | ClubOS | Notes |
+| Wild Apricot | Murmurant | Notes |
 |--------------|--------|-------|
 | `Registration.Id` | Store in metadata | WA uses integer IDs |
-| `Registration.Contact.Id` | `memberId` | Must resolve WA contact to ClubOS member |
-| `Registration.RegistrationTypeId` | `ticketTierId` | Map via WA-to-ClubOS tier mapping |
+| `Registration.Contact.Id` | `memberId` | Must resolve WA contact to Murmurant member |
+| `Registration.RegistrationTypeId` | `ticketTierId` | Map via WA-to-Murmurant tier mapping |
 | `Registration.Status` | `status` | See status mapping below |
 | `Registration.RegistrationDate` | `registeredAt` | |
 
 **Registration Status Mapping**:
 
-| WA Status | ClubOS `RegistrationStatus` |
+| WA Status | Murmurant `RegistrationStatus` |
 |-----------|---------------------------|
 | `Pending` | `PENDING_PAYMENT` |
 | `PendingApproval` | `PENDING_PAYMENT` |
@@ -70,11 +70,11 @@ Wild Apricot uses a combination of fields to determine visibility:
 
 ## Key Differences
 
-### 1. State Machine (ClubOS P3)
+### 1. State Machine (Murmurant P3)
 
 **Wild Apricot**: Uses boolean flags (`IsEnabled`, `IsVisible`) and implicit states.
 
-**ClubOS**: Uses explicit `EventStatus` enum with defined transitions:
+**Murmurant**: Uses explicit `EventStatus` enum with defined transitions:
 
 ```
 DRAFT → PENDING_APPROVAL → APPROVED → PUBLISHED → (COMPLETED)
@@ -88,19 +88,19 @@ DRAFT → PENDING_APPROVAL → APPROVED → PUBLISHED → (COMPLETED)
 
 **Wild Apricot**: Returns dates in account timezone (configurable).
 
-**ClubOS**: Stores all dates in UTC; displays in club timezone (`America/Los_Angeles`).
+**Murmurant**: Stores all dates in UTC; displays in club timezone (`America/Los_Angeles`).
 
 **Migration Steps**:
 
 1. Determine WA account timezone from API settings
 2. Parse WA dates with timezone context
-3. Convert to UTC before storing in ClubOS
+3. Convert to UTC before storing in Murmurant
 
 ### 3. Capacity Model
 
 **Wild Apricot**: Single `Capacity` field or per-registration-type limits.
 
-**ClubOS**: Per-tier capacity via `TicketTier.quantity`.
+**Murmurant**: Per-tier capacity via `TicketTier.quantity`.
 
 **Migration Approach**:
 
@@ -111,7 +111,7 @@ DRAFT → PENDING_APPROVAL → APPROVED → PUBLISHED → (COMPLETED)
 
 **Wild Apricot**: Registration opens when event is enabled.
 
-**ClubOS**: Uses `registrationOpensAt` for scheduled opening (SBNC Sunday/Tuesday policy).
+**Murmurant**: Uses `registrationOpensAt` for scheduled opening (SBNC Sunday/Tuesday policy).
 
 **Migration**: Set `registrationOpensAt = null` for imported events (immediate opening).
 
@@ -119,7 +119,7 @@ DRAFT → PENDING_APPROVAL → APPROVED → PUBLISHED → (COMPLETED)
 
 **Wild Apricot**: No formal approval workflow.
 
-**ClubOS**: Requires VP Activities approval before publishing.
+**Murmurant**: Requires VP Activities approval before publishing.
 
 **Migration**: Import past events as `PUBLISHED`; future events as `APPROVED` pending review.
 
@@ -144,7 +144,7 @@ for event in events:
     event['registrations'] = wa_client.get_event_registrations(event['Id'])
 ```
 
-### Step 2: Transform to ClubOS Format
+### Step 2: Transform to Murmurant Format
 
 ```typescript
 interface WAEvent {
@@ -160,7 +160,7 @@ interface WAEvent {
   RegistrationTypes: WARegistrationType[];
 }
 
-interface ClubOSEvent {
+interface MurmurantEvent {
   id: string; // Generated UUID
   title: string;
   description: string | null;
@@ -174,7 +174,7 @@ interface ClubOSEvent {
   _waId: number; // Migration metadata
 }
 
-function transformEvent(waEvent: WAEvent): ClubOSEvent {
+function transformEvent(waEvent: WAEvent): MurmurantEvent {
   const startTime = parseWADate(waEvent.StartDate);
   const isPast = startTime < new Date();
 
@@ -197,12 +197,12 @@ function transformEvent(waEvent: WAEvent): ClubOSEvent {
 ### Step 3: Create Ticket Tiers
 
 ```typescript
-function createTicketTiers(waEvent: WAEvent, clubosEventId: string): TicketTier[] {
+function createTicketTiers(waEvent: WAEvent, murmurantEventId: string): TicketTier[] {
   if (!waEvent.RegistrationTypes?.length) {
     // No registration types = single general tier
     return [{
       id: generateUUID(),
-      eventId: clubosEventId,
+      eventId: murmurantEventId,
       name: 'General Admission',
       priceCents: 0,
       quantity: waEvent.Capacity || 999,
@@ -213,7 +213,7 @@ function createTicketTiers(waEvent: WAEvent, clubosEventId: string): TicketTier[
 
   return waEvent.RegistrationTypes.map((rt, index) => ({
     id: generateUUID(),
-    eventId: clubosEventId,
+    eventId: murmurantEventId,
     name: rt.Name,
     priceCents: Math.round((rt.BasePrice || 0) * 100),
     quantity: rt.MaxRegistrantsCount || 999,
@@ -230,7 +230,7 @@ function createTicketTiers(waEvent: WAEvent, clubosEventId: string): TicketTier[
 **Recurring Events**:
 
 - WA stores recurring events as separate instances
-- Import each instance as a separate ClubOS event
+- Import each instance as a separate Murmurant event
 - Consider using `clonedFromId` to link related events
 
 **Past Events**:
@@ -242,11 +242,11 @@ function createTicketTiers(waEvent: WAEvent, clubosEventId: string): TicketTier[
 
 - WA allows rich HTML in descriptions
 - Sanitize to remove scripts, styles, and unsafe elements
-- Convert to ClubOS-compatible markdown if possible
+- Convert to Murmurant-compatible markdown if possible
 
 **Member ID Resolution**:
 
-- WA contacts must be matched to ClubOS members
+- WA contacts must be matched to Murmurant members
 - Match by email (primary), then by name (fallback)
 - Log unmatched contacts for manual review
 
@@ -259,7 +259,7 @@ Before committing migration:
 - [ ] Status values are valid enum members
 - [ ] Ticket tier quantities are positive integers
 - [ ] Price cents are non-negative integers
-- [ ] Member references resolve to existing ClubOS members
+- [ ] Member references resolve to existing Murmurant members
 - [ ] No duplicate event imports (check by WA ID in metadata)
 
 ---
@@ -268,7 +268,7 @@ Before committing migration:
 
 ### Currently Supported
 
-| Feature | WA | ClubOS | Notes |
+| Feature | WA | Murmurant | Notes |
 |---------|----|---------| ------|
 | Event creation | Yes | Yes | |
 | Event listing | Yes | Yes | |
@@ -280,12 +280,12 @@ Before committing migration:
 | Capacity limits | Yes | Yes | Via TicketTier |
 | Waitlist | Yes | Yes | Via RegistrationStatus.WAITLISTED |
 | Event chair assignment | Yes | Yes | Via eventChairId |
-| Approval workflow | No | Yes | ClubOS adds VP approval |
-| Postmortem/notes | No | Yes | ClubOS adds Chair Notebook |
+| Approval workflow | No | Yes | Murmurant adds VP approval |
+| Postmortem/notes | No | Yes | Murmurant adds Chair Notebook |
 
 ### Not Yet Supported
 
-| Feature | WA | ClubOS | Timeline |
+| Feature | WA | Murmurant | Timeline |
 |---------|----|---------| ---------|
 | Payment processing | Yes | No | Future |
 | ICS export | Yes | No | Future |
@@ -301,7 +301,7 @@ Before committing migration:
 
 After import, verify:
 
-1. **Event Counts**: Total events in WA matches ClubOS
+1. **Event Counts**: Total events in WA matches Murmurant
 2. **Registration Counts**: Per-event registration counts match
 3. **Date Accuracy**: Spot-check 10 events for correct times
 4. **Category Distribution**: Category counts are reasonable
@@ -323,7 +323,7 @@ If migration issues are discovered:
 
 ## Related Documentation
 
-- `docs/events/EVENT_STATUS_LIFECYCLE.md` - ClubOS event state machine
+- `docs/events/EVENT_STATUS_LIFECYCLE.md` - Murmurant event state machine
 - `docs/events/EVENT_LIFECYCLE_DESIGN.md` - Full architecture
-- `docs/ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md` - SafeEmbed for WA widgets
+- `docs/ARCH/MURMURANT_PAGE_BUILDER_PRIMITIVES.md` - SafeEmbed for WA widgets
 - `docs/MIGRATION/WA_MEMBER_SYNC.md` - Member migration (prerequisite)

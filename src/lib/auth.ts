@@ -659,7 +659,7 @@ export type AuthResult =
 // Session cookie names for cookie-based authentication
 // Uses __Host- prefix in production for additional security
 export const SESSION_COOKIE_NAME = getSessionCookieName();
-const DEV_SESSION_COOKIE_NAME = "clubos_dev_session";
+const DEV_SESSION_COOKIE_NAME = "murmurant_dev_session";
 
 /**
  * Check if we're running in production mode.
@@ -670,8 +670,8 @@ export function isProduction(): boolean {
 
 /**
  * Read session token from HttpOnly cookies.
- * In production: reads clubos_session
- * In development: also checks clubos_dev_session as fallback
+ * In production: reads murmurant_session
+ * In development: also checks murmurant_dev_session as fallback
  *
  * Charter P1: Provable identity - sessions are server-validated.
  * Charter P9: Fail closed - missing cookie = no auth.

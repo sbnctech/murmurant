@@ -1,8 +1,8 @@
-# ClubOS Policy Master Index
+# Murmurant Policy Master Index
 
 Copyright (c) Santa Barbara Newcomers Club
 
-> **Purpose**: This document provides a complete taxonomy and index of all policies enforced by ClubOS. It serves as the single source of truth for policy discovery, categorization, and cross-referencing.
+> **Purpose**: This document provides a complete taxonomy and index of all policies enforced by Murmurant. It serves as the single source of truth for policy discovery, categorization, and cross-referencing.
 
 ---
 
@@ -19,7 +19,7 @@ Copyright (c) Santa Barbara Newcomers Club
 
 ## Policy Categories
 
-ClubOS policies are organized into three tiers:
+Murmurant policies are organized into three tiers:
 
 | Tier | Prefix | Scope | Change Authority |
 |------|--------|-------|------------------|
@@ -42,7 +42,7 @@ ClubOS policies are organized into three tiers:
 
 ## Core Principles (P1-P10)
 
-These are the non-negotiable architectural principles that govern all ClubOS development. They are defined in `docs/ARCHITECTURAL_CHARTER.md`.
+These are the non-negotiable architectural principles that govern all Murmurant development. They are defined in `docs/ARCHITECTURAL_CHARTER.md`.
 
 | ID | Title | Summary |
 |----|-------|---------|
@@ -227,4 +227,4 @@ These are club-specific policies approved by the Board of Directors. Full defini
 ---
 
 *Last updated: 2024-12-20*
-*Maintainer: ClubOS Development Team*
+*Maintainer: Murmurant Development Team*

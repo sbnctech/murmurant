@@ -1,7 +1,7 @@
 /**
  * Application Configuration
  *
- * Centralized configuration for ClubOS. Values can be overridden via environment variables.
+ * Centralized configuration for Murmurant. Values can be overridden via environment variables.
  * All config values should be accessed through this module rather than directly from process.env.
  */
 

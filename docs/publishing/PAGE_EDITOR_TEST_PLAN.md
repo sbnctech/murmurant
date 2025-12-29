@@ -1,6 +1,6 @@
 # Page Editor Test Plan
 
-Testing strategy for the ClubOS page editor.
+Testing strategy for the Murmurant page editor.
 
 ## Test Layers
 

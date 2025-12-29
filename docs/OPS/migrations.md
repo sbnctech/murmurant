@@ -1,6 +1,6 @@
 # Safe Database Migrations
 
-This document describes ClubOS migration safety practices and how to handle destructive schema changes.
+This document describes Murmurant migration safety practices and how to handle destructive schema changes.
 
 **Charter Principles:**
 
@@ -12,7 +12,7 @@ This document describes ClubOS migration safety practices and how to handle dest
 
 ## Migration Safety Check
 
-ClubOS runs automated checks on all Prisma migrations to prevent accidental data loss.
+Murmurant runs automated checks on all Prisma migrations to prevent accidental data loss.
 
 ### Blocked Patterns
 

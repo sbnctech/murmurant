@@ -1,6 +1,6 @@
-# ClubOS Project History & Story
+# Murmurant Project History & Story
 
-This document is the authoritative narrative of how ClubOS evolved,
+This document is the authoritative narrative of how Murmurant evolved,
 why architectural decisions were made, and how work is coordinated.
 
 It is intentionally human-readable and decision-focused.
@@ -24,7 +24,7 @@ Outcome:
 
 ### Problem Being Solved
 Wild Apricot-style permission models are opaque and brittle.
-ClubOS requires:
+Murmurant requires:
 - Explicit authority
 - Clear accountability
 - No “magic” permissions
@@ -93,7 +93,7 @@ Merged:
   - Notable: Vercel deploy check failed; merges are not gated by required checks under current repo plan settings, so this is treated as advisory for now.
 
 Opened/Updated:
-- PR #62: docs(widgets): assess events widget fit to ClubOS model (Worker 1).
+- PR #62: docs(widgets): assess events widget fit to Murmurant model (Worker 1).
 - PR #65: docs(architecture): open source adoption policy (Worker 5).
 
 Queued docs PRs observed in the open set:

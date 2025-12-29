@@ -1,12 +1,12 @@
 // Copyright (c) Santa Barbara Newcomers Club
-// ClubOS Wordmark - Text only
+// Murmurant Wordmark - Text only
 
 import React from "react";
 
 type WordmarkSize = "sm" | "md" | "lg" | "xl";
 type WordmarkVariant = "color" | "white" | "black";
 
-interface ClubOSWordmarkProps {
+interface MurmurantWordmarkProps {
   size?: WordmarkSize;
   variant?: WordmarkVariant;
   className?: string;
@@ -26,15 +26,15 @@ const variantColors: Record<WordmarkVariant, string> = {
 };
 
 /**
- * ClubOS Wordmark Component
+ * Murmurant Wordmark Component
  * 
- * The "ClubOS" text in brand typography
+ * The "Murmurant" text in brand typography
  */
-export function ClubOSWordmark({ 
+export function MurmurantWordmark({ 
   size = "md", 
   variant = "color",
   className = "" 
-}: ClubOSWordmarkProps) {
+}: MurmurantWordmarkProps) {
   const styles = sizeStyles[size];
   const color = variantColors[variant];
 
@@ -50,9 +50,9 @@ export function ClubOSWordmark({
         whiteSpace: "nowrap",
       }}
     >
-      Club<span style={{ fontWeight: 800 }}>OS</span>
+      Murmurant
     </span>
   );
 }
 
-export default ClubOSWordmark;
+export default MurmurantWordmark;

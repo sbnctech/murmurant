@@ -3,7 +3,7 @@
 /**
  * Theme Pack Install Script
  *
- * Installs a theme pack into the ClubOS repo.
+ * Installs a theme pack into the Murmurant repo.
  * Idempotent - safe to run multiple times.
  *
  * Usage:

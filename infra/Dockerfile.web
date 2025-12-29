@@ -1,4 +1,4 @@
-# ClubOS Web Application
+# Murmurant Web Application
 # Node.js / Next.js development container
 #
 # This Dockerfile builds the web application for local development.

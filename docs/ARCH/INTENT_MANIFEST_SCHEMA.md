@@ -32,14 +32,14 @@ an organization's presentation intent during assisted migration or
 reconstruction. It sits between:
 
 - The source system (e.g., Wild Apricot)
-- The target system (ClubOS)
+- The target system (Murmurant)
 
 The manifest does not describe how to render content. It describes what
 the organization wants their presentation to accomplish.
 
 ### What Problem It Solves
 
-Organizations migrating to ClubOS face three anxieties:
+Organizations migrating to Murmurant face three anxieties:
 
 1. **Data loss**: Will my content survive the transition?
 2. **Loss of control**: Will the system do something I did not approve?
@@ -109,7 +109,7 @@ systems.
 |-------|------|-------------|
 | `manifestId` | string (UUID) | Unique identifier for this manifest version |
 | `manifestVersion` | integer | Monotonically increasing version number |
-| `organizationId` | string | ClubOS organization identifier |
+| `organizationId` | string | Murmurant organization identifier |
 | `sourceSystem` | string | Origin system (e.g., "wild-apricot", "manual") |
 | `sourceOrgId` | string | Identifier in source system (if applicable) |
 | `createdAt` | timestamp | When manifest was created |

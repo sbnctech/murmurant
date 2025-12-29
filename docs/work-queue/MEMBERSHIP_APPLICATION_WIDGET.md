@@ -36,7 +36,7 @@ Data model (draft)
 
 Integration assumptions
 - This replaces or supplements Wild Apricot membership application forms.
-- May support importing applicants from WA later, but v1 can be ClubOS-native.
+- May support importing applicants from WA later, but v1 can be Murmurant-native.
 
 UX bar
 - "Special" feel: clean typography, generous spacing, tasteful motion, strong confirmation states

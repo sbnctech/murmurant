@@ -128,7 +128,7 @@ This appears to reference the **current** bylaws (before proposed amendments). T
 
 > "Treasurer: financial review if budget present"
 
-**Confidence:** Low (this is a ClubOS spec, not an SBNC policy document)
+**Confidence:** Low (this is a Murmurant spec, not an SBNC policy document)
 
 ---
 
@@ -172,7 +172,7 @@ This references governance authority, not spending authority. No specific spendi
 
 > "VP Activities: queue + approval actions"
 
-**Confidence:** Medium (ClubOS spec, not SBNC policy document)
+**Confidence:** Medium (Murmurant spec, not SBNC policy document)
 
 ---
 

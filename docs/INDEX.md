@@ -1,6 +1,6 @@
-# ClubOS Documentation Index
+# Murmurant Documentation Index
 
-This is the main entry point for all ClubOS developer documentation.
+This is the main entry point for all Murmurant developer documentation.
 
 ## Getting Started
 - [Developer Onboarding](ONBOARDING.md)
@@ -53,7 +53,7 @@ This is the main entry point for all ClubOS developer documentation.
 - [ChatGPT Working Notes](BIZ/_ARCHIVE/CHATGPT_BUSINESS_MODEL_WORKING_NOTES.md) - Archived design rationale
 
 ## Operator Guides
-- [Calendar Trust and Reliability](BIZ/CALENDAR_TRUST_AND_RELIABILITY.md) - How ClubOS handles dates and times (non-technical)
+- [Calendar Trust and Reliability](BIZ/CALENDAR_TRUST_AND_RELIABILITY.md) - How Murmurant handles dates and times (non-technical)
 - [Core Trust Surface for Operators](BIZ/TRUST_SURFACE_FOR_OPERATORS.md) - The five guarantees that protect your organization
 
 ## Reference

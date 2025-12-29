@@ -1,9 +1,9 @@
-# Events/Calendar Widget Fit Assessment (ClubOS)
+# Events/Calendar Widget Fit Assessment (Murmurant)
 
 Worker 1 — Events Widget Fit — Report
 
 ## Scope
-Assess whether the events/calendar widget concept fits the ClubOS model (plugins, RBAC, auditability, maintainability).
+Assess whether the events/calendar widget concept fits the Murmurant model (plugins, RBAC, auditability, maintainability).
 No implementation. No new architecture.
 
 ## Current Widget Capabilities (Observed / Expected)
@@ -17,7 +17,7 @@ No implementation. No new architecture.
 - Chair view: show registration counts, waitlist status
 - Admin view: show all events with management actions
 
-## ClubOS Model Requirements
+## Murmurant Model Requirements
 
 - RBAC gates for read access (member vs public vs admin)
 - Delegated administration boundaries (VP Activities -> chairs; chairs -> their events/committees)
@@ -27,7 +27,7 @@ No implementation. No new architecture.
 
 ## Fit Mapping
 
-| Widget Capability | ClubOS Equivalent | Fit | Notes |
+| Widget Capability | Murmurant Equivalent | Fit | Notes |
 |---|---|---|---|
 | Display public events | EVT_UPCOMING_PUBLIC template | OK | Server filters by visibility=public |
 | Display member events | EVT_UPCOMING_MEMBER template | OK | Server requires authenticated viewer |
@@ -80,7 +80,7 @@ No implementation. No new architecture.
 | REQUIRES DECISION | 1 |
 | Blocked | 0 |
 
-The events/calendar widget fits the ClubOS model with minimal adaptation. All read operations map to pre-filtered templates. The only open decision is whether v1 requires real-time waitlist updates (recommend: no for v1).
+The events/calendar widget fits the Murmurant model with minimal adaptation. All read operations map to pre-filtered templates. The only open decision is whether v1 requires real-time waitlist updates (recommend: no for v1).
 
 ## Verdict
 READY FOR REVIEW

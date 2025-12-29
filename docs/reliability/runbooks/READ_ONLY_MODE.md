@@ -1,4 +1,4 @@
-# ClubOS - Runbook: Read-Only Mode (Human Procedure)
+# Murmurant - Runbook: Read-Only Mode (Human Procedure)
 
 Status: Canonical Runbook
 Applies to: Production incidents and readiness drills

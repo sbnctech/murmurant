@@ -35,7 +35,7 @@ NC='\033[0m' # No Color
 
 echo ""
 echo "============================================================"
-echo "  ClubOS Cron Health Check"
+echo "  Murmurant Cron Health Check"
 echo "============================================================"
 echo ""
 echo "Target: ${HEALTH_ENDPOINT}"

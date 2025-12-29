@@ -102,8 +102,8 @@ describe("mapRegistrationStatus", () => {
 // ============================================================================
 
 describe("transformRegistration", () => {
-  const eventId = "clubos-event-uuid";
-  const memberId = "clubos-member-uuid";
+  const eventId = "murmurant-event-uuid";
+  const memberId = "murmurant-member-uuid";
 
   it("transforms a valid registration successfully", () => {
     const waReg = makeRegistration();
@@ -258,8 +258,8 @@ describe("Registration Sync Prerequisites", () => {
 // ============================================================================
 
 describe("Registration Edge Cases", () => {
-  const eventId = "clubos-event-uuid";
-  const memberId = "clubos-member-uuid";
+  const eventId = "murmurant-event-uuid";
+  const memberId = "murmurant-member-uuid";
 
   it("handles registration with checked-in status", () => {
     const waReg = makeRegistration({ IsCheckedIn: true });

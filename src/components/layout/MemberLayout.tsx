@@ -77,7 +77,7 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
               letterSpacing: "-0.02em",
             }}
           >
-            ClubOS
+            Murmurant
           </Link>
 
           {/* Primary navigation links */}
@@ -150,7 +150,7 @@ export default function MemberLayout({ children }: MemberLayoutProps) {
           backgroundColor: "#ffffff",
         }}
       >
-        <div style={{ fontWeight: 500, color: "#64748b" }}>ClubOS</div>
+        <div style={{ fontWeight: 500, color: "#64748b" }}>Murmurant</div>
         <div style={{ marginTop: "4px", fontSize: "13px" }}>
           Powered by modern club management
         </div>

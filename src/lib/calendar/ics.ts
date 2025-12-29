@@ -37,14 +37,14 @@ export interface IcsEventInput {
 export interface IcsOptions {
   /** IANA timezone name. Defaults to CLUB_TIMEZONE. */
   timezone?: string;
-  /** Product identifier for PRODID. Defaults to ClubOS. */
+  /** Product identifier for PRODID. Defaults to Murmurant. */
   prodId?: string;
   /** Base URL for generating unique UIDs. */
   baseUrl?: string;
 }
 
-const DEFAULT_PROD_ID = "-//ClubOS//Event Calendar//EN";
-const DEFAULT_BASE_URL = "clubos.app";
+const DEFAULT_PROD_ID = "-//Murmurant//Event Calendar//EN";
+const DEFAULT_BASE_URL = "murmurant.app";
 
 /**
  * Escapes special characters in ICS text fields per RFC 5545 Section 3.3.11.

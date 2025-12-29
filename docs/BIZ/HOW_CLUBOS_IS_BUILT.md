@@ -1,4 +1,4 @@
-# How ClubOS Is Built
+# How Murmurant Is Built
 
 **Audience**: Non-profit executive directors, board members, operations leaders
 
@@ -40,13 +40,13 @@ These fears are reasonable. They are based on real experiences.
 
 ---
 
-## 3. How ClubOS Is Intentionally Built Differently
+## 3. How Murmurant Is Intentionally Built Differently
 
-ClubOS is designed around a foundational principle: **the system proposes, humans decide**.
+Murmurant is designed around a foundational principle: **the system proposes, humans decide**.
 
 This is not a marketing statement. It is how every part of the system works.
 
-- **The system never acts alone.** ClubOS does not make decisions on your behalf. Every consequential action requires human approval.
+- **The system never acts alone.** Murmurant does not make decisions on your behalf. Every consequential action requires human approval.
 
 - **You see before you commit.** Before any change takes effect, you see exactly what will happen. This is the actual change, shown for your review.
 
@@ -60,9 +60,9 @@ This is not a marketing statement. It is how every part of the system works.
 
 Some software tries to be "smart." It makes decisions for you, automates processes, and optimizes without asking. This can seem convenient, but you lose control.
 
-ClubOS takes a different approach.
+Murmurant takes a different approach.
 
-**What ClubOS automates:**
+**What Murmurant automates:**
 
 - Displaying information you have already approved
 - Recording that an action occurred
@@ -71,7 +71,7 @@ ClubOS takes a different approach.
 
 These are mechanical tasks where the answer is obvious and consequences are minimal.
 
-**What ClubOS does not automate:**
+**What Murmurant does not automate:**
 
 - Approving changes to your content
 - Deciding who is a member in good standing
@@ -86,11 +86,11 @@ For these actions, the system prepares everything, but a human makes the decisio
 
 ## 5. Preview Before Change
 
-One of ClubOS's guarantees is that you see exactly what will happen before it happens.
+One of Murmurant's guarantees is that you see exactly what will happen before it happens.
 
 **How preview works:**
 
-When you ask ClubOS to make a change—updating a record, publishing a page, migrating data—the system first shows you what will change. This preview uses the same logic that the actual change would use.
+When you ask Murmurant to make a change—updating a record, publishing a page, migrating data—the system first shows you what will change. This preview uses the same logic that the actual change would use.
 
 **What this means in practice:**
 
@@ -120,7 +120,7 @@ In all these cases, aborting is safe. The system returns to exactly the state it
 
 **After commit:**
 
-Once you commit a change, it is real. However, ClubOS is designed so that committed changes are either reversible or clearly marked as permanent before you approve them.
+Once you commit a change, it is real. However, Murmurant is designed so that committed changes are either reversible or clearly marked as permanent before you approve them.
 
 **Why this matters:** Fear of making mistakes prevents people from taking action. Knowing you can always stop removes the fear that holds organizations back.
 
@@ -130,7 +130,7 @@ Once you commit a change, it is real. However, ClubOS is designed so that commit
 
 Trust is not just about promises. It is about evidence.
 
-**What ClubOS records:**
+**What Murmurant records:**
 
 Every consequential action is logged:
 
@@ -149,23 +149,23 @@ When disputes arise, when something goes wrong, or when you need to understand y
 - "When did we change our event policy?"
 - "What did this record look like before the update?"
 
-**How this builds trust:** You do not need to trust that ClubOS did the right thing. You can verify. The record is always available, always complete, and always accurate.
+**How this builds trust:** You do not need to trust that Murmurant did the right thing. You can verify. The record is always available, always complete, and always accurate.
 
 ---
 
-## 8. What ClubOS Explicitly Does Not Do
+## 8. What Murmurant Explicitly Does Not Do
 
 Understanding what a system does not do is as important as understanding what it does.
 
-**ClubOS does not:**
+**Murmurant does not:**
 
 - **Make decisions without your approval.** No automated rules decide who is a member, what content is published, or when communications are sent.
 
-- **Send communications you did not authorize.** ClubOS never sends an email to your members unless a human specifically approved that message.
+- **Send communications you did not authorize.** Murmurant never sends an email to your members unless a human specifically approved that message.
 
 - **Modify your data silently.** Every change is logged and visible. There are no background processes that alter records without your knowledge.
 
-- **Assume what you meant.** If something is ambiguous, ClubOS asks for clarification rather than guessing.
+- **Assume what you meant.** If something is ambiguous, Murmurant asks for clarification rather than guessing.
 
 - **Commit based on timeouts.** Inaction does not equal approval. Nothing happens because you forgot to say no.
 
@@ -175,9 +175,9 @@ Understanding what a system does not do is as important as understanding what it
 
 ## 9. What This Means for You as a Customer
 
-If you are considering ClubOS, here is what you can count on:
+If you are considering Murmurant, here is what you can count on:
 
-**You remain in control.** Your organization makes the decisions. ClubOS is a tool that serves your intentions, not a system that manages your organization on your behalf.
+**You remain in control.** Your organization makes the decisions. Murmurant is a tool that serves your intentions, not a system that manages your organization on your behalf.
 
 **You will not be surprised.** Before anything changes, you see what will change. Preview is the actual change, shown for your approval.
 
@@ -193,7 +193,7 @@ If you are considering ClubOS, here is what you can count on:
 
 Trust is built through consistent behavior over time, not through promises.
 
-ClubOS is designed so that every interaction reinforces the same principles: you are in control, you see before you commit, you can walk away, and you can verify what happened.
+Murmurant is designed so that every interaction reinforces the same principles: you are in control, you see before you commit, you can walk away, and you can verify what happened.
 
 We do not ask you to trust us. We ask you to observe how the system behaves and draw your own conclusions.
 
@@ -205,4 +205,4 @@ For technical details on how these principles are implemented, see the [Core Tru
 
 ---
 
-*This document describes how ClubOS is built. If your experience differs from what is described here, we want to know.*
+*This document describes how Murmurant is built. If your experience differs from what is described here, we want to know.*

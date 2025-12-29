@@ -126,7 +126,7 @@ export default function MemberWelcomeCard() {
         }}
       >
         <h1 style={{ color: "#fff", fontSize: "28px", margin: 0 }}>
-          Welcome to ClubOS
+          Welcome to Murmurant
         </h1>
         <p style={{ color: "rgba(255,255,255,0.8)", marginTop: "8px" }}>
           {error || "Your personalized dashboard is loading..."}

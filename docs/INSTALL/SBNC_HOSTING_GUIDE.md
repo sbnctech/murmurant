@@ -42,7 +42,7 @@ git --version
 npm --version
 
 # Verify you have the repository cloned
-cd ~/clubos && pwd
+cd ~/murmurant && pwd
 ```
 
 ---
@@ -53,7 +53,7 @@ Run these commands from the repository root:
 
 ```zsh
 # Navigate to repository
-cd ~/clubos
+cd ~/murmurant
 
 # Install dependencies (if not already done)
 npm ci
@@ -108,7 +108,7 @@ git commit -m "Initial commit"
 
 ```zsh
 # Copy the inline widget build to the hosting repo
-cp -R ~/clubos/dist/inline-widget/* ~/sbnc-widget-host/
+cp -R ~/murmurant/dist/inline-widget/* ~/sbnc-widget-host/
 
 # Verify files were copied
 ls -la ~/sbnc-widget-host/
@@ -156,12 +156,12 @@ Your widget is now available at:
 ### A6. Update Deployment (Future Updates)
 
 ```zsh
-# After rebuilding the widget in clubos:
-cd ~/clubos
+# After rebuilding the widget in murmurant:
+cd ~/murmurant
 npm run build:inline-widget
 
 # Copy to hosting repo
-cp -R ~/clubos/dist/inline-widget/* ~/sbnc-widget-host/
+cp -R ~/murmurant/dist/inline-widget/* ~/sbnc-widget-host/
 
 # Commit and push
 cd ~/sbnc-widget-host
@@ -182,7 +182,7 @@ mkdir -p ~/sbnc-widget-netlify
 cd ~/sbnc-widget-netlify
 
 # Copy the inline widget build
-cp -R ~/clubos/dist/inline-widget/* ~/sbnc-widget-netlify/
+cp -R ~/murmurant/dist/inline-widget/* ~/sbnc-widget-netlify/
 
 # Verify files
 ls -la
@@ -242,12 +242,12 @@ Your widget is now available at:
 ### B5. Update Deployment (Future Updates)
 
 ```zsh
-# After rebuilding the widget in clubos:
-cd ~/clubos
+# After rebuilding the widget in murmurant:
+cd ~/murmurant
 npm run build:inline-widget
 
 # Copy to Netlify directory
-cp -R ~/clubos/dist/inline-widget/* ~/sbnc-widget-netlify/
+cp -R ~/murmurant/dist/inline-widget/* ~/sbnc-widget-netlify/
 
 # Deploy update
 cd ~/sbnc-widget-netlify
@@ -349,10 +349,10 @@ If you see CORS errors when embedding the widget:
 
 ```zsh
 # Full deploy from scratch
-cd ~/clubos && npm run build:inline-widget
+cd ~/murmurant && npm run build:inline-widget
 mkdir -p ~/sbnc-widget-host && cd ~/sbnc-widget-host
 git init && touch .nojekyll
-cp -R ~/clubos/dist/inline-widget/* .
+cp -R ~/murmurant/dist/inline-widget/* .
 git add . && git commit -m "Deploy widget"
 git remote add origin https://github.com/sbnctech/sbnc-widget-host.git
 git push -u origin main
@@ -362,9 +362,9 @@ git push -u origin main
 
 ```zsh
 # Full deploy from scratch
-cd ~/clubos && npm run build:inline-widget
+cd ~/murmurant && npm run build:inline-widget
 mkdir -p ~/sbnc-widget-netlify && cd ~/sbnc-widget-netlify
-cp -R ~/clubos/dist/inline-widget/* .
+cp -R ~/murmurant/dist/inline-widget/* .
 netlify deploy --prod --dir=.
 ```
 
@@ -372,12 +372,12 @@ netlify deploy --prod --dir=.
 
 ```zsh
 # GitHub Pages update
-cd ~/clubos && npm run build:inline-widget
+cd ~/murmurant && npm run build:inline-widget
 cp -R dist/inline-widget/* ~/sbnc-widget-host/
 cd ~/sbnc-widget-host && git add . && git commit -m "Update" && git push
 
 # Netlify update
-cd ~/clubos && npm run build:inline-widget
+cd ~/murmurant && npm run build:inline-widget
 cp -R dist/inline-widget/* ~/sbnc-widget-netlify/
 cd ~/sbnc-widget-netlify && netlify deploy --prod --dir=.
 ```

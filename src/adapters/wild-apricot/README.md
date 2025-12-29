@@ -20,7 +20,7 @@ src/adapters/wild-apricot/     <-- Adapter Layer (this directory)
 src/lib/importing/wildapricot/ <-- Core Importer Layer
 ├── client.ts                  - WA API client
 ├── importer.ts                - Import/sync logic
-├── transformers.ts            - WA → ClubOS transformers
+├── transformers.ts            - WA → Murmurant transformers
 ├── types.ts                   - WA API types
 ├── config.ts                  - Import configuration
 └── index.ts                   - Core exports
@@ -28,7 +28,7 @@ src/lib/importing/wildapricot/ <-- Core Importer Layer
 
 **Why this structure?**
 
-- **Separation of concerns**: Core importer handles raw WA API interaction; adapter provides ClubOS-specific services
+- **Separation of concerns**: Core importer handles raw WA API interaction; adapter provides Murmurant-specific services
 - **Import direction**: Adapter imports from lib (never the reverse) to avoid circular dependencies
 - **Standalone mode**: Adapter is conditionally loaded; lib code remains available for scripts
 
@@ -38,7 +38,7 @@ src/lib/importing/wildapricot/ <-- Core Importer Layer
 - `config.ts` - WA-specific configuration and environment variables
 - `WAAuthService.ts` - OAuth authentication with Wild Apricot
 - `WAMemberService.ts` - Member sync operations
-- `WASyncService.ts` - Full data synchronization between ClubOS and WA
+- `WASyncService.ts` - Full data synchronization between Murmurant and WA
 - `index.ts` - Public exports
 
 ## Usage

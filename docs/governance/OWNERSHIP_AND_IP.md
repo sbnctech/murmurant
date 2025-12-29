@@ -1,6 +1,6 @@
 # Ownership & Intellectual Property Statement
 
-ClubOS is an original software system developed for and owned by the Santa Barbara Newcomers Club (SBNC).
+Murmurant is an original software system developed for and owned by the Santa Barbara Newcomers Club (SBNC).
 
 All source code, documentation, architecture, tests, and related materials in this repository were created independently for SBNC and are the property of SBNC, unless explicitly stated otherwise.
 

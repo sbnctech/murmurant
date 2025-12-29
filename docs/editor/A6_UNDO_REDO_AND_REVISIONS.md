@@ -7,7 +7,7 @@ Copyright (c) Santa Barbara Newcomers Club
 
 ## Summary
 
-Define a minimal, safe undo/redo experience for the page editor that is appropriate for non-technical club admins and consistent with ClubOS reliability posture. This document specifies the approach; implementation follows in A7.
+Define a minimal, safe undo/redo experience for the page editor that is appropriate for non-technical club admins and consistent with Murmurant reliability posture. This document specifies the approach; implementation follows in A7.
 
 ## Problem
 

@@ -1,6 +1,6 @@
-# ClubOS Themes
+# Murmurant Themes
 
-CSS custom property-based theme system for ClubOS.
+CSS custom property-based theme system for Murmurant.
 
 ## Overview
 

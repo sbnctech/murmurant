@@ -1,4 +1,4 @@
-# SBNC ClubOS Widget Installation Guide
+# SBNC Murmurant Widget Installation Guide
 
 **For**: SBNC Board Members and Tech Chairs
 **Version**: 1.0
@@ -8,7 +8,7 @@
 
 ## What's In This Package
 
-This package contains two HTML snippets you paste into your Wild Apricot website to display ClubOS widgets:
+This package contains two HTML snippets you paste into your Wild Apricot website to display Murmurant widgets:
 
 | File | Purpose | Where to Paste |
 |------|---------|----------------|
@@ -115,7 +115,7 @@ width="800"
 ### Widget shows "Loading..." forever
 
 - Check your internet connection
-- The ClubOS server may be temporarily unavailable
+- The Murmurant server may be temporarily unavailable
 - Wait a few minutes and refresh
 
 ### Widget looks squished or cut off
@@ -132,8 +132,8 @@ Contact your SBNC technology coordinator or email support.
 ## Security Notes
 
 - These widgets run in a secure iframe
-- No Wild Apricot data is sent to ClubOS
-- ClubOS data is read-only in these widgets
+- No Wild Apricot data is sent to Murmurant
+- Murmurant data is read-only in these widgets
 - No login is required for public event display
 
 ---
@@ -144,15 +144,15 @@ The widgets use iframe embedding with these properties:
 
 | Property | Value | Purpose |
 |----------|-------|---------|
-| `src` | ClubOS embed URL | Points to hosted widget |
+| `src` | Murmurant embed URL | Points to hosted widget |
 | `sandbox` | allow-scripts allow-same-origin | Security restrictions |
 | `loading` | lazy | Performance optimization |
 | `referrerpolicy` | no-referrer | Privacy |
 
 The hosting location is:
 
-- Production: `https://clubos-prod-sbnc.netlify.app`
-- Staging: `https://clubos-staging-sbnc.netlify.app`
+- Production: `https://murmurant-prod-sbnc.netlify.app`
+- Staging: `https://murmurant-staging-sbnc.netlify.app`
 
 By default, widgets point to production. For testing, you can change the URL in the HTML to use staging.
 

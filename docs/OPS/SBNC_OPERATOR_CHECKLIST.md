@@ -12,7 +12,7 @@ Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
 ## Overview
 
-This document provides operator checklists for publishing, verifying, and rolling back inline widgets on the SBNC website. All checklists follow the **inline-only approach** where ClubOS widgets are embedded directly into Wild Apricot pages.
+This document provides operator checklists for publishing, verifying, and rolling back inline widgets on the SBNC website. All checklists follow the **inline-only approach** where Murmurant widgets are embedded directly into Wild Apricot pages.
 
 **Core Principle:** Every publish action is reversible. If something goes wrong, you can always roll back to the previous version.
 
@@ -38,11 +38,11 @@ Complete these steps BEFORE making any changes visible to members.
 - [ ] **Browser ready**: Safari or Chrome with WA admin access
 - [ ] **Logged into Wild Apricot**: As admin with page editing permissions
 - [ ] **Test account ready**: Separate browser/incognito window for member view testing
-- [ ] **ClubOS widget build verified**: `dist/inline-widget/` contains current build
+- [ ] **Murmurant widget build verified**: `dist/inline-widget/` contains current build
 
 ```zsh
 # Verify build exists and is recent
-ls -la ~/clubos/dist/inline-widget/
+ls -la ~/murmurant/dist/inline-widget/
 # Check modification date - should be today or expected build date
 ```
 
@@ -57,7 +57,7 @@ ls -la ~/clubos/dist/inline-widget/
 
 ```zsh
 # Validate JSON syntax
-cat ~/clubos/config-templates/[widget-name]/config.json | jq .
+cat ~/murmurant/config-templates/[widget-name]/config.json | jq .
 # If jq outputs formatted JSON without errors, syntax is valid
 ```
 

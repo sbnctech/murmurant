@@ -75,9 +75,9 @@ and guard conditions.
 
 ## WA Field Mapping to States
 
-Wild Apricot does not use the same state machine. ClubOS infers state from:
+Wild Apricot does not use the same state machine. Murmurant infers state from:
 
-| WA Field(s)                        | ClubOS State Inference                         |
+| WA Field(s)                        | Murmurant State Inference                         |
 |------------------------------------|------------------------------------------------|
 | membershipStatus = Active          | Depends on tier and timestamps.                |
 | membershipStatus = Lapsed          | lapsed                                         |

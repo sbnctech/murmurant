@@ -1,7 +1,7 @@
 /**
  * Entitlements Module
  *
- * Plan-based feature gating for ClubOS.
+ * Plan-based feature gating for Murmurant.
  *
  * @example
  * ```typescript

@@ -1,4 +1,4 @@
-# ClubOS — Failure Modes and Guardrails
+# Murmurant — Failure Modes and Guardrails
 
 ```
 Status: Canonical Specification
@@ -10,7 +10,7 @@ Classification: Normative
 
 ## Overview
 
-This document enumerates what can go wrong in ClubOS, defines how each failure mode must be handled, and specifies guardrails that must never be violated.
+This document enumerates what can go wrong in Murmurant, defines how each failure mode must be handled, and specifies guardrails that must never be violated.
 
 **Core principle:** Every failure mode has a deterministic, safe outcome. When in doubt, deny access and surface the error.
 

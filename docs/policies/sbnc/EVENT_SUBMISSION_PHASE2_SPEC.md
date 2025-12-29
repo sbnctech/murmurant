@@ -1,14 +1,14 @@
-# ClubOS Phase 2 – Event Submission & Approval Specification (Draft)
+# Murmurant Phase 2 – Event Submission & Approval Specification (Draft)
 
 ## Purpose
-Replace Jotform-based event submission with a native ClubOS workflow
+Replace Jotform-based event submission with a native Murmurant workflow
 that is policy-aware, auditable, and integrated into officer dashboards.
 
 ---
 
 ## Submission Entry Point
 - Role: Member, Committee Chair
-- Method: ClubOS Web UI
+- Method: Murmurant Web UI
 - Authentication: Required
 
 ---

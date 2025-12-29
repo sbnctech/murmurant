@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document describes the first database migration for ClubOS. The v1 migration creates all the core tables needed to track members, committees, events, photos, and communications. After running this migration, the database will have a complete structure ready for development and testing, though it will contain no actual data until we run the seed script.
+This document describes the first database migration for Murmurant. The v1 migration creates all the core tables needed to track members, committees, events, photos, and communications. After running this migration, the database will have a complete structure ready for development and testing, though it will contain no actual data until we run the seed script.
 
 ---
 
@@ -66,7 +66,7 @@ This command will:
 
 ## Future Migrations
 
-Later versions of ClubOS will likely add these features, each requiring new migrations:
+Later versions of Murmurant will likely add these features, each requiring new migrations:
 
 - **Guest Support** - A Guest model for non-members who attend events, linked to EventRegistration. This allows tracking of prospective members and visitors.
 

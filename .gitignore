@@ -22,6 +22,6 @@ tsconfig.tsbuildinfo
 *.log
 .netlify/
 
-# --- ClubOS: ignore harvested WA/SBNC policy PDFs (local source artifacts) ---
+# --- Murmurant: ignore harvested WA/SBNC policy PDFs (local source artifacts) ---
 docs/policies/**/sources/**/*.pdf
-# --- end ClubOS harvested PDFs ---
+# --- end Murmurant harvested PDFs ---

@@ -1,7 +1,7 @@
 # Membership Application Demo Script
 
 **URL:** `/join`
-**Purpose:** Demonstrate ClubOS membership application experience
+**Purpose:** Demonstrate Murmurant membership application experience
 **Duration:** 3-5 minutes
 
 ---
@@ -64,7 +64,7 @@ This demo showcases the membership application flow - a multi-step, friendly exp
 
 **Talking Points:**
 
-- "This is where ClubOS shines - we're learning about the member"
+- "This is where Murmurant shines - we're learning about the member"
 - "Interest selection helps us match them with activities they'll enjoy"
 - "This data can drive personalized event recommendations"
 - "Referral tracking helps the club understand what's working"
@@ -125,7 +125,7 @@ This demo showcases the membership application flow - a multi-step, friendly exp
 
 ## Comparison Points vs Wild Apricot
 
-| Feature | Wild Apricot | ClubOS Demo |
+| Feature | Wild Apricot | Murmurant Demo |
 |---------|-------------|-------------|
 | Tier selection | Dropdown menu | Side-by-side cards |
 | Progress indicator | None | Visual progress bar |
@@ -161,4 +161,4 @@ A: Yes, modify the `TierCard` components in Step 1. For production, tiers should
 
 ---
 
-*Demo created December 2024 for ClubOS stakeholder review*
+*Demo created December 2024 for Murmurant stakeholder review*

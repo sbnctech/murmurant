@@ -2,7 +2,7 @@ Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
 # Permission Change Notifications (v1)
 
-When a user's effective access changes, ClubOS should notify them.
+When a user's effective access changes, Murmurant should notify them.
 This applies both to:
 1) Subject changes: the user's roles/groups/assignments change
 2) Policy changes: the permission mapping behind a role/group changes
@@ -100,7 +100,7 @@ UserNotification
 ## Content (v1)
 
 Minimum content:
-- Subject line: "Your ClubOS access changed"
+- Subject line: "Your Murmurant access changed"
 - Body:
   - what changed (high-level): "You were granted access to X" / "Your access to X was removed"
   - effective time: immediate

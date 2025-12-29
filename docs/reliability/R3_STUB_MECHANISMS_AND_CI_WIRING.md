@@ -1,4 +1,4 @@
-# ClubOS - R3: Stub Mechanisms and CI Wiring (Pre-Deployment)
+# Murmurant - R3: Stub Mechanisms and CI Wiring (Pre-Deployment)
 
 Status: Canonical Planning + Implementation Specification
 Applies to: All environments (dev, staging, production)
@@ -14,7 +14,7 @@ This phase MUST NOT:
 - Alter infrastructure
 - Change production deployment posture
 
-R3 exists to make ClubOS "ready to be deployed if directed" without actually
+R3 exists to make Murmurant "ready to be deployed if directed" without actually
 deploying or activating reliability controls.
 
 This document is normative for R3.

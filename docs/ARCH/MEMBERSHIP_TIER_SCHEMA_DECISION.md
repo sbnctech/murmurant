@@ -55,12 +55,12 @@ Wild Apricot uses "Membership Levels" to represent pricing tiers:
 | ExtendedNewcomer | Third+ year member | $85 |
 | Admins | Honorary/admin accounts | $0 |
 
-### ClubOS Mapping Requirement
+### Murmurant Mapping Requirement
 
 During WA import, we must:
 
 1. **Preserve the original WA level** in `waMembershipLevelRaw` for audit
-2. **Map to a ClubOS tier** in `membershipTierId` for application logic
+2. **Map to a Murmurant tier** in `membershipTierId` for application logic
 3. **Allow unmapped imports** (tier = null) without blocking migration
 
 ### Current Behavior

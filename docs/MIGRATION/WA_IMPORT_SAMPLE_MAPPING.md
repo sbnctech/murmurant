@@ -1,7 +1,7 @@
 # WA Import Sample Mapping Reference
 
 ```
-Purpose: Concrete examples of WA-to-ClubOS data transformation
+Purpose: Concrete examples of WA-to-Murmurant data transformation
 Audience: Migration developers, QA testers
 ```
 
@@ -9,7 +9,7 @@ Audience: Migration developers, QA testers
 
 ## Sample Data Files
 
-This document provides complete examples of WA export data and the corresponding ClubOS records that should be created.
+This document provides complete examples of WA export data and the corresponding Murmurant records that should be created.
 
 ---
 
@@ -26,7 +26,7 @@ EVT-004,Board Meeting - February,Monthly board meeting. Open to all members.,Gov
 EVT-005,Museum Visit - SBMA,Guided tour of current exhibition at Santa Barbara Museum of Art.,Cultural; Art; Museum,Santa Barbara Museum of Art,03/01/2025 10:00,03/01/2025 12:00,15,Yes,Members only
 ```
 
-### Transformed ClubOS Records
+### Transformed Murmurant Records
 
 #### Event Records
 
@@ -137,11 +137,11 @@ EVT-005,Museum Visit - SBMA,Guided tour of current exhibition at Santa Barbara M
 
 ```json
 [
-  { "runId": "mig-2025-01-15-001", "entityType": "event", "waId": "EVT-001", "clubosId": "uuid-event-001" },
-  { "runId": "mig-2025-01-15-001", "entityType": "event", "waId": "EVT-002", "clubosId": "uuid-event-002" },
-  { "runId": "mig-2025-01-15-001", "entityType": "event", "waId": "EVT-003", "clubosId": "uuid-event-003" },
-  { "runId": "mig-2025-01-15-001", "entityType": "event", "waId": "EVT-004", "clubosId": "uuid-event-004" },
-  { "runId": "mig-2025-01-15-001", "entityType": "event", "waId": "EVT-005", "clubosId": "uuid-event-005" }
+  { "runId": "mig-2025-01-15-001", "entityType": "event", "waId": "EVT-001", "murmurantId": "uuid-event-001" },
+  { "runId": "mig-2025-01-15-001", "entityType": "event", "waId": "EVT-002", "murmurantId": "uuid-event-002" },
+  { "runId": "mig-2025-01-15-001", "entityType": "event", "waId": "EVT-003", "murmurantId": "uuid-event-003" },
+  { "runId": "mig-2025-01-15-001", "entityType": "event", "waId": "EVT-004", "murmurantId": "uuid-event-004" },
+  { "runId": "mig-2025-01-15-001", "entityType": "event", "waId": "EVT-005", "murmurantId": "uuid-event-005" }
 ]
 ```
 
@@ -200,7 +200,7 @@ GRP-009,Interest Group: Book Club,Monthly book discussion group,Open,25,03/15/20
 GRP-010,Interest Group: Photography,Photography walks and workshops,Open,18,06/01/2020
 ```
 
-### Transformed ClubOS Records
+### Transformed Murmurant Records
 
 #### Committee Records
 
@@ -310,7 +310,7 @@ GRP-003,CON-109,Michael,Thomas,mike.t@email.com,Chair,01/01/2024
 GRP-003,CON-101,Jane,Smith,jane.smith@email.com,Member,03/01/2024
 ```
 
-### Transformed ClubOS Records
+### Transformed Murmurant Records
 
 #### RoleAssignment Records
 
@@ -397,7 +397,7 @@ REG-006,CON-106,EVT-003,Patricia,Wilson,pat.wilson@email.com,02/15/2025 08:00,Co
 REG-007,CON-107,EVT-003,James,Taylor,james.t@email.com,02/16/2025 09:30,No show,,0,N/A
 ```
 
-### Transformed ClubOS Records
+### Transformed Murmurant Records
 
 #### EventRegistration Records
 
@@ -481,7 +481,7 @@ REG-008,CON-999,EVT-001,Unknown,Person,unknown@email.com,01/14/2025 10:00,Confir
 ```
 
 **Handling:**
-- Member lookup by `CON-999` fails (member not in ClubOS)
+- Member lookup by `CON-999` fails (member not in Murmurant)
 - Log error: `{ waId: "REG-008", error: "Member not found", waContactId: "CON-999" }`
 - Skip registration
 - Include in error report
@@ -691,19 +691,19 @@ GRP-002,CON-110,Alex,Wong,alex.w@email.com,Event Coordinator,07/01/2024
 ```sql
 -- Verify event count matches expected
 SELECT COUNT(*) as event_count FROM "Event"
-WHERE id IN (SELECT clubos_id FROM migration_id_map WHERE run_id = 'mig-2025-01-15-001' AND entity_type = 'event');
+WHERE id IN (SELECT murmurant_id FROM migration_id_map WHERE run_id = 'mig-2025-01-15-001' AND entity_type = 'event');
 -- Expected: 6
 
 -- Verify all events have categories
 SELECT id, title, category FROM "Event"
-WHERE id IN (SELECT clubos_id FROM migration_id_map WHERE run_id = 'mig-2025-01-15-001' AND entity_type = 'event')
+WHERE id IN (SELECT murmurant_id FROM migration_id_map WHERE run_id = 'mig-2025-01-15-001' AND entity_type = 'event')
 AND category IS NULL;
 -- Expected: 0 rows
 
 -- Verify tag counts
 SELECT tag, COUNT(*) as count
 FROM "EventTag"
-WHERE event_id IN (SELECT clubos_id FROM migration_id_map WHERE run_id = 'mig-2025-01-15-001' AND entity_type = 'event')
+WHERE event_id IN (SELECT murmurant_id FROM migration_id_map WHERE run_id = 'mig-2025-01-15-001' AND entity_type = 'event')
 GROUP BY tag
 ORDER BY count DESC;
 
@@ -711,7 +711,7 @@ ORDER BY count DESC;
 SELECT c.name as committee, COUNT(e.id) as event_count
 FROM "Committee" c
 LEFT JOIN "Event" e ON e.committee_id = c.id
-WHERE c.id IN (SELECT clubos_id FROM migration_id_map WHERE run_id = 'mig-2025-01-15-001' AND entity_type = 'committee')
+WHERE c.id IN (SELECT murmurant_id FROM migration_id_map WHERE run_id = 'mig-2025-01-15-001' AND entity_type = 'committee')
 GROUP BY c.name;
 ```
 

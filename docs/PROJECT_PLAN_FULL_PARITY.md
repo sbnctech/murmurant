@@ -1,6 +1,6 @@
-# ClubOS Full Parity Project Plan
+# Murmurant Full Parity Project Plan
 
-**Goal:** Complete ClubOS to full feature parity with Wild Apricot + mail server, supporting both greenfield clubs and WA migration paths.
+**Goal:** Complete Murmurant to full feature parity with Wild Apricot + mail server, supporting both greenfield clubs and WA migration paths.
 
 **Timeline:** 4-5 months with 8-worker harness
 **Start Date:** December 27, 2024
@@ -275,7 +275,7 @@ This plan delivers a standalone club management system that:
 | 3 | Sync mode | Ongoing sync during parallel run |
 | 4 | Cutover workflow | Final migration steps |
 | 5 | Rollback capability | Undo migration if needed |
-| 6 | Data reconciliation | Compare WA vs ClubOS |
+| 6 | Data reconciliation | Compare WA vs Murmurant |
 | 7 | Migration status dashboard | Progress tracking |
 | 8 | Migration documentation | Runbook, FAQ |
 

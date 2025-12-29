@@ -8,7 +8,7 @@
 
 ## Purpose
 
-This document examines ClubOS documentation from the perspective of someone who has experienced vendor failures, botched migrations, and broken promises. The goal is to identify gaps, unstated risks, and claims that may not hold under stress.
+This document examines Murmurant documentation from the perspective of someone who has experienced vendor failures, botched migrations, and broken promises. The goal is to identify gaps, unstated risks, and claims that may not hold under stress.
 
 This is not a marketing document. It is an honest assessment of what the documentation promises, where those promises are supported, and where skepticism remains warranted.
 
@@ -30,7 +30,7 @@ This is not a marketing document. It is an honest assessment of what the documen
 
 **Risk**: The documentation repeatedly states that abort leaves systems unchanged. But what if the abort mechanism itself fails? What if there's a bug in the "discard" logic?
 
-**Source**: CUSTOMER_MIGRATION_CUTOVER_REHEARSAL.md, lines 43-44: "On Abort, the journal is discarded, and ClubOS returns to pre-rehearsal state."
+**Source**: CUSTOMER_MIGRATION_CUTOVER_REHEARSAL.md, lines 43-44: "On Abort, the journal is discarded, and Murmurant returns to pre-rehearsal state."
 
 **Assessment**: **Partially mitigated.** The architecture is designed for safe abort (intent journal is separate from production state). However:
 
@@ -50,7 +50,7 @@ This is not a marketing document. It is an honest assessment of what the documen
 
 **Assessment**: **Mitigated by design, but not by documentation.** The sync scripts use read-only API endpoints. However:
 
-- No documentation explicitly states "ClubOS never writes to WA"
+- No documentation explicitly states "Murmurant never writes to WA"
 - No documentation describes API permission scoping (read-only vs. read-write)
 - A skeptical customer cannot verify this claim without reading code
 
@@ -314,7 +314,7 @@ This is not a marketing document. It is an honest assessment of what the documen
 
 ## Conclusion
 
-The ClubOS trust documentation is more transparent than most vendor documentation. It explicitly states non-goals, accepted limitations, and customer responsibilities. This honesty is valuable.
+The Murmurant trust documentation is more transparent than most vendor documentation. It explicitly states non-goals, accepted limitations, and customer responsibilities. This honesty is valuable.
 
 However, a skeptical customer should note:
 

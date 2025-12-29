@@ -1,9 +1,9 @@
-# ClubOS Page Editor
+# Murmurant Page Editor
 
 ## What This Is
 
-The ClubOS Page Editor is a deliberate, minimal, non-magical system for creating
-new ClubOS-native pages.
+The Murmurant Page Editor is a deliberate, minimal, non-magical system for creating
+new Murmurant-native pages.
 
 It exists to let non-technical volunteers publish pages safely, without:
 - accidental navigation changes

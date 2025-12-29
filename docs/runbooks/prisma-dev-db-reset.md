@@ -2,7 +2,7 @@
 
 ## Scope
 
-**LOCAL DEV ONLY** - `clubos_dev` on `localhost:5432`
+**LOCAL DEV ONLY** - `murmurant_dev` on `localhost:5432`
 
 Never run these procedures against production databases.
 
@@ -31,7 +31,7 @@ Drift detected: Your database schema is not in sync with your migration history.
 ```bash
 # Verify you're targeting LOCAL dev DB
 echo $DATABASE_URL
-# Should show: postgresql://...@localhost:5432/clubos_dev
+# Should show: postgresql://...@localhost:5432/murmurant_dev
 ```
 
 **STOP** if DATABASE_URL points to anything other than localhost.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ClubOS Charter Compliance Audit Script
+# Murmurant Charter Compliance Audit Script
 # Run this script to check for common charter violations
 #
 # Usage: ./scripts/audit_charter.sh
@@ -21,7 +21,7 @@ VIOLATION_COUNT=0
 WARNING_COUNT=0
 
 echo "========================================"
-echo "ClubOS Charter Compliance Audit"
+echo "Murmurant Charter Compliance Audit"
 echo "========================================"
 echo ""
 

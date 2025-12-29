@@ -1,17 +1,17 @@
 # Embedded Widgets Security Model
 
 ## Question
-Do we allow a user to embed ClubOS widgets into their own HTML/JS? If yes, how do we do it safely without breaking RBAC?
+Do we allow a user to embed Murmurant widgets into their own HTML/JS? If yes, how do we do it safely without breaking RBAC?
 
 ## Core Principle
 Embedded widgets are **untrusted UI**.
-All authorization and privacy decisions must be enforced **server-side** in ClubOS using ViewerContext.
+All authorization and privacy decisions must be enforced **server-side** in Murmurant using ViewerContext.
 
 ## Supported Embed Patterns
 
 ### Pattern A: Iframe Embed (Preferred for security)
-- Host site embeds an iframe pointing to a ClubOS embed route.
-- ClubOS requires authentication and applies RBAC exactly as it does for first-party pages.
+- Host site embeds an iframe pointing to a Murmurant embed route.
+- Murmurant requires authentication and applies RBAC exactly as it does for first-party pages.
 
 Pros:
 - Simplest security model
@@ -23,11 +23,11 @@ Cons:
 - Cross-domain UX constraints
 
 ### Pattern B: JS SDK + Short-Lived Embed Session (Preferred for native UX)
-- Host site loads a ClubOS JS bundle and mounts a widget into a div.
-- Widget calls ClubOS APIs.
+- Host site loads a Murmurant JS bundle and mounts a widget into a div.
+- Widget calls Murmurant APIs.
 - Access is via:
-  - existing authenticated ClubOS session (cookie), OR
-  - an **embed session token** minted by ClubOS, short-lived, origin-bound, scope-limited.
+  - existing authenticated Murmurant session (cookie), OR
+  - an **embed session token** minted by Murmurant, short-lived, origin-bound, scope-limited.
 
 Pros:
 - Native look and feel

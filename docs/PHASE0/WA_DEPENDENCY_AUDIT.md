@@ -1,13 +1,13 @@
 # Wild Apricot Dependency Audit
 
 **Generated:** 2025-12-27
-**Purpose:** Document all Wild Apricot (WA) dependencies in ClubOS codebase
+**Purpose:** Document all Wild Apricot (WA) dependencies in Murmurant codebase
 
 ---
 
 ## Summary
 
-ClubOS has a well-structured Wild Apricot integration layer located primarily in `src/lib/importing/wildapricot/`. The integration is used for data migration/import purposes.
+Murmurant has a well-structured Wild Apricot integration layer located primarily in `src/lib/importing/wildapricot/`. The integration is used for data migration/import purposes.
 
 | Category | Count |
 |----------|-------|
@@ -29,7 +29,7 @@ Located in `src/lib/importing/wildapricot/`:
 | `config.ts` | 3.6KB | Configuration loading from env vars |
 | `importer.ts` | 49KB | Main import/sync logic |
 | `index.ts` | 1.2KB | Module exports |
-| `transformers.ts` | 11KB | WA to ClubOS data transformers |
+| `transformers.ts` | 11KB | WA to Murmurant data transformers |
 | `types.ts` | 10KB | TypeScript type definitions |
 
 ---
@@ -129,10 +129,10 @@ In `src/lib/importing/wildapricot/types.ts`:
 - `docs/IMPORTING/WA_FULL_SYNC_REPORTING.md` - Sync reporting
 - `docs/IMPORTING/WA_REGISTRATIONS_DIAGNOSTIC.md` - Registration diagnostics
 - `docs/MIGRATION/WA_IMPORT_PIPELINE_*.md` - Import pipeline docs
-- `docs/MIGRATION/WA_TO_CLUBOS_EVENTS.md` - Event migration
+- `docs/MIGRATION/WA_TO_MURMURANT_EVENTS.md` - Event migration
 - `docs/INSTALL/WA_CONFIG_PAGE_GUIDE.md` - WA config page setup
 - `docs/INSTALL/WA_CONFIG_PAGE_BLOCK.html` - WA config HTML block
-- `docs/FINANCE/WA_VS_CLUBOS_COST_COMPARISON.md` - Cost comparison
+- `docs/FINANCE/WA_VS_MURMURANT_COST_COMPARISON.md` - Cost comparison
 - `docs/product/WA_TOP_50_PERSONA_IMPLICATIONS.md` - Product analysis
 - `docs/BIZ/WILD_APRICOT_EXTENSION_LANDSCAPE.md` - Extension landscape
 

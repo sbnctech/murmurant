@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document explains how to run ClubOS on your laptop for local development.
+This document explains how to run Murmurant on your laptop for local development.
 The local environment uses Docker containers to run the web application and
 database. This keeps your setup consistent and avoids conflicts with other
 software on your machine.
@@ -32,7 +32,7 @@ Both commands should show version numbers.
 
 ## First-Time Setup
 
-Run these commands once when setting up ClubOS for the first time.
+Run these commands once when setting up Murmurant for the first time.
 
 ### Step 1: Start the containers
 
@@ -85,7 +85,7 @@ Open your web browser and go to:
 http://localhost:3000
 ```
 
-You should see the ClubOS application.
+You should see the Murmurant application.
 
 ---
 
@@ -93,7 +93,7 @@ You should see the ClubOS application.
 
 ### Starting the system
 
-When you want to work on ClubOS, run:
+When you want to work on Murmurant, run:
 
 ```bash
 docker compose -f infra/docker-compose.yml up -d
@@ -135,7 +135,7 @@ To see if containers are running:
 docker compose -f infra/docker-compose.yml ps
 ```
 
-You should see both `clubos-db` and `clubos-web` listed as "Up".
+You should see both `murmurant-db` and `murmurant-web` listed as "Up".
 
 ---
 
@@ -179,7 +179,7 @@ Then update your DATABASE_URL to use port 5433.
    ```bash
    docker compose -f infra/docker-compose.yml ps
    ```
-   The `clubos-db` container should show as "healthy".
+   The `murmurant-db` container should show as "healthy".
 
 3. Try rebuilding the container:
    ```bash

@@ -1,19 +1,19 @@
-# ClubOS System Guarantees
+# Murmurant System Guarantees
 
 Status: Draft (Authoritative once approved)
 Owner: Architecture / Product
-Applies to: All ClubOS services, data stores, and operational workflows
+Applies to: All Murmurant services, data stores, and operational workflows
 
 ---
 
 ## 1. Purpose
 
-ClubOS is the system of record for a membership organization of approximately 700 members.
-If ClubOS is unavailable or loses data, organizational operations are materially impaired.
+Murmurant is the system of record for a membership organization of approximately 700 members.
+If Murmurant is unavailable or loses data, organizational operations are materially impaired.
 
 This document defines **explicit system guarantees**:
-- What ClubOS guarantees
-- What ClubOS does NOT guarantee
+- What Murmurant guarantees
+- What Murmurant does NOT guarantee
 - How failures are handled
 - How recovery is expected to work
 
@@ -50,12 +50,12 @@ All infrastructure, application logic, and operational decisions MUST conform to
 
 ### 3.2 Partial Availability
 
-ClubOS guarantees:
+Murmurant guarantees:
 - The system may enter **degraded mode** instead of total outage.
 - Read-only access may be enforced during incidents.
 - Administrative access may be restricted during instability.
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Zero downtime deployments
 - Continuous write availability during failures
 - Real-time updates during degraded operation
@@ -66,19 +66,19 @@ ClubOS does NOT guarantee:
 
 ### 4.1 Data Durability
 
-ClubOS guarantees:
+Murmurant guarantees:
 - No acknowledged write is lost without a documented catastrophic failure.
 - All primary data is backed up on a defined schedule.
 - Backups are encrypted and retained for a defined period.
 
 ### 4.2 Data Integrity
 
-ClubOS guarantees:
+Murmurant guarantees:
 - No silent data mutation.
 - No background jobs that alter historical records without audit logging.
 - Schema migrations must be forward- and backward-compatible during rollout.
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Recovery from manual database tampering
 - Preservation of data explicitly deleted by authorized admins
 
@@ -99,12 +99,12 @@ ClubOS does NOT guarantee:
 
 ## 6. Security Guarantees
 
-ClubOS guarantees:
+Murmurant guarantees:
 - No private or restricted content is exposed due to partial failure.
 - Authentication failures default to denial.
 - Authorization is enforced server-side at all times.
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Protection against compromised admin credentials
 - Defense against nation-state actors
 
@@ -112,12 +112,12 @@ ClubOS does NOT guarantee:
 
 ## 7. Publishing & Visibility Guarantees
 
-ClubOS guarantees:
+Murmurant guarantees:
 - Draft content is never visible to unintended audiences.
 - Preview does not imply publish.
 - Visibility rules are evaluated server-side on every request.
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Atomic multi-page publishes (unless explicitly implemented)
 - Rollback of user-perceived publication once cached externally
 
@@ -125,12 +125,12 @@ ClubOS does NOT guarantee:
 
 ## 8. Operational Guarantees
 
-ClubOS guarantees:
+Murmurant guarantees:
 - All critical operations have a written runbook.
 - Failures produce observable signals (logs, alerts, admin UI warnings).
 - Administrative actions are auditable.
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Automatic recovery from all failures
 - Absence of human intervention during incidents
 
@@ -163,5 +163,5 @@ The following are intentionally NOT guaranteed:
   - Changelog entry
   - Rationale explaining tradeoffs
 
-This document is the foundation for all reliability, resiliency, and operational work in ClubOS.
+This document is the foundation for all reliability, resiliency, and operational work in Murmurant.
 

@@ -1,11 +1,11 @@
-# ClubOS Development Makefile
+# Murmurant Development Makefile
 # macOS/zsh compatible
 
 .PHONY: dev dev-clean dev-safe test test-admin test-api test-smoke test-clean test-report test-changed smoke kill clean reset help types lint search turbopack-reset doctor diagnostics preflight install-hooks
 
 # Default target
 help:
-	@echo "ClubOS Development Commands"
+	@echo "Murmurant Development Commands"
 	@echo "============================"
 	@echo ""
 	@echo "Setup:"

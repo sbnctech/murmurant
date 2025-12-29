@@ -15,7 +15,7 @@ import { Suspense } from "react";
 import PoliciesListClient from "./PoliciesListClient";
 
 export const metadata = {
-  title: "Club Policies | ClubOS",
+  title: "Club Policies | Murmurant",
   description: "View the Santa Barbara Newcomers Club policy registry",
 };
 

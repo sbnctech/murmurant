@@ -1,10 +1,10 @@
-# ClubOS — Dependency Isolation and Blast Radius Control
+# Murmurant — Dependency Isolation and Blast Radius Control
 
 Status: Canonical Specification  
 Applies to: All runtime domains  
 Last updated: 2025-12-20
 
-This document defines how ClubOS isolates failures so that
+This document defines how Murmurant isolates failures so that
 a fault in one domain does not cascade into systemic failure.
 
 This document is normative.
@@ -25,7 +25,7 @@ Isolation is preferred over availability.
 
 ## 2. Defined Failure Domains
 
-ClubOS explicitly separates the following domains:
+Murmurant explicitly separates the following domains:
 
 - Member Identity & Roles
 - Authorization / Permissions
@@ -108,7 +108,7 @@ Undefined blast radius is forbidden.
 
 ## 9. Explicit Non-Guarantees
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Seamless cross-domain availability
 - Transparent failure masking
 - Automatic failover across domains

@@ -1,6 +1,6 @@
 # Demo Scenarios Runbook
 
-This document describes how to set up and run the ClubOS demo dashboard with
+This document describes how to set up and run the Murmurant demo dashboard with
 pre-configured scenarios for demonstrating key features.
 
 ---
@@ -235,7 +235,7 @@ npx tsx scripts/demo/seed_demo_scenarios.ts
 Check `DATABASE_URL` in `.env`:
 
 ```bash
-DATABASE_URL="postgresql://clubos:clubos@localhost:5432/clubos_dev"
+DATABASE_URL="postgresql://murmurant:murmurant@localhost:5432/murmurant_dev"
 ```
 
 ### Permission denied errors

@@ -31,7 +31,7 @@
 
 This contract defines the bridge between an organization's **Intent Manifest** (the source of truth for presentation intent) and the **Renderable Plan** (a deterministic, reviewable artifact that drives actual rendering).
 
-The goal is **recognizable fidelity**: when an organization migrates to ClubOS, their identity should be preserved well enough that their members recognize it.
+The goal is **recognizable fidelity**: when an organization migrates to Murmurant, their identity should be preserved well enough that their members recognize it.
 
 **In scope:**
 
@@ -45,7 +45,7 @@ The goal is **recognizable fidelity**: when an organization migrates to ClubOS, 
 
 | Non-Goal | Explanation |
 |----------|-------------|
-| **Not WA HTML cloning** | We do not scrape and replay Wild Apricot HTML. We extract intent and reconstruct it using ClubOS primitives. |
+| **Not WA HTML cloning** | We do not scrape and replay Wild Apricot HTML. We extract intent and reconstruct it using Murmurant primitives. |
 | **Not auto-publishing** | Nothing renders to production without explicit human approval. The Renderable Plan is a proposal, not an action. |
 | **Not pixel-perfect reproduction** | We preserve visual intent (colors, layout patterns, priorities), not exact pixels. Theme tokens approximate, not replicate. |
 | **Not CMS bypass** | The Renderable Plan does not replace content management. Content lives in its authoritative stores; the plan references it. |
@@ -373,7 +373,7 @@ The Intent Manifest and Renderable Plan MUST be exportable:
 
 1. **Self-describing**: Exported artifacts include schema version and type
 2. **Stable references**: Asset references use stable URIs
-3. **No vendor lock-in**: Export format does not require ClubOS to interpret
+3. **No vendor lock-in**: Export format does not require Murmurant to interpret
 4. **Reversible**: An exported manifest can be re-imported to recreate the plan
 
 ### CMS Lock-In Avoidance
@@ -399,10 +399,10 @@ This section documents what this contract intentionally does not define, guarant
 
 | Not Guaranteed | Why Intentionally Undefined | Who Is Responsible |
 |----------------|----------------------------|-------------------|
-| Column widths and proportions | Source layouts depend on WA's CSS framework; ClubOS uses different layout primitives | Operator reviews preview and adjusts if needed |
-| Responsive breakpoints | Mobile/tablet behavior is template-dependent, not extractable from source | ClubOS templates define responsive behavior |
+| Column widths and proportions | Source layouts depend on WA's CSS framework; Murmurant uses different layout primitives | Operator reviews preview and adjusts if needed |
+| Responsive breakpoints | Mobile/tablet behavior is template-dependent, not extractable from source | Murmurant templates define responsive behavior |
 | Vertical rhythm and spacing | Precise pixel spacing is theme-engine specific | Theme tokens approximate; human validates |
-| Animation and transitions | Interactive behaviors are not part of presentation intent | ClubOS templates may add or omit as appropriate |
+| Animation and transitions | Interactive behaviors are not part of presentation intent | Murmurant templates may add or omit as appropriate |
 
 **Why this protects trust**: Promising layout fidelity would require replicating WA's rendering engine. That creates fragile coupling. Instead, we promise *recognizable* presentation and give operators the preview to verify it.
 
@@ -412,8 +412,8 @@ This section documents what this contract intentionally does not define, guarant
 |----------------|----------------------------|-------------------|
 | Custom CSS rules | Arbitrary CSS cannot be safely migrated without understanding its purpose | Organization provides brand guidelines; operator configures tokens |
 | WA theme internals | WA themes are proprietary; we extract visible outcomes, not implementation | Theme tokens capture visual intent, not source rules |
-| Browser-specific rendering | Browser quirks are outside scope | ClubOS targets modern browsers; edge cases are implementation concerns |
-| Third-party font licensing | Font availability depends on licensing agreements | Organization ensures fonts are licensed for ClubOS use |
+| Browser-specific rendering | Browser quirks are outside scope | Murmurant targets modern browsers; edge cases are implementation concerns |
+| Third-party font licensing | Font availability depends on licensing agreements | Organization ensures fonts are licensed for Murmurant use |
 
 **Why this protects trust**: CSS is code. Migrating code without understanding it creates hidden failures. We extract *what it looks like*, not *how it was built*.
 
@@ -421,9 +421,9 @@ This section documents what this contract intentionally does not define, guarant
 
 | Not Guaranteed | Why Intentionally Undefined | Who Is Responsible |
 |----------------|----------------------------|-------------------|
-| WA-specific widgets | Widgets like event calendars, member directories are WA features | ClubOS provides its own components; mapping is explicit in manifest |
+| WA-specific widgets | Widgets like event calendars, member directories are WA features | Murmurant provides its own components; mapping is explicit in manifest |
 | Custom code blocks | Embedded JavaScript or custom HTML may have unknown dependencies | Operator reviews and decides whether to migrate, recreate, or omit |
-| Third-party integrations | External widgets (forms, chat, analytics) are not part of presentation intent | Organization re-configures integrations in ClubOS |
+| Third-party integrations | External widgets (forms, chat, analytics) are not part of presentation intent | Organization re-configures integrations in Murmurant |
 | Dynamic content sources | Content pulled from external APIs is not captured in intent | Operator documents external dependencies separately |
 
 **Why this protects trust**: Widgets are behavior, not presentation. Silently migrating a broken widget is worse than explicitly noting it needs attention.
@@ -454,10 +454,10 @@ This section documents what this contract intentionally does not define, guarant
 
 | Not Guaranteed | Why Intentionally Undefined | Who Is Responsible |
 |----------------|----------------------------|-------------------|
-| Template immutability | ClubOS templates may evolve over time | Renderable Plan references templates by ID; changes are versioned |
-| Cross-browser pixel identity | Different browsers render differently | ClubOS tests against modern browsers; minor variations are expected |
+| Template immutability | Murmurant templates may evolve over time | Renderable Plan references templates by ID; changes are versioned |
+| Cross-browser pixel identity | Different browsers render differently | Murmurant tests against modern browsers; minor variations are expected |
 | Print fidelity | Print rendering is not preview scope | If print matters, organization tests separately |
-| Accessibility perfection | Accessibility is improved incrementally | ClubOS templates aim for WCAG compliance; organization validates |
+| Accessibility perfection | Accessibility is improved incrementally | Murmurant templates aim for WCAG compliance; organization validates |
 
 **Why this protects trust**: Templates are living code. Freezing them would prevent improvements. The contract is that *the same plan produces the same output*—not that output never improves.
 
@@ -478,9 +478,9 @@ This section documents what this contract intentionally does not define, guarant
 |--------------|-----------|
 | Visual judgment calls | Operator preview review |
 | Semantic understanding | Organization's knowledge of itself |
-| Technical edge cases | ClubOS implementation decisions |
+| Technical edge cases | Murmurant implementation decisions |
 | Content quality | Organization's editorial judgment |
-| Integration configuration | Operator re-configuration in ClubOS |
+| Integration configuration | Operator re-configuration in Murmurant |
 
 The contract defines what the *system* guarantees. These gaps are filled by *humans*—operators and organizations—who bring context the system cannot have.
 

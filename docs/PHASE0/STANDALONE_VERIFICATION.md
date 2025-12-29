@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Verify that ClubOS can be built and type-checked without Wild Apricot environment variables.
+Verify that Murmurant can be built and type-checked without Wild Apricot environment variables.
 
 ## How to Verify
 

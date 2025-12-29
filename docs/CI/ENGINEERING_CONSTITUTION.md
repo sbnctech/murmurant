@@ -1,6 +1,6 @@
-# ClubOS Engineering Constitution
+# Murmurant Engineering Constitution
 
-This document defines the non-negotiable engineering rules for ClubOS.
+This document defines the non-negotiable engineering rules for Murmurant.
 Its purpose is to keep `main` green, prevent merge churn, and preserve developer time.
 
 If a choice exists between speed and safety, choose safety.

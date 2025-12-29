@@ -146,10 +146,10 @@ export async function POST(req: NextRequest) {
     if (process.env.NODE_ENV === "production") {
       await sendEmail({
         to: email,
-        subject: "Sign in to ClubOS",
+        subject: "Sign in to Murmurant",
         text: `Click this link to sign in: ${verifyUrl}\n\nThis link expires in 30 minutes.`,
         html: `
-          <p>Click the button below to sign in to ClubOS:</p>
+          <p>Click the button below to sign in to Murmurant:</p>
           <p style="margin: 20px 0;">
             <a href="${verifyUrl}"
                style="background-color: #2563eb; color: white; padding: 12px 24px;

@@ -2,7 +2,7 @@
 
 Last updated: December 20, 2025
 Owner (operational): Secretary or Parliamentarian (confirm via job descriptions)
-Scope: SBNC policies and governing documents; independent of ClubOS infrastructure
+Scope: SBNC policies and governing documents; independent of Murmurant infrastructure
 
 ---
 
@@ -29,7 +29,7 @@ It answers:
 - Who owns it
 - Who can see it
 - How changes are proposed, approved, and deployed
-- What ClubOS behavior (if any) is governed by the policy
+- What Murmurant behavior (if any) is governed by the policy
 
 No policy content is modified here. This registry points to sources and records decisions.
 
@@ -68,7 +68,7 @@ Default for new items: Board only (until reclassified).
 4. Draft: policy/procedure text prepared for review
 5. Approval: recorded vote or delegated approval (TBD by bylaws)
 6. Publication: board-only visibility by default; member-facing as approved
-7. Implementation: ClubOS config updated only after explicit permission
+7. Implementation: Murmurant config updated only after explicit permission
 8. Audit: change logged, linked to approval record, rollback plan recorded
 
 ## Policy Roster
@@ -84,7 +84,7 @@ Each entry should include:
 - Source(s) and links
 - Owner role
 - Approval authority
-- ClubOS enforcement notes
+- Murmurant enforcement notes
 - Contradictions / ambiguities
 
 ---
@@ -112,7 +112,7 @@ Each entry should include:
   - PDF: `Santa Barbara Newcomers Club - Bylaws (Draft with All Amendments).pdf`
   - Location: Google Drive / Board folder (also archived locally)
 - **Summary:** Core governing document defining club structure, membership rules, officer roles, committees, meetings, elections, and amendment procedures. Includes Code of Conduct (Appendix I) and Event Waiver (Appendix II).
-- **ClubOS enforcement:**
+- **Murmurant enforcement:**
   - Membership term (2 years) → `src/lib/membership/lifecycle.ts`
   - Officer terms (6 months) → role assignment logic
   - Geographic eligibility (Carpinteria to Goleta, ocean to Camino Cielo) → membership validation
@@ -147,7 +147,7 @@ Each entry should include:
   - Bylaws Appendix I (pages 11-17)
 - **Summary:** Behavioral expectations covering: (I) Respectful Community Behavior, (II) Integrity and Honesty, (III) Digital Citizenship and Social Media, (IV) Event Participation and Safety, (V) Business and Solicitation Guidelines, (VI) Leadership Responsibilities, (VII) Compliance and Enforcement, (VIII) Continuous Improvement, (IX) Acknowledgment and Commitment.
 - **Core Values:** Caring, Community Focus, Fairness, Friendliness, Fun, Honesty, Humility, Impartiality, Inclusiveness, Realism, Respect
-- **ClubOS enforcement:**
+- **Murmurant enforcement:**
   - Member termination process (Art. III §4) → disciplinary workflow
   - Appeal process (Art. III §5) → 30-day appeal window, 60-day review
   - Annual Code review by Board (§VIII) → governance calendar
@@ -175,7 +175,7 @@ Each entry should include:
 - **Sources:**
   - Bylaws Appendix II (pages 17-20)
 - **Summary:** Combined waiver covering: Participation Agreement, Assumption of Risk, Waiver and Release of Liability, Indemnification, Medical Treatment Consent, Age Certification (18+), and Audio/Photo/Video Media Release.
-- **ClubOS enforcement:**
+- **Murmurant enforcement:**
   - Event registration requires waiver acceptance → registration flow
   - Media release consent tracking → member profile
   - Emergency contact collection → member data
@@ -220,7 +220,7 @@ Each entry should include:
 - **Sources:**
   - (link)
 - **Summary:**
-- **ClubOS enforcement:**
+- **Murmurant enforcement:**
 - **Open questions / contradictions:**
 
 ---
@@ -321,5 +321,5 @@ The following items are documented in operational guidance (SBNC Business Model 
 
 *This registry is a READ-ONLY inventory. Policy meaning has not been altered. Uncertainty is explicitly labeled.*
 
-*Registry Maintainer: Secretary (with ClubOS Development Team support)*
+*Registry Maintainer: Secretary (with Murmurant Development Team support)*
 *Last Updated: December 20, 2025*

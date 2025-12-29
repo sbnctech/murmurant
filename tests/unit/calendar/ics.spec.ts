@@ -138,7 +138,7 @@ describe("ICS Generator", () => {
 
   describe("generateUid", () => {
     it("generates UID with event ID and domain", () => {
-      expect(generateUid("abc-123", "clubos.app")).toBe("abc-123@clubos.app");
+      expect(generateUid("abc-123", "murmurant.app")).toBe("abc-123@murmurant.app");
     });
   });
 
@@ -154,7 +154,7 @@ describe("ICS Generator", () => {
 
       expect(vevent).toContain("BEGIN:VEVENT");
       expect(vevent).toContain("END:VEVENT");
-      expect(vevent).toContain("UID:evt-001@clubos.app");
+      expect(vevent).toContain("UID:evt-001@murmurant.app");
       expect(vevent).toMatch(/DTSTAMP:\d{8}T\d{6}Z/);
       expect(vevent).toContain("SUMMARY:Monthly Lunch");
     });
@@ -247,7 +247,7 @@ describe("ICS Generator", () => {
 
       expect(ics).toContain("BEGIN:VCALENDAR");
       expect(ics).toContain("VERSION:2.0");
-      expect(ics).toContain("PRODID:-//ClubOS//Event Calendar//EN");
+      expect(ics).toContain("PRODID:-//Murmurant//Event Calendar//EN");
       expect(ics).toContain("CALSCALE:GREGORIAN");
       expect(ics).toContain("METHOD:PUBLISH");
       expect(ics).toContain("END:VCALENDAR");
@@ -294,8 +294,8 @@ describe("ICS Generator", () => {
       ];
       const ics = generateIcs(events);
 
-      expect(ics).toContain("UID:evt-1@clubos.app");
-      expect(ics).toContain("UID:evt-2@clubos.app");
+      expect(ics).toContain("UID:evt-1@murmurant.app");
+      expect(ics).toContain("UID:evt-2@murmurant.app");
       expect((ics.match(/BEGIN:VEVENT/g) ?? []).length).toBe(2);
     });
 
@@ -321,7 +321,7 @@ describe("ICS Generator", () => {
       const ics = generateSingleEventIcs(event);
 
       expect(ics).toContain("BEGIN:VCALENDAR");
-      expect(ics).toContain("UID:single-001@clubos.app");
+      expect(ics).toContain("UID:single-001@murmurant.app");
       expect((ics.match(/BEGIN:VEVENT/g) ?? []).length).toBe(1);
     });
   });
@@ -348,7 +348,7 @@ describe("ICS Generator", () => {
       // Verify structure
       expect(ics).toContain("BEGIN:VCALENDAR");
       expect(ics).toContain("VERSION:2.0");
-      expect(ics).toContain("PRODID:-//ClubOS//Event Calendar//EN");
+      expect(ics).toContain("PRODID:-//Murmurant//Event Calendar//EN");
 
       // Verify timezone block is present
       expect(ics).toContain("BEGIN:VTIMEZONE");

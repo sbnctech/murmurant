@@ -4,7 +4,7 @@ Copyright (c) Santa Barbara Newcomers Club
 
 ## Overview
 
-This document describes the "no-surprises" approach to importing SBNC organizational policies into the ClubOS Policy Registry. The goal is to make policies inspectable without changing any system behavior.
+This document describes the "no-surprises" approach to importing SBNC organizational policies into the Murmurant Policy Registry. The goal is to make policies inspectable without changing any system behavior.
 
 **Key Principle**: Read-only first. We import and display policies before any enforcement integration.
 
@@ -130,12 +130,12 @@ Topics: [membership, dues, renewal]
 
 ## Phase 4: Contradiction Detection (Week 5)
 
-### Step 4.1: Configure ClubOS Config Mapping
+### Step 4.1: Configure Murmurant Config Mapping
 
-Map policy topics to ClubOS configuration keys:
+Map policy topics to Murmurant configuration keys:
 
 ```yaml
-# Policy topics → ClubOS config mapping
+# Policy topics → Murmurant config mapping
 mappings:
   - topics: [dues, membership, fees]
     configKeys:
@@ -157,7 +157,7 @@ mappings:
 
 Generate first contradiction report:
 
-1. Compare policy extracts to ClubOS config values
+1. Compare policy extracts to Murmurant config values
 2. Flag any mismatches
 3. Present to Board for review
 

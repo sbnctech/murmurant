@@ -1,4 +1,4 @@
-# ClubOS Component Style Guide
+# Murmurant Component Style Guide
 
 ## Design Principles
 

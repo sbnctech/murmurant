@@ -23,7 +23,7 @@ export async function getAuthService(): Promise<AuthService> {
   }
   // Default: throw until WA auth adapter is wired
   throw new Error(
-    "Auth service not configured. Enable CLUBOS_NATIVE_AUTH or configure WA adapter."
+    "Auth service not configured. Enable MURMURANT_NATIVE_AUTH or configure WA adapter."
   );
 }
 

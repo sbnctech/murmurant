@@ -3,7 +3,7 @@
 # Prints required environment variable names and whether they are set locally.
 # DOES NOT print values - only checks existence.
 
-echo "ClubOS Environment Variable Check"
+echo "Murmurant Environment Variable Check"
 echo "================================="
 echo ""
 

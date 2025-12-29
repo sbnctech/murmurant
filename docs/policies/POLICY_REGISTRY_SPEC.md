@@ -4,7 +4,7 @@ Copyright (c) Santa Barbara Newcomers Club
 
 ## Overview
 
-The Policy Registry is a read-only system for inspecting organizational policies. It does **not** change ClubOS behavior—it makes policy visible and queryable so officers can understand what rules exist, where they come from, and whether they conflict.
+The Policy Registry is a read-only system for inspecting organizational policies. It does **not** change Murmurant behavior—it makes policy visible and queryable so officers can understand what rules exist, where they come from, and whether they conflict.
 
 ### Goals
 
@@ -86,15 +86,15 @@ Extracted rules/provisions from a policy document.
 
 ### PolicyContradiction
 
-Detected conflicts between policies or with ClubOS configuration.
+Detected conflicts between policies or with Murmurant configuration.
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | UUID | Primary key |
 | `extractA_Id` | UUID | FK to PolicyExtract (first conflicting rule) |
 | `extractB_Id` | UUID? | FK to PolicyExtract (second conflicting rule, if policy-to-policy) |
-| `configKey` | String? | ClubOS config key if conflict is with system config |
-| `configValue` | String? | Current ClubOS config value |
+| `configKey` | String? | Murmurant config key if conflict is with system config |
+| `configValue` | String? | Current Murmurant config value |
 | `contradictionType` | Enum | POLICY_VS_POLICY, POLICY_VS_CONFIG, AMBIGUOUS, OUTDATED |
 | `description` | Text | Explanation of the conflict |
 | `severity` | Enum | LOW, MEDIUM, HIGH, CRITICAL |
@@ -365,7 +365,7 @@ Each extract shows:
 
 ### Citation Format
 
-When referencing policies elsewhere in ClubOS:
+When referencing policies elsewhere in Murmurant:
 
 ```
 Per SBNC Bylaws 2024, Art. IV §2: "Members shall pay annual dues..."
@@ -380,18 +380,18 @@ Per SBNC Bylaws 2024, Art. IV §2: "Members shall pay annual dues..."
 | Type | Description | Example |
 |------|-------------|---------|
 | `POLICY_VS_POLICY` | Two policies state conflicting rules | Bylaws say 30-day notice, Standing Rules say 14-day |
-| `POLICY_VS_CONFIG` | Policy differs from ClubOS setting | Policy says $50 dues, ClubOS configured for $60 |
+| `POLICY_VS_CONFIG` | Policy differs from Murmurant setting | Policy says $50 dues, Murmurant configured for $60 |
 | `AMBIGUOUS` | Policy language is unclear or contradictory within itself | "Must" vs "should" for same requirement |
 | `OUTDATED` | Policy references obsolete entities/processes | References committee that no longer exists |
 
 ### Detection Methods
 
 1. **Keyword matching**: Find extracts with same topics, compare for conflicts
-2. **Config comparison**: Match policy extracts to ClubOS configuration keys
+2. **Config comparison**: Match policy extracts to Murmurant configuration keys
 3. **Date checking**: Flag policies past review date or referencing expired policies
 4. **Entity validation**: Check referenced committees, roles, processes exist
 
-### ClubOS Config Keys for Comparison
+### Murmurant Config Keys for Comparison
 
 | Config Key | Policy Topics |
 |------------|---------------|
@@ -412,7 +412,7 @@ Generated: December 20, 2024
 ### Dues Amount Mismatch
 - **Policy**: SBNC Bylaws 2024, Art. IV §2
   "Annual dues shall be $50 per household"
-- **ClubOS Config**: membership.duesAmount = 60
+- **Murmurant Config**: membership.duesAmount = 60
 - **Impact**: Members are being charged differently than policy states
 - **Recommendation**: Update either policy or configuration
 

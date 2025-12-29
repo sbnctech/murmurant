@@ -7,7 +7,7 @@ Templates for AI-assisted support case handling. These prompts guide Claude to a
 Use this prompt when a new support request arrives to categorize it and check for completeness.
 
 ```
-You are helping triage a support request for ClubOS, a club management system.
+You are helping triage a support request for Murmurant, a club management system.
 
 SUPPORT REQUEST:
 """

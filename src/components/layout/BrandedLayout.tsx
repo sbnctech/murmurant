@@ -44,7 +44,7 @@ export interface BrandedLayoutProps {
 }
 
 const defaultBrand: BrandConfig = {
-  clubName: "ClubOS",
+  clubName: "Murmurant",
   tagline: "Your community, connected.",
   colors: {
     primary: "#2563eb",

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://clubos.dev/schemas/presentation-discovery-report.json",
+  "$id": "https://murmurant.dev/schemas/presentation-discovery-report.json",
   "title": "Presentation Discovery Report",
   "description": "Schema for the output of the Presentation Discovery stage. This report inventories a Wild Apricot site's public presentation layer.",
   "type": "object",
