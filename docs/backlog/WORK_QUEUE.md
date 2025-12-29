@@ -201,13 +201,15 @@ F2. ✅ COMPLETE - WA API proxy layer
 - Features: Typed client with auto-pagination, rate limiting, input validation
 - Security: Credential protection, sensitive data redaction, webhook signatures
 - Audit: Full operation logging with PII protection
-- Tests: tests/unit/wa/ (60 tests)
+- Tests: tests/unit/wa/ (95 tests)
 - Docs: docs/ARCH/WA_API_SECURITY.md
 
-F3. Member data read-through
+F3. 🔄 IN PROGRESS - Member data read-through
 - Goal: MM reads member data from WA, caches locally for performance.
-- Deliverables: Member sync service, cache invalidation strategy.
-- Must include: Staleness indicators in UI, manual refresh option.
+- Implemented: src/lib/wa/memberSync.ts (cache layer, read-through, background sync)
+- Features: TTL-based caching (5 min default), staleness indicators, manual refresh
+- Tests: tests/unit/wa/memberSync.spec.ts (35 tests)
+- Remaining: Staleness indicator UI components, integration with member pages
 
 F4. Event/registration write-through
 - Goal: Event registrations in MM UI write to WA as source of truth.

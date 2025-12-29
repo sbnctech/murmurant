@@ -131,3 +131,36 @@ export type {
   WaWebhookEventType,
   WaWebhookPayload,
 } from "./webhooks";
+
+// Member Sync (F3 - Read-Through Cache)
+export {
+  // Core operations
+  getMember,
+  getMembers,
+  searchMembers,
+  refreshMember,
+
+  // Cache management
+  getMemberCache,
+  resetMemberCache,
+  invalidateMember,
+  invalidateAllMembers,
+
+  // Background sync
+  incrementalSync,
+  startBackgroundSync,
+  stopBackgroundSync,
+  getSyncStatus,
+
+  // Staleness helpers
+  getStalenessIndicator,
+  getStalenessLabel,
+
+  // Config
+  DEFAULT_MEMBER_CACHE_CONFIG,
+} from "./memberSync";
+export type {
+  CachedData,
+  CacheSource,
+  MemberCacheConfig,
+} from "./memberSync";
