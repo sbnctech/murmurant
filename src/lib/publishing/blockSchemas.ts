@@ -373,24 +373,24 @@ export const EDITABLE_BLOCK_TYPES: BlockType[] = [
   "cta",
   "divider",
   "spacer",
+  "before-after",
+  "stats",
+  "timeline",
+  "accordion",
+  "tabs",
+  "testimonial",
+  "cards",
+  "flip-card",
+  "gallery",
+  "faq",
+  "contact",
 ];
 
 /**
  * Block types that are read-only in the editor (complex/nested data)
  */
 export const READONLY_BLOCK_TYPES: BlockType[] = [
-  "cards",
   "event-list",
-  "gallery",
-  "faq",
-  "contact",
-  "flip-card",
-  "accordion",
-  "tabs",
-  "testimonial",
-  "stats",
-  "timeline",
-  "before-after",
 ];
 
 // ============================================================================
@@ -564,9 +564,13 @@ export function isReadonlyBlockType(type: BlockType): boolean {
 export function getBlockFieldMetadata(type: BlockType): Array<{
   name: string;
   required: boolean;
-  type: "text" | "textarea" | "select" | "url";
+  type: "text" | "textarea" | "select" | "url" | "number";
   options?: string[];
   label: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  placeholder?: string;
 }> {
   switch (type) {
     case "hero":
@@ -666,6 +670,33 @@ export function getBlockFieldMetadata(type: BlockType): Array<{
           type: "select",
           options: ["small", "medium", "large"],
           label: "Height",
+        },
+      ];
+    case "before-after":
+      return [
+        { name: "title", required: false, type: "text", label: "Title", placeholder: "Optional heading above the slider" },
+        { name: "beforeImage", required: true, type: "url", label: "Before Image URL" },
+        { name: "beforeAlt", required: true, type: "text", label: "Before Alt Text", placeholder: "Describe the before image" },
+        { name: "beforeLabel", required: false, type: "text", label: "Before Label", placeholder: "Before" },
+        { name: "afterImage", required: true, type: "url", label: "After Image URL" },
+        { name: "afterAlt", required: true, type: "text", label: "After Alt Text", placeholder: "Describe the after image" },
+        { name: "afterLabel", required: false, type: "text", label: "After Label", placeholder: "After" },
+        {
+          name: "aspectRatio",
+          required: false,
+          type: "select",
+          options: ["16:9", "4:3", "1:1", "3:2"],
+          label: "Aspect Ratio",
+        },
+        {
+          name: "initialPosition",
+          required: false,
+          type: "number",
+          label: "Initial Slider Position",
+          min: 0,
+          max: 100,
+          step: 5,
+          placeholder: "50",
         },
       ];
     default:
