@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document defines authorization rules for the VP of Activities role in ClubOS. The VP of Activities supervises Event Chairs and needs access to events managed by their direct reports, but not events outside their scope.
+This document defines authorization rules for the VP of Activities role in Murmurant. The VP of Activities supervises Event Chairs and needs access to events managed by their direct reports, but not events outside their scope.
 
 ## Business Context
 

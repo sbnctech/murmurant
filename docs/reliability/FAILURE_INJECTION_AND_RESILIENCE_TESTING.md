@@ -1,10 +1,10 @@
-# ClubOS — Failure Injection and Resilience Testing
+# Murmurant — Failure Injection and Resilience Testing
 
 Status: Canonical Specification  
 Applies to: Staging and controlled production scenarios  
 Last updated: 2025-12-20
 
-This document defines how ClubOS deliberately injects failures to validate
+This document defines how Murmurant deliberately injects failures to validate
 system guarantees, degraded modes, recovery paths, and data safety.
 
 This document is normative.
@@ -13,7 +13,7 @@ This document is normative.
 
 ## 1. Core Principle
 
-Failure injection exists to prove that ClubOS behaves correctly when things go wrong.
+Failure injection exists to prove that Murmurant behaves correctly when things go wrong.
 
 Failure injection MUST verify:
 - Guarantees are enforced

@@ -1,6 +1,6 @@
-# ClubOS Operator Runbooks
+# Murmurant Operator Runbooks
 
-Standardized incident response procedures for ClubOS operators.
+Standardized incident response procedures for Murmurant operators.
 
 ## Runbook Index
 

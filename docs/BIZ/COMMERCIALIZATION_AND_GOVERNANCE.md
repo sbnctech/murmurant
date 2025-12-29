@@ -1,6 +1,6 @@
 # Commercialization and Governance Guardrails
 
-This document defines the ethical, legal, and governance boundaries for ClubOS
+This document defines the ethical, legal, and governance boundaries for Murmurant
 commercialization, with Santa Barbara Newcomers Club (SBNC) serving as Client
 Zero. It is intended for board review, legal counsel, and organizational
 leadership.
@@ -37,10 +37,10 @@ Client Zero status does not imply:
 
 For this document, **commercialization** refers to any activity that:
 
-- Offers ClubOS capabilities to organizations other than SBNC
+- Offers Murmurant capabilities to organizations other than SBNC
 - Generates revenue from licensing, hosting, or services
 - Creates intellectual property with potential market value
-- Establishes business relationships based on ClubOS technology
+- Establishes business relationships based on Murmurant technology
 
 ## Governance Principles
 
@@ -49,7 +49,7 @@ For this document, **commercialization** refers to any activity that:
 SBNC retains full independence in all operational and governance decisions.
 
 - The board maintains sole authority over technology adoption
-- No external party may direct SBNC's use of ClubOS
+- No external party may direct SBNC's use of Murmurant
 - Evaluation participation does not bind future decisions
 - SBNC may discontinue use at any time for any reason
 
@@ -64,7 +64,7 @@ Participation as Client Zero is explicitly an evaluation activity.
 
 ### G3: No Operational Dependency Without Approval
 
-SBNC shall not become operationally dependent on ClubOS without explicit
+SBNC shall not become operationally dependent on Murmurant without explicit
 board approval.
 
 - Critical operations must have documented fallback procedures
@@ -74,7 +74,7 @@ board approval.
 
 ### G4: Transparency in Dual Roles
 
-Any individual serving both SBNC and ClubOS commercialization interests
+Any individual serving both SBNC and Murmurant commercialization interests
 must disclose this relationship.
 
 - Conflicts of interest shall be declared to the board
@@ -86,7 +86,7 @@ must disclose this relationship.
 
 ### Royalty Participation Rationale
 
-If SBNC contributes to ClubOS value through:
+If SBNC contributes to Murmurant value through:
 
 - Operational feedback that improves the product
 - Domain expertise incorporated into features
@@ -105,12 +105,12 @@ such arrangement requires:
 
 SBNC's participation as Client Zero:
 
-- Does not grant ClubOS exclusive rights to SBNC's operational data
+- Does not grant Murmurant exclusive rights to SBNC's operational data
 - Does not prevent SBNC from using competing products
 - Does not obligate SBNC to provide ongoing feedback or support
 - Does not restrict SBNC from sharing evaluation findings
 
-ClubOS commercialization:
+Murmurant commercialization:
 
 - May serve other organizations without SBNC approval
 - May incorporate learnings from SBNC deployment
@@ -184,7 +184,7 @@ The following activities are prohibited without explicit board approval:
 - Sharing SBNC member data with third parties
 - Creating operational dependencies on non-approved systems
 - Entering financial agreements on SBNC's behalf
-- Making public statements about SBNC's use of ClubOS
+- Making public statements about SBNC's use of Murmurant
 
 ## Review and Amendment
 

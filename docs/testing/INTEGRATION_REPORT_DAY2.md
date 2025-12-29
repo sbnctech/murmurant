@@ -65,7 +65,7 @@ Total:                45 passed (6.7s)
 
 **PostgreSQL:**
 - Status: Configured but connection pending
-- `DATABASE_URL="postgresql://clubos:clubos@localhost:5432/clubos"`
+- `DATABASE_URL="postgresql://murmurant:murmurant@localhost:5432/murmurant"`
 - Finding: `psql` client not installed on dev machine
 - Action: Apply migrations when database is running
 

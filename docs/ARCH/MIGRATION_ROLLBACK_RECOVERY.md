@@ -4,7 +4,7 @@
 > **Related Issues**: #277 (D1: Rollback & Recovery Capability), #202 (Migration Wave)
 > **Last Updated**: 2025-12-24
 
-This document defines the rollback model for ClubOS migrations: what can be reverted, what cannot, and the required audit artifacts.
+This document defines the rollback model for Murmurant migrations: what can be reverted, what cannot, and the required audit artifacts.
 
 ---
 
@@ -78,14 +78,14 @@ The ID mapping file (`id-map-{mode}-{timestamp}.json`) is **write-once**:
 
 **Immutability Guarantees**:
 
-- Same WA ID always maps to same ClubOS ID within a run
+- Same WA ID always maps to same Murmurant ID within a run
 - Mappings preserve insertion order from source CSV
 - No timestamps in mapping entries (only in report metadata)
 
 **Violation Consequences**:
 
 - Editing ID maps invalidates bundle hash
-- Orphaned ClubOS records become unreferenceable
+- Orphaned Murmurant records become unreferenceable
 - Registration foreign keys may break
 
 ### 1.4 Replay Safety
@@ -158,7 +158,7 @@ Each migration run must produce and retain:
 |----------|---------|-----------|
 | `migration-{mode}-{ts}.json` | Summary report | Permanent |
 | `migration-{mode}-{ts}-full.json` | Full report with records | 90 days |
-| `id-map-{mode}-{ts}.json` | WA to ClubOS ID mapping | Permanent |
+| `id-map-{mode}-{ts}.json` | WA to Murmurant ID mapping | Permanent |
 | `before-snapshot-{ts}.json` | Pre-migration state | 90 days |
 | Audit log entries | Per-record trail | Permanent |
 
@@ -189,7 +189,7 @@ Captures state of records that will be modified:
 
 **Snapshot Rules**:
 
-- Capture only records that exist in ClubOS AND appear in migration CSV
+- Capture only records that exist in Murmurant AND appear in migration CSV
 - Exclude records that will be created (no prior state)
 - Include all mutable fields, not just changed ones
 - Timestamp with server time at capture
@@ -257,7 +257,7 @@ Each migration action creates an audit entry:
 ```sql
 -- For each record created by run ID
 UPDATE Member SET deletedAt = NOW()
-WHERE id IN (SELECT clubosId FROM migration_records WHERE runId = ?);
+WHERE id IN (SELECT murmurantId FROM migration_records WHERE runId = ?);
 
 -- Restore updated records from snapshot
 UPDATE Member SET
@@ -292,17 +292,17 @@ WHERE id = snapshot.id;
 ```sql
 -- Delete registrations first (FK constraint)
 DELETE FROM EventRegistration
-WHERE id IN (SELECT clubosId FROM migration_records
+WHERE id IN (SELECT murmurantId FROM migration_records
              WHERE runId = ? AND entityType = 'registration');
 
 -- Delete events
 DELETE FROM Event
-WHERE id IN (SELECT clubosId FROM migration_records
+WHERE id IN (SELECT murmurantId FROM migration_records
              WHERE runId = ? AND entityType = 'event');
 
 -- Delete members
 DELETE FROM Member
-WHERE id IN (SELECT clubosId FROM migration_records
+WHERE id IN (SELECT murmurantId FROM migration_records
              WHERE runId = ? AND entityType = 'member');
 
 -- Restore updated records from snapshot
@@ -524,7 +524,7 @@ EMERGENCY ROLLBACK PROCEDURE
    $ Create incident report in #operations
 
 8. NOTIFY stakeholders
-   $ Post in #clubos-alerts
+   $ Post in #murmurant-alerts
 ```
 
 ---
@@ -594,5 +594,5 @@ The following questions must be resolved before implementation:
 ## References
 
 - [IMPORTER_SYSTEM_SPEC.md](../IMPORTING/IMPORTER_SYSTEM_SPEC.md) - Import system specification
-- [Issue #277](https://github.com/sbnctech/clubos/issues/277) - Rollback capability tracking issue
-- [Issue #202](https://github.com/sbnctech/clubos/issues/202) - Migration Wave parent issue
+- [Issue #277](https://github.com/sbnctech/murmurant/issues/277) - Rollback capability tracking issue
+- [Issue #202](https://github.com/sbnctech/murmurant/issues/202) - Migration Wave parent issue

@@ -127,11 +127,11 @@ The VPS and mail infrastructure depends on a single volunteer:
 
 ---
 
-## ClubOS Eliminates These Costs
+## Murmurant Eliminates These Costs
 
-With ClubOS, external infrastructure is unnecessary:
+With Murmurant, external infrastructure is unnecessary:
 
-| WA External Cost | ClubOS Equivalent |
+| WA External Cost | Murmurant Equivalent |
 |------------------|-------------------|
 | VPS hosting | Vercel (included in hosting) |
 | Mail server | Resend/Postmark (managed service) |
@@ -140,7 +140,7 @@ With ClubOS, external infrastructure is unnecessary:
 
 ### Quantified Offset
 
-| Item | WA External Cost | ClubOS Cost | Savings |
+| Item | WA External Cost | Murmurant Cost | Savings |
 |------|------------------|-------------|---------|
 | VPS hosting | $TBD/year | $0 | $TBD |
 | Mail infrastructure labor | (volunteer time) | $0 | N/A |
@@ -162,5 +162,5 @@ To complete this analysis:
 
 ## References
 
-- WA_VS_CLUBOS_COST_COMPARISON.md - Overall comparison framework
-- CLUBOS_HOSTING_COST_MODEL.md - ClubOS infrastructure costs (pending)
+- WA_VS_MURMURANT_COST_COMPARISON.md - Overall comparison framework
+- MURMURANT_HOSTING_COST_MODEL.md - Murmurant infrastructure costs (pending)

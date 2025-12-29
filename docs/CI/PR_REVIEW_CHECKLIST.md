@@ -1,6 +1,6 @@
 # PR Review Checklist
 
-A mechanical checklist for reviewing ClubOS pull requests. Follow this systematically to catch security and correctness issues before merge.
+A mechanical checklist for reviewing Murmurant pull requests. Follow this systematically to catch security and correctness issues before merge.
 
 ---
 

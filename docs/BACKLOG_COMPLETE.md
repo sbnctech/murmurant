@@ -1,4 +1,4 @@
-# ClubOS Complete Backlog Summary
+# Murmurant Complete Backlog Summary
 
 Generated: 2025-12-28
 Session: Phase 0/1 Full Parity Sprint
@@ -13,7 +13,7 @@ Session: Phase 0/1 Full Parity Sprint
 | **Phase 1** (Native Services) | ✅ Complete | 100% |
 | **Phase 2** (UI/Integration) | 🔄 Next | ~60% |
 
-**Key Milestone:** ClubOS compiles and runs WITHOUT Wild Apricot environment variables.
+**Key Milestone:** Murmurant compiles and runs WITHOUT Wild Apricot environment variables.
 
 ---
 
@@ -157,4 +157,4 @@ Session: Phase 0/1 Full Parity Sprint
 
 **Estimated effort:** 2-3 days
 
-After import is verified, ClubOS is ready for go-live testing.
+After import is verified, Murmurant is ready for go-live testing.

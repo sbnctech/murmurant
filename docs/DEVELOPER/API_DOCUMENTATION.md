@@ -2,7 +2,7 @@
 
 ## Overview
 
-ClubOS includes an internal API documentation system that provides a comprehensive, interactive reference for all API endpoints. This documentation is intended for developers, tech leads, reviewers, and future maintainers.
+Murmurant includes an internal API documentation system that provides a comprehensive, interactive reference for all API endpoints. This documentation is intended for developers, tech leads, reviewers, and future maintainers.
 
 **This is an internal tool - not for external or public use.**
 
@@ -109,7 +109,7 @@ Update the OpenAPI spec when:
 ```yaml
 openapi: 3.1.0
 info:
-  title: ClubOS Internal API Documentation
+  title: Murmurant Internal API Documentation
   version: 1.0.0
 
 tags:
@@ -129,7 +129,7 @@ components:
     cookieAuth:
       type: apiKey
       in: cookie
-      name: clubos_session
+      name: murmurant_session
 
   schemas:
     # Reusable schema definitions

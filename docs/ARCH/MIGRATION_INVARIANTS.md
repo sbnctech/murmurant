@@ -4,7 +4,7 @@
 **Last Updated**: 2024-12-24
 **Related Issues**: #202, #277
 
-This document describes the invariant validation layer for the ClubOS migration pipeline.
+This document describes the invariant validation layer for the Murmurant migration pipeline.
 
 ---
 
@@ -25,14 +25,14 @@ Invariants are conditions that must **always** be true at specific points in the
 
 ### 1. ID Mapping Invariants
 
-These ensure the WA-to-ClubOS ID mapping is consistent and complete.
+These ensure the WA-to-Murmurant ID mapping is consistent and complete.
 
 | Code | Description |
 |------|-------------|
 | `MISSING_WA_ID` | A mapping entry lacks a Wild Apricot ID |
-| `MISSING_CLUBOS_ID` | A mapping entry lacks a ClubOS ID |
+| `MISSING_MURMURANT_ID` | A mapping entry lacks a Murmurant ID |
 | `DUPLICATE_WA_ID` | Same WA ID appears multiple times in mappings |
-| `DUPLICATE_CLUBOS_ID` | Same ClubOS ID appears multiple times in mappings |
+| `DUPLICATE_MURMURANT_ID` | Same Murmurant ID appears multiple times in mappings |
 | `ORPHANED_MAPPING` | Mapping references a record that was not processed |
 | `COUNT_MISMATCH` | Mapping array length does not match count field |
 
@@ -198,6 +198,6 @@ tests/unit/migration/invariants.spec.ts
 
 ## References
 
-- [Issue #202](https://github.com/sbnctech/clubos/issues/202) - Migration Wave
-- [Issue #277](https://github.com/sbnctech/clubos/issues/277) - Rollback and Recovery
+- [Issue #202](https://github.com/sbnctech/murmurant/issues/202) - Migration Wave
+- [Issue #277](https://github.com/sbnctech/murmurant/issues/277) - Rollback and Recovery
 - [Migration Pipeline Design](../IMPORTING/WA_MIGRATION_RUNBOOK.md)

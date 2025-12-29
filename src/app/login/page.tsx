@@ -18,8 +18,8 @@ import PasskeyLoginButton from "@/components/auth/PasskeyLoginButton";
 import MagicLinkForm from "@/components/auth/MagicLinkForm";
 
 export const metadata = {
-  title: "Sign In - ClubOS",
-  description: "Sign in to your ClubOS account",
+  title: "Sign In - Murmurant",
+  description: "Sign in to your Murmurant account",
 };
 
 export default async function LoginPage() {
@@ -65,7 +65,7 @@ export default async function LoginPage() {
             Welcome back
           </h1>
           <p style={{ color: "#6b7280", fontSize: "14px" }}>
-            Sign in to your ClubOS account
+            Sign in to your Murmurant account
           </p>
         </div>
 

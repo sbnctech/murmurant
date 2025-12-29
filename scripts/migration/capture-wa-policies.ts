@@ -46,7 +46,7 @@ function printUsage(): void {
   console.log(`
 ${CYAN}WA Policy Capture${NC}
 
-Extracts organization policies from Wild Apricot for migration to ClubOS.
+Extracts organization policies from Wild Apricot for migration to Murmurant.
 
 ${YELLOW}Usage:${NC}
   npx tsx scripts/migration/capture-wa-policies.ts [options]
@@ -175,15 +175,15 @@ async function runCapture(args: ReturnType<typeof parseArgs>): Promise<void> {
     for (const entry of mapping.levels) {
       const nameLower = entry.waName.toLowerCase();
       if (nameLower.includes("active") || nameLower.includes("member")) {
-        entry.clubosTier = "active";
+        entry.murmurantTier = "active";
       } else if (nameLower.includes("lapsed") || nameLower.includes("expired")) {
-        entry.clubosTier = "lapsed";
+        entry.murmurantTier = "lapsed";
       } else if (nameLower.includes("pending")) {
-        entry.clubosTier = "pending_new";
+        entry.murmurantTier = "pending_new";
       } else if (nameLower.includes("suspended")) {
-        entry.clubosTier = "suspended";
+        entry.murmurantTier = "suspended";
       } else if (nameLower.includes("guest") || nameLower.includes("contact")) {
-        entry.clubosTier = "not_a_member";
+        entry.murmurantTier = "not_a_member";
       }
     }
   } else {
@@ -323,7 +323,7 @@ async function runGenerateTemplate(args: ReturnType<typeof parseArgs>): Promise<
   }
 
   console.log(`${GREEN}Template generated!${NC}`);
-  console.log(`\nEdit the file to add your WA membership levels and their ClubOS tier mappings.`);
+  console.log(`\nEdit the file to add your WA membership levels and their Murmurant tier mappings.`);
   console.log(`\nThen run:`);
   console.log(`  npx tsx scripts/migration/capture-wa-policies.ts --mapping-file ${mappingPath}`);
 }

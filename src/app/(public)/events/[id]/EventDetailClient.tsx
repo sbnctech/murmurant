@@ -91,9 +91,9 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
     const ics = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
-      "PRODID:-//Santa Barbara Newcomers Club//ClubOS//EN",
+      "PRODID:-//Santa Barbara Newcomers Club//Murmurant//EN",
       "BEGIN:VEVENT",
-      `UID:${event.id}@sbnc.clubos`,
+      `UID:${event.id}@sbnc.murmurant`,
       `DTSTAMP:${formatICSDate(new Date())}`,
       `DTSTART:${formatICSDate(start)}`,
       `DTEND:${formatICSDate(end)}`,

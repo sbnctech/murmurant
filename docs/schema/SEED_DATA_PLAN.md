@@ -2,9 +2,9 @@
 
 ## Goals
 
-The seed script creates realistic sample data that makes ClubOS feel like a real club management system. This data serves several purposes:
+The seed script creates realistic sample data that makes Murmurant feel like a real club management system. This data serves several purposes:
 
-1. **Demo for Leadership** - When showing ClubOS to the President or Board, we want screens to look populated and realistic, not empty or filled with "Test User 1" placeholders.
+1. **Demo for Leadership** - When showing Murmurant to the President or Board, we want screens to look populated and realistic, not empty or filled with "Test User 1" placeholders.
 
 2. **Developer Testing** - Engineers need data to test queries, APIs, and UI components. The seed provides consistent, predictable data that makes debugging easier.
 

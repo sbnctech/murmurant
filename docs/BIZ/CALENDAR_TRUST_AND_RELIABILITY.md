@@ -1,6 +1,6 @@
 # Calendar Trust and Reliability
 
-How ClubOS handles dates, times, and calendars reliably.
+How Murmurant handles dates, times, and calendars reliably.
 
 **Audience:** Club officers and administrators
 **Last Updated:** 2025-12-25
@@ -51,19 +51,19 @@ These represent calendar squares, not clock times. "Company Holiday on December 
 
 ---
 
-## What ClubOS Does
+## What Murmurant Does
 
 ### Storage: UTC Instants
 
 All event times are stored as UTC instants in the database. UTC (Coordinated Universal Time) is the global reference point--it does not observe daylight saving time and provides an unambiguous timestamp.
 
-When you create an event for "Tuesday at 10:00 AM," ClubOS calculates the corresponding UTC instant and stores that.
+When you create an event for "Tuesday at 10:00 AM," Murmurant calculates the corresponding UTC instant and stores that.
 
 ### Display: Named Timezones
 
-When displaying times to you, ClubOS converts UTC instants back to your organization's configured timezone. This ensures everyone sees consistent times.
+When displaying times to you, Murmurant converts UTC instants back to your organization's configured timezone. This ensures everyone sees consistent times.
 
-ClubOS uses IANA timezone identifiers, not abbreviations:
+Murmurant uses IANA timezone identifiers, not abbreviations:
 
 - **Correct:** America/Los_Angeles
 - **Incorrect:** PST, PDT, Pacific
@@ -72,17 +72,17 @@ Why? Because "PST" is ambiguous (some systems interpret it as exactly -8 hours, 
 
 ### Scheduling: Organization Timezone Rules
 
-When ClubOS calculates "next Tuesday" or "registration opens Sunday at 8 AM," it uses your organization's timezone. The day-of-week and hour-of-day are determined in that timezone, then converted to UTC for storage.
+When Murmurant calculates "next Tuesday" or "registration opens Sunday at 8 AM," it uses your organization's timezone. The day-of-week and hour-of-day are determined in that timezone, then converted to UTC for storage.
 
 This means "8 AM Pacific" stays "8 AM Pacific" regardless of DST. During standard time, that is UTC-8. During daylight time, that is UTC-7. The stored UTC instant changes to maintain the same local wall-clock time.
 
 ### All-Day Events: Date-Only (Future)
 
-ClubOS does not currently distinguish all-day events from timed events. When this capability is added, all-day events will be stored as date-only values (no time component), ensuring they appear on the correct calendar square regardless of timezone.
+Murmurant does not currently distinguish all-day events from timed events. When this capability is added, all-day events will be stored as date-only values (no time component), ensuring they appear on the correct calendar square regardless of timezone.
 
 ---
 
-## What ClubOS Does NOT Promise
+## What Murmurant Does NOT Promise
 
 ### External Calendar Rendering
 
@@ -90,11 +90,11 @@ When you export an event to Google Calendar or Apple Calendar, that external app
 
 ### Perfect Recurrence Support
 
-Recurring events (repeating weekly meetings, monthly gatherings) require additional complexity that ClubOS does not currently implement. If recurring events are added in the future, they will use the organization's timezone for recurrence calculations, so "every Tuesday at 10 AM" stays at 10 AM local time across DST boundaries.
+Recurring events (repeating weekly meetings, monthly gatherings) require additional complexity that Murmurant does not currently implement. If recurring events are added in the future, they will use the organization's timezone for recurrence calculations, so "every Tuesday at 10 AM" stays at 10 AM local time across DST boundaries.
 
 ### Multi-Timezone Participants
 
-ClubOS displays times in the organization's timezone. If a member is traveling in a different timezone, their calendar application will convert to local time, but ClubOS itself does not provide per-user timezone conversion.
+Murmurant displays times in the organization's timezone. If a member is traveling in a different timezone, their calendar application will convert to local time, but Murmurant itself does not provide per-user timezone conversion.
 
 ---
 
@@ -121,7 +121,7 @@ You configure what time of day registration opens for events (default: 8:00 AM).
 
 ### Cutover Verification Steps
 
-Before going live with ClubOS, verify that:
+Before going live with Murmurant, verify that:
 
 1. Events imported from your previous system show correct times
 2. Sample calendar exports display correctly in Google Calendar and Apple Calendar
@@ -137,7 +137,7 @@ Use this checklist to confirm calendar handling works correctly for your organiz
 
 Compare 3 sample events across calendar applications:
 
-- [ ] Create a test event in ClubOS at a specific time (e.g., Tuesday 2:00 PM)
+- [ ] Create a test event in Murmurant at a specific time (e.g., Tuesday 2:00 PM)
 - [ ] Export to Google Calendar and verify the time displays correctly
 - [ ] Export to Apple Calendar (macOS or iOS) and verify the time displays correctly
 - [ ] If times differ, note the discrepancy before going live
@@ -178,7 +178,7 @@ For events near midnight:
 
 ## Summary
 
-ClubOS handles calendar times by:
+Murmurant handles calendar times by:
 
 1. Storing all events as UTC instants (unambiguous, worldwide)
 2. Displaying times in your organization's configured timezone

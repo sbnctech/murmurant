@@ -1,8 +1,8 @@
-# ClubOS Project Plan
+# Murmurant Project Plan
 
 Copyright (c) Santa Barbara Newcomers Club
 
-This plan describes the current implementation phases for ClubOS.
+This plan describes the current implementation phases for Murmurant.
 It is kept short and practical so it can be read quickly before coding sessions.
 
 All files and code in this repository must use ASCII only and avoid smart quotes.
@@ -12,7 +12,7 @@ All markdown files must be formatted to render cleanly in MacDown.
 Phase 0: Foundation (completed)
 --------------------------------------------------
 
-- Create clubos repository under sbnctech.
+- Create murmurant repository under sbnctech.
 - Initialize Next.js 16 app router project with TypeScript and Tailwind.
 - Enable React strict mode and the React compiler with a conservative configuration.
 - Add basic app layout and health check endpoint at /api/health.
@@ -132,7 +132,7 @@ Phase 3: Email delivery and activity views (planned)
 
 Goals
 
-- Provide a stable abstraction for sending email from ClubOS.
+- Provide a stable abstraction for sending email from Murmurant.
 - Continue to use a mock provider in development, with a path to plug in a real provider later.
 - Give admins a simple way to see what messages were sent.
 
@@ -175,17 +175,17 @@ The project now has a working relational schema and local database for developme
 Completed:
 
 - Installed PostgreSQL 16 via Homebrew and started it as a background service.
-- Created a dedicated "clubos" role with login and createdb privileges.
-- Created a "clubos" database owned by the "clubos" role.
+- Created a dedicated "murmurant" role with login and createdb privileges.
+- Created a "murmurant" database owned by the "murmurant" role.
 - Configured DATABASE_URL in .env to use:
-  - postgresql://clubos:clubos@localhost:5432/clubos
+  - postgresql://murmurant:murmurant@localhost:5432/murmurant
 - Defined the following Prisma models and applied an initial migration:
   - Contact
   - Membership
   - Event
   - Registration
   - SmsMessageLog
-- Verified that tables exist in the "clubos" database and that Prisma Client can be generated successfully.
+- Verified that tables exist in the "murmurant" database and that Prisma Client can be generated successfully.
 
 ### Current constraints
 

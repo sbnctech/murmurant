@@ -1,6 +1,6 @@
-# ClubOS Hosting Cost Model
+# Murmurant Hosting Cost Model
 
-Projected infrastructure costs for running ClubOS in production.
+Projected infrastructure costs for running Murmurant in production.
 
 **Status**: Draft - Based on published pricing as of 2024.
 
@@ -155,9 +155,9 @@ R2 provides S3-compatible object storage with no egress fees.
 
 ---
 
-## Comparison: WA vs ClubOS Infrastructure
+## Comparison: WA vs Murmurant Infrastructure
 
-| Component | WA Subscription | ClubOS (Option B) |
+| Component | WA Subscription | Murmurant (Option B) |
 |-----------|-----------------|-------------------|
 | Database | Included | $19/month (Neon) |
 | Hosting | Included | $20/month (Vercel) |
@@ -165,7 +165,7 @@ R2 provides S3-compatible object storage with no egress fees.
 | File storage | Limited | $0 (R2) |
 | **Monthly Total** | Part of $X/month | ~$60/month |
 
-**Key Insight**: ClubOS hosting is additive cost, but:
+**Key Insight**: Murmurant hosting is additive cost, but:
 
 1. Eliminates WA external infrastructure (VPS, mail server)
 2. Eliminates WA subscription entirely

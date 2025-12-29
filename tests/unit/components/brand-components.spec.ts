@@ -8,26 +8,26 @@
 import { describe, it, expect } from "vitest";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
-import { ClubOSLogo, ClubOSBug, ClubOSWordmark } from "@/components/brand";
+import { MurmurantLogo, MurmurantBug, MurmurantWordmark } from "@/components/brand";
 
 describe("Brand Components", () => {
-  describe("ClubOSLogo", () => {
+  describe("MurmurantLogo", () => {
     it("renders without crashing", () => {
-      const html = ReactDOMServer.renderToString(React.createElement(ClubOSLogo));
+      const html = ReactDOMServer.renderToString(React.createElement(MurmurantLogo));
       expect(html).toBeDefined();
       expect(html.length).toBeGreaterThan(0);
     });
 
     it("accepts size prop", () => {
       const html = ReactDOMServer.renderToString(
-        React.createElement(ClubOSLogo, { size: "lg" })
+        React.createElement(MurmurantLogo, { size: "lg" })
       );
       expect(html).toBeDefined();
     });
 
     it("accepts variant prop", () => {
       const html = ReactDOMServer.renderToString(
-        React.createElement(ClubOSLogo, { variant: "white" })
+        React.createElement(MurmurantLogo, { variant: "white" })
       );
       expect(html).toBeDefined();
     });
@@ -36,7 +36,7 @@ describe("Brand Components", () => {
       const sizes = ["sm", "md", "lg", "xl"] as const;
       for (const size of sizes) {
         const html = ReactDOMServer.renderToString(
-          React.createElement(ClubOSLogo, { size })
+          React.createElement(MurmurantLogo, { size })
         );
         expect(html).toBeDefined();
       }
@@ -46,29 +46,29 @@ describe("Brand Components", () => {
       const variants = ["color", "white", "black"] as const;
       for (const variant of variants) {
         const html = ReactDOMServer.renderToString(
-          React.createElement(ClubOSLogo, { variant })
+          React.createElement(MurmurantLogo, { variant })
         );
         expect(html).toBeDefined();
       }
     });
   });
 
-  describe("ClubOSBug", () => {
+  describe("MurmurantBug", () => {
     it("renders without crashing", () => {
-      const html = ReactDOMServer.renderToString(React.createElement(ClubOSBug));
+      const html = ReactDOMServer.renderToString(React.createElement(MurmurantBug));
       expect(html).toBeDefined();
       expect(html.length).toBeGreaterThan(0);
     });
 
     it("renders as SVG", () => {
-      const html = ReactDOMServer.renderToString(React.createElement(ClubOSBug));
+      const html = ReactDOMServer.renderToString(React.createElement(MurmurantBug));
       expect(html).toContain("<svg");
       expect(html).toContain("</svg>");
     });
 
     it("accepts size prop", () => {
       const html = ReactDOMServer.renderToString(
-        React.createElement(ClubOSBug, { size: 32 })
+        React.createElement(MurmurantBug, { size: 32 })
       );
       expect(html).toContain('width="32"');
       expect(html).toContain('height="32"');
@@ -76,14 +76,14 @@ describe("Brand Components", () => {
 
     it("accepts variant prop", () => {
       const html = ReactDOMServer.renderToString(
-        React.createElement(ClubOSBug, { variant: "white" })
+        React.createElement(MurmurantBug, { variant: "white" })
       );
       expect(html).toContain("#FFFFFF");
     });
 
     it("has accessible label", () => {
-      const html = ReactDOMServer.renderToString(React.createElement(ClubOSBug));
-      expect(html).toContain('aria-label="ClubOS"');
+      const html = ReactDOMServer.renderToString(React.createElement(MurmurantBug));
+      expect(html).toContain('aria-label="Murmurant"');
       expect(html).toContain('role="img"');
     });
 
@@ -91,24 +91,23 @@ describe("Brand Components", () => {
       const sizes = [16, 24, 32, 48, 64] as const;
       for (const size of sizes) {
         const html = ReactDOMServer.renderToString(
-          React.createElement(ClubOSBug, { size })
+          React.createElement(MurmurantBug, { size })
         );
         expect(html).toContain(`width="${size}"`);
       }
     });
   });
 
-  describe("ClubOSWordmark", () => {
+  describe("MurmurantWordmark", () => {
     it("renders without crashing", () => {
-      const html = ReactDOMServer.renderToString(React.createElement(ClubOSWordmark));
+      const html = ReactDOMServer.renderToString(React.createElement(MurmurantWordmark));
       expect(html).toBeDefined();
       expect(html.length).toBeGreaterThan(0);
     });
 
-    it("renders ClubOS text", () => {
-      const html = ReactDOMServer.renderToString(React.createElement(ClubOSWordmark));
-      expect(html).toContain("Club");
-      expect(html).toContain("OS");
+    it("renders Murmurant text", () => {
+      const html = ReactDOMServer.renderToString(React.createElement(MurmurantWordmark));
+      expect(html).toContain("Murmurant");
     });
   });
 });

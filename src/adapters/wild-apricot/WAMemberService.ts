@@ -1,7 +1,7 @@
 /**
  * Wild Apricot Member Service
  *
- * Handles member data synchronization between ClubOS and Wild Apricot.
+ * Handles member data synchronization between Murmurant and Wild Apricot.
  */
 
 import {

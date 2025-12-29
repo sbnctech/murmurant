@@ -1,7 +1,7 @@
-# ClubOS Personas
+# Murmurant Personas
 Copyright (c) Santa Barbara Newcomers Club
 
-This document defines the primary user personas for ClubOS. These personas represent typical members, volunteers, and leaders of the Santa Barbara Newcomers Club. Most have moved to Santa Barbara within the last 18 months, spend at least six months per year in town, and have been members for two to three years. Many take leadership roles in part to qualify for extended membership.
+This document defines the primary user personas for Murmurant. These personas represent typical members, volunteers, and leaders of the Santa Barbara Newcomers Club. Most have moved to Santa Barbara within the last 18 months, spend at least six months per year in town, and have been members for two to three years. Many take leadership roles in part to qualify for extended membership.
 
 All personas are non-technical. They do not write code, manage servers, or maintain databases. Design, documentation, and the user interface must be clear, simple, and written in everyday language.
 
@@ -26,7 +26,7 @@ Alice helps with small tasks on a social committee and occasionally hosts small 
 Struggles:  
 Confusing instructions, long emails, unclear workflows, and hidden admin settings.
 
-What ClubOS must support:  
+What Murmurant must support:  
 Clear pages, readable fonts, friendly labels, step-by-step flows, and no jargon.
 
 ------------------------------------------------------------
@@ -47,7 +47,7 @@ Bob often takes on event chair roles because he is comfortable with logistics an
 Struggles:  
 Too many buttons on one screen, unclear permission settings, and unpredictable behavior in systems.
 
-What ClubOS must support:  
+What Murmurant must support:  
 Predictable workflows, simple checklists, clear confirmation messages, and easy exports of attendee lists.
 
 ------------------------------------------------------------
@@ -68,7 +68,7 @@ Carol chairs committees and may serve on the board.
 Struggles:  
 Systems that make governance harder instead of easier. She dislikes when role changes require guesswork.
 
-What ClubOS must support:  
+What Murmurant must support:  
 Committee tools, approvals, role transitions, term-based permissions, and plain-language reporting.
 
 ------------------------------------------------------------
@@ -89,7 +89,7 @@ David serves as president or in other top leadership roles.
 Struggles:  
 Impatience with slow systems and unclear workflows. He dislikes surprises and hidden rules.
 
-What ClubOS must support:  
+What Murmurant must support:  
 Simple dashboards with key insights, quick summaries of membership and events, clear approval flows, templates for president letters, and stable, predictable behavior.
 
 ------------------------------------------------------------
@@ -110,7 +110,7 @@ Ellen works on the membership team, reviewing applications and tracking member s
 Struggles:  
 Manually sorting applicants, tracking status changes in spreadsheets, and unclear communication templates.
 
-What ClubOS must support:  
+What Murmurant must support:  
 Membership pipelines, application forms, approvals, renewals, and automatic reminders that are easy to understand and manage.
 
 ------------------------------------------------------------
@@ -131,7 +131,7 @@ Frank handles hands-on logistics such as setup, supplies, and on-the-day support
 Struggles:  
 Hard-to-find information, cluttered interfaces, and unclear responsibilities.
 
-What ClubOS must support:  
+What Murmurant must support:  
 Simple task lists, concise event pages, clear notes about what is needed, and quick access to who is attending.
 
 ------------------------------------------------------------
@@ -152,7 +152,7 @@ Grace helps write newsletters, announcements, and event descriptions.
 Struggles:  
 Confusing email tools, fragile templates, and accidental sends to the wrong audience.
 
-What ClubOS must support:  
+What Murmurant must support:  
 Locked templates, audience safeguards, simple personalization fields, preview modes, and clear send confirmations.
 
 ------------------------------------------------------------
@@ -173,7 +173,7 @@ Henry photographs events and helps maintain photo galleries.
 Struggles:  
 Photo upload limits, inconsistent gallery layouts, and unclear rules for which photos go where.
 
-What ClubOS must support:  
+What Murmurant must support:  
 Photo gadgets, album upload flows, consistent metadata, simple tagging by event, and role-scoped editing rights.
 
 ------------------------------------------------------------
@@ -194,7 +194,7 @@ Irene acts as an informal support person for other volunteers who get stuck.
 Struggles:  
 Systems that are not explainable in plain English. She dislikes hidden rules and unclear error messages.
 
-What ClubOS must support:  
+What Murmurant must support:  
 Clear documentation, in-system help, hover explanations, safe defaults, and consistent terminology.
 
 ------------------------------------------------------------
@@ -215,7 +215,7 @@ Jack serves as an event host. He manages check-in, name tags, waitlists, and on-
 Struggles:  
 Complicated check-in tools, unpredictable waitlist behavior, and confusing exports for name tags.
 
-What ClubOS must support:  
+What Murmurant must support:  
 Host mode, one-click name tag exports, clear waitlist ordering, mobile-friendly check-in, and simple communication tools for attendees.
 
 ------------------------------------------------------------
@@ -236,7 +236,7 @@ Alex serves as the technology chair or leads the technology committee. He evalua
 Struggles:  
 Legacy systems with hidden behavior, poor documentation, and brittle integrations. He does not want to maintain servers or perform low-level administration.
 
-What ClubOS must support:  
+What Murmurant must support:  
 Clear admin tools, no hidden side effects, full documentation that an hourly contractor or future helper can follow, predictable data structures, clean import and export, strong permissions, workflow observability, and useful logs.
 
 ------------------------------------------------------------
@@ -253,4 +253,4 @@ These personas should guide:
 - Onboarding and training  
 - In-app help and guidance  
 
-Every feature of ClubOS should be testable against these personas. The system should remain understandable by non-technical users and maintainable by future volunteers or a contractor following the documentation.
+Every feature of Murmurant should be testable against these personas. The system should remain understandable by non-technical users and maintainable by future volunteers or a contractor following the documentation.

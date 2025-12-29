@@ -1,10 +1,10 @@
 # Embed Widget SDK v1
 
 Goal
-- Allow third parties to embed ClubOS widgets safely without weakening RBAC.
+- Allow third parties to embed Murmurant widgets safely without weakening RBAC.
 
 Pattern A (recommended): iframe embed
-- <iframe src="https://clubos.example/embed/widget?widget_id=...&token=...">
+- <iframe src="https://murmurant.example/embed/widget?widget_id=...&token=...">
 - Token is short-lived, signed, and origin-bound.
 
 Pattern B (optional): small JS loader

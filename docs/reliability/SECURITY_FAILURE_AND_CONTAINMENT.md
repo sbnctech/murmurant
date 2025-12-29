@@ -1,10 +1,10 @@
-# ClubOS — Security Failure and Containment Guarantees
+# Murmurant — Security Failure and Containment Guarantees
 
 Status: Canonical Specification  
 Applies to: All production environments  
 Last updated: 2025-12-20
 
-This document defines how ClubOS behaves when security assumptions fail.
+This document defines how Murmurant behaves when security assumptions fail.
 The objective is containment, visibility, and preservation of trust.
 
 This document is normative.
@@ -99,7 +99,7 @@ Security uncertainty:
 
 ## 9. Explicit Non-Guarantees
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Zero vulnerabilities
 - Automatic detection of all abuse
 - Prevention of insider misuse
@@ -114,4 +114,4 @@ The goal is containment and trust.
 - Ambiguity resolves toward denial
 - Violations are SEV-1 incidents
 
-This document defines how ClubOS survives security failure.
+This document defines how Murmurant survives security failure.

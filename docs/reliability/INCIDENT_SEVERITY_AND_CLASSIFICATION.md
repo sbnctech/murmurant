@@ -1,10 +1,10 @@
-# ClubOS — Incident Severity and Classification
+# Murmurant — Incident Severity and Classification
 
 Status: Canonical Specification
 Applies to: All incidents, all environments
 Last updated: 2025-12-21
 
-This document defines how incidents are classified in ClubOS,
+This document defines how incidents are classified in Murmurant,
 what severity means, and what actions are REQUIRED at each level.
 
 This document is normative.
@@ -26,7 +26,7 @@ If correctness or authorization is uncertain:
 
 ## 2. Severity Levels (Authoritative)
 
-ClubOS uses three severity levels only.
+Murmurant uses three severity levels only.
 
 ### SEV-1 — Critical (System Safety at Risk)
 
@@ -176,5 +176,5 @@ The goal is safety and trust.
 - Repeated under-classification is a governance failure
 - Features without clear severity behavior MUST NOT merge
 
-This document is the authoritative source for incident severity in ClubOS.
+This document is the authoritative source for incident severity in Murmurant.
 

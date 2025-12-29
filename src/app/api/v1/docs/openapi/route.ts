@@ -17,12 +17,12 @@ import { NextResponse } from "next/server";
 const openApiSpec = {
   openapi: "3.0.3",
   info: {
-    title: "ClubOS API",
+    title: "Murmurant API",
     description: "Internal API for Santa Barbara Newcomers Club management system",
     version: "1.0.0",
     contact: {
       name: "Tech Lead",
-      url: "https://github.com/sbnewcomers/clubos",
+      url: "https://github.com/sbnewcomers/murmurant",
     },
   },
   servers: [
@@ -474,7 +474,7 @@ const openApiSpec = {
       session: {
         type: "apiKey",
         in: "cookie",
-        name: "clubos_session",
+        name: "murmurant_session",
         description: "Session cookie from login",
       },
     },

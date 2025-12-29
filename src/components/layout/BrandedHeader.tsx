@@ -26,7 +26,7 @@ export interface BrandedHeaderProps {
 export function BrandedHeader({
   logoUrl,
   logoAlt = "Club Logo",
-  clubName = "ClubOS",
+  clubName = "Murmurant",
   navLinks = [],
   variant = "public",
   userName,

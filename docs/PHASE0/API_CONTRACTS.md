@@ -1,6 +1,6 @@
-# ClubOS Service API Contracts
+# Murmurant Service API Contracts
 
-This document defines the API contracts for ClubOS service interfaces. All endpoints follow RESTful conventions and return JSON responses.
+This document defines the API contracts for Murmurant service interfaces. All endpoints follow RESTful conventions and return JSON responses.
 
 ## Common Response Format
 

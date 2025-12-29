@@ -1,12 +1,12 @@
-# ClubOS Deployment Overview
+# Murmurant Deployment Overview
 
-This document explains how ClubOS is deployed to the web and what databases it uses.
+This document explains how Murmurant is deployed to the web and what databases it uses.
 
 ---
 
 ## Current State (as of December 2025)
 
-ClubOS uses two cloud services for hosting:
+Murmurant uses two cloud services for hosting:
 
 - **Netlify** - Hosts the web application
 - **Neon** - Hosts the PostgreSQL database
@@ -15,8 +15,8 @@ ClubOS uses two cloud services for hosting:
 
 | Site Name | URL | Git Branch | Purpose |
 |-----------|-----|------------|---------|
-| clubos-staging-sbnc | https://clubos-staging-sbnc.netlify.app | sandbox | Testing before production |
-| clubos-prod-sbnc | https://clubos-prod-sbnc.netlify.app | sandbox* | Live production site |
+| murmurant-staging-sbnc | https://murmurant-staging-sbnc.netlify.app | sandbox | Testing before production |
+| murmurant-prod-sbnc | https://murmurant-prod-sbnc.netlify.app | sandbox* | Live production site |
 
 *Note: Production is currently deploying from `sandbox` branch. Target architecture is `main` branch.
 
@@ -39,15 +39,15 @@ The recommended architecture isolates production from staging completely.
 
 | Environment | Netlify Site | Git Branch | Neon Project | URL |
 |-------------|--------------|------------|--------------|-----|
-| Production | clubos-prod-sbnc | main | clubos-prod (separate) | https://clubos-prod-sbnc.netlify.app |
-| Staging | clubos-staging-sbnc | sandbox | clubos-staging | https://clubos-staging-sbnc.netlify.app |
-| PR Preview | (auto-generated) | PR branch | clubos-staging | https://deploy-preview-NNN--clubos-staging-sbnc.netlify.app |
+| Production | murmurant-prod-sbnc | main | murmurant-prod (separate) | https://murmurant-prod-sbnc.netlify.app |
+| Staging | murmurant-staging-sbnc | sandbox | murmurant-staging | https://murmurant-staging-sbnc.netlify.app |
+| PR Preview | (auto-generated) | PR branch | murmurant-staging | https://deploy-preview-NNN--murmurant-staging-sbnc.netlify.app |
 | Local Dev | none | any | localhost:5432 | http://localhost:3000 |
 
 ### Architecture Diagram
 
 ```
-                    GitHub (sbnctech/clubos)
+                    GitHub (sbnctech/murmurant)
                               |
             +-----------------+-----------------+
             |                                   |
@@ -55,13 +55,13 @@ The recommended architecture isolates production from staging completely.
             |                                   |
             v                                   v
    +------------------+               +------------------+
-   | clubos-prod-sbnc |               | clubos-staging-sbnc |
+   | murmurant-prod-sbnc |               | murmurant-staging-sbnc |
    | (Netlify)        |               | (Netlify)           |
    +------------------+               +------------------+
             |                                   |
             v                                   v
    +------------------+               +------------------+
-   | Neon: clubos-prod|               | Neon: clubos-staging |
+   | Neon: murmurant-prod|               | Neon: murmurant-staging |
    | (isolated)       |               | (shared with PR previews) |
    +------------------+               +------------------+
 ```

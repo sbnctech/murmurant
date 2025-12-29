@@ -34,7 +34,7 @@ test.describe("GET /api/v1/members/:id/public", () => {
     test("returns 401 with invalid session cookie", async ({ request }) => {
       const response = await request.get(`${BASE}/api/v1/members/mem_fake123/public`, {
         headers: {
-          Cookie: "clubos_session=invalid-token-xyz",
+          Cookie: "murmurant_session=invalid-token-xyz",
         },
       });
 
@@ -44,7 +44,7 @@ test.describe("GET /api/v1/members/:id/public", () => {
     test("returns 401 with expired session cookie", async ({ request }) => {
       const response = await request.get(`${BASE}/api/v1/members/mem_fake123/public`, {
         headers: {
-          Cookie: "clubos_session=expired.session.token",
+          Cookie: "murmurant_session=expired.session.token",
         },
       });
 
@@ -145,7 +145,7 @@ test.describe("GET /api/v1/members/directory", () => {
     test("returns 401 with invalid session cookie", async ({ request }) => {
       const response = await request.get(`${BASE}/api/v1/members/directory`, {
         headers: {
-          Cookie: "clubos_session=invalid-token",
+          Cookie: "murmurant_session=invalid-token",
         },
       });
 

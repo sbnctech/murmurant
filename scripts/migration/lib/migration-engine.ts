@@ -31,7 +31,7 @@ export class MigrationEngine {
 
   async run(): Promise<MigrationReport> {
     const start = Date.now();
-    this.log(`\n${'='.repeat(60)}\nClubOS Migration - ${this.report.runId}\nMode: ${this.options.dryRun ? 'DRY RUN' : 'LIVE'}\n${'='.repeat(60)}\n`);
+    this.log(`\n${'='.repeat(60)}\nMurmurant Migration - ${this.report.runId}\nMode: ${this.options.dryRun ? 'DRY RUN' : 'LIVE'}\n${'='.repeat(60)}\n`);
     try {
       await this.loadLookups();
       if (this.options.membersFile) await this.processMembers();
@@ -100,15 +100,15 @@ export class MigrationEngine {
         else if (tierResult.error) { this.log(`  WARN: ${tierResult.error}`, 'error'); }
       }
       if (existing) {
-        if (this.config.id_reconciliation.members.on_conflict === 'skip') { r._action = 'skip'; r._clubosId = existing; this.report.members.skipped++; }
-        else { r._action = 'update'; r._clubosId = existing; if (!this.options.dryRun) await this.prisma.member.update({ where: { id: existing }, data: { firstName: r.firstName, lastName: r.lastName, phone: r.phone || null, joinedAt: r.joinedAt, membershipStatusId: statusId, ...(tierIdToAssign && { membershipTierId: tierIdToAssign }) } }); this.report.members.updated++; }
+        if (this.config.id_reconciliation.members.on_conflict === 'skip') { r._action = 'skip'; r._murmurantId = existing; this.report.members.skipped++; }
+        else { r._action = 'update'; r._murmurantId = existing; if (!this.options.dryRun) await this.prisma.member.update({ where: { id: existing }, data: { firstName: r.firstName, lastName: r.lastName, phone: r.phone || null, joinedAt: r.joinedAt, membershipStatusId: statusId, ...(tierIdToAssign && { membershipTierId: tierIdToAssign }) } }); this.report.members.updated++; }
       } else {
         r._action = 'create';
-        if (!this.options.dryRun) { const c = await this.prisma.member.create({ data: { firstName: r.firstName, lastName: r.lastName, email: r.email, phone: r.phone || null, joinedAt: r.joinedAt, membershipStatusId: statusId, ...(tierIdToAssign && { membershipTierId: tierIdToAssign }) } }); r._clubosId = c.id; this.memberLookup.set(email, c.id); }
-        else r._clubosId = `dry-${randomUUID()}`;
+        if (!this.options.dryRun) { const c = await this.prisma.member.create({ data: { firstName: r.firstName, lastName: r.lastName, email: r.email, phone: r.phone || null, joinedAt: r.joinedAt, membershipStatusId: statusId, ...(tierIdToAssign && { membershipTierId: tierIdToAssign }) } }); r._murmurantId = c.id; this.memberLookup.set(email, c.id); }
+        else r._murmurantId = `dry-${randomUUID()}`;
         this.report.members.created++;
       }
-      if (r._waId && r._clubosId) { this.memberIdMap.set(r._waId, r._clubosId); this.report.idMapping.members.push({ waId: r._waId, clubosId: r._clubosId, email: r.email }); }
+      if (r._waId && r._murmurantId) { this.memberIdMap.set(r._waId, r._murmurantId); this.report.idMapping.members.push({ waId: r._waId, murmurantId: r._murmurantId, email: r.email }); }
     } catch (e) { r._action = 'skip'; r._errors = [...(r._errors || []), (e as Error).message]; this.report.members.errors++; this.report.errors.push({ entity: 'member', sourceRow: r._sourceRow, message: (e as Error).message, waId: r._waId }); }
   }
 
@@ -132,14 +132,14 @@ export class MigrationEngine {
     if (r._errors?.length) { r._action = 'skip'; return; }
     try {
       const key = this.eventKey(r.title, r.startTime), existing = this.eventLookup.get(key);
-      if (existing) { r._action = 'skip'; r._clubosId = existing; this.report.events.skipped++; }
+      if (existing) { r._action = 'skip'; r._murmurantId = existing; this.report.events.skipped++; }
       else {
         r._action = 'create';
-        if (!this.options.dryRun) { const c = await this.prisma.event.create({ data: { title: r.title, description: r.description || null, category: r.category || null, location: r.location || null, startTime: r.startTime, endTime: r.endTime || null, capacity: r.capacity || null, isPublished: r.isPublished } }); r._clubosId = c.id; this.eventLookup.set(key, c.id); }
-        else r._clubosId = `dry-${randomUUID()}`;
+        if (!this.options.dryRun) { const c = await this.prisma.event.create({ data: { title: r.title, description: r.description || null, category: r.category || null, location: r.location || null, startTime: r.startTime, endTime: r.endTime || null, capacity: r.capacity || null, isPublished: r.isPublished } }); r._murmurantId = c.id; this.eventLookup.set(key, c.id); }
+        else r._murmurantId = `dry-${randomUUID()}`;
         this.report.events.created++;
       }
-      if (r._waId && r._clubosId) { this.eventIdMap.set(r._waId, r._clubosId); this.report.idMapping.events.push({ waId: r._waId, clubosId: r._clubosId, title: r.title }); }
+      if (r._waId && r._murmurantId) { this.eventIdMap.set(r._waId, r._murmurantId); this.report.idMapping.events.push({ waId: r._waId, murmurantId: r._murmurantId, title: r.title }); }
     } catch (e) { r._action = 'skip'; r._errors = [...(r._errors || []), (e as Error).message]; this.report.events.errors++; this.report.errors.push({ entity: 'event', sourceRow: r._sourceRow, message: (e as Error).message, waId: r._waId }); }
   }
 
@@ -170,12 +170,12 @@ export class MigrationEngine {
       const existing = this.options.dryRun ? null : await this.prisma.eventRegistration.findUnique({ where: { eventId_memberId: { eventId: r.eventId, memberId: r.memberId } } });
       const status = r.status as 'CONFIRMED' | 'CANCELLED' | 'WAITLISTED' | 'PENDING' | 'NO_SHOW';
       if (existing) {
-        if (this.config.id_reconciliation.registrations.on_conflict === 'skip') { r._action = 'skip'; r._clubosId = existing.id; this.report.registrations.skipped++; }
-        else { r._action = 'update'; r._clubosId = existing.id; if (!this.options.dryRun) await this.prisma.eventRegistration.update({ where: { id: existing.id }, data: { status, registeredAt: r.registeredAt, cancelledAt: r.cancelledAt || null } }); this.report.registrations.updated++; }
+        if (this.config.id_reconciliation.registrations.on_conflict === 'skip') { r._action = 'skip'; r._murmurantId = existing.id; this.report.registrations.skipped++; }
+        else { r._action = 'update'; r._murmurantId = existing.id; if (!this.options.dryRun) await this.prisma.eventRegistration.update({ where: { id: existing.id }, data: { status, registeredAt: r.registeredAt, cancelledAt: r.cancelledAt || null } }); this.report.registrations.updated++; }
       } else {
         r._action = 'create';
-        if (!this.options.dryRun) { const c = await this.prisma.eventRegistration.create({ data: { eventId: r.eventId, memberId: r.memberId, status, registeredAt: r.registeredAt, cancelledAt: r.cancelledAt || null } }); r._clubosId = c.id; }
-        else r._clubosId = `dry-${randomUUID()}`;
+        if (!this.options.dryRun) { const c = await this.prisma.eventRegistration.create({ data: { eventId: r.eventId, memberId: r.memberId, status, registeredAt: r.registeredAt, cancelledAt: r.cancelledAt || null } }); r._murmurantId = c.id; }
+        else r._murmurantId = `dry-${randomUUID()}`;
         this.report.registrations.created++;
       }
     } catch (e) { r._action = 'skip'; r._errors = [...(r._errors || []), (e as Error).message]; this.report.registrations.errors++; this.report.errors.push({ entity: 'registration', sourceRow: r._sourceRow, message: (e as Error).message, waId: r._waId }); }

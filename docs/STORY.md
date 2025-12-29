@@ -1,6 +1,6 @@
 Copyright (c) 2025 Santa Barbara Newcomers Club. All rights reserved.
 
-# The Story of the ClubOS Project
+# The Story of the Murmurant Project
 
 How the idea became a working system and how the team made it happen.
 
@@ -14,7 +14,7 @@ The project began with a simple, ambitious idea:
 replace the limitations of legacy platforms and give clubs real
 control over their members, events, registrations, and communications."
 
-The first sketch of ClubOS included:
+The first sketch of Murmurant included:
 
 - A unified admin dashboard
 - Explorer views for members, events, and registrations
@@ -215,7 +215,7 @@ Key documents include:
 - INDEX and NAV style docs
   - Central entry points for project documentation
 
-This documentation layer moves ClubOS beyond "demo" status into something
+This documentation layer moves Murmurant beyond "demo" status into something
 that looks and feels like an internal product platform.
 
 ----------------------------------------------------------------
@@ -268,9 +268,9 @@ a strong quality bar.
 
 ----------------------------------------------------------------
 
-## Chapter 8 - The Goal: A Replaceable, Modular ClubOS
+## Chapter 8 - The Goal: A Replaceable, Modular Murmurant
 
-The intent of ClubOS is clear:
+The intent of Murmurant is clear:
 
 - Provide a complete, navigable, test covered admin interface.
 - Back it with clean, composable admin APIs.
@@ -283,7 +283,7 @@ The intent of ClubOS is clear:
   - External integrations
   - Future automation and advanced features
 
-ClubOS is designed to be a credible successor to legacy club systems,
+Murmurant is designed to be a credible successor to legacy club systems,
 not a disposable experiment.
 
 ----------------------------------------------------------------
@@ -500,7 +500,7 @@ STORY.md is intended to sit alongside HISTORY.md:
 - HISTORY.md holds the timeline, hours, and factual milestones.
 - STORY.md holds the narrative arc and lessons learned.
 
-Both should grow together as ClubOS moves toward production.
+Both should grow together as Murmurant moves toward production.
 
 ## Sunday, 2025-12-14 ~09:30 PT - The Sunday Morning Docs Wave
 
@@ -508,7 +508,7 @@ Sunday morning began with a clear goal: keep the story and the rules ahead of th
 
 Multiple small documentation PRs landed or were opened in parallel, each one scoped to a single concept and designed to be reviewable:
 - One PR codified safe embedding patterns for widgets, explicitly stating what is allowed and what is forbidden.
-- One PR captured a plain-language assessment of how an events/calendar widget fits the ClubOS model without drifting into implementation.
+- One PR captured a plain-language assessment of how an events/calendar widget fits the Murmurant model without drifting into implementation.
 - Another PR wrote down a bias toward adopting proven open-source modules to reduce long-term maintenance, while insisting on RBAC, auditability, and clear wrapper boundaries.
 
 A key meta-lesson emerged:
@@ -522,7 +522,7 @@ After capturing the narrative and governance intent, the project moved into "con
 A cluster of documentation PRs was merged to lock down how widgets and embedded experiences must behave:
 - A dedicated security model for embedded widgets clarified sandboxing, allowed capabilities, and the "deny by default" posture.
 - A companion security model for admin widgets clarified RBAC boundaries for list-style gadgets and privileged operations.
-- The embed widget SDK contract and an iframe-first SDK note established a clear boundary between ClubOS and any external site embedding ClubOS widgets.
+- The embed widget SDK contract and an iframe-first SDK note established a clear boundary between Murmurant and any external site embedding Murmurant widgets.
 - A first read-only finance approval queue contract was recorded to keep money-adjacent UI safely constrained.
 - The Activities delegated admin model landed with explicit deny-path tests and a support playbook, reinforcing that delegation must be auditable and safe.
 

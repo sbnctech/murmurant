@@ -1,7 +1,7 @@
 /**
  * Layout Components
  *
- * Token-based layout components for consistent UI across ClubOS.
+ * Token-based layout components for consistent UI across Murmurant.
  */
 
 export { default as PageHeader } from "./PageHeader";

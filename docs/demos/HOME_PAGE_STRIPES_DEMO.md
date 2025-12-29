@@ -8,7 +8,7 @@ Copyright (c) Santa Barbara Newcomers Club
 
 ## Overview
 
-This demo showcases ClubOS's flexible page model:
+This demo showcases Murmurant's flexible page model:
 
 - **Public home page** (`/`): Marketing-forward with hero, events, gift certificates
 - **Member home page** (`/my`): Two-column utility/curated layout
@@ -73,7 +73,7 @@ This demo showcases ClubOS's flexible page model:
 
 Compare to legacy system limitations:
 
-| Legacy System | ClubOS |
+| Legacy System | Murmurant |
 |---------------|--------|
 | Separate admin/member sites | Single site, role-aware rendering |
 | Rigid page templates | Composable stripes |
@@ -110,7 +110,7 @@ The "View as" control reduces cognitive load:
 
 ### For Board / Decision Makers
 
-This demonstrates ClubOS can:
+This demonstrates Murmurant can:
 
 - Deliver personalized experiences
 - Unify admin and member portals
@@ -142,7 +142,7 @@ Usage:
 
 ### View-As System
 
-Controlled by cookie (`clubos_view_as`):
+Controlled by cookie (`murmurant_view_as`):
 
 - Server reads via `getViewContext()` in server components
 - Client reads via `useViewAs()` hook

@@ -10,7 +10,7 @@
 
 ## Purpose
 
-This document defines the official terminology for ClubOS. It prevents semantic drift—the gradual weakening or inflation of meaning that erodes trust.
+This document defines the official terminology for Murmurant. It prevents semantic drift—the gradual weakening or inflation of meaning that erodes trust.
 
 This document is normative. When writing documentation, UI text, or communications:
 
@@ -179,7 +179,7 @@ Errors are system failures. Unknowns are gaps requiring human judgment.
 | **Fidelity** | Faithful representation | Intent preserved, not identical |
 | **Equivalence** | Exactly the same | Implies pixel-perfect match |
 
-ClubOS provides fidelity (recognizable), not equivalence (identical).
+Murmurant provides fidelity (recognizable), not equivalence (identical).
 
 ### Proposal vs. Action
 

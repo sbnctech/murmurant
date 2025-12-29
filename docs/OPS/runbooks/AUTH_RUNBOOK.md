@@ -1,6 +1,6 @@
 # Authentication Runbook
 
-Operational procedures for ClubOS authentication system.
+Operational procedures for Murmurant authentication system.
 
 **Charter Principles:**
 
@@ -12,7 +12,7 @@ Operational procedures for ClubOS authentication system.
 
 ## Overview
 
-ClubOS uses passkey-based authentication (WebAuthn). Key components:
+Murmurant uses passkey-based authentication (WebAuthn). Key components:
 
 - **Auth Provider**: NextAuth.js with WebAuthn adapter
 - **Session Storage**: Database-backed sessions (PostgreSQL)

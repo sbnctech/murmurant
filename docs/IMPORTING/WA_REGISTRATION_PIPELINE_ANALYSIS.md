@@ -8,7 +8,7 @@ Audit Type: Read-only code analysis (no sync runs, no schema changes)
 ## Summary
 
 The WA registration import pipeline fetches event registrations from Wild Apricot
-and upserts them into ClubOS. Registrations can be skipped for several reasons,
+and upserts them into Murmurant. Registrations can be skipped for several reasons,
 some of which are logged and some of which may appear silent to operators.
 
 ---
@@ -73,14 +73,14 @@ Checks performed before transform:
 
 ### Skip Reason Details
 
-**Event not mapped**: The WA event ID has no corresponding ClubOS event ID in
+**Event not mapped**: The WA event ID has no corresponding Murmurant event ID in
 `WaIdMapping`. This happens if:
 - Event was never synced (new event in WA)
 - Event sync failed previously
-- Event was deleted in ClubOS but mapping remains
+- Event was deleted in Murmurant but mapping remains
 
 **Member not mapped**: The WA contact ID on the registration has no corresponding
-ClubOS member ID. This happens if:
+Murmurant member ID. This happens if:
 - Contact was never synced
 - Contact sync failed (e.g., missing email, missing name)
 - Contact was filtered out during sync
@@ -88,7 +88,7 @@ ClubOS member ID. This happens if:
 **Transform error**: The registration's `RegistrationDate` field cannot be parsed
 as a valid ISO8601 date.
 
-**Status unchanged**: Registration already exists in ClubOS with the same status.
+**Status unchanged**: Registration already exists in Murmurant with the same status.
 This is a no-op skip, not an error.
 
 ---
@@ -246,7 +246,7 @@ The `RegistrationDiagnostics` struct tracks:
 | Counter | Meaning |
 |---------|---------|
 | `eventsProcessed` | Total events iterated |
-| `eventsSkippedUnmapped` | Events with no ClubOS mapping |
+| `eventsSkippedUnmapped` | Events with no Murmurant mapping |
 | `registrationFetchCalls` | Number of WA API calls made |
 | `registrationsFetchedTotal` | Total registrations received from WA |
 | `registrationsTransformedOk` | Registrations that passed validation |

@@ -65,7 +65,7 @@ When the system cannot make a confident prediction, it must mark uncertainty exp
 |--------|---------|
 | `UNCERTAIN` | Decision depends on runtime conditions that may change |
 | `REQUIRES_HUMAN` | System cannot proceed without human judgment |
-| `EXTERNAL_DEPENDENCY` | Outcome depends on an external system not under ClubOS control |
+| `EXTERNAL_DEPENDENCY` | Outcome depends on an external system not under Murmurant control |
 | `POLICY_AMBIGUOUS` | Multiple valid interpretations exist; customer must clarify |
 
 Uncertainty markers are not failures. They are honest communication.

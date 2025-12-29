@@ -1,7 +1,7 @@
 /**
  * Membership Tier Mapper
  *
- * Maps WA membership levels to ClubOS MembershipTier IDs.
+ * Maps WA membership levels to Murmurant MembershipTier IDs.
  * Gated by feature flag: membership_tiers_enabled
  *
  * Related: Issue #276, #275, #202
@@ -48,7 +48,7 @@ export function isTierMappingEnabled(): boolean {
 
 /**
  * Load tier mappings from database and policy.
- * Returns a mapper that can resolve WA levels to ClubOS tier IDs.
+ * Returns a mapper that can resolve WA levels to Murmurant tier IDs.
  */
 export async function loadTierMappings(
   prisma: PrismaClient
@@ -104,7 +104,7 @@ export async function loadTierMappings(
 }
 
 /**
- * Resolve a WA membership level to a ClubOS tier ID.
+ * Resolve a WA membership level to a Murmurant tier ID.
  */
 export function resolveTierId(
   waLevel: string,

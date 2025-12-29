@@ -1,7 +1,7 @@
 # Salvage Plan: Issue #202 - WA Migration/Importing Wave
 
 **Status:** Parked
-**Tracking Issue:** [#202](https://github.com/sbnctech/clubos/issues/202)
+**Tracking Issue:** [#202](https://github.com/sbnctech/murmurant/issues/202)
 **Theme Label:** `theme-migration`
 **Date:** 2025-12-21
 
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-The Migration wave contains data import infrastructure for moving from Wild Apricot to ClubOS. This is operationally critical but isolated from other waves. The PRs are loosely coupled and can be integrated independently.
+The Migration wave contains data import infrastructure for moving from Wild Apricot to Murmurant. This is operationally critical but isolated from other waves. The PRs are loosely coupled and can be integrated independently.
 
 **Recommendation:** Land documentation and scripts first. Schema changes require careful ordering. Email infrastructure can wait until after core migration works.
 
@@ -19,7 +19,7 @@ The Migration wave contains data import infrastructure for moving from Wild Apri
 
 | PR | Title | Files | Key Content | Risk |
 |----|-------|-------|-------------|------|
-| #120 | feat(migration): WA to ClubOS data migration pipeline | 15 | Migration engine, CSV parser, config | MEDIUM |
+| #120 | feat(migration): WA to Murmurant data migration pipeline | 15 | Migration engine, CSV parser, config | MEDIUM |
 | #134 | feat(importing): MembershipTier and WA level mapping | 10 | MembershipTier model, tier resolution | MEDIUM |
 | #119 | feat(email): email tracking and VP Tech dashboard | 6 | DeliveryLog enhancements, email health | LOW |
 | #117 | feat(comms): Email templates and composer system | 15 | EmailIdentity, templates, composer UI | LOW |
@@ -256,7 +256,7 @@ curl /api/v1/admin/import/status
 
 ### Members CSV
 
-| WA Field | ClubOS Field | Notes |
+| WA Field | Murmurant Field | Notes |
 |----------|--------------|-------|
 | Contact ID | waContactId | Stored for reconciliation |
 | First name | firstName | Required |
@@ -268,7 +268,7 @@ curl /api/v1/admin/import/status
 
 ### Events CSV
 
-| WA Field | ClubOS Field | Notes |
+| WA Field | Murmurant Field | Notes |
 |----------|--------------|-------|
 | Event ID | waEventId | Stored for reconciliation |
 | Event name | title | Unique key (with date) |
@@ -278,7 +278,7 @@ curl /api/v1/admin/import/status
 
 ### Registrations CSV
 
-| WA Field | ClubOS Field | Notes |
+| WA Field | Murmurant Field | Notes |
 |----------|--------------|-------|
 | Registration ID | waRegistrationId | Stored for reconciliation |
 | Contact ID | member (via waContactId) | Foreign key |

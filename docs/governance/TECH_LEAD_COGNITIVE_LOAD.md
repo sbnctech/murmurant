@@ -242,15 +242,15 @@ Every month without addressing these risks:
 
 ---
 
-## How ClubOS Addresses These Risks
+## How Murmurant Addresses These Risks
 
 ### Architecture Simplification
 
-ClubOS eliminates the external infrastructure layer:
+Murmurant eliminates the external infrastructure layer:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                      ClubOS                              │
+│                      Murmurant                              │
 │                                                          │
 │  Database (Neon)     Hosting (Vercel)    Email (Resend) │
 │      │                    │                    │         │
@@ -267,7 +267,7 @@ ClubOS eliminates the external infrastructure layer:
 
 ### Reduced Cognitive Load
 
-| WA + Infrastructure | ClubOS |
+| WA + Infrastructure | Murmurant |
 |---------------------|--------|
 | Remember WA quirks | Explicit, documented rules |
 | Manage mail server | Managed email service |
@@ -276,7 +276,7 @@ ClubOS eliminates the external infrastructure layer:
 
 ### Handoff Simplicity
 
-With ClubOS:
+With Murmurant:
 
 - Standard technology stack (Next.js, PostgreSQL)
 - Code is the documentation
@@ -295,13 +295,13 @@ With ClubOS:
 
 ### Medium-term (3-12 months)
 
-4. **Evaluate ClubOS**: Complete development and migration planning
+4. **Evaluate Murmurant**: Complete development and migration planning
 5. **Reduce infrastructure**: Migrate to managed services where possible
 6. **Create runbooks**: Document common operations
 
 ### Long-term (12+ months)
 
-7. **Complete migration**: Move off Wild Apricot to ClubOS
+7. **Complete migration**: Move off Wild Apricot to Murmurant
 8. **Decommission VPS**: Eliminate external infrastructure
 9. **Establish succession plan**: Multiple people can maintain the system
 
@@ -316,7 +316,7 @@ The current technology setup works, but only because a specific volunteer makes 
 - **No handoff plan**: Succession would be painful and slow
 - **Operational risk**: Board is exposed to service disruption
 
-ClubOS addresses these issues by:
+Murmurant addresses these issues by:
 
 - Using managed services instead of self-hosted infrastructure
 - Making behavior explicit and documented

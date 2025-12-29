@@ -1,4 +1,4 @@
-# ClubOS Charter Compliance Work Plan
+# Murmurant Charter Compliance Work Plan
 
 **Created**: 2025-12-16
 **Source**: Constitutional Audit Report

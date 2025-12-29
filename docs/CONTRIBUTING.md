@@ -1,4 +1,4 @@
-# Contributing to ClubOS
+# Contributing to Murmurant
 
 Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
@@ -8,7 +8,7 @@ This document describes rules for contributing code and documentation.
 
 Read these documents first:
 
-- `docs/ARCHITECTURAL_CHARTER.md` - The ClubOS constitution
+- `docs/ARCHITECTURAL_CHARTER.md` - The Murmurant constitution
 - `docs/CI/HOTSPOT_MAP.md` - Files requiring special handling
 - `docs/CI/PR_SIZE_LIMITS.md` - Size limits and micro-PR pattern
 

@@ -74,7 +74,7 @@ export function TransitionDashboard() {
           Transition Status Dashboard
         </h1>
         <p className="text-gray-600">
-          Here&apos;s where you are in the transition from Wild Apricot to ClubOS
+          Here&apos;s where you are in the transition from Wild Apricot to Murmurant
         </p>
       </div>
 

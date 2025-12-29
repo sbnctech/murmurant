@@ -1,6 +1,6 @@
-# ClubOS Project Story
+# Murmurant Project Story
 
-A narrative history of how ClubOS came to be, why it exists, and
+A narrative history of how Murmurant came to be, why it exists, and
 how it is being built by a hybrid team of humans and AI agents.
 
 This file is meant to be readable by leadership, developers, and
@@ -11,7 +11,7 @@ built, but how it felt to build it.
 
 Chapter 1 - The Moment of Conception
 
-The origin of ClubOS was not an accident. It began with three
+The origin of Murmurant was not an accident. It began with three
 converging forces.
 
 1) Frustration with a legacy system
@@ -51,7 +51,7 @@ You wanted to know, in a concrete way:
 - Can it handle documentation, tests, and developer experience,
   not just "happy path" features?
 
-ClubOS became the testbed for that question.
+Murmurant became the testbed for that question.
 
 3) A rehearsal for a larger, more complex system
 
@@ -69,7 +69,7 @@ would require:
 Before plunging into that, you chose a domain you know
 intimately: a club, its members, its events, and its workflows.
 
-ClubOS became the rehearsal stage. If AI plus a human lead could
+Murmurant became the rehearsal stage. If AI plus a human lead could
 deliver a robust and extensible club management platform, then a
 more ambitious product would be within reach.
 
@@ -226,7 +226,7 @@ Chapter 6 - Phase 3: Documentation Layer
 
 Most prototypes stop at "it works on my machine."
 
-ClubOS did not.
+Murmurant did not.
 
 Documentation was treated as a first class feature:
 
@@ -309,9 +309,9 @@ This made the system feel ready for real club data at scale.
 
 ----------------------------------------------------------------
 
-Chapter 9 - The Goal: A Replaceable, Modular, AI First ClubOS
+Chapter 9 - The Goal: A Replaceable, Modular, AI First Murmurant
 
-By now, the purpose of ClubOS is clear.
+By now, the purpose of Murmurant is clear.
 
 It is meant to be:
 
@@ -329,7 +329,7 @@ It is meant to be:
   - Future AI powered features (recommendations, insights,
     automated communications).
 
-ClubOS is not meant to remain a mock data experiment. It is
+Murmurant is not meant to remain a mock data experiment. It is
 designed to evolve into a genuine operational system.
 
 ----------------------------------------------------------------
@@ -411,6 +411,6 @@ STORY.md and HISTORY.md should move forward together:
 - HISTORY.md holds the timeline, hours, and factual milestones.
 - STORY.md holds the narrative arc and lessons learned.
 
-ClubOS is intentionally open ended. The story will keep going as
+Murmurant is intentionally open ended. The story will keep going as
 long as the system continues to grow.
 

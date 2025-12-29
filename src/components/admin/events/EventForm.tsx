@@ -4,7 +4,7 @@
  * Reusable form for creating and editing events with clear field intelligence:
  * - Required fields: Must be entered by humans
  * - Optional fields: Can be entered by humans
- * - Calculated fields: Derived automatically by ClubOS
+ * - Calculated fields: Derived automatically by Murmurant
  *
  * Charter: P1 (explicit state), N4 (no hidden rules)
  *
@@ -80,7 +80,7 @@ const FIELD_METADATA: Record<string, FieldMeta> = {
   category: {
     type: "optional",
     label: "Category",
-    tooltip: "If left blank, ClubOS may suggest one based on the title.",
+    tooltip: "If left blank, Murmurant may suggest one based on the title.",
     placeholder: "e.g., Wine, Golf, Luncheon",
   },
   location: {
@@ -91,12 +91,12 @@ const FIELD_METADATA: Record<string, FieldMeta> = {
   endTime: {
     type: "optional",
     label: "End Time",
-    tooltip: "If not set, ClubOS defaults to 2 hours after start time.",
+    tooltip: "If not set, Murmurant defaults to 2 hours after start time.",
   },
   capacity: {
     type: "optional",
     label: "Capacity",
-    tooltip: "Leave blank for unlimited. ClubOS will track spots remaining.",
+    tooltip: "Leave blank for unlimited. Murmurant will track spots remaining.",
     placeholder: "e.g., 30",
   },
   isPublished: {
@@ -167,7 +167,7 @@ function FieldTypeBadge({ type }: { type: "required" | "optional" | "calculated"
   const labels: Record<string, string> = {
     required: "Required",
     optional: "Optional",
-    calculated: "Calculated by ClubOS",
+    calculated: "Calculated by Murmurant",
   };
 
   return (
@@ -299,7 +299,7 @@ function FormField({
 }
 
 /**
- * Derivation preview panel - shows what ClubOS calculates
+ * Derivation preview panel - shows what Murmurant calculates
  */
 function DerivationPreview({
   formData,
@@ -385,7 +385,7 @@ function DerivationPreview({
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2">
           <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
         </svg>
-        <span style={{ fontWeight: 600, color: "#1e40af" }}>ClubOS Calculations</span>
+        <span style={{ fontWeight: 600, color: "#1e40af" }}>Murmurant Calculations</span>
         <InfoTooltip text="These values are derived automatically based on your inputs. You don't need to enter them." />
       </div>
 
@@ -709,7 +709,7 @@ export default function EventForm({
               borderBottom: "1px solid #e5e7eb",
             }}
           >
-            Calculated by ClubOS
+            Calculated by Murmurant
           </h3>
 
           <DerivationPreview formData={formData} registeredCount={registeredCount} />

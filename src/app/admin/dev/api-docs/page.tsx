@@ -14,8 +14,8 @@ import { Metadata } from "next";
 import ApiDocsClient from "./ApiDocsClient";
 
 export const metadata: Metadata = {
-  title: "API Documentation | ClubOS Dev",
-  description: "Internal API documentation for ClubOS developers",
+  title: "API Documentation | Murmurant Dev",
+  description: "Internal API documentation for Murmurant developers",
   robots: "noindex, nofollow", // Do not index this page
 };
 

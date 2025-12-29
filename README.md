@@ -1,4 +1,4 @@
-# ClubOS
+# Murmurant
 
 Admin and membership management system.
 
@@ -78,8 +78,8 @@ All scripts are ASCII-only, zsh-based, and autodetect the project root.
 
 ## Ownership & Intellectual Property
 
-ClubOS is an independently developed system owned by the Santa Barbara Newcomers Club (SBNC).
+Murmurant is an independently developed system owned by the Santa Barbara Newcomers Club (SBNC) and Murmurant, Inc.
 
-All code and documentation in this repository are original works created for SBNC. Development follows a clean-room methodology, and SBNC retains full ownership of the resulting intellectual property. Use of AI-assisted tools does not transfer ownership or rights in the work product.
+All code and documentation in this repository are original works created for SBNC. Development follows a clean-room methodology, and ownership is retained of the resulting intellectual property. Use of AI-assisted tools does not transfer ownership or rights in the work product.
 
 See `docs/governance/OWNERSHIP_AND_IP.md` for details.

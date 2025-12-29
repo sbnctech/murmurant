@@ -13,9 +13,9 @@ mkdir -p docs
 
 # Regenerate docs/INDEX.md
 cat << 'INDEX_EOF' > docs/INDEX.md
-# ClubOS Documentation Index
+# Murmurant Documentation Index
 
-This is the main entry point for all ClubOS developer documentation.
+This is the main entry point for all Murmurant developer documentation.
 
 ## Getting Started
 - [Developer Onboarding](ONBOARDING.md)
@@ -48,7 +48,7 @@ echo "Wrote docs/INDEX.md"
 cat << 'NAV_EOF' > docs/NAV.md
 # Documentation Navigation
 
-This file provides a structured navigation index for all ClubOS documentation.
+This file provides a structured navigation index for all Murmurant documentation.
 
 ## Developer Onboarding
 - ONBOARDING.md

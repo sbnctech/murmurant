@@ -79,7 +79,7 @@ describe("Event Scheduling Helpers", () => {
   });
 
   describe("getFollowingTuesday", () => {
-    // Flaky: https://github.com/sbnctech/clubos/issues/XXX
+    // Flaky: https://github.com/sbnctech/murmurant/issues/XXX
     // CI runs in UTC; test expects PST timezone offset
     it("@flaky: returns Tuesday at 8 AM Pacific following the given Sunday", () => {
       // Dec 22, 2024 is a Sunday

@@ -7,7 +7,7 @@
 
 ## Purpose
 
-This document describes ClubOS's feature flag system, which provides:
+This document describes Murmurant's feature flag system, which provides:
 
 - **Gradual rollout** of new features
 - **Kill switches** for instant feature disable in production
@@ -43,10 +43,10 @@ if (!isKillSwitchActive("email_sending_enabled")) {
 
 ```bash
 # Enable a flag
-CLUBOS_FLAG_EVENT_POSTMORTEM_ENABLED=1
+MURMURANT_FLAG_EVENT_POSTMORTEM_ENABLED=1
 
 # Disable a flag (kill switch)
-CLUBOS_FLAG_EMAIL_SENDING_ENABLED=0
+MURMURANT_FLAG_EMAIL_SENDING_ENABLED=0
 ```
 
 ---
@@ -115,7 +115,7 @@ If the default isn't what you want:
 
 ```bash
 # In .env or Netlify environment
-CLUBOS_FLAG_MY_NEW_FEATURE=1
+MURMURANT_FLAG_MY_NEW_FEATURE=1
 ```
 
 ---
@@ -125,14 +125,14 @@ CLUBOS_FLAG_MY_NEW_FEATURE=1
 Flags are controlled via environment variables with this naming:
 
 ```
-CLUBOS_FLAG_{UPPERCASE_KEY}
+MURMURANT_FLAG_{UPPERCASE_KEY}
 ```
 
 | Flag Key | Environment Variable |
 |----------|---------------------|
-| `event_postmortem_enabled` | `CLUBOS_FLAG_EVENT_POSTMORTEM_ENABLED` |
-| `email_sending_enabled` | `CLUBOS_FLAG_EMAIL_SENDING_ENABLED` |
-| `migration_mode_enabled` | `CLUBOS_FLAG_MIGRATION_MODE_ENABLED` |
+| `event_postmortem_enabled` | `MURMURANT_FLAG_EVENT_POSTMORTEM_ENABLED` |
+| `email_sending_enabled` | `MURMURANT_FLAG_EMAIL_SENDING_ENABLED` |
+| `migration_mode_enabled` | `MURMURANT_FLAG_MIGRATION_MODE_ENABLED` |
 
 **Values:**
 
@@ -157,14 +157,14 @@ CLUBOS_FLAG_{UPPERCASE_KEY}
 
 ```toml
 [context.deploy-preview.environment]
-CLUBOS_FLAG_DEBUG_MODE_UI = "1"
+MURMURANT_FLAG_DEBUG_MODE_UI = "1"
 ```
 
 ### For Production Emergencies (Kill Switch)
 
 1. Go to Netlify dashboard
 2. Site settings > Environment variables
-3. Change the kill switch variable (e.g., `CLUBOS_FLAG_EMAIL_SENDING_ENABLED=0`)
+3. Change the kill switch variable (e.g., `MURMURANT_FLAG_EMAIL_SENDING_ENABLED=0`)
 4. Trigger immediate redeploy or wait for next request (env vars are read per-request)
 
 ---
@@ -214,7 +214,7 @@ const result = evaluateFlag("my_feature");
 //   key: "my_feature",
 //   enabled: false,
 //   source: "default",      // "override" | "env" | "default"
-//   envVar: "CLUBOS_FLAG_MY_FEATURE",
+//   envVar: "MURMURANT_FLAG_MY_FEATURE",
 //   envValue: undefined,
 //   defaultValue: false
 // }
@@ -328,7 +328,7 @@ beforeEach(() => {
 ### Flag not taking effect
 
 1. Check environment variable name matches convention:
-   `CLUBOS_FLAG_{UPPERCASE_KEY}`
+   `MURMURANT_FLAG_{UPPERCASE_KEY}`
 
 2. Check value is `1` or `0` (not `true`/`false` string unless intentional)
 

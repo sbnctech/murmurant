@@ -1,6 +1,6 @@
 # Non-Goals and Exclusions
 
-This document explicitly states what ClubOS v1 does NOT do.
+This document explicitly states what Murmurant v1 does NOT do.
 These are intentional scope boundaries, not missing features.
 
 ---
@@ -10,7 +10,7 @@ These are intentional scope boundaries, not missing features.
 ### 1. Continuous Sync
 
 **What it would mean**: Real-time or periodic synchronization of data between
-Wild Apricot and ClubOS while both systems are in use.
+Wild Apricot and Murmurant while both systems are in use.
 
 **Why excluded**:
 - Creates two sources of truth (conflict nightmare)
@@ -19,11 +19,11 @@ Wild Apricot and ClubOS while both systems are in use.
 - Adds complexity without clear customer value
 
 **Decision**: Migration is a one-time operation. Once data is imported,
-ClubOS is the source of truth. No ongoing sync.
+Murmurant is the source of truth. No ongoing sync.
 
 ### 2. Bi-Directional Sync
 
-**What it would mean**: Changes in ClubOS flow back to Wild Apricot,
+**What it would mean**: Changes in Murmurant flow back to Wild Apricot,
 and vice versa.
 
 **Why excluded**:
@@ -32,26 +32,26 @@ and vice versa.
 - Operator confusion about where to make changes
 - Massively increased testing surface
 
-**Decision**: Data flows one direction: WA -> ClubOS. Period.
+**Decision**: Data flows one direction: WA -> Murmurant. Period.
 
 ### 3. Wild Apricot as Live Fallback
 
 **What it would mean**: Keeping WA running indefinitely as a fallback,
-with ClubOS automatically redirecting to WA if issues occur.
+with Murmurant automatically redirecting to WA if issues occur.
 
 **Why excluded**:
 - Requires keeping WA subscription active (cost)
 - Requires keeping both systems in sync (see above)
 - Creates confusion about which system is authoritative
-- Delays full adoption and hides ClubOS issues
+- Delays full adoption and hides Murmurant issues
 
 **Decision**: The shadow period exists for validation. After cutover,
-ClubOS is primary. WA is decommissioned after a safety hold period.
+Murmurant is primary. WA is decommissioned after a safety hold period.
 
 ### 4. Automatic HTML Scraping / Content Publishing
 
 **What it would mean**: Automatically migrating Wild Apricot website content
-(pages, layouts, custom CSS, embedded media) to ClubOS.
+(pages, layouts, custom CSS, embedded media) to Murmurant.
 
 **Why excluded**:
 - HTML scraping is fragile (layout changes break everything)
@@ -60,7 +60,7 @@ ClubOS is primary. WA is decommissioned after a safety hold period.
 - Content migration is a separate, content-strategy problem
 
 **Decision**: Presentation layer migration is deferred. Organizations
-recreate content in ClubOS or use manual migration assistance.
+recreate content in Murmurant or use manual migration assistance.
 
 ---
 

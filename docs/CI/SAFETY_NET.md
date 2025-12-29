@@ -1,12 +1,12 @@
-# ClubOS Safety Net
+# Murmurant Safety Net
 
-This document answers the questions a skeptical senior engineer or auditor would ask about how ClubOS prevents catastrophic mistakes.
+This document answers the questions a skeptical senior engineer or auditor would ask about how Murmurant prevents catastrophic mistakes.
 
 ---
 
 ## What Prevents Catastrophic Mistakes?
 
-ClubOS uses a **defense-in-depth** approach with multiple layers of protection:
+Murmurant uses a **defense-in-depth** approach with multiple layers of protection:
 
 ### Layer 1: Architecture (Design Time)
 
@@ -144,7 +144,7 @@ Some things cannot be fully automated:
 | **Inconsistent standards** | "Developer A tests auth, Developer B doesn't" |
 | **No enforcement** | "I meant to add tests but forgot" |
 
-### How ClubOS Addresses Each
+### How Murmurant Addresses Each
 
 | Solution | How It Helps |
 |----------|--------------|
@@ -220,7 +220,7 @@ You don't have to remember to test these scenarios—the contract test does it f
 
 ## Summary
 
-ClubOS safety comes from **layered defenses**:
+Murmurant safety comes from **layered defenses**:
 
 1. **Architecture** → Default-deny, explicit state machines
 2. **Runtime** → Capability checks on every request

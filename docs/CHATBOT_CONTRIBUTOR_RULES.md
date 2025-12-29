@@ -1,4 +1,4 @@
-# ClubOS Chatbot Contributor Rules
+# Murmurant Chatbot Contributor Rules
 
 **Version**: 1.0
 **Effective Date**: 2025-12-16
@@ -9,7 +9,7 @@
 
 ## Purpose
 
-This document defines rules that AI assistants and automated contributors MUST follow when working on the ClubOS codebase. These rules ensure that AI-generated code remains consistent with the Architectural Charter and does not introduce violations.
+This document defines rules that AI assistants and automated contributors MUST follow when working on the Murmurant codebase. These rules ensure that AI-generated code remains consistent with the Architectural Charter and does not introduce violations.
 
 Before making any change, chatbots MUST:
 

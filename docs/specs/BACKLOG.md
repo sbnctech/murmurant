@@ -1,4 +1,4 @@
-# ClubOS Specs Backlog
+# Murmurant Specs Backlog
 
 This file tracks spec work that is approved as backlog but not yet implemented.
 

@@ -31,7 +31,7 @@ NC='\033[0m' # No Color
 
 echo ""
 echo "============================================================"
-echo "  ClubOS Auth Health Check"
+echo "  Murmurant Auth Health Check"
 echo "============================================================"
 echo ""
 echo "Target: ${HEALTH_ENDPOINT}"

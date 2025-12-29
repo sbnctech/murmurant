@@ -1,6 +1,6 @@
 # Release Process
 
-This document explains how to release changes to ClubOS.
+This document explains how to release changes to Murmurant.
 
 ---
 
@@ -76,7 +76,7 @@ When the PR is approved:
 
 1. Click **Merge Pull Request** on GitHub
 2. Netlify automatically deploys to staging
-3. Verify at: https://clubos-staging-sbnc.netlify.app
+3. Verify at: https://murmurant-staging-sbnc.netlify.app
 
 ### Staging Verification Checklist
 
@@ -108,7 +108,7 @@ Or via GitHub:
 ### Verify Production
 
 1. Wait for Netlify to deploy (usually 1-2 minutes)
-2. Verify at: https://clubos-prod-sbnc.netlify.app
+2. Verify at: https://murmurant-prod-sbnc.netlify.app
 
 ### Production Verification Checklist
 
@@ -244,7 +244,7 @@ After deploying to production:
 
 1. **Check Netlify logs**: Functions tab for any errors
 2. **Check browser console**: No new errors on page load
-3. **Check API health**: `curl https://clubos-prod-sbnc.netlify.app/api/health`
+3. **Check API health**: `curl https://murmurant-prod-sbnc.netlify.app/api/health`
 4. **Watch for user reports**: First 30 minutes are critical
 
 ---

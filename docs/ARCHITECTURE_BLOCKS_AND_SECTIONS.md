@@ -1,4 +1,4 @@
-# ClubOS UI Architecture: Blocks and Sections
+# Murmurant UI Architecture: Blocks and Sections
 
 Last updated: 2025-12-20
 
@@ -12,7 +12,7 @@ This document clarifies the intended architecture and defines a rename and depre
 
 ### Block (first-class concept)
 
-A Block is the primary authoring and product concept for ClubOS pages.
+A Block is the primary authoring and product concept for Murmurant pages.
 
 A Block:
 - Represents a self-contained content or functional unit.

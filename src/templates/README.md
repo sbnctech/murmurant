@@ -1,4 +1,4 @@
-# ClubOS Templates
+# Murmurant Templates
 
 Canonical page templates for consistent UI across member and admin surfaces.
 

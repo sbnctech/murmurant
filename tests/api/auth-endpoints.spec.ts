@@ -151,8 +151,8 @@ test.describe("Auth API Endpoints", () => {
       if (setCookieHeader) {
         // Should contain the session cookie with an expired date or maxAge=0
         expect(
-          setCookieHeader.includes("clubos_session") ||
-            setCookieHeader.includes("__Host-clubos_session")
+          setCookieHeader.includes("murmurant_session") ||
+            setCookieHeader.includes("__Host-murmurant_session")
         ).toBeTruthy();
       }
     });
@@ -171,7 +171,7 @@ test.describe("Auth API Endpoints", () => {
     test("returns 401 with invalid session cookie", async ({ request }) => {
       const response = await request.get(`${BASE}/api/auth/me`, {
         headers: {
-          Cookie: "clubos_session=invalid-session-token",
+          Cookie: "murmurant_session=invalid-session-token",
         },
       });
 

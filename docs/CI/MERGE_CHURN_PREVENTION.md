@@ -1,4 +1,4 @@
-# Merge Churn Prevention Policy (ClubOS)
+# Merge Churn Prevention Policy (Murmurant)
 Date: 2025-12-22
 Owner: Merge Captain
 
@@ -101,7 +101,7 @@ Work queue discipline
 
 Cadence
 - Run merge captain daily at 11:00pm local:
-  cd "$HOME/clubos" && zsh ./MERGE_CAPTAIN.zsh
+  cd "$HOME/murmurant" && zsh ./MERGE_CAPTAIN.zsh
 
 Success metrics (track monthly)
 - Number of "red CI due to contract mismatch" incidents: target 0

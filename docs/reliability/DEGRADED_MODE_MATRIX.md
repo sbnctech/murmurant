@@ -1,10 +1,10 @@
-# ClubOS — Degraded Mode Matrix
+# Murmurant — Degraded Mode Matrix
 
 Status: Canonical Specification  
 Applies to: Production operations  
 Last updated: 2025-12-20
 
-This document defines how ClubOS behaves when parts of the system are degraded,
+This document defines how Murmurant behaves when parts of the system are degraded,
 unavailable, or unsafe. Degraded behavior MUST be predictable, conservative,
 and reversible.
 
@@ -24,7 +24,7 @@ When in doubt:
 
 ## 2. Failure Domains
 
-ClubOS recognizes the following independent failure domains:
+Murmurant recognizes the following independent failure domains:
 
 - Database
 - Authentication / Identity
@@ -206,7 +206,7 @@ MUST:
 
 ## 13. Explicit Non-Guarantees
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Graceful degradation for unknown failures
 - Automatic recovery from cascading failures
 - Correct behavior if multiple domains fail simultaneously

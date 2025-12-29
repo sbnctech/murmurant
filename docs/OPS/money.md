@@ -2,7 +2,7 @@
 Copyright (c) Santa Barbara Newcomers Club
 
 ## Decision
-All money values in ClubOS MUST be represented as integer cents.
+All money values in Murmurant MUST be represented as integer cents.
 
 Use:
 - amountCents: Int

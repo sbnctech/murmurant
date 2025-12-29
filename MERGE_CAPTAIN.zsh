@@ -17,7 +17,7 @@ set -euo pipefail
 
 # Configuration
 DRY_RUN="${DRY_RUN:-1}"
-REPO="sbnctech/clubos"
+REPO="sbnctech/murmurant"
 
 # Colors
 RED='\033[0;31m'

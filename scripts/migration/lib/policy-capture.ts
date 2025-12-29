@@ -2,7 +2,7 @@
  * Policy Capture Library
  *
  * Captures organization policies from WA (where possible) and generates
- * a policy bundle for ClubOS migration. Supports manual template generation
+ * a policy bundle for Murmurant migration. Supports manual template generation
  * for policies that cannot be auto-captured.
  *
  * Related: Issue #275 (Policy Capture), #202 (WA Migration), #263 (Policy Layer)
@@ -239,7 +239,7 @@ export const POLICY_DEFINITIONS: Record<
   },
   "membership.tiers.waMapping": {
     description:
-      "Mapping of WA membership level names to ClubOS tier codes. " +
+      "Mapping of WA membership level names to Murmurant tier codes. " +
       "NOTE: WA membership level API may not be available; manual mapping is acceptable.",
     required: false,
     capturable: false, // WA membership levels API is unreliable
@@ -667,7 +667,7 @@ export function generatePolicyMarkdown(bundle: PolicyBundle): string {
   if (tierMapping?.value && typeof tierMapping.value === "object") {
     lines.push("Current mapping:");
     lines.push("");
-    lines.push("| WA Level | ClubOS Tier Code |");
+    lines.push("| WA Level | Murmurant Tier Code |");
     lines.push("|----------|------------------|");
     for (const [waLevel, tierCode] of Object.entries(tierMapping.value as Record<string, string>)) {
       lines.push(`| ${waLevel} | ${tierCode} |`);
@@ -766,7 +766,7 @@ export function generateMappingTemplate(
     levels: capturedLevels.map((level) => ({
       waId: level.waId,
       waName: level.name,
-      clubosTier: undefined,
+      murmurantTier: undefined,
       ignore: false,
       reason: undefined,
       notes: undefined,
@@ -839,12 +839,12 @@ export function validateMappingFile(
         });
       }
       ignoredCount++;
-    } else if (level.clubosTier) {
-      if (!validTiers.includes(level.clubosTier)) {
+    } else if (level.murmurantTier) {
+      if (!validTiers.includes(level.murmurantTier)) {
         errors.push({
           level: level.waName,
           waId: level.waId,
-          message: `Invalid tier code: ${level.clubosTier}. Valid: ${validTiers.join(", ")}`,
+          message: `Invalid tier code: ${level.murmurantTier}. Valid: ${validTiers.join(", ")}`,
         });
       }
       mappedCount++;
@@ -852,7 +852,7 @@ export function validateMappingFile(
       errors.push({
         level: level.waName,
         waId: level.waId,
-        message: "Level must be mapped to a ClubOS tier or marked as ignored",
+        message: "Level must be mapped to a Murmurant tier or marked as ignored",
       });
       unmappedCount++;
     }
@@ -898,7 +898,7 @@ export function generatePolicyCaptureReport(
     let status: "mapped" | "ignored" | "unmapped";
     if (level.ignore) {
       status = "ignored";
-    } else if (level.clubosTier) {
+    } else if (level.murmurantTier) {
       status = "mapped";
     } else {
       status = "unmapped";
@@ -908,7 +908,7 @@ export function generatePolicyCaptureReport(
       waId: level.waId,
       waName: level.waName,
       status,
-      clubosTier: level.clubosTier,
+      murmurantTier: level.murmurantTier,
       reason: level.reason,
     };
   });
@@ -919,7 +919,7 @@ export function generatePolicyCaptureReport(
     membershipLevels: entries,
     summary: {
       totalWaLevels: capturedLevels.length,
-      mappedToClubos: validation.summary.mappedLevels,
+      mappedToMurmurant: validation.summary.mappedLevels,
       ignoredWithReason: validation.summary.ignoredLevels,
       unmappedBlocking: validation.summary.unmappedLevels,
     },
@@ -945,7 +945,7 @@ export function renderReportAsMarkdown(report: PolicyCaptureReport): string {
   lines.push("## Summary");
   lines.push("");
   lines.push(`- Total WA Levels: ${report.summary.totalWaLevels}`);
-  lines.push(`- Mapped to ClubOS: ${report.summary.mappedToClubos}`);
+  lines.push(`- Mapped to Murmurant: ${report.summary.mappedToMurmurant}`);
   lines.push(`- Ignored (with reason): ${report.summary.ignoredWithReason}`);
   lines.push(`- Unmapped (blocking): ${report.summary.unmappedBlocking}`);
   lines.push("");
@@ -963,11 +963,11 @@ export function renderReportAsMarkdown(report: PolicyCaptureReport): string {
   // Membership levels table
   lines.push("## Membership Level Mapping");
   lines.push("");
-  lines.push("| WA ID | WA Name | Status | ClubOS Tier | Reason |");
+  lines.push("| WA ID | WA Name | Status | Murmurant Tier | Reason |");
   lines.push("|-------|---------|--------|-------------|--------|");
 
   for (const entry of report.membershipLevels) {
-    const tier = entry.clubosTier || "-";
+    const tier = entry.murmurantTier || "-";
     const reason = entry.reason || "-";
     lines.push(`| ${entry.waId} | ${entry.waName} | ${entry.status} | ${tier} | ${reason} |`);
   }

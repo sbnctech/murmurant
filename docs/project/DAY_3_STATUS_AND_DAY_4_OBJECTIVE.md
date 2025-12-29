@@ -34,4 +34,4 @@ Definition of done check:
 - Auth behavior documented for frontend integration
 
 ### Rationale
-With data and APIs now stable, Day 4 ensures ClubOS is safe by default. This unlocks real-world usage and prepares the system for UI wiring and external integrations.
+With data and APIs now stable, Day 4 ensures Murmurant is safe by default. This unlocks real-world usage and prepares the system for UI wiring and external integrations.

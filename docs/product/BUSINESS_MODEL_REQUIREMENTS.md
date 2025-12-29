@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-This document translates ClubOS business model requirements into implementable software specifications. It covers:
+This document translates Murmurant business model requirements into implementable software specifications. It covers:
 
 - Membership tiers and entitlements (what users can do)
 - Capability gating (how entitlements are enforced)
@@ -31,7 +31,7 @@ This document translates ClubOS business model requirements into implementable s
 
 ### 2.1 Tier Enumeration
 
-ClubOS supports a configurable tier system. The following are **invariant** (cannot be removed):
+Murmurant supports a configurable tier system. The following are **invariant** (cannot be removed):
 
 | Tier Code | Display Name | Description |
 |-----------|--------------|-------------|
@@ -47,7 +47,7 @@ The following are **configurable** (organization can add/modify):
 
 ### 2.2 Tier vs Status (Orthogonal Dimensions)
 
-As documented in `docs/MEMBERSHIP_MODEL_TRUTH_TABLE.md`, ClubOS uses two orthogonal dimensions:
+As documented in `docs/MEMBERSHIP_MODEL_TRUTH_TABLE.md`, Murmurant uses two orthogonal dimensions:
 
 - **Status** (lifecycle state): active, lapsed, pending_new, pending_renewal, suspended
 - **Tier** (benefit level): free, member, premium, etc.

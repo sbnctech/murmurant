@@ -10,7 +10,7 @@ Classification: Architecture Specification
 
 ## Overview
 
-SafeEmbed is ClubOS's mechanism for rendering external content (iframes) within pages. Unlike arbitrary HTML blocks, SafeEmbed uses a **domain allowlist** to permit only trusted sources.
+SafeEmbed is Murmurant's mechanism for rendering external content (iframes) within pages. Unlike arbitrary HTML blocks, SafeEmbed uses a **domain allowlist** to permit only trusted sources.
 
 This document specifies the **two-person approval model** for managing the allowlist, ensuring no single administrator can introduce a malicious embed source.
 
@@ -162,7 +162,7 @@ Before approving, reviewers can test how an embed renders using a sandboxed prev
 ### Sandbox Constraints
 
 - Preview renders in isolated modal
-- No network access to ClubOS APIs from preview
+- No network access to Murmurant APIs from preview
 - No access to user session or tokens
 - Preview URL must match proposed domain
 - Preview times out after 30 seconds
@@ -202,7 +202,7 @@ Every allowlist action creates an immutable audit log entry.
 
 ## Default Allowlist (Seed Data)
 
-ClubOS ships with a pre-approved allowlist for common trusted sources.
+Murmurant ships with a pre-approved allowlist for common trusted sources.
 
 | Domain | Path Prefix | Embed Type | Notes |
 |--------|-------------|------------|-------|
@@ -467,7 +467,7 @@ See: docs/MIGRATION/WILD_APRICOT_CUSTOM_HTML_BLOCKS_GUIDE.md
 
 ## Related Documents
 
-- [Page Builder Primitives](./CLUBOS_PAGE_BUILDER_PRIMITIVES.md) - SafeEmbed component spec
+- [Page Builder Primitives](./MURMURANT_PAGE_BUILDER_PRIMITIVES.md) - SafeEmbed component spec
 - [Custom HTML Blocks Guide](../MIGRATION/WILD_APRICOT_CUSTOM_HTML_BLOCKS_GUIDE.md) - Operator guidance
 - [Gadget Tagging](../MIGRATION/WILD_APRICOT_GADGET_TAGGING.md) - Migration classification
 - [Architectural Charter](../ARCHITECTURAL_CHARTER.md) - P1 (audit), P2 (default deny), P9 (fail closed)

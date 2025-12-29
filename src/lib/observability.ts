@@ -1,5 +1,5 @@
 /**
- * Observability Utilities for ClubOS
+ * Observability Utilities for Murmurant
  *
  * Charter Principle P7: Observability is a product feature.
  * Charter Principle P9: Security must fail closed.

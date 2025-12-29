@@ -273,6 +273,6 @@ Per EVENT_SUBMISSION_PHASE2_SPEC.md, the following acknowledgements are required
 
 ---
 
-*This inventory does NOT resolve ambiguity. All "Unknown" values require Board decision before ClubOS implementation.*
+*This inventory does NOT resolve ambiguity. All "Unknown" values require Board decision before Murmurant implementation.*
 
 *Last Updated: December 20, 2025*

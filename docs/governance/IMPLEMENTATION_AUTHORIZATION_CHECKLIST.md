@@ -4,7 +4,7 @@ Worker 2 — Implementation Authorization Checklist — Report
 
 ## Purpose
 A simple, repeatable go/no-go checklist that must be satisfied before any feature is implemented or deployed.
-This is designed to keep ClubOS maintainable by humans and agents, prevent regressions, and preserve RBAC guarantees.
+This is designed to keep Murmurant maintainable by humans and agents, prevent regressions, and preserve RBAC guarantees.
 
 ## Scope
 Applies to:

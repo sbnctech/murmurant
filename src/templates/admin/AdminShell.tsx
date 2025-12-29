@@ -44,7 +44,7 @@ export default function AdminShell({
   children,
   navItems = defaultNavItems,
   sidebarItems,
-  brandName = "ClubOS Admin",
+  brandName = "Murmurant Admin",
   showSidebar = false,
 }: AdminShellProps) {
   const hasSidebar = showSidebar && sidebarItems && sidebarItems.length > 0;

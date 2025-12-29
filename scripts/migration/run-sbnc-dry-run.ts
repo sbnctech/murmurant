@@ -120,7 +120,7 @@ function printHeader(): void {
   const divider = "=".repeat(70);
   console.log(`\n${divider}`);
   console.log("  SBNC Migration Dry-Run");
-  console.log("  Santa Barbara Newcomers Club → ClubOS");
+  console.log("  Santa Barbara Newcomers Club → Murmurant");
   console.log(`${divider}`);
   console.log(`\n  Mode:       DRY RUN (read-only, no database changes)`);
   console.log(`  Data Dir:   ${SBNC_DATA_DIR}`);

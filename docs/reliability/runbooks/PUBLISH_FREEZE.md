@@ -1,4 +1,4 @@
-# ClubOS - Runbook: Publishing Freeze (Human Procedure)
+# Murmurant - Runbook: Publishing Freeze (Human Procedure)
 
 Status: Canonical Runbook
 Applies to: Production incidents and readiness drills

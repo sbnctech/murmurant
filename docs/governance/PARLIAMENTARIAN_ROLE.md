@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Parliamentarian role in ClubOS provides governance oversight capabilities including annotation tools for bylaws interpretations, policy clarifications, and review flag management. The role is intentionally **read-only for core records** - the Parliamentarian can annotate and flag documents but cannot mutate official minutes or motions.
+The Parliamentarian role in Murmurant provides governance oversight capabilities including annotation tools for bylaws interpretations, policy clarifications, and review flag management. The role is intentionally **read-only for core records** - the Parliamentarian can annotate and flag documents but cannot mutate official minutes or motions.
 
 ## RBAC Capabilities
 

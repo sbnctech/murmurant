@@ -1,7 +1,7 @@
 /**
  * ID Mapping Report Generation
  *
- * Produces deterministic mapping files from source WA IDs to ClubOS IDs
+ * Produces deterministic mapping files from source WA IDs to Murmurant IDs
  * with duplicate detection and missing ID reporting.
  *
  * Related: Issue #273 (A8: ID Mapping & Report Generation)
@@ -17,7 +17,7 @@ import type { MigrationReport } from "./types";
 
 export interface IdMappingEntry {
   waId: string;
-  clubosId: string;
+  murmurantId: string;
   identifier?: string; // email for members, title for events
 }
 
@@ -74,7 +74,7 @@ export function generateIdMappingReport(report: MigrationReport): IdMappingRepor
     members: {
       mappings: report.idMapping.members.map((m) => ({
         waId: m.waId,
-        clubosId: m.clubosId,
+        murmurantId: m.murmurantId,
         identifier: m.email,
       })),
       counts: {
@@ -89,7 +89,7 @@ export function generateIdMappingReport(report: MigrationReport): IdMappingRepor
     events: {
       mappings: report.idMapping.events.map((e) => ({
         waId: e.waId,
-        clubosId: e.clubosId,
+        murmurantId: e.murmurantId,
         identifier: e.title,
       })),
       counts: {
@@ -108,8 +108,8 @@ export function generateIdMappingReport(report: MigrationReport): IdMappingRepor
  * Analyzes ID mappings for duplicates and missing entries.
  */
 export function analyzeIdMappings(
-  mappings: { waId: string; clubosId: string }[],
-  records: { _waId?: string; _clubosId?: string }[]
+  mappings: { waId: string; murmurantId: string }[],
+  records: { _waId?: string; _murmurantId?: string }[]
 ): { duplicates: string[]; missing: string[] } {
   // Find duplicate WA IDs in mappings
   const waIdCounts = new Map<string, number>();
@@ -121,7 +121,7 @@ export function analyzeIdMappings(
     .map(([waId]) => waId)
     .sort();
 
-  // Find records with WA ID but no ClubOS ID mapping
+  // Find records with WA ID but no Murmurant ID mapping
   const mappedWaIds = new Set(mappings.map((m) => m.waId));
   const missing = records
     .filter((r) => r._waId && !mappedWaIds.has(r._waId))

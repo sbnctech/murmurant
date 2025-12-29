@@ -86,7 +86,7 @@ Mentor is the gateway volunteer role:
 Mentorship should be visible in member activity history and usable in third-year decisions.
 
 ## System requirements derived from this grounding
-ClubOS should support:
+Murmurant should support:
 - Newbie-first availability and signaling
 - Mentorship matching workflow (VP Membership owned; immediate)
 - Action logging that creates leadership confidence ("what is normal?")

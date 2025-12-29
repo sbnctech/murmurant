@@ -1,4 +1,4 @@
-# Contributing to ClubOS
+# Contributing to Murmurant
 
 Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 

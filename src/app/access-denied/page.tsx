@@ -12,7 +12,7 @@
 import AccessDenied from "@/components/auth/AccessDenied";
 
 export const metadata = {
-  title: "Access Denied - ClubOS",
+  title: "Access Denied - Murmurant",
   description: "You don't have permission to access this page",
 };
 

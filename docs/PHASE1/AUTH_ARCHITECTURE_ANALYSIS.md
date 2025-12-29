@@ -7,7 +7,7 @@
 
 ## Current Auth System
 
-ClubOS already has a robust authentication system that is **more secure than JWT**:
+Murmurant already has a robust authentication system that is **more secure than JWT**:
 
 ### Authentication Methods
 

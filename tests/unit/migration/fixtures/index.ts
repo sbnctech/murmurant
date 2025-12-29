@@ -71,7 +71,7 @@ export const CSV_WITH_WINDOWS_LINE_ENDINGS = "Contact ID,First name,Email\r\nWA0
 export const MINIMAL_CONFIG: MigrationConfig = {
   version: "1.0",
   source: "wild-apricot",
-  target: "clubos",
+  target: "murmurant",
   membership_status_mapping: {
     Newcomer: "NEWCOMER",
     "2nd Year": "NEWCOMER",

@@ -1,6 +1,6 @@
 /**
- * ClubOS Migration Pipeline - CSV Parser
- * Parses Wild Apricot CSV exports and maps to ClubOS records
+ * Murmurant Migration Pipeline - CSV Parser
+ * Parses Wild Apricot CSV exports and maps to Murmurant records
  */
 
 import * as fs from 'fs';

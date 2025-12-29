@@ -1,19 +1,19 @@
 # Netlify Configuration
 
-This document explains how ClubOS uses Netlify for web hosting.
+This document explains how Murmurant uses Netlify for web hosting.
 
 ---
 
 ## Overview
 
-Netlify builds and hosts the ClubOS Next.js application. When code is pushed to GitHub, Netlify automatically builds and deploys it.
+Netlify builds and hosts the Murmurant Next.js application. When code is pushed to GitHub, Netlify automatically builds and deploys it.
 
 ### Our Netlify Sites
 
 | Site | Purpose | Admin URL |
 |------|---------|-----------|
-| clubos-staging-sbnc | Staging/testing | https://app.netlify.com/projects/clubos-staging-sbnc |
-| clubos-prod-sbnc | Production | https://app.netlify.com/projects/clubos-prod-sbnc |
+| murmurant-staging-sbnc | Staging/testing | https://app.netlify.com/projects/murmurant-staging-sbnc |
+| murmurant-prod-sbnc | Production | https://app.netlify.com/projects/murmurant-prod-sbnc |
 
 ---
 
@@ -25,11 +25,11 @@ Netlify can deploy different Git branches to different URLs.
 
 - **Staging site** deploys from `sandbox` branch
   - Push to `sandbox` triggers automatic deploy
-  - URL: https://clubos-staging-sbnc.netlify.app
+  - URL: https://murmurant-staging-sbnc.netlify.app
 
 - **Production site** should deploy from `main` branch (target architecture)
   - Push to `main` triggers automatic deploy
-  - URL: https://clubos-prod-sbnc.netlify.app
+  - URL: https://murmurant-prod-sbnc.netlify.app
 
 ### Deploy Flow
 
@@ -43,7 +43,7 @@ Netlify detects change
 Runs: npm run build
           |
           v
-Deploys to: clubos-staging-sbnc.netlify.app
+Deploys to: murmurant-staging-sbnc.netlify.app
 ```
 
 ---
@@ -56,7 +56,7 @@ When you open a Pull Request, Netlify creates a preview deployment.
 
 Each PR gets a unique preview URL:
 ```
-https://deploy-preview-123--clubos-staging-sbnc.netlify.app
+https://deploy-preview-123--murmurant-staging-sbnc.netlify.app
 ```
 
 Where `123` is the PR number.
@@ -82,7 +82,7 @@ If you need to connect a new Netlify site to GitHub:
 5. Under "Build settings", click **Link site to Git** or **Configure**
 6. Select **GitHub** as provider
 7. Authorize Netlify if prompted
-8. Select repository: **sbnctech/clubos**
+8. Select repository: **sbnctech/murmurant**
 9. Configure build settings:
    - **Branch to deploy**: `main` (for prod) or `sandbox` (for staging)
    - **Build command**: `npm run build`
@@ -166,7 +166,7 @@ netlify env:set VARIABLE_NAME "value" --context production
 
 ## Build Configuration
 
-ClubOS uses these build settings:
+Murmurant uses these build settings:
 
 | Setting | Value |
 |---------|-------|

@@ -1,6 +1,6 @@
 # Event Derivation Model
 
-ClubOS reduces human error and admin burden by automatically calculating event properties from minimal required inputs. This document defines what humans must enter vs. what ClubOS derives.
+Murmurant reduces human error and admin burden by automatically calculating event properties from minimal required inputs. This document defines what humans must enter vs. what Murmurant derives.
 
 ## Field Classification
 
@@ -20,7 +20,7 @@ These fields enhance the event but have sensible defaults:
 | Field | Type | Default Behavior |
 |-------|------|------------------|
 | `description` | string | Empty (no description shown) |
-| `category` | string | ClubOS infers from title patterns (see Category Inference) |
+| `category` | string | Murmurant infers from title patterns (see Category Inference) |
 | `location` | string | Empty (no location shown) |
 | `endTime` | DateTime | Derived as `startTime + 2 hours` |
 | `capacity` | integer | `null` = unlimited capacity |
@@ -78,7 +78,7 @@ otherwise → "none"
 
 ## Category Inference
 
-When no category is provided, ClubOS suggests one based on title patterns:
+When no category is provided, Murmurant suggests one based on title patterns:
 
 | Title Pattern | Inferred Category |
 |---------------|-------------------|
@@ -152,7 +152,7 @@ The event form clearly shows:
 This transparency helps admins understand:
 - What they must provide
 - What they can provide
-- What ClubOS handles automatically
+- What Murmurant handles automatically
 
 ## Implementation
 

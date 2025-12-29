@@ -1,10 +1,10 @@
-# ClubOS Architecture
+# Murmurant Architecture
 
 This file is a high-level architecture overview.
 
 ## UI composition: Blocks and Sections
 
-ClubOS pages are composed from:
+Murmurant pages are composed from:
 - Blocks: first-class, reusable content/functional units (role-aware, data-backed).
 - Sections: layout-only wrappers that group Blocks and handle spacing/background/width.
 

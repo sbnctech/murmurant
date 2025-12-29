@@ -1,7 +1,7 @@
 /**
- * RBAC Module - Centralized Role-Based Access Control for ClubOS
+ * RBAC Module - Centralized Role-Based Access Control for Murmurant
  *
- * This module provides centralized access control for ClubOS including:
+ * This module provides centralized access control for Murmurant including:
  * - Event row-level security policies
  * - Admin action guards with audit logging
  * - General-purpose RoleGate for capability checks

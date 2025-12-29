@@ -65,7 +65,7 @@ describe("Passkey Configuration", () => {
     it("returns default name when not set", async () => {
       delete process.env.PASSKEY_RP_NAME;
       const { getRelyingPartyName } = await import("@/lib/passkey/config");
-      expect(getRelyingPartyName()).toBe("ClubOS");
+      expect(getRelyingPartyName()).toBe("Murmurant");
     });
   });
 
@@ -77,7 +77,7 @@ describe("Passkey Configuration", () => {
 
     it("exports SESSION_COOKIE_NAME", async () => {
       const { SESSION_COOKIE_NAME } = await import("@/lib/passkey/config");
-      expect(SESSION_COOKIE_NAME).toBe("clubos_session");
+      expect(SESSION_COOKIE_NAME).toBe("murmurant_session");
     });
 
     it("exports SESSION_MAX_AGE_SECONDS", async () => {

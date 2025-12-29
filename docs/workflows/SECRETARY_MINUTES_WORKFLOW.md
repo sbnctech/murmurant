@@ -219,4 +219,4 @@ All workflow actions produce audit log entries:
 
 ---
 
-*Document maintained by ClubOS development team. Last updated: December 2024*
+*Document maintained by Murmurant development team. Last updated: December 2024*

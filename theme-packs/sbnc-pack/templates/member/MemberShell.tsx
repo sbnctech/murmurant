@@ -14,7 +14,7 @@ import Link from "next/link";
  * Props:
  * - children: Page content
  * - navItems: Navigation items (optional, uses defaults)
- * - brandName: Brand/logo text (default: "ClubOS")
+ * - brandName: Brand/logo text (default: "Murmurant")
  */
 
 type NavItem = {
@@ -38,7 +38,7 @@ const defaultNavItems: NavItem[] = [
 export default function MemberShell({
   children,
   navItems = defaultNavItems,
-  brandName = "ClubOS",
+  brandName = "Murmurant",
 }: MemberShellProps) {
   return (
     <div

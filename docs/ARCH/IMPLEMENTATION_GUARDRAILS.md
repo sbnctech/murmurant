@@ -146,7 +146,7 @@ Every item below MUST produce an audit log entry. Logging is not optional, not "
 
 ## 4. What Must Be Reversible
 
-ClubOS is built on the principle that consequential actions should be undoable. The following defines what reversibility means for each category.
+Murmurant is built on the principle that consequential actions should be undoable. The following defines what reversibility means for each category.
 
 ### 4.1 Always Reversible (Before Commit)
 

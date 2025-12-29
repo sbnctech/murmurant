@@ -20,7 +20,7 @@ describe("parseArgs", () => {
       const args = parseArgs([]);
 
       expect(args.sourceOrg).toBe("wild-apricot");
-      expect(args.targetOrg).toBe("clubos");
+      expect(args.targetOrg).toBe("murmurant");
       expect(args.dryRun).toBe(true);
       expect(args.verbose).toBe(false);
       expect(args.yes).toBe(false);
@@ -195,7 +195,7 @@ describe("parseArgs", () => {
         "--source-org",
         "wa",
         "--target-org",
-        "clubos",
+        "murmurant",
         "--live",
         "--verbose",
         "--yes",
@@ -208,7 +208,7 @@ describe("parseArgs", () => {
       ]);
 
       expect(args.sourceOrg).toBe("wa");
-      expect(args.targetOrg).toBe("clubos");
+      expect(args.targetOrg).toBe("murmurant");
       expect(args.dryRun).toBe(false);
       expect(args.verbose).toBe(true);
       expect(args.yes).toBe(true);
@@ -226,7 +226,7 @@ describe("parseArgs", () => {
 describe("validateArgs", () => {
   const defaultArgs: CLIArgs = {
     sourceOrg: "wild-apricot",
-    targetOrg: "clubos",
+    targetOrg: "murmurant",
     dryRun: true,
     outputReport: "/tmp/reports",
     verbose: false,
@@ -262,7 +262,7 @@ describe("validateArgs", () => {
 
   describe("target-org validation", () => {
     it("accepts valid target org", () => {
-      const result = validateArgs({ ...defaultArgs, targetOrg: "clubos" });
+      const result = validateArgs({ ...defaultArgs, targetOrg: "murmurant" });
       expect(result.errors.filter((e) => e.includes("target-org"))).toHaveLength(0);
     });
 

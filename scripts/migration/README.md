@@ -1,6 +1,6 @@
-# ClubOS Data Migration Pipeline
+# Murmurant Data Migration Pipeline
 
-Wild Apricot (WA) → ClubOS data migration tool.
+Wild Apricot (WA) → Murmurant data migration tool.
 
 ## Quick Start
 

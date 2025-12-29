@@ -1,7 +1,7 @@
 /**
- * Wild Apricot to ClubOS Field Transformers
+ * Wild Apricot to Murmurant Field Transformers
  *
- * Transform WA API responses into ClubOS Prisma create/update inputs.
+ * Transform WA API responses into Murmurant Prisma create/update inputs.
  * Based on WA_FIELD_MAPPING.md specification.
  */
 
@@ -20,7 +20,7 @@ import {
 // ============================================================================
 
 /**
- * Map WA contact status to ClubOS MembershipStatus code.
+ * Map WA contact status to Murmurant MembershipStatus code.
  */
 export function mapContactStatusToCode(waStatus: WAContactStatus): string {
   switch (waStatus) {
@@ -42,7 +42,7 @@ export function mapContactStatusToCode(waStatus: WAContactStatus): string {
 }
 
 /**
- * Map WA registration status to ClubOS RegistrationStatus enum.
+ * Map WA registration status to Murmurant RegistrationStatus enum.
  */
 export function mapRegistrationStatus(
   waStatus: WARegistrationStatus,
@@ -200,7 +200,7 @@ export interface TransformResult<T> {
 }
 
 /**
- * Transform WA Contact to ClubOS Member create input.
+ * Transform WA Contact to Murmurant Member create input.
  * Requires membershipStatusId lookup to be done separately.
  */
 export function transformContact(
@@ -269,7 +269,7 @@ export function transformContact(
 }
 
 /**
- * Transform WA Event to ClubOS Event create input.
+ * Transform WA Event to Murmurant Event create input.
  * eventChairId lookup to be done separately if organizer is known.
  */
 export function transformEvent(
@@ -327,7 +327,7 @@ export function transformEvent(
 }
 
 /**
- * Transform WA Event Registration to ClubOS EventRegistration create input.
+ * Transform WA Event Registration to Murmurant EventRegistration create input.
  * eventId and memberId lookups to be done separately.
  */
 export function transformRegistration(

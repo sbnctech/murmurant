@@ -1,7 +1,7 @@
 /**
  * Wild Apricot Sync Service
  *
- * Handles full data synchronization between ClubOS and Wild Apricot.
+ * Handles full data synchronization between Murmurant and Wild Apricot.
  * This is the main orchestrator for WA data import.
  */
 
@@ -36,7 +36,7 @@ export interface WASyncOptions {
 /**
  * WA Sync Service
  *
- * Orchestrates data synchronization between ClubOS and Wild Apricot.
+ * Orchestrates data synchronization between Murmurant and Wild Apricot.
  */
 export class WASyncService {
   private config: WAConfig;

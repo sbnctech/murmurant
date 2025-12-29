@@ -1,5 +1,5 @@
 /**
- * ClubOS Design Tokens - Colors
+ * Murmurant Design Tokens - Colors
  *
  * Brand colors, semantic colors, and neutral palette.
  * Based on Tailwind CSS color system for consistency.
@@ -9,7 +9,7 @@
 
 :root {
   /* =========================================================================
-     ClubOS Brand Colors
+     Murmurant Brand Colors
      ========================================================================= */
   --color-brand-primary: #4F46E5;
   --color-brand-primary-light: #6366F1;

@@ -152,7 +152,7 @@ NEVER: Delete without warning
 ```
 INVARIANT: Payment credentials MUST:
   - Be handled by PCI-compliant processor (Stripe)
-  - Never touch ClubOS servers in raw form
+  - Never touch Murmurant servers in raw form
   - Use tokenization for recurring payments
 
 NEVER: Store card numbers, CVVs, or full account numbers

@@ -2,13 +2,13 @@
 
 Copyright (c) Santa Barbara Newcomers Club
 
-This guide covers administrative tasks for the ClubOS publishing and communications system. It is intended for site administrators, content editors, and communications staff.
+This guide covers administrative tasks for the Murmurant publishing and communications system. It is intended for site administrators, content editors, and communications staff.
 
 ---
 
 ## Overview
 
-The ClubOS publishing system enables you to:
+The Murmurant publishing system enables you to:
 
 - Create and manage web pages without writing code
 - Build pages using configurable content blocks

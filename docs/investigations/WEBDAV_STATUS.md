@@ -2,7 +2,7 @@
 
 **Status:** CONFIRMED WORKING
 **Date:** December 2025
-**Investigator:** ClubOS Tech Lead
+**Investigator:** Murmurant Tech Lead
 **Tested:** 2025-12-20
 
 ---
@@ -143,7 +143,7 @@ Or use a WebDAV client like:
 1. **Connect with Cyberduck** or curl using admin credentials
 2. **Download all files** recursively to `~/SBNC_WA_Files`
 3. **Inventory the files** and determine what to migrate
-4. **Document file structure** for ClubOS import planning
+4. **Document file structure** for Murmurant import planning
 
 ---
 

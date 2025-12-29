@@ -10,7 +10,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "View As Member - Support Tool | ClubOS",
+  title: "View As Member - Support Tool | Murmurant",
   description: "Learn about the View As Member support tool for troubleshooting member experiences.",
 };
 

@@ -1,8 +1,8 @@
-# ClubOS Data Model Overview
+# Murmurant Data Model Overview
 
 ## Purpose
 
-This document explains the core data structures used by ClubOS in plain language. It is written for club leaders, Tech Chairs, committee members, and future contractors who need to understand what information the system stores and how different pieces connect together. You do not need to read code or understand databases to use this guide. The goal is to give you a mental map of how ClubOS organizes data about members, committees, events, photos, and communications.
+This document explains the core data structures used by Murmurant in plain language. It is written for club leaders, Tech Chairs, committee members, and future contractors who need to understand what information the system stores and how different pieces connect together. You do not need to read code or understand databases to use this guide. The goal is to give you a mental map of how Murmurant organizes data about members, committees, events, photos, and communications.
 
 ---
 

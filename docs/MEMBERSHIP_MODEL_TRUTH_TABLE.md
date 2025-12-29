@@ -1,12 +1,12 @@
 # Membership Model Truth Table
 
-**Purpose:** Define the canonical mapping between Wild Apricot (WA) membership concepts and ClubOS models.
+**Purpose:** Define the canonical mapping between Wild Apricot (WA) membership concepts and Murmurant models.
 
 ---
 
 ## 1. Two Orthogonal Dimensions
 
-ClubOS models membership using **two independent fields** on the Member entity:
+Murmurant models membership using **two independent fields** on the Member entity:
 
 | Field | Purpose | Source |
 |-------|---------|--------|
@@ -38,9 +38,9 @@ model MembershipStatus {
 }
 ```
 
-### Truth Table: WA Status to ClubOS Status
+### Truth Table: WA Status to Murmurant Status
 
-| WA Contact.Status | ClubOS code | isActive | isEligibleForRenewal | isBoardEligible |
+| WA Contact.Status | Murmurant code | isActive | isEligibleForRenewal | isBoardEligible |
 |-------------------|-------------|----------|----------------------|-----------------|
 | Active | `active` | true | true | true |
 | Lapsed | `lapsed` | false | true | false |
@@ -82,9 +82,9 @@ model MembershipTier {
 }
 ```
 
-### Truth Table: WA MembershipLevel to ClubOS Tier
+### Truth Table: WA MembershipLevel to Murmurant Tier
 
-| WA MembershipLevel | ClubOS tier code | ClubOS tier name | Confidence |
+| WA MembershipLevel | Murmurant tier code | Murmurant tier name | Confidence |
 |--------------------|------------------|------------------|------------|
 | ExtendedNewcomer | `extended_member` | Extended Member | exact |
 | NewcomerMember | `member` | Member | exact |
@@ -95,7 +95,7 @@ model MembershipTier {
 
 ### Current Distribution (Post-Sync)
 
-| WA Raw Value | Count | ClubOS Tier |
+| WA Raw Value | Count | Murmurant Tier |
 |--------------|-------|-------------|
 | ExtendedNewcomer | 61 | extended_member |
 | Admins | 26 | unknown (unmapped) |
@@ -261,4 +261,4 @@ Some members genuinely have no tier (null in WA). Rather than forcing everything
 
 ---
 
-*Document maintained by ClubOS development team. Last updated: December 2024*
+*Document maintained by Murmurant development team. Last updated: December 2024*

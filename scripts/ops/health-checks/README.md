@@ -1,6 +1,6 @@
-# ClubOS Health Check Scripts
+# Murmurant Health Check Scripts
 
-Operational health check scripts for monitoring ClubOS system status.
+Operational health check scripts for monitoring Murmurant system status.
 
 ## Scripts
 
@@ -20,7 +20,7 @@ Operational health check scripts for monitoring ClubOS system status.
 # Application health check (defaults to localhost:3000)
 ./app-health.sh
 ./app-health.sh --verbose
-./app-health.sh https://clubos.example.com
+./app-health.sh https://murmurant.example.com
 
 # Full system check
 ./full-health.sh

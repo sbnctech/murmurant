@@ -1,4 +1,4 @@
-# ClubOS File Storage System Overview
+# Murmurant File Storage System Overview
 
 Copyright (c) Santa Barbara Newcomers Club
 

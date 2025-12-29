@@ -1,4 +1,4 @@
-# ClubOS - A4 Page Lifecycle Basics
+# Murmurant - A4 Page Lifecycle Basics
 
 Status: Implemented
 Applies to: Admin editor

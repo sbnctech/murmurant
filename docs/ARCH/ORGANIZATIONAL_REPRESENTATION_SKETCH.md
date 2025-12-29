@@ -50,7 +50,7 @@ ContentInventory
 
 ### 1.2 Representation Intent
 
-For each inventory item, we track the **representation intent** - how we propose to reconstruct it in ClubOS:
+For each inventory item, we track the **representation intent** - how we propose to reconstruct it in Murmurant:
 
 ```
 RepresentationIntent
@@ -59,7 +59,7 @@ RepresentationIntent
 ├── proposedAction       -- create | map | skip | defer
 ├── confidenceLevel      -- high | medium | low | manual
 ├── humanApprovalState   -- pending | approved | rejected | modified
-├── proposedTarget       -- Where in ClubOS this maps
+├── proposedTarget       -- Where in Murmurant this maps
 └── transformationNotes  -- Explanation of what we propose
 ```
 
@@ -97,7 +97,7 @@ The reconstruction follows a four-phase workflow with explicit operator and cust
 **Goal:** Generate proposed representation for each inventory item.
 
 **Activities:**
-- Match source pages to ClubOS page types
+- Match source pages to Murmurant page types
 - Propose navigation structure
 - Suggest content transformations
 - Flag items requiring manual attention
@@ -146,7 +146,7 @@ The preview surface allows stakeholders to see the proposed representation befor
 
 | Capability | Description |
 |------------|-------------|
-| Read-only rendering | View proposed pages in ClubOS layout |
+| Read-only rendering | View proposed pages in Murmurant layout |
 | Source comparison | Side-by-side with WA original |
 | Diff view | Highlight differences from source |
 | Approval interface | Mark items as approved/rejected |
@@ -204,7 +204,7 @@ Each representation intent follows a state machine:
 | draft | Initial proposal generated | reviewed |
 | reviewed | Operator has examined | approved, aborted, modified |
 | approved | Ready for commit | committed, aborted |
-| committed | Applied to ClubOS | (terminal) |
+| committed | Applied to Murmurant | (terminal) |
 | aborted | Rejected; will not apply | (terminal) |
 
 **Modified:** Returns to `reviewed` with changes tracked.
@@ -230,7 +230,7 @@ Reconstruction creates pages. Page management is a separate concern.
 Visual editing of reconstructed content is deferred. Initial flow is:
 1. System generates content
 2. Human reviews and approves
-3. Editing (if needed) is done through existing ClubOS interfaces
+3. Editing (if needed) is done through existing Murmurant interfaces
 
 ### 5.3 No Automatic Publishing
 
@@ -288,7 +288,7 @@ If migration is aborted:
 
 | Question | Status |
 |----------|--------|
-| How to handle WA widgets with no ClubOS equivalent? | Deferred to implementation |
+| How to handle WA widgets with no Murmurant equivalent? | Deferred to implementation |
 | Asset storage location and limits? | Deferred to implementation |
 | Incremental update after initial commit? | Deferred; initial scope is one-time migration |
 | Multi-language content? | Not in initial scope |

@@ -1,6 +1,6 @@
 # Event RBAC Invariants
 
-> Row-level security, admin action guards, and audit logging for ClubOS events.
+> Row-level security, admin action guards, and audit logging for Murmurant events.
 
 ## Security Invariants
 

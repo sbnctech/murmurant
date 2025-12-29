@@ -40,11 +40,11 @@ This document defines failure modes, safe checkpoints, and rollback procedures f
 
 ### 1.2 Wrong Mappings
 
-**Description**: WA IDs mapped to incorrect ClubOS records.
+**Description**: WA IDs mapped to incorrect Murmurant records.
 
 | Symptom | Example |
 |---------|---------|
-| Member linked to wrong person | Alice's WA ID points to Bob's ClubOS record |
+| Member linked to wrong person | Alice's WA ID points to Bob's Murmurant record |
 | Event registrations on wrong event | Registrations from Event A on Event B |
 | Duplicate mappings | Same WA ID mapped twice |
 
@@ -75,7 +75,7 @@ This document defines failure modes, safe checkpoints, and rollback procedures f
 
 ### 1.4 Duplicate IDs
 
-**Description**: Same entity imported multiple times with different ClubOS IDs.
+**Description**: Same entity imported multiple times with different Murmurant IDs.
 
 | Symptom | Example |
 |---------|---------|
@@ -101,7 +101,7 @@ This document defines failure modes, safe checkpoints, and rollback procedures f
 | Invalid date ranges | Events with end before start |
 
 **Causes**:
-- Source data not validated against ClubOS policies
+- Source data not validated against Murmurant policies
 - Policy configuration changed after import started
 - Transform functions not applying org rules
 
@@ -203,7 +203,7 @@ SELECT
 
 -- Orphan check
 SELECT COUNT(*) FROM "WaIdMapping" wm
-LEFT JOIN "Member" m ON wm."clubosId" = m.id AND wm."entityType" = 'Member'
+LEFT JOIN "Member" m ON wm."murmurantId" = m.id AND wm."entityType" = 'Member'
 WHERE m.id IS NULL AND wm."entityType" = 'Member';
 ```
 
@@ -262,14 +262,14 @@ WHERE "syncRunId" = '<RUN_ID>';
 -- 2. Delete registrations from this run
 DELETE FROM "Registration" r
 USING "WaIdMapping" wm
-WHERE wm."clubosId" = r.id
+WHERE wm."murmurantId" = r.id
   AND wm."entityType" = 'Registration'
   AND wm."syncRunId" = '<RUN_ID>';
 
 -- 3. Delete events from this run
 DELETE FROM "Event" e
 USING "WaIdMapping" wm
-WHERE wm."clubosId" = e.id
+WHERE wm."murmurantId" = e.id
   AND wm."entityType" = 'Event'
   AND wm."syncRunId" = '<RUN_ID>';
 
@@ -277,7 +277,7 @@ WHERE wm."clubosId" = e.id
 -- CAUTION: Members may have other associations
 DELETE FROM "Member" m
 USING "WaIdMapping" wm
-WHERE wm."clubosId" = m.id
+WHERE wm."murmurantId" = m.id
   AND wm."entityType" = 'Member'
   AND wm."syncRunId" = '<RUN_ID>';
 
@@ -359,10 +359,10 @@ npx tsx scripts/importing/wa_full_sync.ts
 
 ### 4.2 Wrong Mapping Recovery
 
-**Scenario**: WA Contact 12345 mapped to wrong ClubOS member
+**Scenario**: WA Contact 12345 mapped to wrong Murmurant member
 
 **Procedure**:
-1. Identify correct ClubOS member ID
+1. Identify correct Murmurant member ID
 2. Update mapping record
 3. Audit log the correction
 
@@ -371,15 +371,15 @@ npx tsx scripts/importing/wa_full_sync.ts
 SELECT * FROM "WaIdMapping"
 WHERE "waId" = '12345' AND "entityType" = 'Member';
 
--- Correct it (after identifying right clubosId)
+-- Correct it (after identifying right murmurantId)
 UPDATE "WaIdMapping"
-SET "clubosId" = '<CORRECT_UUID>'
+SET "murmurantId" = '<CORRECT_UUID>'
 WHERE "waId" = '12345' AND "entityType" = 'Member';
 
 -- Log the fix
 INSERT INTO "AuditLog" (action, metadata)
 VALUES ('migration:mapping:corrected',
-  '{"waId": "12345", "oldClubosId": "<WRONG_UUID>", "newClubosId": "<CORRECT_UUID>"}');
+  '{"waId": "12345", "oldMurmurantId": "<WRONG_UUID>", "newMurmurantId": "<CORRECT_UUID>"}');
 ```
 
 ### 4.3 Bad Tier Recovery
@@ -438,8 +438,8 @@ DELETE FROM "Member" WHERE id = '<DUPLICATE_UUID>';
 
 -- 3. Update mapping
 UPDATE "WaIdMapping"
-SET "clubosId" = '<CANONICAL_UUID>'
-WHERE "clubosId" = '<DUPLICATE_UUID>' AND "entityType" = 'Member';
+SET "murmurantId" = '<CANONICAL_UUID>'
+WHERE "murmurantId" = '<DUPLICATE_UUID>' AND "entityType" = 'Member';
 ```
 
 ---
@@ -457,7 +457,7 @@ Every migration operation MUST create audit log entries:
 | `migration:failed` | Import errors | run_id, error, last_batch |
 | `migration:rollback:level1` | Single-run rollback | run_id, records_affected |
 | `migration:rollback:level2` | Snapshot restore | backup_file, restore_time |
-| `migration:mapping:corrected` | Mapping fixed | waId, old/new clubosId |
+| `migration:mapping:corrected` | Mapping fixed | waId, old/new murmurantId |
 
 ### 5.2 Audit Query Examples
 
@@ -528,7 +528,7 @@ After any rollback, verify:
 ```sql
 -- No orphaned mappings
 SELECT COUNT(*) as orphaned_members FROM "WaIdMapping" wm
-LEFT JOIN "Member" m ON wm."clubosId" = m.id AND wm."entityType" = 'Member'
+LEFT JOIN "Member" m ON wm."murmurantId" = m.id AND wm."entityType" = 'Member'
 WHERE m.id IS NULL AND wm."entityType" = 'Member';
 
 -- No orphaned registrations

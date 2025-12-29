@@ -1,7 +1,7 @@
 /**
  * Hooks Module
  *
- * Reusable React hooks for ClubOS.
+ * Reusable React hooks for Murmurant.
  */
 
 export {

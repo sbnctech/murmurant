@@ -1,10 +1,10 @@
-# ClubOS — Recovery and Restoration Guarantees
+# Murmurant — Recovery and Restoration Guarantees
 
 Status: Canonical Specification  
 Applies to: All production data and services  
 Last updated: 2025-12-20
 
-This document defines how ClubOS recovers from failures and restores
+This document defines how Murmurant recovers from failures and restores
 service while preserving data integrity and organizational trust.
 
 This document is normative.
@@ -25,7 +25,7 @@ A fast recovery that corrupts data is a failure.
 
 ## 2. Recoverable Failure Classes
 
-ClubOS explicitly supports recovery from:
+Murmurant explicitly supports recovery from:
 
 - Application crashes
 - Partial deploy failures
@@ -52,7 +52,7 @@ These are escalated as SEV-1 with disclosure.
 
 ## 4. Recovery Guarantees
 
-ClubOS guarantees that:
+Murmurant guarantees that:
 
 - Authoritative data can be restored to a known-good state
 - Restoration can be performed without reintroducing writes
@@ -108,7 +108,7 @@ Resumption without verification is forbidden.
 
 ## 9. Explicit Non-Guarantees
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Zero data loss under all conditions
 - Automatic recovery without humans
 - Instant restoration

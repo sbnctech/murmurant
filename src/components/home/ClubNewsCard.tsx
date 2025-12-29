@@ -36,7 +36,7 @@ interface NewsItem {
 const CLUB_NEWS: NewsItem[] = [
   {
     id: "news-1",
-    title: "Welcome to ClubOS!",
+    title: "Welcome to Murmurant!",
     excerpt: "We're excited to launch our new member portal. Explore events, connect with members, and manage your profile all in one place.",
     date: "Dec 2024",
     category: "Announcement",

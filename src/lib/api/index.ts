@@ -1,5 +1,5 @@
 /**
- * ClubOS API utilities
+ * Murmurant API utilities
  *
  * Shared helpers for API route handlers.
  */

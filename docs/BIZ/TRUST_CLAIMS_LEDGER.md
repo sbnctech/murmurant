@@ -2,7 +2,7 @@
 
 ```
 Purpose: Internal governance artifact
-Audience: ClubOS operators, architects, auditors
+Audience: Murmurant operators, architects, auditors
 Status: Living document - update when claims change
 ```
 
@@ -49,7 +49,7 @@ This is not marketing material. It is an accountability document.
 | Claim | Type | Source | Enforcement | Risk if Misunderstood | Notes |
 |-------|------|--------|-------------|----------------------|-------|
 | No consequential action occurs without explicit human authorization | Guarantee | CORE_TRUST_SURFACE, ARCHITECTURAL_CHARTER (P5, N5) | Architectural + Code | Customer may expect automation and be confused by required approvals | Core invariant |
-| The system proposes; humans decide | Guarantee | CORE_TRUST_SURFACE, HOW_CLUBOS_IS_BUILT | Architectural | Customer may think "propose" means partial execution | Philosophical anchor |
+| The system proposes; humans decide | Guarantee | CORE_TRUST_SURFACE, HOW_MURMURANT_IS_BUILT | Architectural | Customer may think "propose" means partial execution | Philosophical anchor |
 | Suggestions never auto-apply | Guarantee | SUGGESTION_REVIEW_WORKFLOW | Code | Customer may expect time-based auto-approval | State machine enforced |
 | Authority remains with humans at every decision point | Guarantee | SUGGESTION_REVIEW_WORKFLOW | Architectural | May be interpreted as "no automation at all" | Clarify mechanical vs consequential automation |
 
@@ -61,7 +61,7 @@ This is not marketing material. It is an accountability document.
 |-------|------|--------|-------------|----------------------|-------|
 | Preview uses the same decision logic as execution | Guarantee | PREVIEW_SURFACE_CONTRACT (2.1) | Code | Customer may expect byte-identical results | Timestamps and IDs may differ |
 | Preview does not modify any persistent state | Guarantee | PREVIEW_SURFACE_CONTRACT (2.1) | Code | None significant | Hard enforcement |
-| What you see in preview is what will happen | Guarantee | PREVIEW_SURFACE_CONTRACT, HOW_CLUBOS_IS_BUILT | Code | Data may change between preview and execution | Document known deltas |
+| What you see in preview is what will happen | Guarantee | PREVIEW_SURFACE_CONTRACT, HOW_MURMURANT_IS_BUILT | Code | Data may change between preview and execution | Document known deltas |
 | Customer sees exactly what will happen before it happens | Guarantee | MIGRATION_CUSTOMER_JOURNEY | Procedural + Code | External changes are not visible | Re-preview recommended after delay |
 | Preview is always available before commit | Guarantee | SUGGESTION_REVIEW_WORKFLOW | Code | Does not mean preview is exhaustive | Some edge cases may not be surfaced |
 
@@ -86,7 +86,7 @@ This is not marketing material. It is an accountability document.
 | Every decision is logged | Guarantee | CORE_TRUST_SURFACE, ARCHITECTURAL_CHARTER (P1) | Code | "Decision" scope may be unclear | Logs consequential state transitions |
 | Who approved what, when, and why is recorded | Guarantee | CORE_TRUST_SURFACE, SUGGESTION_REVIEW_WORKFLOW | Code | "Why" requires human input | Reason field optional except for Reject |
 | Every state transition is logged | Guarantee | SUGGESTION_REVIEW_WORKFLOW | Code | Log retention policy not specified | **⚠️ Ambiguous: retention period undefined** |
-| Audit log cannot be edited or deleted | Guarantee | HOW_CLUBOS_IS_BUILT | Code + Schema | Database admin access could bypass | Append-only by design |
+| Audit log cannot be edited or deleted | Guarantee | HOW_MURMURANT_IS_BUILT | Code + Schema | Database admin access could bypass | Append-only by design |
 | The system fails visibly, not silently | Guarantee | CORE_TRUST_SURFACE, SUGGESTION_REVIEW_WORKFLOW | Code | Not all failure modes may be covered | Best effort for unknown failures |
 
 ---
@@ -98,7 +98,7 @@ This is not marketing material. It is an accountability document.
 | Rollback documented for every phase | Guarantee | MIGRATION_CUSTOMER_JOURNEY | Procedural | "Documented" ≠ "automated" | Manual procedures |
 | Post-commit rollback requires artifact and capability | Constraint | SUGGESTION_REVIEW_WORKFLOW | Code | Rollback may not always be possible | **⚠️ Ambiguous: not all changes create rollback artifacts** |
 | Every important action must be undoable or safely reversible | Constraint | ARCHITECTURAL_CHARTER (P5) | Architectural | "Important" is subjective | Charter principle, not absolute guarantee |
-| If a change cannot be undone, you are told before you commit | Guarantee | HOW_CLUBOS_IS_BUILT | Procedural | Depends on accurate classification | **⚠️ Risk: classification could be wrong** |
+| If a change cannot be undone, you are told before you commit | Guarantee | HOW_MURMURANT_IS_BUILT | Procedural | Depends on accurate classification | **⚠️ Risk: classification could be wrong** |
 
 ---
 
@@ -107,11 +107,11 @@ This is not marketing material. It is an accountability document.
 | Claim | Type | Source | Enforcement | Risk if Misunderstood | Notes |
 |-------|------|--------|-------------|----------------------|-------|
 | Your data will arrive complete and correct | Guarantee | MIGRATION_CUSTOMER_JOURNEY | Procedural + Code | "Complete" subject to source data quality | Verification phase addresses this |
-| Data stays in Wild Apricot until explicit cutover | Guarantee | MIGRATION_CUSTOMER_JOURNEY | Architectural | ClubOS copy exists during sync | WA is authoritative until commit |
+| Data stays in Wild Apricot until explicit cutover | Guarantee | MIGRATION_CUSTOMER_JOURNEY | Architectural | Murmurant copy exists during sync | WA is authoritative until commit |
 | Dry run uses identical logic as real sync | Guarantee | MIGRATION_CUSTOMER_JOURNEY, PREVIEW_SURFACE_CONTRACT | Code | Timing and external state may differ | Same code path, not same moment |
 | Sync either completes fully or rolls back entirely | Guarantee | MIGRATION_CUSTOMER_JOURNEY | Code (transactional) | Transaction scope may be unclear | Per-batch transactions |
 | You control the timing of cutover | Guarantee | MIGRATION_CUSTOMER_JOURNEY | Procedural | No system-imposed deadline | Operator must not impose artificial pressure |
-| ClubOS helps your organization arrive intact | Process | ORGANIZATIONAL_PRESENTATION_PHILOSOPHY | Procedural | "Intact" is subjective | Aspirational anchor |
+| Murmurant helps your organization arrive intact | Process | ORGANIZATIONAL_PRESENTATION_PHILOSOPHY | Procedural | "Intact" is subjective | Aspirational anchor |
 
 ---
 
@@ -130,8 +130,8 @@ This is not marketing material. It is an accountability document.
 
 | Claim | Type | Source | Enforcement | Risk if Misunderstood | Notes |
 |-------|------|--------|-------------|----------------------|-------|
-| Your data belongs to you | Guarantee | HOW_CLUBOS_IS_BUILT | Procedural | Export format not specified | **⚠️ Ambiguous: export capabilities undefined** |
-| ClubOS provides ways to export your information | Guarantee | HOW_CLUBOS_IS_BUILT | Procedural | **⚠️ No current export tool** | Future capability |
+| Your data belongs to you | Guarantee | HOW_MURMURANT_IS_BUILT | Procedural | Export format not specified | **⚠️ Ambiguous: export capabilities undefined** |
+| Murmurant provides ways to export your information | Guarantee | HOW_MURMURANT_IS_BUILT | Procedural | **⚠️ No current export tool** | Future capability |
 | We do not lock you in | Guarantee | ORGANIZATIONAL_PRESENTATION_PHILOSOPHY | Procedural | Depends on export availability | Claims ahead of capability |
 
 ---
@@ -143,8 +143,8 @@ This is not marketing material. It is an accountability document.
 | Preview does not guarantee byte-identical output | Non-goal | PREVIEW_SURFACE_CONTRACT (3) | Descriptive | Customers should not diff raw output | IDs, timestamps differ |
 | Preview does not guarantee external system behavior | Non-goal | PREVIEW_SURFACE_CONTRACT (3) | Descriptive | Third-party APIs are beyond control | Honest limitation |
 | Preview does not guarantee infinite validity | Non-goal | PREVIEW_SURFACE_CONTRACT (3) | Descriptive | Re-preview if time passes | Explicit expiration |
-| We do not automate consequential decisions | Constraint | HOW_CLUBOS_IS_BUILT, ARCHITECTURAL_CHARTER (N5) | Architectural | "Consequential" requires definition | Core design principle |
-| We do not assume what you meant | Constraint | HOW_CLUBOS_IS_BUILT | Procedural | System asks for clarification | Ambiguity surfaced, not resolved |
+| We do not automate consequential decisions | Constraint | HOW_MURMURANT_IS_BUILT, ARCHITECTURAL_CHARTER (N5) | Architectural | "Consequential" requires definition | Core design principle |
+| We do not assume what you meant | Constraint | HOW_MURMURANT_IS_BUILT | Procedural | System asks for clarification | Ambiguity surfaced, not resolved |
 
 ---
 
@@ -206,7 +206,7 @@ This ledger should be reviewed:
 - [Architectural Charter](../ARCHITECTURAL_CHARTER.md)
 - [Organizational Presentation Philosophy](./ORGANIZATIONAL_PRESENTATION_PHILOSOPHY.md)
 - [Migration Customer Journey](../IMPORTING/MIGRATION_CUSTOMER_JOURNEY.md)
-- [How ClubOS Is Built](./HOW_CLUBOS_IS_BUILT_AND_WHY_YOU_CAN_TRUST_IT.md)
+- [How Murmurant Is Built](./HOW_MURMURANT_IS_BUILT_AND_WHY_YOU_CAN_TRUST_IT.md)
 
 ---
 

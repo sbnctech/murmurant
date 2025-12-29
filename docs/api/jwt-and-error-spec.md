@@ -1,6 +1,6 @@
-# ClubOS JWT and Error Response Specification
+# Murmurant JWT and Error Response Specification
 
-This document defines the authentication token structure and standardized error response format for all ClubOS API endpoints.
+This document defines the authentication token structure and standardized error response format for all Murmurant API endpoints.
 
 ---
 
@@ -8,7 +8,7 @@ This document defines the authentication token structure and standardized error 
 
 ### Overview
 
-ClubOS uses JSON Web Tokens (JWT) for API authentication. Tokens are issued by the authentication service and must be included in all authenticated requests.
+Murmurant uses JSON Web Tokens (JWT) for API authentication. Tokens are issued by the authentication service and must be included in all authenticated requests.
 
 ### Token Transport
 
@@ -25,10 +25,10 @@ Authorization: Bearer <token>
 | `sub`       | string | Yes      | Subject - auth provider user identifier             |
 | `iat`       | number | Yes      | Issued At - Unix timestamp (seconds)                |
 | `exp`       | number | Yes      | Expiration - Unix timestamp (seconds)               |
-| `aud`       | string | Yes      | Audience - must be "clubos-api"                     |
+| `aud`       | string | Yes      | Audience - must be "murmurant-api"                     |
 | `iss`       | string | Yes      | Issuer - auth service identifier                    |
 | `globalRole`| string | Yes      | User role: "member" or "admin"                      |
-| `memberId`  | string | No       | ClubOS member record ID (null if not linked)        |
+| `memberId`  | string | No       | Murmurant member record ID (null if not linked)        |
 | `profile`   | object | No       | Cached user display information                     |
 | `sessionId` | string | No       | Session identifier for revocation support           |
 
@@ -51,8 +51,8 @@ When present, the `profile` claim contains:
   "sub": "auth0|abc123def456",
   "iat": 1702300000,
   "exp": 1702303600,
-  "aud": "clubos-api",
-  "iss": "https://auth.clubos.example",
+  "aud": "murmurant-api",
+  "iss": "https://auth.murmurant.example",
   "globalRole": "member",
   "memberId": "m-uuid-12345",
   "profile": {
@@ -71,14 +71,14 @@ When present, the `profile` claim contains:
   "sub": "auth0|xyz789ghi012",
   "iat": 1702300000,
   "exp": 1702303600,
-  "aud": "clubos-api",
-  "iss": "https://auth.clubos.example",
+  "aud": "murmurant-api",
+  "iss": "https://auth.murmurant.example",
   "globalRole": "admin",
   "memberId": "m-uuid-54321",
   "profile": {
     "firstName": "Carol",
     "lastName": "Admin",
-    "email": "carol@clubos.example"
+    "email": "carol@murmurant.example"
   },
   "sessionId": "sess-uuid-11111"
 }
@@ -93,7 +93,7 @@ When present, the `profile` claim contains:
 
 ### Refresh Token Strategy
 
-ClubOS uses a **rotating refresh token** strategy:
+Murmurant uses a **rotating refresh token** strategy:
 
 1. **Initial Login**: User authenticates and receives both access and refresh tokens.
 
@@ -133,7 +133,7 @@ When validating an access token, the API must verify:
 
 1. **Signature** - Token is signed by a trusted issuer
 2. **Expiration** - `exp` is in the future
-3. **Audience** - `aud` equals "clubos-api"
+3. **Audience** - `aud` equals "murmurant-api"
 4. **Issuer** - `iss` matches expected auth service
 5. **Session** - `sessionId` is not revoked (if revocation checking is enabled)
 

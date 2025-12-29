@@ -29,19 +29,19 @@ describe("Auth Cookie Utilities", () => {
     it("returns __Host- prefixed name in production", () => {
       vi.stubEnv("NODE_ENV", "production");
       const name = getSessionCookieName();
-      expect(name).toBe("__Host-clubos_session");
+      expect(name).toBe("__Host-murmurant_session");
     });
 
     it("returns non-prefixed name in development", () => {
       vi.stubEnv("NODE_ENV", "development");
       const name = getSessionCookieName();
-      expect(name).toBe("clubos_session");
+      expect(name).toBe("murmurant_session");
     });
 
     it("returns non-prefixed name in test environment", () => {
       vi.stubEnv("NODE_ENV", "test");
       const name = getSessionCookieName();
-      expect(name).toBe("clubos_session");
+      expect(name).toBe("murmurant_session");
     });
   });
 

@@ -1,5 +1,5 @@
 /**
- * ClubOS Design Tokens - TypeScript Exports
+ * Murmurant Design Tokens - TypeScript Exports
  * Copyright (c) Santa Barbara Newcomers Club
  */
 

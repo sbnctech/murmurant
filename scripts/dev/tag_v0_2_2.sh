@@ -34,7 +34,7 @@ if ! git merge-base --is-ancestor HEAD origin/main; then
   exit 1
 fi
 
-git tag -a "$TAG" -m "ClubOS $TAG"
+git tag -a "$TAG" -m "Murmurant $TAG"
 git push origin "$TAG"
 
 echo "OK: tagged and pushed $TAG at:"

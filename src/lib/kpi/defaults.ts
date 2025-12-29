@@ -9,7 +9,7 @@
 import type { KpiConfig } from "./types";
 
 /**
- * Default KPI configuration for ClubOS
+ * Default KPI configuration for Murmurant
  *
  * This configuration defines:
  * - Admin dashboard metrics (membership, events, registrations)

@@ -8,7 +8,7 @@ Agent can print a polished gift certificate (PDF) to hand to the recipient.
 
 Primary users
 1) Gift Purchaser (Agent)
-- Not a member, not a contact in ClubOS
+- Not a member, not a contact in Murmurant
 - Needs fast checkout and professional-looking certificate
 2) Recipient (New resident)
 - Needs a warm, welcoming, simple onboarding experience

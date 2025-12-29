@@ -1,6 +1,6 @@
 # SBNC Migration Dry-Run Guide
 
-This guide explains how to run a dry-run of the SBNC (Santa Barbara Newcomers Club) migration from Wild Apricot to ClubOS.
+This guide explains how to run a dry-run of the SBNC (Santa Barbara Newcomers Club) migration from Wild Apricot to Murmurant.
 
 ## Quick Start
 
@@ -13,7 +13,7 @@ npm run migration:dry-run:sbnc
 The dry-run:
 
 - **Reads** WA export CSV files from the SBNC data directory
-- **Validates** all records against ClubOS schema and business rules
+- **Validates** all records against Murmurant schema and business rules
 - **Counts** members, events, and registrations that would be created/updated
 - **Reports** errors and warnings with source row numbers
 - **Generates** preview artifacts for inspection
@@ -93,7 +93,7 @@ npm run migration:dry-run:sbnc
 ```
 ======================================================================
   SBNC Migration Dry-Run
-  Santa Barbara Newcomers Club → ClubOS
+  Santa Barbara Newcomers Club → Murmurant
 ======================================================================
 
   Mode:       DRY RUN (read-only, no database changes)
@@ -145,7 +145,7 @@ npm run migration:dry-run:sbnc
 | Field | Meaning |
 |-------|---------|
 | total | Number of rows in the CSV file |
-| create | Records that would be created (new to ClubOS) |
+| create | Records that would be created (new to Murmurant) |
 | update | Records that would be updated (already exist, matched by email/title) |
 | skip | Records that would be skipped (e.g., duplicates, invalid) |
 | errors | Records with validation errors |
@@ -185,7 +185,7 @@ The dry-run generates JSON files in `scripts/migration/reports/sbnc/`:
 Contains complete record-level details including:
 
 - Every parsed record with field values
-- ID mapping (WA ID → ClubOS ID)
+- ID mapping (WA ID → Murmurant ID)
 - Per-record action (create/update/skip)
 - Per-record errors
 

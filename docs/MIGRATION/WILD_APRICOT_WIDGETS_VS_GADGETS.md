@@ -53,7 +53,7 @@ During discovery, we need to identify what gadgets a club uses so we can:
 
 | Category | What It Means | Examples |
 |----------|---------------|----------|
-| AUTO | Data-backed; maps to ClubOS models | Event lists, member directory, login |
+| AUTO | Data-backed; maps to Murmurant models | Event lists, member directory, login |
 | MANUAL | Presentation-only; requires rebuild | Content blocks, embeds, custom layouts |
 | UNSUPPORTED | Security risk; requires review | Custom HTML with scripts, third-party widgets |
 

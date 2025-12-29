@@ -32,8 +32,8 @@ function createValidIdMappingReport(): IdMappingReport {
     dryRun: true,
     members: {
       mappings: [
-        { waId: "WA001", clubosId: "CLB001", identifier: "alice@example.com" },
-        { waId: "WA002", clubosId: "CLB002", identifier: "bob@example.com" },
+        { waId: "WA001", murmurantId: "CLB001", identifier: "alice@example.com" },
+        { waId: "WA002", murmurantId: "CLB002", identifier: "bob@example.com" },
       ],
       counts: { total: 2, mapped: 2, missing: 0, duplicates: 0 },
       duplicateWaIds: [],
@@ -41,7 +41,7 @@ function createValidIdMappingReport(): IdMappingReport {
     },
     events: {
       mappings: [
-        { waId: "EVT001", clubosId: "CEVT001", identifier: "Coffee Social" },
+        { waId: "EVT001", murmurantId: "CEVT001", identifier: "Coffee Social" },
       ],
       counts: { total: 1, mapped: 1, missing: 0, duplicates: 0 },
       duplicateWaIds: [],
@@ -68,7 +68,7 @@ function createValidMigrationReport(): MigrationReport {
     startedAt: new Date("2024-03-15T12:00:00.000Z"),
     completedAt: new Date("2024-03-15T12:05:00.000Z"),
     dryRun: true,
-    config: { source: "wild-apricot", target: "clubos", version: "1.0" },
+    config: { source: "wild-apricot", target: "murmurant", version: "1.0" },
     summary: {
       totalRecords: 30,
       created: 24,
@@ -82,8 +82,8 @@ function createValidMigrationReport(): MigrationReport {
     registrations: createValidEntityReport(10),
     errors: [],
     idMapping: {
-      members: [{ waId: "WA001", clubosId: "CLB001", email: "test@example.com" }],
-      events: [{ waId: "EVT001", clubosId: "CEVT001", title: "Test Event" }],
+      members: [{ waId: "WA001", murmurantId: "CLB001", email: "test@example.com" }],
+      events: [{ waId: "EVT001", murmurantId: "CEVT001", title: "Test Event" }],
     },
   };
 }
@@ -168,16 +168,16 @@ describe("validateIdMapping", () => {
 
     it("detects missing waId in mapping entry", () => {
       const report = createValidIdMappingReport();
-      report.members.mappings[0] = { waId: "", clubosId: "CLB001" };
+      report.members.mappings[0] = { waId: "", murmurantId: "CLB001" };
       const violations = validateIdMapping(report);
       expect(violations.some((v) => v.code === VIOLATION_CODES.MISSING_WA_ID)).toBe(true);
     });
 
-    it("detects missing clubosId in mapping entry", () => {
+    it("detects missing murmurantId in mapping entry", () => {
       const report = createValidIdMappingReport();
-      report.members.mappings[0] = { waId: "WA001", clubosId: "" };
+      report.members.mappings[0] = { waId: "WA001", murmurantId: "" };
       const violations = validateIdMapping(report);
-      expect(violations.some((v) => v.code === VIOLATION_CODES.MISSING_CLUBOS_ID)).toBe(true);
+      expect(violations.some((v) => v.code === VIOLATION_CODES.MISSING_MURMURANT_ID)).toBe(true);
     });
   });
 
@@ -185,8 +185,8 @@ describe("validateIdMapping", () => {
     it("detects duplicate WA IDs in members", () => {
       const report = createValidIdMappingReport();
       report.members.mappings = [
-        { waId: "WA001", clubosId: "CLB001" },
-        { waId: "WA001", clubosId: "CLB002" }, // Duplicate WA ID
+        { waId: "WA001", murmurantId: "CLB001" },
+        { waId: "WA001", murmurantId: "CLB002" }, // Duplicate WA ID
       ];
       report.members.counts.mapped = 2;
       const violations = validateIdMapping(report);
@@ -195,24 +195,24 @@ describe("validateIdMapping", () => {
       expect(dupViolation?.details?.waId).toBe("WA001");
     });
 
-    it("detects duplicate ClubOS IDs in members", () => {
+    it("detects duplicate Murmurant IDs in members", () => {
       const report = createValidIdMappingReport();
       report.members.mappings = [
-        { waId: "WA001", clubosId: "CLB001" },
-        { waId: "WA002", clubosId: "CLB001" }, // Duplicate ClubOS ID
+        { waId: "WA001", murmurantId: "CLB001" },
+        { waId: "WA002", murmurantId: "CLB001" }, // Duplicate Murmurant ID
       ];
       report.members.counts.mapped = 2;
       const violations = validateIdMapping(report);
-      expect(violations.some((v) => v.code === VIOLATION_CODES.DUPLICATE_CLUBOS_ID)).toBe(true);
-      const dupViolation = violations.find((v) => v.code === VIOLATION_CODES.DUPLICATE_CLUBOS_ID);
-      expect(dupViolation?.details?.clubosId).toBe("CLB001");
+      expect(violations.some((v) => v.code === VIOLATION_CODES.DUPLICATE_MURMURANT_ID)).toBe(true);
+      const dupViolation = violations.find((v) => v.code === VIOLATION_CODES.DUPLICATE_MURMURANT_ID);
+      expect(dupViolation?.details?.murmurantId).toBe("CLB001");
     });
 
     it("detects duplicate WA IDs in events", () => {
       const report = createValidIdMappingReport();
       report.events.mappings = [
-        { waId: "EVT001", clubosId: "CEVT001" },
-        { waId: "EVT001", clubosId: "CEVT002" }, // Duplicate
+        { waId: "EVT001", murmurantId: "CEVT001" },
+        { waId: "EVT001", murmurantId: "CEVT002" }, // Duplicate
       ];
       report.events.counts.mapped = 2;
       const violations = validateIdMapping(report);

@@ -95,6 +95,6 @@ Planned improvements for the Admin Members Explorer:
 - Replace mock members and registrations with database-backed queries
 - Add filters and search on the members list (by name, email, status)
 - Add pagination and sort controls for large member lists
-- Show additional profile fields as ClubOS evolves (address, membership tier, etc.)
+- Show additional profile fields as Murmurant evolves (address, membership tier, etc.)
 - Add member edit and create functionality
 - Export member lists to CSV

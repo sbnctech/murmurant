@@ -14,7 +14,7 @@
 
 ---
 
-# ClubOS - Work Queue (Backlog)
+# Murmurant - Work Queue (Backlog)
 
 Status: Canonical backlog
 Last updated: 2025-12-21

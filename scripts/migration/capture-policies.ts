@@ -2,7 +2,7 @@
 /**
  * Policy Capture Script
  *
- * Captures organization policies for ClubOS migration.
+ * Captures organization policies for Murmurant migration.
  * Generates a policy bundle artifact for operator review and validation.
  *
  * Usage:
@@ -108,7 +108,7 @@ function printHelp(): void {
   console.log(`
 Policy Capture Script
 
-Generates a policy bundle for ClubOS migration. Supports three modes:
+Generates a policy bundle for Murmurant migration. Supports three modes:
 1. --generate-template: Create empty template for manual completion
 2. (default): Best-effort capture with WA, template for rest
 3. --validate-only: Validate an existing mapping file
@@ -151,7 +151,7 @@ async function main(): Promise<void> {
   const options = parseArgs();
 
   console.log("\n" + "=".repeat(60));
-  console.log("ClubOS Policy Capture");
+  console.log("Murmurant Policy Capture");
   console.log("=".repeat(60) + "\n");
 
   // Mode: Validate only

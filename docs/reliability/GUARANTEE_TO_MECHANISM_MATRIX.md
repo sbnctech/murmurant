@@ -1,4 +1,4 @@
-# ClubOS - Guarantee to Mechanism Matrix
+# Murmurant - Guarantee to Mechanism Matrix
 
 Status: Canonical Specification
 Applies to: All environments (dev, staging, production)

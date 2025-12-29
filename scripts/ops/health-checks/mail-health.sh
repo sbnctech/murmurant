@@ -26,7 +26,7 @@ NC='\033[0m' # No Color
 
 echo ""
 echo "============================================================"
-echo "  ClubOS Mail Health Check"
+echo "  Murmurant Mail Health Check"
 echo "============================================================"
 echo ""
 

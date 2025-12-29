@@ -97,5 +97,5 @@ Behavior: hidden unless threshold breached
 - Quartile definitions
 - Board-friendly naming
 - UI styling/branding
-- Data source mapping to ClubOS models
+- Data source mapping to Murmurant models
 

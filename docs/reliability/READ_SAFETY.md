@@ -1,10 +1,10 @@
-# ClubOS — Read Safety and Consistency Guarantees
+# Murmurant — Read Safety and Consistency Guarantees
 
 Status: Canonical Specification
 Applies to: All read paths (UI, API, rendering, preview)
 Last updated: 2025-12-20
 
-This document defines when ClubOS may read and present data,
+This document defines when Murmurant may read and present data,
 how consistency is enforced, and how ambiguity is handled.
 
 This document is normative.
@@ -24,7 +24,7 @@ If the system cannot determine that a read is safe:
 
 ## 2. Preconditions for Any Read
 
-Before serving data, ClubOS MUST verify:
+Before serving data, Murmurant MUST verify:
 
 - Authentication state (or explicit anonymous access)
 - Authorization rules for the target data
@@ -101,7 +101,7 @@ If cache safety cannot be guaranteed, caching MUST be disabled.
 
 ## 9. Explicit Non-Guarantees
 
-ClubOS does NOT guarantee:
+Murmurant does NOT guarantee:
 - Real-time consistency across all views
 - Graceful rendering under permission ambiguity
 - Partial data availability during failures

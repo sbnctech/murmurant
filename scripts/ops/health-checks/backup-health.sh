@@ -27,7 +27,7 @@ NC='\033[0m' # No Color
 
 echo ""
 echo "============================================================"
-echo "  ClubOS Backup Health Check"
+echo "  Murmurant Backup Health Check"
 echo "============================================================"
 echo ""
 
@@ -156,7 +156,7 @@ fi
 
 # Check last restore drill
 echo "Checking restore drill status..."
-DRILL_DIR="/Users/edf/clubos/docs/OPS/drills"
+DRILL_DIR="/Users/edf/murmurant/docs/OPS/drills"
 
 if [[ -d "$DRILL_DIR" ]]; then
     LATEST_DRILL=$(ls -1t "$DRILL_DIR"/*restore-drill*.md 2>/dev/null | head -1 || echo "")

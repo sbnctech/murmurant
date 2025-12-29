@@ -2,7 +2,7 @@
 /**
  * Wild Apricot Full Sync Script
  *
- * Imports all data from Wild Apricot into ClubOS.
+ * Imports all data from Wild Apricot into Murmurant.
  * Run with: npx tsx scripts/importing/wa_full_sync.ts
  *
  * Options:
@@ -103,9 +103,9 @@ async function runProbe(waEventId: number): Promise<void> {
     console.log("");
     console.log(`Event ID:              ${result.eventId}`);
     console.log(`Event found in WA:     ${result.eventFound ? "YES" : "NO"}`);
-    console.log(`Event mapped to ClubOS: ${result.eventMapped ? "YES" : "NO"}`);
-    if (result.clubosEventId) {
-      console.log(`ClubOS Event ID:       ${result.clubosEventId}`);
+    console.log(`Event mapped to Murmurant: ${result.eventMapped ? "YES" : "NO"}`);
+    if (result.murmurantEventId) {
+      console.log(`Murmurant Event ID:       ${result.murmurantEventId}`);
     }
     console.log(`Registrations from WA: ${result.registrationsFromWA}`);
     console.log("");
@@ -122,7 +122,7 @@ async function runProbe(waEventId: number): Promise<void> {
         const status = reg.wouldSkip ? `SKIP: ${reg.skipReason}` : "IMPORT";
         console.log(`  - WA#${reg.waRegistrationId} ${reg.contactName} (${reg.contactEmail ?? "no email"})`);
         console.log(`    WA Contact: ${reg.waContactId}, Status: ${reg.status}`);
-        console.log(`    Member mapped: ${reg.memberMapped ? `YES (${reg.clubosMemberId})` : "NO"}`);
+        console.log(`    Member mapped: ${reg.memberMapped ? `YES (${reg.murmurantMemberId})` : "NO"}`);
         console.log(`    Result: ${status}`);
         console.log("");
       }

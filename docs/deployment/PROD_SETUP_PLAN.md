@@ -51,7 +51,7 @@ git push origin main
 npx neonctl auth
 
 # Create production project
-npx neonctl projects create --name clubos-prod --region aws-us-east-2
+npx neonctl projects create --name murmurant-prod --region aws-us-east-2
 
 # Get connection string
 npx neonctl connection-string --project-id <new-project-id>
@@ -62,7 +62,7 @@ npx neonctl connection-string --project-id <new-project-id>
 1. Go to https://console.neon.tech
 2. Click **New Project**
 3. Configure:
-   - **Name**: `clubos-prod`
+   - **Name**: `murmurant-prod`
    - **Postgres version**: 17
    - **Region**: US East (Ohio) - `aws-us-east-2`
 4. Click **Create Project**
@@ -107,7 +107,7 @@ netlify env:list
 
 ### Via Netlify UI
 
-1. Go to https://app.netlify.com/projects/clubos-prod-sbnc
+1. Go to https://app.netlify.com/projects/murmurant-prod-sbnc
 2. Navigate to **Site configuration** > **Environment variables**
 3. Update **DATABASE_URL** to the new production Neon connection string
 4. Verify **CRON_SECRET** is set
@@ -121,7 +121,7 @@ This step requires the Netlify UI.
 
 ### Step-by-Step
 
-1. Go to https://app.netlify.com/projects/clubos-prod-sbnc
+1. Go to https://app.netlify.com/projects/murmurant-prod-sbnc
 
 2. Click **Site configuration** (left sidebar)
 
@@ -140,7 +140,7 @@ This step requires the Netlify UI.
 After saving, trigger a deploy:
 
 ```bash
-netlify deploy --build --prod --site clubos-prod-sbnc
+netlify deploy --build --prod --site murmurant-prod-sbnc
 ```
 
 Or push to main:
@@ -159,13 +159,13 @@ git push origin main
 
 ```bash
 # API health
-curl https://clubos-prod-sbnc.netlify.app/api/health
+curl https://murmurant-prod-sbnc.netlify.app/api/health
 
 # Version endpoint
-curl https://clubos-prod-sbnc.netlify.app/api/v1/version
+curl https://murmurant-prod-sbnc.netlify.app/api/v1/version
 
 # Cron health (no auth needed for GET)
-curl https://clubos-prod-sbnc.netlify.app/api/cron/transitions
+curl https://murmurant-prod-sbnc.netlify.app/api/cron/transitions
 ```
 
 ### Database Verification

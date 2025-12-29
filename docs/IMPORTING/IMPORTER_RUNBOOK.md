@@ -60,7 +60,7 @@ This is a deliberate boundary, not a limitation.
 Content migration is best handled through an **assisted, human-reviewed process**:
 
 - **Content inventory**: Identify which pages contain valuable content
-- **Template preparation**: Set up ClubOS page structures before copying
+- **Template preparation**: Set up Murmurant page structures before copying
 - **Manual editorial review**: Verify accuracy and relevance during transfer
 - **Optional import tools**: Copy/paste or markdown import for text content
 
@@ -80,7 +80,7 @@ This approach produces higher-quality results and ensures content is reviewed du
 # Required for all operations
 WA_API_KEY=your_api_key_here      # Wild Apricot API key
 WA_ACCOUNT_ID=176353              # Wild Apricot account ID
-DATABASE_URL=postgresql://...     # ClubOS database connection
+DATABASE_URL=postgresql://...     # Murmurant database connection
 
 # Optional safety flags
 ALLOW_PROD_IMPORT=1               # Required for production writes
@@ -127,7 +127,7 @@ If using tier mapping during migration (Issue #276), seed the MembershipTier rec
 
 ```bash
 # Enable the feature flag first
-export CLUBOS_FLAG_MEMBERSHIP_TIERS_ENABLED=1
+export MURMURANT_FLAG_MEMBERSHIP_TIERS_ENABLED=1
 
 # Development/staging
 npx tsx scripts/migration/seed-membership-tiers.ts
@@ -209,7 +209,7 @@ npx tsx scripts/migration/capture-policies.ts --validate-only --mapping-file mig
 - `scheduling.timezone` - Organization timezone (e.g., "America/Los_Angeles")
 - `display.organizationName` - Organization display name
 
-**Optional tier mapping:** If migrating WA membership levels to ClubOS tiers, configure `membership.tiers.waMapping` in the policy file. Note: WA membership level API may be unreliable; manual mapping is acceptable.
+**Optional tier mapping:** If migrating WA membership levels to Murmurant tiers, configure `membership.tiers.waMapping` in the policy file. Note: WA membership level API may be unreliable; manual mapping is acceptable.
 
 ## 1.8 Operator Pre-Migration Checklist
 
@@ -443,8 +443,8 @@ Example output:
 
 Event ID:              12345
 Event found in WA:     YES
-Event mapped to ClubOS: YES
-ClubOS Event ID:       uuid-abc123
+Event mapped to Murmurant: YES
+Murmurant Event ID:       uuid-abc123
 Registrations from WA: 45
 
 Import Analysis:
@@ -552,7 +552,7 @@ SELECT * FROM "WaIdMapping" ORDER BY "syncedAt" DESC LIMIT 20;
 
 -- Check for orphaned mappings
 SELECT wm.* FROM "WaIdMapping" wm
-LEFT JOIN "Member" m ON wm."clubosId" = m.id AND wm."entityType" = 'Member'
+LEFT JOIN "Member" m ON wm."murmurantId" = m.id AND wm."entityType" = 'Member'
 WHERE m.id IS NULL AND wm."entityType" = 'Member';
 
 -- Check import audit logs

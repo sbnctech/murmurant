@@ -1,4 +1,4 @@
-# Prisma Schema Authorization Contract (ClubOS)
+# Prisma Schema Authorization Contract (Murmurant)
 
 **Last updated:** 2025-12-22
 
@@ -6,7 +6,7 @@
 
 ## Purpose
 
-- Schema changes are the highest merge-risk hotspot in ClubOS.
+- Schema changes are the highest merge-risk hotspot in Murmurant.
 - This contract makes "schema authorization" explicit, auditable, and unambiguous.
 
 ---

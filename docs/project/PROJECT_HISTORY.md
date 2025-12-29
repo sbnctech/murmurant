@@ -6,7 +6,7 @@
 **Real-world timestamp:** Day 2, 23:12  
 **Project phase:** Core platform stabilization complete
 
-By the end of Day 4, ClubOS crossed a critical threshold:
+By the end of Day 4, Murmurant crossed a critical threshold:
 the system moved from "working code" to a **reliable and extensible foundation**.
 
 ### What Is Now True
@@ -59,7 +59,7 @@ Day 5 planning reflects this shift:
 This moment marks the transition from a solo-driven build
 to a system that a **team can safely extend**.
 
-The goal is not just that ClubOS works —
+The goal is not just that Murmurant works —
 but that it continues to work as new features, roles,
 and contributors are added.
 

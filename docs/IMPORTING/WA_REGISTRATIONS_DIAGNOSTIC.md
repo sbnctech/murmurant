@@ -15,16 +15,16 @@ The WA registration import can fail silently if prerequisites are not met. This 
 
 The registration sync follows a strict order:
 
-1. **Members sync first**: Contacts are fetched from WA and mapped to ClubOS Members
-2. **Events sync second**: Events are fetched from WA and mapped to ClubOS Events
+1. **Members sync first**: Contacts are fetched from WA and mapped to Murmurant Members
+2. **Events sync second**: Events are fetched from WA and mapped to Murmurant Events
 3. **Registrations sync last**: Registrations are fetched per-event and linked to both Members and Events
 
 ### Critical Dependency
 
 Each registration references both:
 
-- A WA **Contact ID** (must map to a ClubOS Member)
-- A WA **Event ID** (must map to a ClubOS Event)
+- A WA **Contact ID** (must map to a Murmurant Member)
+- A WA **Event ID** (must map to a Murmurant Event)
 
 If either mapping is missing, the registration is **skipped and counted** in the diagnostics summary. The first 10 skips are logged individually; all skips are reflected in the final counters.
 
@@ -151,7 +151,7 @@ This outputs:
 ============================================================
 
 [PROBE] Event found: Monthly Luncheon
-[PROBE] Event mapped to ClubOS: YES (uuid-abc123)
+[PROBE] Event mapped to Murmurant: YES (uuid-abc123)
 [PROBE] Fetched 45 registrations from WA
 
 [PROBE] Sample registration 1: {
@@ -167,8 +167,8 @@ This outputs:
 
 Event ID:              12345
 Event found in WA:     YES
-Event mapped to ClubOS: YES
-ClubOS Event ID:       uuid-abc123
+Event mapped to Murmurant: YES
+Murmurant Event ID:       uuid-abc123
 Registrations from WA: 45
 
 Import Analysis:

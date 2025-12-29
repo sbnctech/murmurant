@@ -1,4 +1,4 @@
-# Exhibit C: Dual Business Model — SBNC and ClubOS, Inc.
+# Exhibit C: Dual Business Model — SBNC and Murmurant, Inc.
 
 ```
 Audience: Board Members, Finance Committees, Presidents, Legal Counsel
@@ -10,9 +10,9 @@ Classification: Strategic Planning Document
 
 ## Executive Summary
 
-ClubOS operates as a dual-entity model: ClubOS, Inc. (a commercial software company) provides technology to nonprofit organizations like the Santa Barbara Newcomers Club (SBNC). This document explains why this arrangement creates value for both parties, why the incentives align, and why SBNC's role as the founding client ("Client Zero") is both appropriate and protected.
+Murmurant operates as a dual-entity model: Murmurant, Inc. (a commercial software company) provides technology to nonprofit organizations like the Santa Barbara Newcomers Club (SBNC). This document explains why this arrangement creates value for both parties, why the incentives align, and why SBNC's role as the founding client ("Client Zero") is both appropriate and protected.
 
-The core proposition is straightforward: SBNC gets better technology at lower cost with reduced volunteer burden, while ClubOS, Inc. gets a committed development partner and a pathway to serving the broader nonprofit market.
+The core proposition is straightforward: SBNC gets better technology at lower cost with reduced volunteer burden, while Murmurant, Inc. gets a committed development partner and a pathway to serving the broader nonprofit market.
 
 ---
 
@@ -41,11 +41,11 @@ SBNC currently operates on Wild Apricot, a third-party platform. While functiona
 
 These indirect costs are difficult to quantify but represent real volunteer burden.
 
-### 1.2 What SBNC Gains from ClubOS
+### 1.2 What SBNC Gains from Murmurant
 
 **Cost Reduction:**
 
-ClubOS consolidates multiple paid services into a single platform:
+Murmurant consolidates multiple paid services into a single platform:
 
 - Membership management (replaces Wild Apricot core)
 - Email communications (replaces supplemental services)
@@ -59,14 +59,14 @@ The licensing model (see Section 2.2) is designed to be competitive with or belo
 
 Wild Apricot forces nonprofits to maintain parallel systems:
 
-| Function | Wild Apricot Approach | ClubOS Approach |
+| Function | Wild Apricot Approach | Murmurant Approach |
 |----------|----------------------|-----------------|
 | Permissions | Limited roles; manual workarounds | Fine-grained, delegated roles |
 | Email | Basic; often supplemented | Integrated with membership |
 | Event capacity | Per-event configuration | Policy-driven, auditable |
 | Member data | Export/import workflows | Single source of truth |
 
-ClubOS eliminates the "duct tape" integrations that consume volunteer time.
+Murmurant eliminates the "duct tape" integrations that consume volunteer time.
 
 **Volunteer Load Reduction:**
 
@@ -87,7 +87,7 @@ With Wild Apricot, SBNC bears platform risk alone:
 - If Wild Apricot discontinues features, SBNC adapts or loses capability
 - If Wild Apricot has outages, SBNC waits
 
-With ClubOS:
+With Murmurant:
 
 - SBNC has input into development priorities
 - The codebase is not controlled by a distant vendor
@@ -96,7 +96,7 @@ With ClubOS:
 
 **Governance Protection:**
 
-ClubOS is designed around nonprofit governance needs:
+Murmurant is designed around nonprofit governance needs:
 
 - Audit trails for board accountability
 - Role transitions that match term limits
@@ -111,7 +111,7 @@ Transparency requires acknowledging trade-offs:
 
 **Vendor Maturity:**
 
-Wild Apricot is a mature, established vendor. ClubOS is newer. This means:
+Wild Apricot is a mature, established vendor. Murmurant is newer. This means:
 
 - Some features may be less polished initially
 - Documentation is still developing
@@ -137,7 +137,7 @@ Being Client Zero means a closer relationship with the technology provider. This
 
 ---
 
-## Part 2: The ClubOS, Inc. Perspective
+## Part 2: The Murmurant, Inc. Perspective
 
 ### 2.1 The Nonprofit Market Opportunity
 
@@ -165,7 +165,7 @@ A platform that solves these well for one organization can serve many.
 
 ### 2.2 Revenue Model
 
-ClubOS, Inc. generates revenue through two primary mechanisms:
+Murmurant, Inc. generates revenue through two primary mechanisms:
 
 **Licensing (Per Engaged User):**
 
@@ -187,7 +187,7 @@ Event registrations and payments include a small transaction fee:
 | Free registration | Minimal or zero |
 | Donations | Percentage |
 
-Transaction fees align ClubOS revenue with organizational activity. When organizations thrive (more events, more registrations), ClubOS revenue grows proportionally.
+Transaction fees align Murmurant revenue with organizational activity. When organizations thrive (more events, more registrations), Murmurant revenue grows proportionally.
 
 ### 2.3 Why This Scales Without Staff Explosion
 
@@ -205,7 +205,7 @@ Unlike consulting or professional services, each new customer does not require p
 
 **Automation of Support:**
 
-ClubOS is designed for self-service operation:
+Murmurant is designed for self-service operation:
 
 - Organizations configure their own policies
 - Documentation is comprehensive
@@ -214,7 +214,7 @@ ClubOS is designed for self-service operation:
 
 **Shared Development Costs:**
 
-Features built for one organization benefit all. When SBNC needs better event management, that improvement serves every ClubOS customer. Development costs are amortized across the customer base.
+Features built for one organization benefit all. When SBNC needs better event management, that improvement serves every Murmurant customer. Development costs are amortized across the customer base.
 
 ### 2.4 Why Incentives Align with Customer Outcomes
 
@@ -222,20 +222,20 @@ The revenue model creates alignment:
 
 **Engaged User Pricing:**
 
-- ClubOS earns more when organizations have more active members
+- Murmurant earns more when organizations have more active members
 - This incentivizes features that increase member engagement
 - Organizations do not pay for value they do not receive
 
 **Transaction Fees:**
 
-- ClubOS earns more when organizations run successful events
+- Murmurant earns more when organizations run successful events
 - This incentivizes features that make events easier to manage
-- Failed events (cancellations, no-shows) reduce ClubOS revenue too
+- Failed events (cancellations, no-shows) reduce Murmurant revenue too
 
 **Long-Term Relationships:**
 
 - Switching costs are high (migration effort)
-- This incentivizes ClubOS to maintain customer satisfaction
+- This incentivizes Murmurant to maintain customer satisfaction
 - Unhappy customers do not renew; the model punishes short-term thinking
 
 **Contrast with Wild Apricot:**
@@ -248,9 +248,9 @@ Wild Apricot's pricing is based on total contacts, not engagement. Organizations
 
 ### 3.1 What "Client Zero" Means
 
-SBNC is the founding customer of ClubOS. This means:
+SBNC is the founding customer of Murmurant. This means:
 
-- ClubOS was initially developed to solve SBNC's specific problems
+- Murmurant was initially developed to solve SBNC's specific problems
 - SBNC's operational patterns informed the architecture
 - SBNC has influence on development priorities
 - SBNC's success is proof-of-concept for the broader market
@@ -267,18 +267,18 @@ SBNC is not a simple organization:
 - Formal governance (board, bylaws, term limits)
 - Financial controls and reporting requirements
 
-If ClubOS works for SBNC, it can work for most membership nonprofits.
+If Murmurant works for SBNC, it can work for most membership nonprofits.
 
 **Access to Real Problems:**
 
-The ClubOS development team has direct access to:
+The Murmurant development team has direct access to:
 
 - SBNC's actual workflows (not theoretical use cases)
 - SBNC's volunteers and their pain points
 - SBNC's historical data for testing
 - SBNC's board for governance validation
 
-This access is invaluable. Most software companies guess at customer needs; ClubOS can observe them directly.
+This access is invaluable. Most software companies guess at customer needs; Murmurant can observe them directly.
 
 **Willingness to Iterate:**
 
@@ -291,7 +291,7 @@ SBNC has accepted the role of development partner:
 
 ### 3.3 Why Royalty Participation Is Reasonable
 
-SBNC's contribution to ClubOS development justifies participation in commercial success:
+SBNC's contribution to Murmurant development justifies participation in commercial success:
 
 **What SBNC Contributed:**
 
@@ -302,8 +302,8 @@ SBNC's contribution to ClubOS development justifies participation in commercial 
 
 **What Royalty Participation Provides:**
 
-- Ongoing revenue share from ClubOS commercial success
-- Alignment between SBNC's investment and ClubOS's growth
+- Ongoing revenue share from Murmurant commercial success
+- Alignment between SBNC's investment and Murmurant's growth
 - Potential offset to future licensing costs
 - Recognition of founding-customer contribution
 
@@ -311,7 +311,7 @@ SBNC's contribution to ClubOS development justifies participation in commercial 
 
 Royalty participation should be:
 
-- Capped (not unlimited liability to ClubOS)
+- Capped (not unlimited liability to Murmurant)
 - Time-limited (not perpetual)
 - Based on net revenue (not gross, to account for costs)
 - Clearly documented (auditable by both parties)
@@ -324,10 +324,10 @@ SBNC's role is customer, not owner:
 
 **SBNC Does Not:**
 
-- Own ClubOS, Inc. equity
-- Control ClubOS, Inc. operations
-- Guarantee ClubOS, Inc. obligations
-- Assume liability for ClubOS, Inc. products
+- Own Murmurant, Inc. equity
+- Control Murmurant, Inc. operations
+- Guarantee Murmurant, Inc. obligations
+- Assume liability for Murmurant, Inc. products
 
 **SBNC's Relationship Is:**
 
@@ -337,11 +337,11 @@ SBNC's role is customer, not owner:
 
 **Legal Separation:**
 
-ClubOS, Inc. is a separate legal entity. SBNC's nonprofit status is not affected by:
+Murmurant, Inc. is a separate legal entity. SBNC's nonprofit status is not affected by:
 
-- ClubOS, Inc. commercial activities
-- ClubOS, Inc. relationships with other customers
-- ClubOS, Inc. success or failure
+- Murmurant, Inc. commercial activities
+- Murmurant, Inc. relationships with other customers
+- Murmurant, Inc. success or failure
 
 SBNC should confirm this separation with legal counsel, but the structure is designed to maintain clear boundaries.
 
@@ -362,12 +362,12 @@ SBNC should consult with its accountant on tax treatment, but royalties from int
 
 | Risk | Likelihood | Mitigation |
 |------|------------|------------|
-| ClubOS, Inc. fails | Low-Medium | SBNC retains data export rights; migration path documented |
-| ClubOS pricing increases | Low | Licensing agreement includes rate protections |
-| ClubOS quality declines | Low | SBNC influence as Client Zero; can migrate if necessary |
+| Murmurant, Inc. fails | Low-Medium | SBNC retains data export rights; migration path documented |
+| Murmurant pricing increases | Low | Licensing agreement includes rate protections |
+| Murmurant quality declines | Low | SBNC influence as Client Zero; can migrate if necessary |
 | Royalty income creates tax issues | Low | Standard nonprofit royalty treatment; consult accountant |
 
-### 4.2 Risks to ClubOS, Inc.
+### 4.2 Risks to Murmurant, Inc.
 
 | Risk | Likelihood | Mitigation |
 |------|------------|------------|
@@ -389,7 +389,7 @@ SBNC should consult with its accountant on tax treatment, but royalties from int
 5. **Influence** over product direction
 6. **Royalty participation** in commercial success
 
-### Why This Works for ClubOS, Inc.
+### Why This Works for Murmurant, Inc.
 
 1. **Revenue model** aligned with customer outcomes
 2. **Scalable architecture** without proportional staff growth
@@ -399,7 +399,7 @@ SBNC should consult with its accountant on tax treatment, but royalties from int
 
 ### Why Client Zero Is Protected
 
-1. **Legal separation** between SBNC and ClubOS, Inc.
+1. **Legal separation** between SBNC and Murmurant, Inc.
 2. **No equity ownership** or operational control
 3. **Clear agreements** defining rights and obligations
 4. **Standard royalty structure** appropriate for nonprofits
@@ -409,7 +409,7 @@ SBNC should consult with its accountant on tax treatment, but royalties from int
 ## Related Documents
 
 - [SBNC Business Model and Sustainability](../ORG/SBNC_Business_Model_and_Sustainability.md) - SBNC operational model
-- [Architectural Charter](../ARCHITECTURAL_CHARTER.md) - ClubOS design principles
+- [Architectural Charter](../ARCHITECTURAL_CHARTER.md) - Murmurant design principles
 - [Migration Risk Register](MIGRATION_RISK_REGISTER.md) - Transition risks
 
 ---

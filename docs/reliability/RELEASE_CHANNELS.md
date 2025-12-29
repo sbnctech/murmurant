@@ -49,7 +49,7 @@ You cannot skip channels. A change must prove itself at each stage before moving
 **Environment:**
 
 - Branch: `sandbox`
-- URL: Staging environment (clubos-staging-sbnc.netlify.app)
+- URL: Staging environment (murmurant-staging-sbnc.netlify.app)
 - Data: Test data only (never production data)
 
 **Entry criteria:**
@@ -162,7 +162,7 @@ You cannot skip channels. A change must prove itself at each stage before moving
 **Environment:**
 
 - Branch: `main`
-- URL: Production (clubos-prod-sbnc.netlify.app)
+- URL: Production (murmurant-prod-sbnc.netlify.app)
 - Data: Production data
 
 **Entry criteria:**

@@ -1,7 +1,7 @@
 /**
  * Default Theme Configuration
  *
- * Default theme values for ClubOS branding.
+ * Default theme values for Murmurant branding.
  *
  * Charter: P6 (human-first UI)
  */
@@ -9,16 +9,16 @@
 import type { ClubTheme } from "./types";
 
 export const defaultTheme: ClubTheme = {
-  id: "clubos-default",
-  name: "ClubOS Default",
+  id: "murmurant-default",
+  name: "Murmurant Default",
   logo: {
-    url: "/images/clubos-logo.svg",
+    url: "/images/murmurant-logo.svg",
     width: 200,
     height: 60,
-    alt: "ClubOS",
+    alt: "Murmurant",
   },
   bug: {
-    url: "/images/clubos-bug.svg",
+    url: "/images/murmurant-bug.svg",
     size: 32,
   },
   colors: {
@@ -55,11 +55,11 @@ export const defaultTheme: ClubTheme = {
       event: "Event",
       dues: "Dues",
     },
-    greeting: "Welcome to ClubOS!",
+    greeting: "Welcome to Murmurant!",
   },
   chatbot: {
-    name: "ClubOS Assistant",
-    personality: "I am a helpful assistant for ClubOS users.",
+    name: "Murmurant Assistant",
+    personality: "I am a helpful assistant for Murmurant users.",
     suggestedPrompts: [
       "How do I register for an event?",
       "What are my membership benefits?",

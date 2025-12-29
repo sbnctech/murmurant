@@ -1,7 +1,7 @@
 # Board Memo: Policy Gaps, Contradictions, and Required Approvals
 
 **To:** SBNC Board of Directors
-**From:** ClubOS Development Team
+**From:** Murmurant Development Team
 **Date:** December 20, 2025
 **Re:** Policy Registry Findings Requiring Board Action
 
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-A comprehensive policy harvest and registry normalization has been completed. This memo consolidates findings that require Board attention before ClubOS can safely automate policy enforcement.
+A comprehensive policy harvest and registry normalization has been completed. This memo consolidates findings that require Board attention before Murmurant can safely automate policy enforcement.
 
 **Key Statistics:**
 
@@ -27,7 +27,7 @@ A comprehensive policy harvest and registry normalization has been completed. Th
 
 ### 1.1 Policy Visibility Decisions
 
-Two policies have unclear visibility settings. ClubOS cannot implement access controls without Board direction.
+Two policies have unclear visibility settings. Murmurant cannot implement access controls without Board direction.
 
 | Policy | Current Status | Options | Recommendation |
 |--------|----------------|---------|----------------|
@@ -40,7 +40,7 @@ Two policies have unclear visibility settings. ClubOS cannot implement access co
 
 ### 1.2 Acknowledgement Frequency Decisions
 
-Six acknowledgement requirements have undefined frequency. ClubOS event submission workflow (Phase 2) depends on these decisions.
+Six acknowledgement requirements have undefined frequency. Murmurant event submission workflow (Phase 2) depends on these decisions.
 
 | Acknowledgement | Current | Options | Impact |
 |-----------------|---------|---------|--------|
@@ -152,7 +152,7 @@ The following operational guidance items are documented but lack formal Board ad
 | Event Cost Recovery Principle | Business Model v1.0 | Board resolution to adopt |
 | Volunteer Pathway Model | Business Model v1.0 | Board resolution to adopt |
 
-**Impact:** These items are marked COMMENTARY in the registry, not ADOPTED. Formal adoption creates clear authority for ClubOS enforcement.
+**Impact:** These items are marked COMMENTARY in the registry, not ADOPTED. Formal adoption creates clear authority for Murmurant enforcement.
 
 **Action Required:** Board vote to adopt each item (or decline with rationale).
 
@@ -175,7 +175,7 @@ The following documents are referenced in policies but were not located in the h
 
 ## Part 6: Recommended Board Actions
 
-### Immediate (Before ClubOS Phase 2)
+### Immediate (Before Murmurant Phase 2)
 
 | # | Action | Owner | Due |
 |---|--------|-------|-----|
@@ -221,4 +221,4 @@ The following documents are referenced in policies but were not located in the h
 
 *No policies have been modified. All contradictions and gaps are presented for Board resolution.*
 
-*Prepared by ClubOS Development Team*
+*Prepared by Murmurant Development Team*

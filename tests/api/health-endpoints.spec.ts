@@ -1,7 +1,7 @@
 /**
  * Health Endpoint Tests
  *
- * Synthetic tests for ClubOS health endpoints.
+ * Synthetic tests for Murmurant health endpoints.
  *
  * Charter Principles:
  * - P7: Observability is a product feature

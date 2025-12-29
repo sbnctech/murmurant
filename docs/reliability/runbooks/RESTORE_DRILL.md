@@ -1,4 +1,4 @@
-# ClubOS - Runbook: Restore Drill (Non-Executing)
+# Murmurant - Runbook: Restore Drill (Non-Executing)
 
 Status: Canonical Runbook
 Applies to: Pre-deployment readiness and incident planning

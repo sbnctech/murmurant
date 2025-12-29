@@ -9,7 +9,7 @@
 
 ## 1. Purpose
 
-This document formalizes ClubOS's promise to customers during migration:
+This document formalizes Murmurant's promise to customers during migration:
 
 > **The customer can return to Wild Apricot without data loss or identity erasure at any point before final commit.**
 
@@ -26,8 +26,8 @@ The **authoritative system** is the single system of record for an organization'
 | Phase | Authoritative System | Consequence |
 |-------|---------------------|-------------|
 | Pre-migration | Wild Apricot | All member actions occur in WA |
-| Cutover rehearsal | Wild Apricot | ClubOS records intentions; WA remains source of truth |
-| Post-commit | ClubOS | WA should be archived or decommissioned |
+| Cutover rehearsal | Wild Apricot | Murmurant records intentions; WA remains source of truth |
+| Post-commit | Murmurant | WA should be archived or decommissioned |
 
 **There is never a period where both systems are authoritative.**
 
@@ -36,14 +36,14 @@ The **authoritative system** is the single system of record for an organization'
 **Cutover Rehearsal**: A time-bounded period during which:
 
 - Wild Apricot remains authoritative
-- ClubOS receives mirrored data and records new actions as intentions
-- The customer validates ClubOS behavior
-- No permanent changes occur in ClubOS
+- Murmurant receives mirrored data and records new actions as intentions
+- The customer validates Murmurant behavior
+- No permanent changes occur in Murmurant
 
 **Commit**: The irrevocable transition point where:
 
-- ClubOS becomes authoritative
-- The intent journal is applied to ClubOS permanently
+- Murmurant becomes authoritative
+- The intent journal is applied to Murmurant permanently
 - Wild Apricot ceases to be the source of truth
 - Reversibility guarantees no longer apply
 
@@ -51,7 +51,7 @@ The **authoritative system** is the single system of record for an organization'
 
 | Term | When It Applies | What Happens | Data State |
 |------|-----------------|--------------|------------|
-| **Abort** | Before commit | Intent journal discarded; ClubOS returns to pre-rehearsal state | No data loss; WA unchanged |
+| **Abort** | Before commit | Intent journal discarded; Murmurant returns to pre-rehearsal state | No data loss; WA unchanged |
 | **Rollback** | After commit | Restore from backup or re-import from preserved WA snapshot | Requires preserved artifacts |
 | **Recovery** | After system failure | Restore from backup; may involve data loss depending on backup currency | Depends on backup strategy |
 
@@ -72,30 +72,30 @@ Identity is captured in the **Intent Manifest**. The manifest is:
 - Versioned and immutable per version
 - Discardable without side effects (on abort)
 
-If the customer cannot recognize their organization in ClubOS, the migration is incomplete.
+If the customer cannot recognize their organization in Murmurant, the migration is incomplete.
 
 ---
 
 ## 3. Guarantees
 
-ClubOS makes the following explicit guarantees during cutover rehearsal and wing-walking:
+Murmurant makes the following explicit guarantees during cutover rehearsal and wing-walking:
 
 ### G1: Wild Apricot Remains Unchanged Until Commit
 
-No ClubOS action modifies Wild Apricot data. WA is read-only from ClubOS's perspective.
+No Murmurant action modifies Wild Apricot data. WA is read-only from Murmurant's perspective.
 
 **Verification**: WA data hash before and after rehearsal must match.
 
-### G2: Abort Discards All ClubOS Intentions
+### G2: Abort Discards All Murmurant Intentions
 
 If the customer aborts before commit:
 
 - All intent journal entries are discarded
 - No member, event, or content records persist from rehearsal
-- ClubOS returns to pre-rehearsal state
+- Murmurant returns to pre-rehearsal state
 - The customer may start a new rehearsal
 
-**Verification**: ClubOS entity counts match pre-rehearsal baseline.
+**Verification**: Murmurant entity counts match pre-rehearsal baseline.
 
 ### G3: Intent Manifest Is Reviewable Before Any Commit
 
@@ -124,7 +124,7 @@ Before commit, the following artifacts must exist:
 
 - WA data snapshot (as of rehearsal start)
 - Intent manifest (versioned, signed)
-- Mapping tables (WA ID to ClubOS ID)
+- Mapping tables (WA ID to Murmurant ID)
 - Verification report (pre-commit)
 
 These artifacts enable rollback if required after commit.
@@ -135,21 +135,21 @@ These artifacts enable rollback if required after commit.
 
 ## 4. Non-Guarantees
 
-ClubOS explicitly does not guarantee:
+Murmurant explicitly does not guarantee:
 
 ### NG1: Rollback After Commit
 
-Once committed, reverting to WA is a manual process. ClubOS does not automate rollback. The customer must:
+Once committed, reverting to WA is a manual process. Murmurant does not automate rollback. The customer must:
 
 - Retain WA access and data
 - Use preserved artifacts to restore WA if needed
-- Accept that post-commit ClubOS changes are not automatically reversible
+- Accept that post-commit Murmurant changes are not automatically reversible
 
 **Why**: Bidirectional sync is complex, error-prone, and creates split-brain risk. One-way migration with preserved artifacts is safer.
 
 ### NG2: Continuous Sync
 
-ClubOS does not maintain live sync with WA. During rehearsal:
+Murmurant does not maintain live sync with WA. During rehearsal:
 
 - WA data at rehearsal start is the baseline
 - WA changes during rehearsal may be synced incrementally (optional)
@@ -159,13 +159,13 @@ ClubOS does not maintain live sync with WA. During rehearsal:
 
 ### NG3: Automatic Recovery from WA Downtime
 
-If WA is unavailable during rehearsal, ClubOS cannot fetch updated data. Rehearsal may need to restart when WA is available.
+If WA is unavailable during rehearsal, Murmurant cannot fetch updated data. Rehearsal may need to restart when WA is available.
 
-**Why**: ClubOS depends on WA for source data; there is no data reconstruction capability.
+**Why**: Murmurant depends on WA for source data; there is no data reconstruction capability.
 
 ### NG4: Preservation of WA-Specific Features
 
-ClubOS is not a WA clone. WA features without ClubOS equivalents are not preserved:
+Murmurant is not a WA clone. WA features without Murmurant equivalents are not preserved:
 
 - WA-specific field types
 - WA theme customizations
@@ -186,7 +186,7 @@ Before commit is enabled, automated verification must confirm:
 | Gate | Check | Blocking? |
 |------|-------|-----------|
 | **Entity count match** | Source and target counts reconcile | Yes |
-| **ID mapping complete** | Every WA ID has a ClubOS ID or explicit skip reason | Yes |
+| **ID mapping complete** | Every WA ID has a Murmurant ID or explicit skip reason | Yes |
 | **Policy validation** | Membership tiers, schedules, and rules are valid | Yes |
 | **Intent manifest signed** | Manifest version is locked and hashed | Yes |
 | **Artifact preservation** | Required artifacts exist and are accessible | Yes |
@@ -224,7 +224,7 @@ The following artifacts must exist before commit is enabled:
 |----------|----------|---------|
 | **WA Snapshot** | Complete WA data as of rehearsal start | Immutable blob storage |
 | **Intent Manifest** | Versioned, signed manifest | Migration bundle |
-| **ID Mapping Table** | WA ID -> ClubOS ID mappings | Migration bundle |
+| **ID Mapping Table** | WA ID -> Murmurant ID mappings | Migration bundle |
 | **Policy Bundle** | Captured organizational policies | Migration bundle |
 
 ### 6.2 Verification Artifacts
@@ -269,7 +269,7 @@ The following artifacts must exist before commit is enabled:
 
 1. Confirm abort is the desired action (explicit confirmation)
 2. Execute abort command
-3. Verify ClubOS returns to pre-rehearsal state
+3. Verify Murmurant returns to pre-rehearsal state
 4. Verify WA data unchanged
 5. Archive intent journal for audit purposes
 6. Document reason for abort
@@ -285,11 +285,11 @@ The following artifacts must exist before commit is enabled:
 1. Acknowledge this is a manual process, not automated
 2. Retrieve preserved WA snapshot
 3. Restore WA from snapshot (requires WA admin access)
-4. Disable ClubOS for this organization
+4. Disable Murmurant for this organization
 5. Communicate to members that WA is restored
 6. Document reason for rollback
 
-**Evidence**: WA snapshot retrieval; ClubOS deactivation record.
+**Evidence**: WA snapshot retrieval; Murmurant deactivation record.
 
 ### 7.4 Proving "No Loss"
 
@@ -300,7 +300,7 @@ When customer requests assurance that no data was lost:
 - [ ] WA snapshot hash matches pre-rehearsal hash
 - [ ] Entity count reconciliation report shows zero discrepancy
 - [ ] ID mapping table is complete (no orphaned records)
-- [ ] Intent journal replay would produce identical ClubOS state
+- [ ] Intent journal replay would produce identical Murmurant state
 - [ ] Verification report shows all gates passed
 
 If any item fails, investigate before providing assurance.
@@ -342,7 +342,7 @@ The following mechanisms are **required for full guarantee** but may not be pres
 
 ## 9. Brand Alignment
 
-This contract adheres to ClubOS brand principles:
+This contract adheres to Murmurant brand principles:
 
 ### 9.1 Plainspoken, No Hype
 
@@ -364,7 +364,7 @@ This contract adheres to ClubOS brand principles:
 
 ### 9.4 No Hidden Sync Claims
 
-- ClubOS does not claim to keep WA and ClubOS in perfect sync
+- Murmurant does not claim to keep WA and Murmurant in perfect sync
 - Drift during rehearsal is acknowledged as a known limitation
 - The customer must decide when to commit based on current state
 

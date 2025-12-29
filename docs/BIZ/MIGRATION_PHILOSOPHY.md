@@ -1,7 +1,7 @@
 # Migration Philosophy: Wing-Walking Approach
 
 This document describes the staged migration strategy for moving organizations
-from Wild Apricot to ClubOS safely.
+from Wild Apricot to Murmurant safely.
 
 ---
 
@@ -31,7 +31,7 @@ using CSV exports.
 
 ### Stage 2: Import
 
-**What happens**: Load exported data into ClubOS using migration tooling.
+**What happens**: Load exported data into Murmurant using migration tooling.
 First as DRY RUN (no database writes), then as LIVE RUN.
 
 **Entry criteria**:
@@ -61,17 +61,17 @@ confirm data integrity.
 
 ### Stage 4: Shadow
 
-**What happens**: Run ClubOS in parallel with Wild Apricot. Compare behavior
+**What happens**: Run Murmurant in parallel with Wild Apricot. Compare behavior
 for key workflows. Organization continues using WA as primary.
 
 **Entry criteria**:
 - Verification complete
-- ClubOS accessible to test users
+- Murmurant accessible to test users
 
 **Exit criteria**:
-- Key workflows exercised in ClubOS
+- Key workflows exercised in Murmurant
 - No blocking issues discovered
-- Organization comfortable with ClubOS behavior
+- Organization comfortable with Murmurant behavior
 
 ### Stage 5: Decide
 
@@ -89,7 +89,7 @@ This is a business decision, not a technical one.
 
 ### Stage 6: Cutover
 
-**What happens**: Switch production traffic to ClubOS. Decommission Wild Apricot
+**What happens**: Switch production traffic to Murmurant. Decommission Wild Apricot
 after a safety period.
 
 **Entry criteria**:
@@ -98,7 +98,7 @@ after a safety period.
 - Rollback plan documented (just in case)
 
 **Exit criteria**:
-- ClubOS is primary system
+- Murmurant is primary system
 - WA decommissioned (after safety hold period)
 - Migration project closed
 

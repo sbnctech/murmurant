@@ -1,7 +1,7 @@
 /**
  * Entitlements Type Definitions
  *
- * Plan-based feature gating types for ClubOS.
+ * Plan-based feature gating types for Murmurant.
  *
  * Charter: P4 (no hidden rules - all entitlements explicit and queryable)
  */

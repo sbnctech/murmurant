@@ -10,7 +10,7 @@ Prerequisites: macOS with zsh, Node.js 18+, npm 9+
 
 ## What is the Inline-Only Widget?
 
-The inline-only widget is a standalone build of ClubOS UI components designed to be embedded in external websites without requiring the full ClubOS application server.
+The inline-only widget is a standalone build of Murmurant UI components designed to be embedded in external websites without requiring the full Murmurant application server.
 
 **Use cases:**
 
@@ -20,8 +20,8 @@ The inline-only widget is a standalone build of ClubOS UI components designed to
 
 **What it is NOT:**
 
-- A full ClubOS instance
-- A replacement for the ClubOS admin interface
+- A full Murmurant instance
+- A replacement for the Murmurant admin interface
 - An offline-capable application
 
 ---
@@ -59,10 +59,10 @@ nvm use 18
 
 ```zsh
 # Clone the repository (if not already done)
-git clone https://github.com/sbnctech/clubos.git ~/clubos
+git clone https://github.com/sbnctech/murmurant.git ~/murmurant
 
 # Navigate to repository
-cd ~/clubos
+cd ~/murmurant
 
 # Verify you're on main branch
 git checkout main
@@ -84,7 +84,7 @@ npm run build:inline-widget
 Expected output:
 
 ```
-> clubos@1.0.0 build:inline-widget
+> murmurant@1.0.0 build:inline-widget
 > vite build --config vite.inline.config.ts
 
 vite v5.x.x building for production...
@@ -217,9 +217,9 @@ chmod 755 dist/inline-widget/
 
 1. **No secrets in build**: The inline widget build contains no API keys, tokens, or credentials.
 
-2. **Server-side auth required**: The widget must communicate with a ClubOS backend for any authenticated data.
+2. **Server-side auth required**: The widget must communicate with a Murmurant backend for any authenticated data.
 
-3. **CORS configuration**: The ClubOS backend must allow the hosting domain in its CORS settings.
+3. **CORS configuration**: The Murmurant backend must allow the hosting domain in its CORS settings.
 
 4. **CSP headers**: If your host site has Content Security Policy, add the widget host to allowed script sources.
 

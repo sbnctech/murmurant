@@ -1,7 +1,7 @@
 /**
  * RBAC Service Module
  *
- * Role-Based Access Control abstraction for ClubOS.
+ * Role-Based Access Control abstraction for Murmurant.
  */
 
 // Types

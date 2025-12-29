@@ -1,12 +1,12 @@
 // Copyright (c) Santa Barbara Newcomers Club
-// ClubOS Bug - The "Gathering" symbol only
+// Murmurant Bug - The "Gathering" symbol only
 
 import React from "react";
 
 type BugSize = 16 | 24 | 32 | 48 | 64;
 type BugVariant = "color" | "white" | "black";
 
-interface ClubOSBugProps {
+interface MurmurantBugProps {
   size?: BugSize;
   variant?: BugVariant;
   className?: string;
@@ -27,16 +27,16 @@ const variantColors: Record<BugVariant, string> = {
 };
 
 /**
- * ClubOS Bug Component
+ * Murmurant Bug Component
  * 
  * The "Gathering" symbol: 4 curved shapes converging toward center
  * Represents diverse people uniting in community
  */
-export function ClubOSBug({ 
+export function MurmurantBug({ 
   size = 32, 
   variant = "color",
   className = "" 
-}: ClubOSBugProps) {
+}: MurmurantBugProps) {
   const pixelSize = sizeMap[size];
   const fillColor = variantColors[variant];
 
@@ -48,7 +48,7 @@ export function ClubOSBug({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      aria-label="ClubOS"
+      aria-label="Murmurant"
       role="img"
     >
       {/* Top-left curve - converging to center */}
@@ -81,4 +81,4 @@ export function ClubOSBug({
   );
 }
 
-export default ClubOSBug;
+export default MurmurantBug;

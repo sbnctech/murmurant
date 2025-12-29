@@ -1,10 +1,10 @@
-# ClubOS — Readiness Gaps, Known Risks, and Explicit Acceptances
+# Murmurant — Readiness Gaps, Known Risks, and Explicit Acceptances
 
 Status: Canonical Specification
 Applies to: Pre-deployment readiness and governance
 Last updated: 2025-12-21
 
-This document defines how ClubOS records what is NOT ready,
+This document defines how Murmurant records what is NOT ready,
 what risks are known and accepted, and under what conditions
 deployment may proceed despite incomplete mechanisms.
 
@@ -16,8 +16,8 @@ Undocumented risk is an unmanaged risk.
 
 ## 1. Core Principle
 
-ClubOS does NOT require perfection before deployment.
-ClubOS DOES require **explicit acknowledgment** of gaps and risks.
+Murmurant does NOT require perfection before deployment.
+Murmurant DOES require **explicit acknowledgment** of gaps and risks.
 
 If a gap exists:
 - It MUST be documented
@@ -171,5 +171,5 @@ The goal is honesty and control.
 - Repeated incidents tied to accepted risks REQUIRE escalation
 - This document MUST be reviewed before any production deployment
 
-This document defines how ClubOS deploys responsibly before it is complete.
+This document defines how Murmurant deploys responsibly before it is complete.
 

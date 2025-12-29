@@ -1,4 +1,4 @@
-# ClubOS - A3 Block Schemas and Field Editors
+# Murmurant - A3 Block Schemas and Field Editors
 
 Status: Draft (implementation target)
 Applies to: Admin editor

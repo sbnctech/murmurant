@@ -66,7 +66,7 @@ the repo from returning to the 80+ PR / merge-churn state.
 
 Preview mode (default):
 ```bash
-cd "$HOME/clubos"
+cd "$HOME/murmurant"
 DRY_RUN=1 zsh ./MERGE_CAPTAIN.zsh
 ```
 

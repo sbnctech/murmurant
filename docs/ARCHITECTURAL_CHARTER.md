@@ -1,9 +1,9 @@
-# ClubOS Non-Negotiable Architectural Charter
+# Murmurant Non-Negotiable Architectural Charter
 Copyright (c) Santa Barbara Newcomers Club
 
 ## Normative Reference Documents
 
-The following documents are authoritative inputs to ClubOS design decisions.
+The following documents are authoritative inputs to Murmurant design decisions.
 They define expected operating norms, red flags, and sustainability constraints
 that the system must support, surface, or enforce.
 
@@ -16,7 +16,7 @@ that the system must support, surface, or enforce.
   Used to evaluate feature priority, governance design, and operational risk.
 
 ## Purpose
-ClubOS is a club operating system designed for non-technical users and maintained primarily by chatbots. This charter defines the invariants that must hold across all code, schemas, APIs, UI workflows, and documentation.
+Murmurant is a club operating system designed for non-technical users and maintained primarily by chatbots. This charter defines the invariants that must hold across all code, schemas, APIs, UI workflows, and documentation.
 
 If a change violates this charter, it must not be merged.
 
@@ -86,7 +86,7 @@ Never
 - "Forbidden", "500", stack traces, or technical exception text shown to users.
 
 ### P7. Observability is a product feature
-ClubOS must be operable by non-experts under stress:
+Murmurant must be operable by non-experts under stress:
 - clear status indicators
 - meaningful logs
 - dashboards for "what changed"
@@ -128,7 +128,7 @@ Never
 
 ## Core Trust Surface (Non-Negotiable)
 
-ClubOS migration and presentation guarantees are defined by a set of normative contracts. These contracts specify what the system promises, what it explicitly does not promise, and how customers can verify behavior. They are first-order architectural constraints—regressions are charter violations.
+Murmurant migration and presentation guarantees are defined by a set of normative contracts. These contracts specify what the system promises, what it explicitly does not promise, and how customers can verify behavior. They are first-order architectural constraints—regressions are charter violations.
 
 The contracts:
 
@@ -145,7 +145,7 @@ See also:
 
 ------------------------------------------------------------
 
-## B. ClubOS Must Never Do These Things (Anti-Patterns)
+## B. Murmurant Must Never Do These Things (Anti-Patterns)
 
 These are the "avoid becoming WA-like" rules.
 
@@ -321,7 +321,7 @@ Permissions
 
 ## D. Chatbot-Authored Software Risks and Guardrails
 
-Because ClubOS is maintained by chatbots, the system must assume:
+Because Murmurant is maintained by chatbots, the system must assume:
 - high velocity of changes
 - risk of inconsistent patterns
 - "hallucinated" implementation details
@@ -372,7 +372,7 @@ Guardrail
 
 ## E. Enforcement: How This Charter Must Be Used by Chatbots
 
-Every chatbot working on ClubOS must:
+Every chatbot working on Murmurant must:
 1. Quote the relevant charter principles in its planning output.
 2. Identify which principles are impacted by a change.
 3. Add or update tests that enforce the principles.

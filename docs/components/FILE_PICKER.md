@@ -262,7 +262,7 @@ function FileSelectModal({ isOpen, onClose, onSelect }) {
 
 ## Styling
 
-The component uses inline styles for consistency with the ClubOS admin interface. Key style properties:
+The component uses inline styles for consistency with the Murmurant admin interface. Key style properties:
 
 - Container: White background, rounded border, shadow
 - File items: Hover effect, selected state highlight

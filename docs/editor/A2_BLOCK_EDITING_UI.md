@@ -1,4 +1,4 @@
-# ClubOS - A2 Block Editing UI
+# Murmurant - A2 Block Editing UI
 
 Status: Draft (implementation target)
 Applies to: Admin editor

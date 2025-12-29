@@ -3,7 +3,7 @@
 ```
 Version: 1.0
 Status: Planning
-Audience: Migration Operators, ClubOS Developers
+Audience: Migration Operators, Murmurant Developers
 Purpose: Define extraction, transformation, and load process for WA data
 ```
 
@@ -11,15 +11,15 @@ Purpose: Define extraction, transformation, and load process for WA data
 
 ## Executive Summary
 
-This document defines the complete pipeline for importing Wild Apricot (WA) events, tags, and committees into ClubOS. The pipeline follows a three-phase approach:
+This document defines the complete pipeline for importing Wild Apricot (WA) events, tags, and committees into Murmurant. The pipeline follows a three-phase approach:
 
 1. **Extract**: Export data from WA via CSV and API
-2. **Transform**: Map WA fields to ClubOS schema, normalize values
-3. **Load**: Import into ClubOS with idempotency and rollback support
+2. **Transform**: Map WA fields to Murmurant schema, normalize values
+3. **Load**: Import into Murmurant with idempotency and rollback support
 
 ### Scope
 
-| Entity | WA Source | ClubOS Target | Migration Type |
+| Entity | WA Source | Murmurant Target | Migration Type |
 |--------|-----------|---------------|----------------|
 | Events | Events export + API | `Event` model | AUTO |
 | Event Tags | Event "Tags" field | `Event.category` + new `EventTag` | AUTO |
@@ -148,7 +148,7 @@ curl https://api.wildapricot.org/v2.2/accounts/{accountId}/membergroups \
 
 ### 2.1 Event Field Mapping
 
-| WA Field | ClubOS Field | Transform | Notes |
+| WA Field | Murmurant Field | Transform | Notes |
 |----------|--------------|-----------|-------|
 | `Event ID` | `_waEventId` | Store as metadata | For reconciliation |
 | `Event name` | `title` | Direct copy | Required |
@@ -167,14 +167,14 @@ curl https://api.wildapricot.org/v2.2/accounts/{accountId}/membergroups \
 
 ### 2.2 Tag Strategy
 
-WA uses a flat tag system. ClubOS needs structured categories.
+WA uses a flat tag system. Murmurant needs structured categories.
 
 **Approach: Primary Category + Tag Junction**
 
 ```
 WA Tags: "Social, Coffee, Newcomer Welcome"
          ↓
-ClubOS:
+Murmurant:
   - Event.category = "Social"              (first/primary tag)
   - EventTag records:
       - { eventId, tag: "Social" }
@@ -208,7 +208,7 @@ ClubOS:
 
 ### 2.3 Committee/Group Field Mapping
 
-| WA Field | ClubOS Field | Transform | Notes |
+| WA Field | Murmurant Field | Transform | Notes |
 |----------|--------------|-----------|-------|
 | `Group ID` | `_waGroupId` | Store as metadata | For reconciliation |
 | `Group name` | `name` | Direct copy | Required |
@@ -219,7 +219,7 @@ ClubOS:
 
 **Group Name to Committee Mapping:**
 
-| WA Group Name Pattern | ClubOS Committee | Create New? |
+| WA Group Name Pattern | Murmurant Committee | Create New? |
 |-----------------------|------------------|-------------|
 | `*Board*` | `board` | No (exists) |
 | `*Activities*` | `activities-committee` | Yes |
@@ -237,7 +237,7 @@ ClubOS:
 
 ### 2.4 Group Membership to Role Assignment
 
-| WA Field | ClubOS Field | Transform | Notes |
+| WA Field | Murmurant Field | Transform | Notes |
 |----------|--------------|-----------|-------|
 | `Contact ID` | `memberId` | Lookup by email | Via member import |
 | `Group ID` | `committeeId` | Lookup by WA ID | Via committee import |
@@ -248,7 +248,7 @@ ClubOS:
 
 **Role Mapping:**
 
-| WA Role | ClubOS CommitteeRole | Create If Missing? |
+| WA Role | Murmurant CommitteeRole | Create If Missing? |
 |---------|----------------------|-------------------|
 | `Chair`, `Chairman`, `Chairperson` | `chair` | Yes |
 | `Co-Chair`, `Vice Chair` | `co-chair` | Yes |
@@ -259,7 +259,7 @@ ClubOS:
 
 ### 2.5 Registration Field Mapping
 
-| WA Field | ClubOS Field | Transform | Notes |
+| WA Field | Murmurant Field | Transform | Notes |
 |----------|--------------|-----------|-------|
 | `Registration ID` | `_waRegistrationId` | Store as metadata | |
 | `Contact ID` | `memberId` | Lookup by WA ID | Required |
@@ -271,7 +271,7 @@ ClubOS:
 
 **Registration Status Mapping:**
 
-| WA Status | ClubOS Status | Notes |
+| WA Status | Murmurant Status | Notes |
 |-----------|---------------|-------|
 | `Confirmed` | `CONFIRMED` | |
 | `Registered` | `CONFIRMED` | Alias |
@@ -341,8 +341,8 @@ async function importEvents(events: WAEvent[]): Promise<ImportResult> {
             continue;
           }
 
-          const clubosEvent = transformEvent(waEvent);
-          await tx.event.create({ data: clubosEvent });
+          const murmurantEvent = transformEvent(waEvent);
+          await tx.event.create({ data: murmurantEvent });
           results.created++;
 
         } catch (error) {
@@ -373,8 +373,8 @@ Before import, validate each record:
 - [ ] `slug` is unique
 
 **Registrations:**
-- [ ] `memberId` exists in ClubOS
-- [ ] `eventId` exists in ClubOS
+- [ ] `memberId` exists in Murmurant
+- [ ] `eventId` exists in Murmurant
 - [ ] `registeredAt` <= `event.startTime`
 
 ### 3.5 Error Handling
@@ -508,7 +508,7 @@ pg_dump -t "Event" -t "EventTag" -t "Committee" -t "CommitteeRole" \
 -- Delete events imported in specific run
 DELETE FROM "Event"
 WHERE id IN (
-  SELECT clubos_id FROM migration_id_map
+  SELECT murmurant_id FROM migration_id_map
   WHERE run_id = 'mig-2025-01-15-001'
   AND entity_type = 'event'
 );
@@ -519,7 +519,7 @@ WHERE id IN (
 -- First delete role assignments
 DELETE FROM "RoleAssignment"
 WHERE committee_id IN (
-  SELECT clubos_id FROM migration_id_map
+  SELECT murmurant_id FROM migration_id_map
   WHERE run_id = 'mig-2025-01-15-001'
   AND entity_type = 'committee'
 );
@@ -527,7 +527,7 @@ WHERE committee_id IN (
 -- Then delete committee roles
 DELETE FROM "CommitteeRole"
 WHERE committee_id IN (
-  SELECT clubos_id FROM migration_id_map
+  SELECT murmurant_id FROM migration_id_map
   WHERE run_id = 'mig-2025-01-15-001'
   AND entity_type = 'committee'
 );
@@ -535,7 +535,7 @@ WHERE committee_id IN (
 -- Finally delete committees
 DELETE FROM "Committee"
 WHERE id IN (
-  SELECT clubos_id FROM migration_id_map
+  SELECT murmurant_id FROM migration_id_map
   WHERE run_id = 'mig-2025-01-15-001'
   AND entity_type = 'committee'
 );
@@ -603,7 +603,7 @@ model MigrationIdMap {
   runId      String   // e.g., "mig-2025-01-15-001"
   entityType String   // "event", "committee", "registration"
   waId       String   // Original WA ID
-  clubosId   String   @db.Uuid // ClubOS UUID
+  murmurantId   String   @db.Uuid // Murmurant UUID
   createdAt  DateTime @default(now())
 
   @@unique([runId, entityType, waId])

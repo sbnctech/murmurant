@@ -1,5 +1,5 @@
 #!/bin/bash
-# Verify ClubOS can typecheck without WA env vars
+# Verify Murmurant can typecheck without WA env vars
 
 echo "=== Verifying Standalone Mode ==="
 

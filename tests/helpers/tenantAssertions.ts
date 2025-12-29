@@ -2,7 +2,7 @@
  * Tenant Isolation Assertion Helper
  *
  * Provides reusable test helpers for verifying member-scoped data isolation.
- * In ClubOS, "tenant" isolation means members can only access their own data
+ * In Murmurant, "tenant" isolation means members can only access their own data
  * unless they have admin privileges.
  *
  * Charter Principles:

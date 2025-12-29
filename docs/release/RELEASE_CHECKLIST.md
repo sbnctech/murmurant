@@ -1,4 +1,4 @@
-# Release Checklist (ClubOS)
+# Release Checklist (Murmurant)
 
 Goal:
 - Keep everything green locally before push and before merge

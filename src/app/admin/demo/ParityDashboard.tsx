@@ -1,7 +1,7 @@
 /**
  * WA Parity Dashboard
  *
- * Shows side-by-side comparison of WA vs ClubOS counts
+ * Shows side-by-side comparison of WA vs Murmurant counts
  * to prove data migration accuracy.
  *
  * Charter: P7 (Observability is a product feature)
@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 type ParityMetric = {
   label: string;
   waCount: number | null;
-  clubosCount: number | null;
+  murmurantCount: number | null;
   loading: boolean;
   error: string | null;
 };
@@ -26,11 +26,11 @@ type ParityData = {
   committees: ParityMetric;
 };
 
-function MatchBadge({ waCount, clubosCount }: { waCount: number | null; clubosCount: number | null }) {
-  if (waCount === null || clubosCount === null) {
+function MatchBadge({ waCount, murmurantCount }: { waCount: number | null; murmurantCount: number | null }) {
+  if (waCount === null || murmurantCount === null) {
     return <span style={{ color: "#888" }}>-</span>;
   }
-  const matches = waCount === clubosCount;
+  const matches = waCount === murmurantCount;
   return (
     <span
       style={{
@@ -63,10 +63,10 @@ function CountCell({ value, loading, error }: { value: number | null; loading: b
 
 export default function ParityDashboard() {
   const [data, setData] = useState<ParityData>({
-    activeMembers: { label: "Active Members", waCount: null, clubosCount: null, loading: true, error: null },
-    upcomingEvents: { label: "Upcoming Events", waCount: null, clubosCount: null, loading: true, error: null },
-    thisMonthRegistrations: { label: "This Month Registrations", waCount: null, clubosCount: null, loading: true, error: null },
-    committees: { label: "Committees", waCount: null, clubosCount: null, loading: true, error: null },
+    activeMembers: { label: "Active Members", waCount: null, murmurantCount: null, loading: true, error: null },
+    upcomingEvents: { label: "Upcoming Events", waCount: null, murmurantCount: null, loading: true, error: null },
+    thisMonthRegistrations: { label: "This Month Registrations", waCount: null, murmurantCount: null, loading: true, error: null },
+    committees: { label: "Committees", waCount: null, murmurantCount: null, loading: true, error: null },
   });
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function ParityDashboard() {
             ...prev,
             activeMembers: {
               ...prev.activeMembers,
-              clubosCount: count,
+              murmurantCount: count,
               // WA count would come from WA sync metadata - using placeholder
               waCount: count, // In reality, this would come from WA API or stored sync data
               loading: false,
@@ -111,7 +111,7 @@ export default function ParityDashboard() {
             ...prev,
             upcomingEvents: {
               ...prev.upcomingEvents,
-              clubosCount: count,
+              murmurantCount: count,
               waCount: count, // Placeholder - would come from WA
               loading: false,
             },
@@ -141,7 +141,7 @@ export default function ParityDashboard() {
             ...prev,
             thisMonthRegistrations: {
               ...prev.thisMonthRegistrations,
-              clubosCount: count,
+              murmurantCount: count,
               waCount: count, // Placeholder - would come from WA
               loading: false,
             },
@@ -169,7 +169,7 @@ export default function ParityDashboard() {
             ...prev,
             committees: {
               ...prev.committees,
-              clubosCount: count,
+              murmurantCount: count,
               waCount: count, // Placeholder - would come from WA
               loading: false,
             },
@@ -199,7 +199,7 @@ export default function ParityDashboard() {
   ];
 
   const allLoaded = metrics.every((m) => !m.loading);
-  const allMatch = allLoaded && metrics.every((m) => m.waCount === m.clubosCount && m.error === null);
+  const allMatch = allLoaded && metrics.every((m) => m.waCount === m.murmurantCount && m.error === null);
 
   return (
     <section
@@ -230,7 +230,7 @@ export default function ParityDashboard() {
         )}
       </div>
       <p style={{ color: "#666", fontSize: "14px", marginBottom: "16px" }}>
-        Compares ClubOS data with Wild Apricot source counts to verify migration accuracy.
+        Compares Murmurant data with Wild Apricot source counts to verify migration accuracy.
       </p>
 
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -243,7 +243,7 @@ export default function ParityDashboard() {
               WA Count
             </th>
             <th style={{ textAlign: "right", padding: "8px 12px", borderBottom: "2px solid #ddd", backgroundColor: "#f8f9fa" }}>
-              ClubOS Count
+              Murmurant Count
             </th>
             <th style={{ textAlign: "center", padding: "8px 12px", borderBottom: "2px solid #ddd", backgroundColor: "#f8f9fa" }}>
               Match?
@@ -260,7 +260,7 @@ export default function ParityDashboard() {
                 <CountCell value={metric.waCount} loading={metric.loading} error={metric.error} />
               </td>
               <td style={{ textAlign: "right", padding: "10px 12px", borderBottom: "1px solid #eee" }}>
-                <CountCell value={metric.clubosCount} loading={metric.loading} error={metric.error} />
+                <CountCell value={metric.murmurantCount} loading={metric.loading} error={metric.error} />
               </td>
               <td style={{ textAlign: "center", padding: "10px 12px", borderBottom: "1px solid #eee" }}>
                 {metric.loading ? (
@@ -268,7 +268,7 @@ export default function ParityDashboard() {
                 ) : metric.error ? (
                   <span style={{ color: "#888" }}>-</span>
                 ) : (
-                  <MatchBadge waCount={metric.waCount} clubosCount={metric.clubosCount} />
+                  <MatchBadge waCount={metric.waCount} murmurantCount={metric.murmurantCount} />
                 )}
               </td>
             </tr>
@@ -277,7 +277,7 @@ export default function ParityDashboard() {
       </table>
 
       <div style={{ marginTop: "16px", fontSize: "12px", color: "#888" }}>
-        Note: WA counts currently mirror ClubOS counts. In production, these would be fetched from WA sync metadata.
+        Note: WA counts currently mirror Murmurant counts. In production, these would be fetched from WA sync metadata.
       </div>
     </section>
   );

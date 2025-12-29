@@ -30,7 +30,7 @@ Copyright (c) Santa Barbara Newcomers Club
 
 **Human-authored, machine-assisted.**
 
-The VP Communications (see Persona 7: Grace Lin) is a skilled writer who wants to craft engaging newsletters. ClubOS removes the tedious research—gathering event details, finding new members, identifying expiring memberships—while leaving all editorial decisions to the human.
+The VP Communications (see Persona 7: Grace Lin) is a skilled writer who wants to craft engaging newsletters. Murmurant removes the tedious research—gathering event details, finding new members, identifying expiring memberships—while leaving all editorial decisions to the human.
 
 ### What the system does:
 
@@ -579,7 +579,7 @@ model EnewsDraft {
 
 ### Wild Apricot Field Mapping
 
-| WA Field Name | ClubOS Field | Notes |
+| WA Field Name | Murmurant Field | Notes |
 |---------------|--------------|-------|
 | `City / Town from` | `previousCity` | Custom field in WA |
 | `State / Region from` | `previousState` | Custom field in WA |
@@ -671,4 +671,4 @@ Generate HTML preview of the eNews.
 ---
 
 *Last updated: 2024-12-20*
-*Maintainer: ClubOS Development Team*
+*Maintainer: Murmurant Development Team*

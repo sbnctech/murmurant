@@ -1,4 +1,4 @@
-# Admin List Widgets Catalog (ClubOS)
+# Admin List Widgets Catalog (Murmurant)
 
 Worker 2 -- Admin List Widgets Catalog -- Report
 
@@ -47,7 +47,7 @@ Each list widget must define:
 
 ## Embed Considerations
 If embedded externally:
-- Must use a ClubOS-generated signed token with short TTL
+- Must use a Murmurant-generated signed token with short TTL
 - Origin allowlist + CSP + iframe sandbox required
 - Never expose raw APIs; use widget endpoints only
 

@@ -1,6 +1,6 @@
-# ClubOS Page Builder Primitives
+# Murmurant Page Builder Primitives
 
-This document defines the complete set of page builder primitives available in ClubOS. Each primitive is a bounded, auditable component that serves a specific purpose.
+This document defines the complete set of page builder primitives available in Murmurant. Each primitive is a bounded, auditable component that serves a specific purpose.
 
 **Related documents:**
 - [WA Gadget Tagging Matrix](../MIGRATION/WILD_APRICOT_GADGET_TAGGING.md) - Migration classification
@@ -14,7 +14,7 @@ This document defines the complete set of page builder primitives available in C
 |----------|---------|
 | AUTO | Script migrates data and configuration; no human judgment needed |
 | ASSISTED | Script provides starting point; operator reviews and adjusts |
-| MANUAL | Operator recreates from scratch using ClubOS primitives |
+| MANUAL | Operator recreates from scratch using Murmurant primitives |
 
 ---
 
@@ -104,7 +104,7 @@ These display static or semi-static content.
 
 ## Dynamic Primitives
 
-These display live data from ClubOS models.
+These display live data from Murmurant models.
 
 ### EventList
 
@@ -189,7 +189,7 @@ These govern visibility and behavior.
 
 ## Implementation Details
 
-This section documents the concrete implementation of Page Builder primitives in ClubOS.
+This section documents the concrete implementation of Page Builder primitives in Murmurant.
 
 ### Page Structure: Page → Sections → Blocks
 
@@ -420,7 +420,7 @@ Admins may add entries for other providers following the safety rules above.
 
 ## Explicit Non-Goals
 
-The following are **permanently excluded** from ClubOS page builder. These are not "future features" or "escape hatches" - they are architectural decisions that protect the platform.
+The following are **permanently excluded** from Murmurant page builder. These are not "future features" or "escape hatches" - they are architectural decisions that protect the platform.
 
 ### Arbitrary HTML
 
@@ -443,7 +443,7 @@ The following are **permanently excluded** from ClubOS page builder. These are n
 | Script widgets | UNSUPPORTED |
 | Custom JS tracking | UNSUPPORTED |
 
-**What to do instead:** ClubOS provides built-in analytics. Interactive features are implemented as platform primitives.
+**What to do instead:** Murmurant provides built-in analytics. Interactive features are implemented as platform primitives.
 
 ### Unbounded Embeds
 
@@ -457,7 +457,7 @@ The following are **permanently excluded** from ClubOS page builder. These are n
 | Social media feeds | UNSUPPORTED |
 | External payment embeds | UNSUPPORTED |
 
-**What to do instead:** Use SafeEmbed with allowlisted sources. For integrations, use ClubOS API or webhooks.
+**What to do instead:** Use SafeEmbed with allowlisted sources. For integrations, use Murmurant API or webhooks.
 
 ### Custom CSS
 

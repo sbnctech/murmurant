@@ -22,7 +22,7 @@ export const CHALLENGE_EXPIRATION_MS = 5 * 60 * 1000;
 export const MAGIC_LINK_EXPIRATION_MS = 15 * 60 * 1000;
 
 // Session cookie configuration
-export const SESSION_COOKIE_NAME = "clubos_session";
+export const SESSION_COOKIE_NAME = "murmurant_session";
 export const SESSION_MAX_AGE_SECONDS = 7 * 24 * 60 * 60; // 7 days
 export const SESSION_IDLE_TIMEOUT_SECONDS = 24 * 60 * 60; // 24 hours
 
@@ -107,7 +107,7 @@ export function getExpectedOrigin(): string | string[] {
  * Get the Relying Party name for display in authenticator prompts.
  */
 export function getRelyingPartyName(): string {
-  return process.env.PASSKEY_RP_NAME ?? "ClubOS";
+  return process.env.PASSKEY_RP_NAME ?? "Murmurant";
 }
 
 /**

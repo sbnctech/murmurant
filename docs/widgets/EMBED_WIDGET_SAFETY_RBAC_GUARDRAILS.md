@@ -1,9 +1,9 @@
-# Embed Widgets Safety & RBAC Guardrails (ClubOS)
+# Embed Widgets Safety & RBAC Guardrails (Murmurant)
 
 Worker 2 — Embed Safety Guardrails — Report
 
 ## Goal
-Allow customers/admins to embed ClubOS widgets into pages they author without breaking RBAC or leaking data.
+Allow customers/admins to embed Murmurant widgets into pages they author without breaking RBAC or leaking data.
 
 ## Threat Model (Short)
 - Shared embed URLs bypassing membership checks
@@ -13,7 +13,7 @@ Allow customers/admins to embed ClubOS widgets into pages they author without br
 - Data exfiltration via overly-broad API responses
 
 ## Allowed Embed Patterns (Preferred First)
-1. Iframe embed to ClubOS-rendered page (RBAC enforced server-side)
+1. Iframe embed to Murmurant-rendered page (RBAC enforced server-side)
 2. Script tag embed that renders UI but fetches data via RBAC-gated APIs
 3. Host-page SDK (advanced; only if we can harden)
 
@@ -27,13 +27,13 @@ Allow customers/admins to embed ClubOS widgets into pages they author without br
 - CSP guidance and frame-ancestors policy
 
 ## Forbidden / High-Risk Patterns
-- Direct links to third-party galleries that bypass ClubOS RBAC
+- Direct links to third-party galleries that bypass Murmurant RBAC
 - Password-only protection as sole gate for member content
 - Client-side filtering of "hidden" data (must be server enforced)
 
 ## RBAC Preservation Rules
 - Embed must never expand user rights
-- Viewer rights determined by ClubOS session, not embed location
+- Viewer rights determined by Murmurant session, not embed location
 - "Delegated admin" actions never allowed from anonymous embeds
 
 ## Operational Notes

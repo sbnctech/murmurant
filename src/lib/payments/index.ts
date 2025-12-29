@@ -1,7 +1,7 @@
 /**
  * Payment Module
  *
- * Provides payment provider abstraction for ClubOS.
+ * Provides payment provider abstraction for Murmurant.
  *
  * Charter Principles:
  * - P9: Fake provider disabled in production

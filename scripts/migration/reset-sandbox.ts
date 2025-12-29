@@ -1,6 +1,6 @@
 #!/usr/bin/env npx tsx
 /**
- * ClubOS Sandbox Reset Tool
+ * Murmurant Sandbox Reset Tool
  * ⚠️ DANGER: Deletes all migration data from database
  *
  * Usage:

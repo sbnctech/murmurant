@@ -217,9 +217,9 @@ active --> [30 days before expiry] --> pending_renewal
 
 ### Status Mapping from WA
 
-The WA importer maps WA Contact.Status to ClubOS status codes. This is a **one-way sync** - ClubOS accepts WA as the source of truth for status.
+The WA importer maps WA Contact.Status to Murmurant status codes. This is a **one-way sync** - Murmurant accepts WA as the source of truth for status.
 
-| WA Status | ClubOS Status | Notes |
+| WA Status | Murmurant Status | Notes |
 |-----------|---------------|-------|
 | Active | active | Direct mapping |
 | Lapsed | lapsed | Direct mapping |
@@ -230,9 +230,9 @@ The WA importer maps WA Contact.Status to ClubOS status codes. This is a **one-w
 
 ### Future: Bidirectional Sync
 
-If ClubOS becomes the system of record, we would need:
+If Murmurant becomes the system of record, we would need:
 
-1. **ClubOS -> WA webhook:** Push status changes to WA
+1. **Murmurant -> WA webhook:** Push status changes to WA
 2. **Conflict resolution:** Handle concurrent updates
 3. **Audit trail:** Track which system initiated the change
 
@@ -313,4 +313,4 @@ model Member {
 
 ---
 
-*Document maintained by ClubOS development team. Charter P3 compliance: Explicit state machines for workflows.*
+*Document maintained by Murmurant development team. Charter P3 compliance: Explicit state machines for workflows.*

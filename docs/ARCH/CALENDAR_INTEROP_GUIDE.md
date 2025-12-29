@@ -2,19 +2,19 @@
 
 Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
-This document describes how ClubOS calendar data interoperates with Google
+This document describes how Murmurant calendar data interoperates with Google
 Calendar, Apple Calendar, and Microsoft Outlook using the iCalendar standard.
 
 ---
 
 ## Overview
 
-ClubOS exports event data in iCalendar format (RFC 5545). This format is
+Murmurant exports event data in iCalendar format (RFC 5545). This format is
 universally supported by major calendar applications. When users subscribe
-to or import ClubOS calendars, their calendar client interprets the data
+to or import Murmurant calendars, their calendar client interprets the data
 according to their local timezone settings.
 
-**Key principle**: ClubOS stores and exports precise UTC instants with
+**Key principle**: Murmurant stores and exports precise UTC instants with
 timezone identifiers (TZID). Calendar clients are responsible for displaying
 events in the user's local timezone.
 
@@ -24,10 +24,10 @@ events in the user's local timezone.
 
 ### 1. Timed Events (UTC Instants + TZID)
 
-Timed events have a specific start and end time. ClubOS exports these as
+Timed events have a specific start and end time. Murmurant exports these as
 UTC timestamps with an associated TZID for the club's timezone.
 
-**What ClubOS exports:**
+**What Murmurant exports:**
 - DTSTART with TZID (e.g., `DTSTART;TZID=America/Los_Angeles:20250215T100000`)
 - DTEND with TZID
 - VTIMEZONE component defining the timezone rules
@@ -37,7 +37,7 @@ UTC timestamps with an associated TZID for the club's timezone.
 ```
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//ClubOS//Event Export//EN
+PRODID:-//Murmurant//Event Export//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VTIMEZONE
@@ -58,7 +58,7 @@ TZNAME:PDT
 END:DAYLIGHT
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:event-abc123@clubos.example.com
+UID:event-abc123@murmurant.example.com
 DTSTAMP:20250115T120000Z
 DTSTART;TZID=America/Los_Angeles:20250215T100000
 DTEND;TZID=America/Los_Angeles:20250215T120000
@@ -81,9 +81,9 @@ END:VCALENDAR
 ### 2. All-Day Events (DATE only)
 
 All-day events span an entire calendar day and have no specific time.
-ClubOS exports these using DATE values (no time component).
+Murmurant exports these using DATE values (no time component).
 
-**What ClubOS exports:**
+**What Murmurant exports:**
 - DTSTART with VALUE=DATE (e.g., `DTSTART;VALUE=DATE:20250401`)
 - DTEND with VALUE=DATE (day after the event ends)
 - No VTIMEZONE needed for all-day events
@@ -93,11 +93,11 @@ ClubOS exports these using DATE values (no time component).
 ```
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//ClubOS//Event Export//EN
+PRODID:-//Murmurant//Event Export//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-UID:event-xyz789@clubos.example.com
+UID:event-xyz789@murmurant.example.com
 DTSTAMP:20250115T120000Z
 DTSTART;VALUE=DATE:20250401
 DTEND;VALUE=DATE:20250402
@@ -121,10 +121,10 @@ Tokyo sees the same calendar date (April 1) as a user in Los Angeles.
 
 ### 3. Recurring Events (RRULE + TZID)
 
-Recurring events repeat according to a pattern. ClubOS exports these with
+Recurring events repeat according to a pattern. Murmurant exports these with
 RRULE (recurrence rule) and TZID to ensure correct handling across DST.
 
-**What ClubOS exports:**
+**What Murmurant exports:**
 - DTSTART with TZID
 - RRULE defining the recurrence pattern
 - VTIMEZONE component
@@ -134,7 +134,7 @@ RRULE (recurrence rule) and TZID to ensure correct handling across DST.
 ```
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//ClubOS//Event Export//EN
+PRODID:-//Murmurant//Event Export//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VTIMEZONE
@@ -155,7 +155,7 @@ TZNAME:PDT
 END:DAYLIGHT
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:event-weekly-456@clubos.example.com
+UID:event-weekly-456@murmurant.example.com
 DTSTAMP:20250115T120000Z
 DTSTART;TZID=America/Los_Angeles:20250107T140000
 DTEND;TZID=America/Los_Angeles:20250107T160000
@@ -182,9 +182,9 @@ at 3:00 PM after DST begins.
 
 ---
 
-## What ClubOS Guarantees
+## What Murmurant Guarantees
 
-ClubOS provides the following guarantees for calendar interoperability:
+Murmurant provides the following guarantees for calendar interoperability:
 
 1. **Correct TZID assignment**: All timed events include `America/Los_Angeles`
    as the timezone identifier.
@@ -209,7 +209,7 @@ ClubOS provides the following guarantees for calendar interoperability:
 ## What is Handled by the Calendar Client
 
 The following behaviors are controlled by the user's calendar application,
-not by ClubOS:
+not by Murmurant:
 
 1. **Local timezone display**: Calendar clients convert event times to the
    user's local timezone for display. A 10 AM Pacific event shows as 1 PM
@@ -232,9 +232,9 @@ not by ClubOS:
 
 ---
 
-## What ClubOS Does NOT Attempt to Normalize
+## What Murmurant Does NOT Attempt to Normalize
 
-ClubOS explicitly does not attempt to:
+Murmurant explicitly does not attempt to:
 
 1. **Convert times for the user**: We export in club timezone. Conversion
    is the client's responsibility.
@@ -253,7 +253,7 @@ ClubOS explicitly does not attempt to:
    by client. Changes may take minutes to hours to appear.
 
 6. **Handle calendar sharing permissions**: Access control is managed by
-   the calendar service (Google, Apple, Microsoft), not by ClubOS.
+   the calendar service (Google, Apple, Microsoft), not by Murmurant.
 
 ---
 
@@ -293,7 +293,7 @@ ClubOS explicitly does not attempt to:
 **Cause**: Usually occurs when DATETIME is used without TZID for a timed
 event, or when VALUE=DATE is missing for an all-day event.
 
-**ClubOS mitigation**: Always include TZID for timed events; use VALUE=DATE
+**Murmurant mitigation**: Always include TZID for timed events; use VALUE=DATE
 for all-day events.
 
 ### Event time shifts after DST
@@ -302,7 +302,7 @@ for all-day events.
 
 **Cause**: Event was stored with UTC offset instead of TZID.
 
-**ClubOS mitigation**: Always use TZID, never raw UTC offsets like `-08:00`.
+**Murmurant mitigation**: Always use TZID, never raw UTC offsets like `-08:00`.
 The VTIMEZONE component defines DST rules.
 
 ### Duplicate events after sync
@@ -312,23 +312,23 @@ The VTIMEZONE component defines DST rules.
 **Cause**: UID changed between exports, or client imported instead of
 subscribed.
 
-**ClubOS mitigation**: Stable UIDs based on event ID. Users should subscribe
+**Murmurant mitigation**: Stable UIDs based on event ID. Users should subscribe
 (not import) for ongoing sync.
 
 ### Changes not appearing
 
-**Symptom**: Event was updated in ClubOS but calendar still shows old info.
+**Symptom**: Event was updated in Murmurant but calendar still shows old info.
 
 **Cause**: Calendar client hasn't refreshed yet.
 
 **Resolution**: Manual refresh in calendar client, or wait for next sync
-cycle. Not a ClubOS issue.
+cycle. Not a Murmurant issue.
 
 ---
 
 ## Summary
 
-| Aspect | ClubOS Responsibility | Client Responsibility |
+| Aspect | Murmurant Responsibility | Client Responsibility |
 |--------|----------------------|----------------------|
 | Timezone assignment | Yes (TZID=America/Los_Angeles) | No |
 | DST rules | Yes (VTIMEZONE component) | Apply rules to display |

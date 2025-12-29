@@ -1,16 +1,16 @@
 // Copyright (c) Santa Barbara Newcomers Club
-// ClubOS Logo - Full horizontal logo with symbol and wordmark
+// Murmurant Logo - Full horizontal logo with symbol and wordmark
 
 "use client";
 
 import React from "react";
-import { ClubOSBug } from "./ClubOSBug";
-import { ClubOSWordmark } from "./ClubOSWordmark";
+import { MurmurantBug } from "./MurmurantBug";
+import { MurmurantWordmark } from "./MurmurantWordmark";
 
 type LogoSize = "sm" | "md" | "lg" | "xl";
 type LogoVariant = "color" | "white" | "black";
 
-interface ClubOSLogoProps {
+interface MurmurantLogoProps {
   size?: LogoSize;
   variant?: LogoVariant;
   className?: string;
@@ -24,19 +24,19 @@ const sizeConfig: Record<LogoSize, { bug: 16 | 24 | 32 | 48 | 64; wordmark: "sm"
 };
 
 /**
- * ClubOS Logo Component
+ * Murmurant Logo Component
  * 
  * Full horizontal logo combining:
- * - The "Gathering" symbol (ClubOSBug)
- * - The "ClubOS" wordmark
+ * - The "Gathering" symbol (MurmurantBug)
+ * - The "Murmurant" wordmark
  * 
  * The Gathering represents diverse people converging and uniting
  */
-export function ClubOSLogo({ 
+export function MurmurantLogo({ 
   size = "md", 
   variant = "color",
   className = "" 
-}: ClubOSLogoProps) {
+}: MurmurantLogoProps) {
   const config = sizeConfig[size];
 
   return (
@@ -48,10 +48,10 @@ export function ClubOSLogo({
         gap: config.gap,
       }}
     >
-      <ClubOSBug size={config.bug} variant={variant} />
-      <ClubOSWordmark size={config.wordmark} variant={variant} />
+      <MurmurantBug size={config.bug} variant={variant} />
+      <MurmurantWordmark size={config.wordmark} variant={variant} />
     </div>
   );
 }
 
-export default ClubOSLogo;
+export default MurmurantLogo;

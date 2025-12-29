@@ -8,7 +8,7 @@ This guide defines how the Tech Lead handles inbound support requests (email, te
 
 - Reduces repetitive manual work
 - Preserves institutional knowledge
-- Feeds improvements back into ClubOS (logic, rules, UX, content)
+- Feeds improvements back into Murmurant (logic, rules, UX, content)
 - Uses AI to draft responses, request missing details, and propose fixes
 - Ensures every issue is tracked, resolved, and closed
 

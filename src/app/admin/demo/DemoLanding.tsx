@@ -2,7 +2,7 @@
  * Demo Landing Component
  *
  * Provides unified navigation for the demo page:
- * - Hero section with "ClubOS for SBNC" branding
+ * - Hero section with "Murmurant for SBNC" branding
  * - Tab navigation: Overview | Workflows | Transition | Officers
  * - Summary stats cards
  *
@@ -122,7 +122,7 @@ export default function DemoLanding({ children }: { children: React.ReactNode })
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "24px" }}>
           <div>
             <h1 style={{ fontSize: "36px", margin: "0 0 12px 0", fontWeight: 700 }}>
-              ClubOS for SBNC
+              Murmurant for SBNC
             </h1>
             <p style={{ fontSize: "18px", margin: 0, opacity: 0.9 }}>
               The modern platform replacing Wild Apricot — built for volunteer-run clubs

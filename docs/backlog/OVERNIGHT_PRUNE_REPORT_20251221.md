@@ -30,7 +30,7 @@
 | 135 | demo: modern home stripes + view-as |
 | 134 | feat(importing): add MembershipTier and map WA membership levels |
 | 121 | feat: Add WYSIWYG drag-and-drop page editor |
-| 120 | feat(migration): add WA to ClubOS data migration pipeline |
+| 120 | feat(migration): add WA to Murmurant data migration pipeline |
 | 119 | feat(email): add email tracking and VP Tech dashboard |
 | 118 | feat(auth): Mandatory 2FA for Admin Roles |
 | 117 | feat(comms): Email templates and composer system |

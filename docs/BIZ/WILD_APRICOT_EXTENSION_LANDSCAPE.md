@@ -2,7 +2,7 @@
 
 ```
 Audience: Product, Engineering, Board
-Purpose: Map WA integrations to ClubOS requirements for roadmap planning
+Purpose: Map WA integrations to Murmurant requirements for roadmap planning
 Classification: Strategy Document
 ```
 
@@ -10,9 +10,9 @@ Classification: Strategy Document
 
 ## Overview
 
-Wild Apricot customers rely on third-party integrations and extensions to fill gaps in the core platform. Before migration, ClubOS must understand what these integrations accomplish and decide how to address each category.
+Wild Apricot customers rely on third-party integrations and extensions to fill gaps in the core platform. Before migration, Murmurant must understand what these integrations accomplish and decide how to address each category.
 
-This document catalogs the major integration categories, what customers use them for, and what ClubOS should provide.
+This document catalogs the major integration categories, what customers use them for, and what Murmurant should provide.
 
 ---
 
@@ -78,9 +78,9 @@ These are the integration needs we hear most often:
 
 ---
 
-## ClubOS Positioning: Equivalent / Non-Goal / Later
+## Murmurant Positioning: Equivalent / Non-Goal / Later
 
-| WA Capability | ClubOS v1 | Rationale |
+| WA Capability | Murmurant v1 | Rationale |
 |---------------|-----------|-----------|
 | Online payments (dues, events) | **Equivalent** (Native Stripe) | Core capability, cannot migrate without it |
 | ICS calendar feeds | **Equivalent** (RFC 5545 compliant) | Day-one member expectation |
@@ -93,7 +93,7 @@ These are the integration needs we hear most often:
 | Direct Mailchimp sync | **Later** (v2) | Webhook covers 80% of need |
 | Direct Salesforce sync | **Later** (v2+) | Niche need, Zapier bridge works |
 | Scheduled exports | **Later** (v2) | Manual download acceptable initially |
-| Calendar widget (embed) | **Later** (v1.1) | Link to ClubOS page is acceptable workaround |
+| Calendar widget (embed) | **Later** (v1.1) | Link to Murmurant page is acceptable workaround |
 
 ---
 
@@ -109,9 +109,9 @@ These are the integration needs we hear most often:
 - Add registrants to mailing list segments in Mailchimp
 - Create tasks in project management tools when volunteers sign up
 
-**ClubOS positioning: Via webhook**
+**Murmurant positioning: Via webhook**
 
-Organizations expect to connect ClubOS to their existing automation workflows. ClubOS does not need to build native integrations to every downstream system. A webhook/event stream lets automation platforms handle the glue.
+Organizations expect to connect Murmurant to their existing automation workflows. Murmurant does not need to build native integrations to every downstream system. A webhook/event stream lets automation platforms handle the glue.
 
 **Minimum technical requirements:**
 
@@ -139,9 +139,9 @@ Organizations with established Zapier workflows will not migrate until they can 
 - Volunteers maintain activity rosters in familiar spreadsheet format
 - Finance committee reconciles membership revenue against bank statements
 
-**ClubOS positioning: Via export**
+**Murmurant positioning: Via export**
 
-Spreadsheet sync is primarily a data extraction need. ClubOS provides clean exports; organizations import them into their preferred tools.
+Spreadsheet sync is primarily a data extraction need. Murmurant provides clean exports; organizations import them into their preferred tools.
 
 **Minimum technical requirements:**
 
@@ -166,9 +166,9 @@ Most organizations can adapt to periodic exports. However, clubs with complex fi
 - Announce events to activity group subscribers
 - Maintain suppression lists for unsubscribes
 
-**ClubOS positioning: Native + via webhook**
+**Murmurant positioning: Native + via webhook**
 
-ClubOS should handle transactional email (confirmations, reminders) natively. Marketing email campaigns are better handled by dedicated platforms. ClubOS provides the audience segments; marketing platforms send the campaigns.
+Murmurant should handle transactional email (confirmations, reminders) natively. Marketing email campaigns are better handled by dedicated platforms. Murmurant provides the audience segments; marketing platforms send the campaigns.
 
 **Minimum technical requirements:**
 
@@ -192,7 +192,7 @@ Organizations can manually export and import lists. But clubs with sophisticated
 - Alert activity chairs about last-minute changes
 - Reach members who do not check email
 
-**ClubOS positioning: Non-goal (v1)**
+**Murmurant positioning: Non-goal (v1)**
 
 SMS requires per-message costs, carrier compliance (TCPA), and opt-in management. This is significant scope for modest benefit in the target customer segment.
 
@@ -217,9 +217,9 @@ Most WA organizations do not use SMS. Those that do typically use standalone SMS
 - Reconcile event registration fees with deposits
 - Generate financial reports for board meetings
 
-**ClubOS positioning: Via export**
+**Murmurant positioning: Via export**
 
-Accounting systems are specialized. ClubOS should not attempt to replicate double-entry bookkeeping. Instead, provide clean transaction exports that accountants can import.
+Accounting systems are specialized. Murmurant should not attempt to replicate double-entry bookkeeping. Instead, provide clean transaction exports that accountants can import.
 
 **Minimum technical requirements:**
 
@@ -233,7 +233,7 @@ Accounting systems are specialized. ClubOS should not attempt to replicate doubl
 
 **Migration risk if missing: Medium**
 
-Treasurers need to close books. If ClubOS cannot produce an importable transaction list, treasurers must manually re-key data. This creates friction but is not a blocker.
+Treasurers need to close books. If Murmurant cannot produce an importable transaction list, treasurers must manually re-key data. This creates friction but is not a blocker.
 
 ---
 
@@ -246,9 +246,9 @@ Treasurers need to close books. If ClubOS cannot produce an importable transacti
 - Get reminders from their preferred calendar system
 - Share activity-specific calendars with group members
 
-**ClubOS positioning: Via export (ICS feeds)**
+**Murmurant positioning: Via export (ICS feeds)**
 
-Calendar sync is a solved problem: ICS feeds. ClubOS publishes standard ICS endpoints; calendar apps subscribe.
+Calendar sync is a solved problem: ICS feeds. Murmurant publishes standard ICS endpoints; calendar apps subscribe.
 
 **Minimum technical requirements:**
 
@@ -274,19 +274,19 @@ Calendar sync is a core expectation. Organizations will not cutover if members l
 - Gather new member application data
 - Process special requests (scholarship applications, board nominations)
 
-**ClubOS positioning: Non-goal (v1)**
+**Murmurant positioning: Non-goal (v1)**
 
-Form builders are deep products. ClubOS should not compete with Typeform. Instead, allow external forms to submit data via API or embed safely.
+Form builders are deep products. Murmurant should not compete with Typeform. Instead, allow external forms to submit data via API or embed safely.
 
 **Minimum technical requirements:**
 
 - API endpoint to accept form submissions (future)
 - Safe embed allowlist for trusted form domains
-- Documentation for form-to-ClubOS data flow patterns
+- Documentation for form-to-Murmurant data flow patterns
 
 **Migration risk if missing: Low**
 
-Organizations already use external form tools with WA. They can continue using them with ClubOS. The main requirement is that ClubOS does not block embedding.
+Organizations already use external form tools with WA. They can continue using them with Murmurant. The main requirement is that Murmurant does not block embedding.
 
 ---
 
@@ -299,9 +299,9 @@ Organizations already use external form tools with WA. They can continue using t
 - Process donations
 - Offer recurring payment plans
 
-**ClubOS positioning: Native (Stripe)**
+**Murmurant positioning: Native (Stripe)**
 
-Payment processing is core to membership management. ClubOS should handle this natively with a single, well-supported payment provider.
+Payment processing is core to membership management. Murmurant should handle this natively with a single, well-supported payment provider.
 
 **Minimum technical requirements:**
 
@@ -328,9 +328,9 @@ Organizations cannot migrate if they cannot collect dues. Payment processing is 
 - Display member count or activity roster
 - Integrate with WordPress, Squarespace, Wix
 
-**ClubOS positioning: Via export + embed**
+**Murmurant positioning: Via export + embed**
 
-ClubOS is not a website builder. But organizations need to display ClubOS data on their existing sites.
+Murmurant is not a website builder. But organizations need to display Murmurant data on their existing sites.
 
 **Minimum technical requirements:**
 
@@ -342,13 +342,13 @@ ClubOS is not a website builder. But organizations need to display ClubOS data o
 
 **Migration risk if missing: Medium**
 
-Organizations with heavily customized WA widget integrations will need to rebuild. This is expected and accepted, but ClubOS should provide equivalent primitives.
+Organizations with heavily customized WA widget integrations will need to rebuild. This is expected and accepted, but Murmurant should provide equivalent primitives.
 
 ---
 
 ## Summary Matrix
 
-| Category | ClubOS Approach | Priority | Migration Risk |
+| Category | Murmurant Approach | Priority | Migration Risk |
 |----------|-----------------|----------|----------------|
 | Automation (Zapier/Make) | Via webhook | High | High |
 | Spreadsheet sync | Via export | Medium | Medium |
@@ -362,7 +362,7 @@ Organizations with heavily customized WA widget integrations will need to rebuil
 
 ---
 
-## ClubOS Integration Roadmap
+## Murmurant Integration Roadmap
 
 This section translates the extension landscape into a prioritized roadmap.
 
@@ -397,8 +397,8 @@ This section translates the extension landscape into a prioritized roadmap.
 
 | Integration | Customer Goal | Approach | If Missing |
 |-------------|---------------|----------|------------|
-| **Calendar widget** | "Show calendar on WordPress" | Embed (iframe) | Link to ClubOS instead. |
-| **Registration form embed** | "Sign up from main website" | Embed (iframe) | Link to ClubOS. |
+| **Calendar widget** | "Show calendar on WordPress" | Embed (iframe) | Link to Murmurant instead. |
+| **Registration form embed** | "Sign up from main website" | Embed (iframe) | Link to Murmurant. |
 | **Public event feed** | "Webmaster wants JSON" | Export (JSON) | Use ICS feed. |
 | **Mailchimp sync** | "Auto-update mailing list" | Webhook | Manual export/import. |
 | **Scheduled exports** | "Email me list every Monday" | Export (scheduled) | Manual download. |
@@ -427,7 +427,7 @@ This section specifies the technical contracts external systems can rely on.
 
 | Column | Type | Description |
 |--------|------|-------------|
-| id | string | ClubOS member ID (stable, unique) |
+| id | string | Murmurant member ID (stable, unique) |
 | email | string | Primary email address |
 | first_name | string | First name |
 | last_name | string | Last name |
@@ -440,7 +440,7 @@ This section specifies the technical contracts external systems can rely on.
 
 | Column | Type | Description |
 |--------|------|-------------|
-| id | string | ClubOS event ID (stable, unique) |
+| id | string | Murmurant event ID (stable, unique) |
 | title | string | Event title |
 | starts_at | ISO 8601 | Start time (UTC instant) |
 | ends_at | ISO 8601 | End time (UTC instant) |
@@ -485,7 +485,7 @@ This section specifies the technical contracts external systems can rely on.
 **Delivery Contract**
 
 - **Format:** JSON payload over HTTPS POST
-- **Authentication:** HMAC-SHA256 signature in `X-ClubOS-Signature` header
+- **Authentication:** HMAC-SHA256 signature in `X-Murmurant-Signature` header
 - **Retry policy:** Exponential backoff (1s, 5s, 30s, 5m, 1h)
 - **Idempotency:** Each event includes unique `event_id`
 - **Replay:** `/webhooks/replay` endpoint for recovery
@@ -507,7 +507,7 @@ This section specifies the technical contracts external systems can rely on.
 - **VTIMEZONE:** Every feed includes full VTIMEZONE component with IANA tzid
 - **DTSTART/DTEND:** Timed events use `DTSTART;TZID=America/Los_Angeles:YYYYMMDDTHHMMSS`
 - **All-day events:** Use `DTSTART;VALUE=DATE:YYYYMMDD`
-- **UID stability:** Format: `event-{id}@clubos.example.com`
+- **UID stability:** Format: `event-{id}@murmurant.example.com`
 - **DTSTAMP:** Always in UTC
 
 **What this means for users:**
@@ -546,7 +546,7 @@ This section provides detailed analysis of each major integration category.
 | Registration sync | Registration + member + event | Real-time |
 | Payment tracking | Transaction + member | Real-time |
 
-#### What ClubOS Must Provide
+#### What Murmurant Must Provide
 
 - **P0:** Webhook events (`member.created`, `member.renewed`, `member.lapsed`, `registration.created`, `payment.completed`)
 - **P0:** HMAC-signed payloads, retry with backoff, event replay
@@ -575,7 +575,7 @@ This section provides detailed analysis of each major integration category.
 | Event registrations | Member info, event, status, guests, payment |
 | Transaction history | Date, amount, type, member, description |
 
-#### What ClubOS Must Provide
+#### What Murmurant Must Provide
 
 - **P0:** CSV export for members, registrations
 - **P0:** Stable column schema, ISO 8601 dates
@@ -603,7 +603,7 @@ This section provides detailed analysis of each major integration category.
 | Activity feed | Events for specific activity | Anonymous |
 | Personal feed | Events member is registered for | Token-auth |
 
-#### What ClubOS Must Provide
+#### What Murmurant Must Provide
 
 - **P0:** ICS feed for all public events, VTIMEZONE with IANA tzid, stable UIDs
 - **P1:** Per-activity feeds, personal feeds
@@ -630,7 +630,7 @@ This section provides detailed analysis of each major integration category.
 | New member add | Member object | Real-time |
 | Unsubscribe sync | Unsubscribe events | Real-time (critical) |
 
-#### What ClubOS Must Provide
+#### What Murmurant Must Provide
 
 - **P0:** CSV export with email/status/tier, `member.created` webhook, native unsubscribe handling
 - **P1:** `member.updated` webhook, segment exports
@@ -649,7 +649,7 @@ This section provides detailed analysis of each major integration category.
 | Event revenue | Registration fees by event | Board packet |
 | Tax prep (990) | Revenue categories | Accountant |
 
-#### What ClubOS Must Provide
+#### What Murmurant Must Provide
 
 - **P0:** Transaction CSV (date, amount, type, member), date filtering, refunds as negative
 - **P1:** QuickBooks-compatible format, per-event summary
@@ -659,9 +659,9 @@ This section provides detailed analysis of each major integration category.
 
 ## Integration Contract: Webhooks + Exports First
 
-**Confirmed approach for ClubOS v1:**
+**Confirmed approach for Murmurant v1:**
 
-ClubOS provides integrations via webhooks and exports rather than native connectors.
+Murmurant provides integrations via webhooks and exports rather than native connectors.
 
 | Approach | Pros | Cons |
 |----------|------|------|
@@ -757,8 +757,8 @@ During policy capture, ask the customer:
 |------|--------|
 | 2025-12-26 | Add Integration Deep Dives, Integration Contract, Discovery Questions |
 | 2025-12-26 | Add Minimum Viable Integration Surface (export schemas, webhook design, ICS spec) |
-| 2025-12-26 | Add WA Integration Taxonomy, Typical Club Use Cases, ClubOS Positioning table |
-| 2025-12-26 | Add ClubOS Integration Roadmap (P0/P1/P2 tiers) |
+| 2025-12-26 | Add WA Integration Taxonomy, Typical Club Use Cases, Murmurant Positioning table |
+| 2025-12-26 | Add Murmurant Integration Roadmap (P0/P1/P2 tiers) |
 | 2025-12-26 | Initial extension landscape |
 
 ---

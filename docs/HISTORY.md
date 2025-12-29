@@ -1,10 +1,10 @@
 Copyright (c) 2025 Santa Barbara Newcomers Club. All rights reserved.
 
-# ClubOS Project History
+# Murmurant Project History
 
 ## Overview
 
-ClubOS is a modern, admin-focused club management system designed to
+Murmurant is a modern, admin-focused club management system designed to
 give officers clear insight into members, events, and registrations,
 with a strong emphasis on test coverage, developer experience, and
 long-term maintainability.
@@ -224,7 +224,7 @@ Context:
 Key outcomes:
 - Merged PR #60: docs(widgets): embed safety and RBAC guardrails.
   - Vercel deployment check was failing, but merges are not gated by required checks under current repo plan settings; treated as advisory for now.
-- Opened PR #62: docs(widgets): assess events widget fit to ClubOS model (Worker 1).
+- Opened PR #62: docs(widgets): assess events widget fit to Murmurant model (Worker 1).
 - Opened/updated PR #65: docs(architecture): open source adoption policy (Worker 5).
 - Additional docs PRs visible and queued for review/merge:
   - PR #66: docs(gadgets): admin gadgets catalog (Worker 3).

@@ -37,7 +37,7 @@ Trigger a rollback if **any** of the following are true:
 ### Via Netlify UI
 
 1. Log in to [Netlify](https://app.netlify.com/)
-2. Select the **clubos** site from your team dashboard
+2. Select the **murmurant** site from your team dashboard
 3. Navigate to **Deploys** in the left sidebar
 4. Look for the most recent deploy with:
    - **Status:** "Published" (green checkmark)
@@ -73,7 +73,7 @@ If you have the Netlify CLI installed and configured:
 
 ```bash
 # List recent deploys
-netlify deploys --site clubos
+netlify deploys --site murmurant
 
 # Publish a specific deploy by ID
 netlify deploy --prod --deploy-id <DEPLOY_ID>

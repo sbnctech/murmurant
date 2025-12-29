@@ -1,6 +1,6 @@
 # Admin Architecture Map
 
-This document provides a high-level view of how the Admin UI, API routes, mock data, and core workflows interact inside ClubOS.
+This document provides a high-level view of how the Admin UI, API routes, mock data, and core workflows interact inside Murmurant.
 
 ## Overview
 The Admin subsystem is built from:

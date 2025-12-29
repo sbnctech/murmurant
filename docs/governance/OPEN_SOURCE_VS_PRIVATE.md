@@ -1,16 +1,16 @@
 # Open Source vs Private Distribution — Decision Framework
 
-This document records how SBNC will evaluate whether portions of ClubOS remain private or are released as open source in the future.
+This document records how SBNC will evaluate whether portions of Murmurant remain private or are released as open source in the future.
 
 ## Current Status
 
-ClubOS is currently a private, SBNC-owned system intended for internal operational use.
+Murmurant is currently a private, SBNC-owned system intended for internal operational use.
 
 No open-source license is implied by the presence of this repository.
 
 ## Decision Criteria (Future)
 
-A decision to open source part or all of ClubOS should consider:
+A decision to open source part or all of Murmurant should consider:
 
 ### Favor Open Source When:
 - The component is infrastructure-level and not SBNC-specific

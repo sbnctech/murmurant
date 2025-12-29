@@ -1,10 +1,10 @@
-# ClubOS - Runbooks (Pre-Deployment)
+# Murmurant - Runbooks (Pre-Deployment)
 
 Status: Canonical Runbook Set
 Applies to: Pre-deployment readiness and incident preparedness
 Last updated: 2025-12-21
 
-These runbooks define human-executable procedures for operating ClubOS safely
+These runbooks define human-executable procedures for operating Murmurant safely
 during failure conditions.
 
 These runbooks are documentation and rehearsal artifacts only.

@@ -1,15 +1,15 @@
 # Embed Widget SDK Contract (v1)
 
 ## Goal
-Allow safe embedding of ClubOS widgets into external pages without breaking RBAC.
+Allow safe embedding of Murmurant widgets into external pages without breaking RBAC.
 
 ## Default: Iframe-First (Recommended)
-- Embed uses an iframe pointing to a ClubOS route.
+- Embed uses an iframe pointing to a Murmurant route.
 - The embedded page enforces auth and RBAC server-side.
 - Host page never receives raw data.
 
 ### Pattern A: Authenticated Embed (Member Portal)
-- User is already logged in to ClubOS
+- User is already logged in to Murmurant
 - iframe renders within same origin (or approved domain)
 
 ### Pattern B: Public Embed (No auth)
@@ -27,7 +27,7 @@ Allow safe embedding of ClubOS widgets into external pages without breaking RBAC
 - Token does NOT grant broader API access.
 
 ## Restrictions (Hard)
-- No arbitrary JS execution inside ClubOS.
+- No arbitrary JS execution inside Murmurant.
 - No postMessage that returns sensitive data.
 - No "custom query" parameters beyond allowlisted filters/sorts.
 - Embed domains must be allowlisted (CORS + frame-ancestors).

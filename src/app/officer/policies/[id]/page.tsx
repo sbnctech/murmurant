@@ -33,11 +33,11 @@ export async function generateMetadata({ params }: PageProps) {
   const policy = getPolicyById(id);
 
   if (!policy) {
-    return { title: "Policy Not Found | ClubOS" };
+    return { title: "Policy Not Found | Murmurant" };
   }
 
   return {
-    title: `${policy.shortTitle} (${policy.id}) | ClubOS`,
+    title: `${policy.shortTitle} (${policy.id}) | Murmurant`,
     description: policy.summary,
   };
 }

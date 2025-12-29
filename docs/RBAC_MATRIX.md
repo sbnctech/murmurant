@@ -1,15 +1,15 @@
-# ClubOS RBAC Matrix
+# Murmurant RBAC Matrix
 
 **Version:** 1.0.0
 **Charter Reference:** P1 (Provable Identity), P2 (Default Deny), P9 (Fail Closed)
 
-This document is the canonical reference for Role-Based Access Control in ClubOS.
+This document is the canonical reference for Role-Based Access Control in Murmurant.
 
 ---
 
 ## Role Hierarchy
 
-ClubOS uses a **capability-based** permission system. Roles are templates that grant capabilities.
+Murmurant uses a **capability-based** permission system. Roles are templates that grant capabilities.
 
 | Tier | Role | Description |
 |------|------|-------------|

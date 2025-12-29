@@ -36,7 +36,7 @@ const socialIcons: Record<string, string> = {
 };
 
 export function BrandedFooter({
-  clubName = "ClubOS",
+  clubName = "Murmurant",
   tagline,
   socialLinks = [],
   footerLinks = [],
@@ -172,8 +172,8 @@ export function BrandedFooter({
         <div style={{ marginTop: "16px", textAlign: "center" }}>
           <p style={{ fontSize: "12px", color: "var(--brand-text-muted, #9ca3af)", margin: 0 }}>
             Powered by{" "}
-            <a href="https://clubos.org" target="_blank" rel="noopener noreferrer" style={{ color: "var(--brand-primary, #2563eb)", textDecoration: "none", fontWeight: 500 }}>
-              ClubOS
+            <a href="https://murmurant.org" target="_blank" rel="noopener noreferrer" style={{ color: "var(--brand-primary, #2563eb)", textDecoration: "none", fontWeight: 500 }}>
+              Murmurant
             </a>
           </p>
         </div>

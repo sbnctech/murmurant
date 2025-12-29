@@ -2,7 +2,7 @@
 
 ```
 Audience: Board Members, Presidents, Risk-Averse Stakeholders
-Purpose: Honest answers to hard questions about ClubOS adoption
+Purpose: Honest answers to hard questions about Murmurant adoption
 Document Type: Q&A Format
 ```
 
@@ -10,15 +10,15 @@ Document Type: Q&A Format
 
 ## Introduction
 
-This document addresses the difficult questions that board members and organizational leaders should ask before considering ClubOS adoption. The answers are intended to be honest rather than reassuring. Where risks exist, they are acknowledged. Where we do not have complete answers, we say so.
+This document addresses the difficult questions that board members and organizational leaders should ask before considering Murmurant adoption. The answers are intended to be honest rather than reassuring. Where risks exist, they are acknowledged. Where we do not have complete answers, we say so.
 
-The goal is not to convince you that ClubOS is safe. The goal is to give you the information you need to make your own judgment.
+The goal is not to convince you that Murmurant is safe. The goal is to give you the information you need to make your own judgment.
 
 ---
 
 ## Q1: What if this fails?
 
-**The honest answer:** It could fail. Technology projects fail all the time, and ClubOS is not immune.
+**The honest answer:** It could fail. Technology projects fail all the time, and Murmurant is not immune.
 
 **What failure could look like:**
 
@@ -35,7 +35,7 @@ The entire migration architecture is designed around the assumption that failure
 
 - **Rehearsal before commitment.** The cutover rehearsal process lets you see exactly what the migrated system will look like before you commit. If it does not work, you do not proceed.
 
-- **Rollback after cutover has limits.** We are honest about this: once you commit the migration and start operating in ClubOS, rolling back becomes difficult. New data would need to be migrated back. This is why we insist on thorough verification before cutover.
+- **Rollback after cutover has limits.** We are honest about this: once you commit the migration and start operating in Murmurant, rolling back becomes difficult. New data would need to be migrated back. This is why we insist on thorough verification before cutover.
 
 **What we cannot mitigate:**
 
@@ -45,11 +45,11 @@ If you commit the migration and then discover a fundamental problem three months
 
 ## Q2: What if key people leave?
 
-**The honest answer:** This is a real risk. ClubOS was developed primarily by one person. If that person becomes unavailable, the organization faces a problem.
+**The honest answer:** This is a real risk. Murmurant was developed primarily by one person. If that person becomes unavailable, the organization faces a problem.
 
 **The current situation:**
 
-- Ed Finkler developed ClubOS and understands it most deeply
+- Ed Finkler developed Murmurant and understands it most deeply
 - Some documentation exists, but institutional knowledge is concentrated
 - No formal support organization exists today
 
@@ -57,13 +57,13 @@ If you commit the migration and then discover a fundamental problem three months
 
 - **Documentation is a priority.** The codebase includes extensive documentation intended to make the system maintainable by others. See [CLAUDE.md](../../CLAUDE.md) and the docs/ directory.
 
-- **The technology stack is conventional.** ClubOS uses standard, widely-understood technologies (Next.js, PostgreSQL, Prisma). A competent developer could learn the codebase.
+- **The technology stack is conventional.** Murmurant uses standard, widely-understood technologies (Next.js, PostgreSQL, Prisma). A competent developer could learn the codebase.
 
-- **Data is portable.** Member data is stored in standard formats. If ClubOS becomes unmaintainable, data can be exported and moved to another system.
+- **Data is portable.** Member data is stored in standard formats. If Murmurant becomes unmaintainable, data can be exported and moved to another system.
 
 **What we cannot mitigate:**
 
-If ClubOS has no active maintainer and breaks, fixing it requires either finding someone with the right skills or abandoning the platform. Nonprofit volunteer organizations have limited capacity to recruit technical talent. This risk is real and should factor into your decision.
+If Murmurant has no active maintainer and breaks, fixing it requires either finding someone with the right skills or abandoning the platform. Nonprofit volunteer organizations have limited capacity to recruit technical talent. This risk is real and should factor into your decision.
 
 ---
 
@@ -77,7 +77,7 @@ If ClubOS has no active maintainer and breaks, fixing it requires either finding
 
 - **Export is guaranteed.** You can export your data at any time in standard formats (CSV, JSON). This is not a future feature; it exists today.
 
-- **Deletion upon request.** If you leave ClubOS, your data will be deleted from ClubOS systems upon written request.
+- **Deletion upon request.** If you leave Murmurant, your data will be deleted from Murmurant systems upon written request.
 
 - **No data monetization.** Your member data will not be sold, shared, or used for purposes beyond operating your organization.
 
@@ -93,7 +93,7 @@ These exceptions are standard and align with normal data handling practices.
 
 ## Q4: What about security?
 
-**The honest answer:** ClubOS takes security seriously, but no system is perfectly secure. We are honest about what we protect and what remains at risk.
+**The honest answer:** Murmurant takes security seriously, but no system is perfectly secure. We are honest about what we protect and what remains at risk.
 
 **What we do:**
 
@@ -106,23 +106,23 @@ These exceptions are standard and align with normal data handling practices.
 **What remains at risk:**
 
 - **Infrastructure security depends on hosting provider.** We use standard cloud providers (Vercel, Neon), but we inherit their security posture. If they have a breach, we are affected.
-- **No formal security audit has been conducted.** ClubOS has not been penetration tested by a third party. This is a gap.
+- **No formal security audit has been conducted.** Murmurant has not been penetration tested by a third party. This is a gap.
 - **Small attack surface, but not zero.** Web applications have vulnerabilities. We follow security best practices, but we cannot guarantee zero vulnerabilities.
 - **Human factors:** Social engineering, credential sharing, and other human behaviors remain risks regardless of technology.
 
 **Compared to Wild Apricot:**
 
-Wild Apricot is a larger target (more customers, more data) but also has more security resources and a dedicated security team. ClubOS is a smaller target but has fewer resources for security response. Neither is inherently safer; the risk profiles differ.
+Wild Apricot is a larger target (more customers, more data) but also has more security resources and a dedicated security team. Murmurant is a smaller target but has fewer resources for security response. Neither is inherently safer; the risk profiles differ.
 
 ---
 
 ## Q5: What about Wild Apricot responsibility versus ours?
 
-**The honest answer:** Adopting ClubOS means accepting responsibility that currently belongs to Wild Apricot.
+**The honest answer:** Adopting Murmurant means accepting responsibility that currently belongs to Wild Apricot.
 
 **What Wild Apricot handles today:**
 
-| Responsibility | Wild Apricot | ClubOS |
+| Responsibility | Wild Apricot | Murmurant |
 |----------------|--------------|--------|
 | Server uptime | Their problem | Our problem |
 | Security patches | Their problem | Our problem |
@@ -133,7 +133,7 @@ Wild Apricot is a larger target (more customers, more data) but also has more se
 
 **This is a real tradeoff:**
 
-When Wild Apricot has an outage, you call their support line and wait. When ClubOS has an outage, someone in your organization needs to fix it or find someone who can.
+When Wild Apricot has an outage, you call their support line and wait. When Murmurant has an outage, someone in your organization needs to fix it or find someone who can.
 
 **Why you might accept this tradeoff:**
 
@@ -163,11 +163,11 @@ Both positions are reasonable. The question is which tradeoff fits your organiza
 
 - **Contractual obligations:** If you have contracts that reference Wild Apricot specifically, you may need to review them before switching.
 
-- **Privacy regulations:** Depending on your jurisdiction, data handling may be subject to regulations (CCPA in California, etc.). ClubOS does not change your compliance obligations.
+- **Privacy regulations:** Depending on your jurisdiction, data handling may be subject to regulations (CCPA in California, etc.). Murmurant does not change your compliance obligations.
 
-**What ClubOS does not change:**
+**What Murmurant does not change:**
 
-Your legal obligations as an organization remain the same. ClubOS is a tool; the organization remains responsible for how it uses that tool.
+Your legal obligations as an organization remain the same. Murmurant is a tool; the organization remains responsible for how it uses that tool.
 
 **What we recommend:**
 
@@ -181,14 +181,14 @@ If legal exposure is a significant concern, consult an attorney before making pl
 
 **Current maintenance model:**
 
-- Ed Finkler maintains ClubOS as a personal project
+- Ed Finkler maintains Murmurant as a personal project
 - No formal support agreement exists
 - Maintenance happens when time permits
 
 **Future possibilities:**
 
-- **ClubOS, Inc.:** If the commercial entity materializes, professional maintenance becomes possible
-- **Community support:** If other organizations adopt ClubOS, shared maintenance becomes possible
+- **Murmurant, Inc.:** If the commercial entity materializes, professional maintenance becomes possible
+- **Community support:** If other organizations adopt Murmurant, shared maintenance becomes possible
 - **Abandonment:** If neither happens, the software may become unmaintained
 
 **Mitigations:**
@@ -199,15 +199,15 @@ If legal exposure is a significant concern, consult an attorney before making pl
 
 **What we cannot promise:**
 
-We cannot promise that ClubOS will be actively maintained in five years. We can promise that if it is not, you will have options (export data, hire a developer, fork the code).
+We cannot promise that Murmurant will be actively maintained in five years. We can promise that if it is not, you will have options (export data, hire a developer, fork the code).
 
 ---
 
-## Q8: What if ClubOS, Inc. never materializes?
+## Q8: What if Murmurant, Inc. never materializes?
 
 **The honest answer:** Then SBNC would be operating on software maintained by a volunteer with no formal support structure. This is the current situation for many nonprofit technology projects.
 
-**What changes if ClubOS, Inc. exists:**
+**What changes if Murmurant, Inc. exists:**
 
 - Professional support would be available
 - Development roadmap would be funded
@@ -251,13 +251,13 @@ The system is designed so that the further you go, the more confidence you shoul
 
 **Why we emphasize abortability:**
 
-Organizations often feel trapped once they start a technology transition. We have designed ClubOS migration so that you are never trapped until you choose to be. At every stage, walking away remains an option. This is intentional. It reflects our belief that trust is earned through demonstrated safety, not demanded through contractual obligation.
+Organizations often feel trapped once they start a technology transition. We have designed Murmurant migration so that you are never trapped until you choose to be. At every stage, walking away remains an option. This is intentional. It reflects our belief that trust is earned through demonstrated safety, not demanded through contractual obligation.
 
-**The question is not whether ClubOS is risk-free.** It is not. Nothing is.
+**The question is not whether Murmurant is risk-free.** It is not. Nothing is.
 
 **The question is whether the risks are acceptable given your organization's circumstances, risk tolerance, and alternatives.**
 
-Every organization has a different answer to this question. Some will find ClubOS worth the risk. Others will not. Both conclusions are valid if they are made with full information.
+Every organization has a different answer to this question. Some will find Murmurant worth the risk. Others will not. Both conclusions are valid if they are made with full information.
 
 This document is intended to help you make that judgment. It is not intended to make that judgment for you.
 
@@ -272,4 +272,4 @@ This document is intended to help you make that judgment. It is not intended to 
 
 ---
 
-_This document provides honest risk analysis for informed decision-making. It is not legal advice, financial advice, or a recommendation to adopt or reject ClubOS._
+_This document provides honest risk analysis for informed decision-making. It is not legal advice, financial advice, or a recommendation to adopt or reject Murmurant._

@@ -1,10 +1,10 @@
-# ClubOS Themes and Templates
+# Murmurant Themes and Templates
 
-This document describes the theming and templating system for ClubOS.
+This document describes the theming and templating system for Murmurant.
 
 ## Overview
 
-ClubOS uses a CSS custom property (CSS variable) based theming system that allows
+Murmurant uses a CSS custom property (CSS variable) based theming system that allows
 complete visual customization without changing component code. Templates provide
 consistent page layouts for both member and admin surfaces.
 

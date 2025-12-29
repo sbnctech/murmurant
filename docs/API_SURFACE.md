@@ -1,6 +1,6 @@
-# ClubOS API Surface
+# Murmurant API Surface
 
-This document describes the HTTP API endpoints available in ClubOS. All endpoints currently use mock data; the database layer is not yet active.
+This document describes the HTTP API endpoints available in Murmurant. All endpoints currently use mock data; the database layer is not yet active.
 
 ## Version and Scope
 
@@ -29,7 +29,7 @@ Authorization: Bearer <token>
   "sub": "user-uuid-here",
   "iat": 1702300000,
   "exp": 1702386400,
-  "aud": "clubos-api",
+  "aud": "murmurant-api",
   "globalRole": "member",
   "memberId": "member-uuid-here",
   "profile": {
@@ -48,9 +48,9 @@ Authorization: Bearer <token>
 | `sub`       | string | Yes      | Auth provider's user identifier                |
 | `iat`       | number | Yes      | Token issued-at timestamp (Unix seconds)       |
 | `exp`       | number | Yes      | Token expiration timestamp (Unix seconds)      |
-| `aud`       | string | Yes      | Must be "clubos-api"                           |
+| `aud`       | string | Yes      | Must be "murmurant-api"                        |
 | `globalRole`| string | Yes      | "member" or "admin"                            |
-| `memberId`  | string | No       | ClubOS member record ID (if linked)            |
+| `memberId`  | string | No       | Murmurant member record ID (if linked)         |
 | `profile`   | object | No       | Cached display info (firstName, lastName, email)|
 | `sessionId` | string | No       | Session identifier for token revocation        |
 
@@ -103,7 +103,7 @@ All API errors return a consistent JSON structure:
 
 ### Payments
 
-- ClubOS **tracks payment status only** in v1
+- Murmurant **tracks payment status only** in v1
 - Payment states: `pending`, `paid`, `refunded`
 - No payment gateway integration; admins update payment status manually
 - Future versions may integrate with payment processors

@@ -1,8 +1,8 @@
-# ClubOS Threat Model
+# Murmurant Threat Model
 
 Last updated: December 2024
 
-This document provides a concise threat model for ClubOS, designed to be read in under 10 minutes by security-conscious reviewers and auditors.
+This document provides a concise threat model for Murmurant, designed to be read in under 10 minutes by security-conscious reviewers and auditors.
 
 ---
 

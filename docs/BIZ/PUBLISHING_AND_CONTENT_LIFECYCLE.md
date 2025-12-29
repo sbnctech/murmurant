@@ -2,7 +2,7 @@
 
 ```
 Audience: Operators, Developers, Board Members
-Purpose: Explain how ClubOS manages content from creation to archival
+Purpose: Explain how Murmurant manages content from creation to archival
 Charter Reference: P3 (State machines), P5 (Reversibility), P7 (Observability)
 ```
 
@@ -12,7 +12,7 @@ Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
 ## Overview
 
-ClubOS uses a predictable publishing lifecycle for all content (pages, templates, themes). Every piece of content moves through defined states with clear transitions, preview capabilities, and rollback options.
+Murmurant uses a predictable publishing lifecycle for all content (pages, templates, themes). Every piece of content moves through defined states with clear transitions, preview capabilities, and rollback options.
 
 **Core Guarantees:**
 
@@ -104,7 +104,7 @@ ClubOS uses a predictable publishing lifecycle for all content (pages, templates
 
 ## The Publishing Snapshot
 
-When you publish a page, ClubOS creates a **publishing snapshot**:
+When you publish a page, Murmurant creates a **publishing snapshot**:
 
 ```
 Before Publish:
@@ -188,7 +188,7 @@ Preview is restricted to authorized users:
 
 ## Rollback Mechanism
 
-ClubOS provides two levels of rollback:
+Murmurant provides two levels of rollback:
 
 ### Level 1: Discard Draft Changes
 

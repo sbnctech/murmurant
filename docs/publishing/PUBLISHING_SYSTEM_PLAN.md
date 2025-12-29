@@ -1,4 +1,4 @@
-# ClubOS v0 Publishing System Plan
+# Murmurant v0 Publishing System Plan
 
 Version: 0.1.0
 Status: Draft
@@ -8,7 +8,7 @@ Date: 2025-12-15
 
 ## Overview
 
-The ClubOS Publishing System enables club administrators to create, edit, and publish web pages for both public visitors and authenticated members. The system supports:
+The Murmurant Publishing System enables club administrators to create, edit, and publish web pages for both public visitors and authenticated members. The system supports:
 
 - **Public pages** - Visible to everyone (e.g., About, Contact, Join)
 - **Member pages** - Visible only to logged-in members

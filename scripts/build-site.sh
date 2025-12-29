@@ -1,6 +1,6 @@
 #!/bin/bash
 # build-site.sh
-# Builds the ClubOS Next.js application for production deployment.
+# Builds the Murmurant Next.js application for production deployment.
 #
 # Usage:
 #   ./scripts/build-site.sh
@@ -33,7 +33,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo "========================================"
-echo "ClubOS Build Script"
+echo "Murmurant Build Script"
 echo "========================================"
 echo ""
 

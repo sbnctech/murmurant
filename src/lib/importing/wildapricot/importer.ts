@@ -38,7 +38,7 @@ import {
 interface IdMapping {
   entityType: string;
   waId: number;
-  clubosId: string;
+  murmurantId: string;
 }
 
 interface SyncContext {
@@ -53,8 +53,8 @@ interface SyncContext {
   };
   errors: SyncError[];
   membershipStatusMap: Map<string, string>; // code -> id
-  memberIdMap: Map<number, string>; // WA ID -> ClubOS ID
-  eventIdMap: Map<number, string>; // WA ID -> ClubOS ID
+  memberIdMap: Map<number, string>; // WA ID -> Murmurant ID
+  eventIdMap: Map<number, string>; // WA ID -> Murmurant ID
   registrationDiagnostics: RegistrationDiagnostics;
   /** Counts fetched from WA (for report) */
   fetched: {
@@ -216,7 +216,7 @@ async function _getIdMapping(entityType: string, waId: number): Promise<string |
   const mapping = await prisma.waIdMapping.findUnique({
     where: { entityType_waId: { entityType, waId } },
   });
-  return mapping?.clubosId ?? null;
+  return mapping?.murmurantId ?? null;
 }
 
 async function createIdMapping(mapping: IdMapping): Promise<void> {
@@ -224,7 +224,7 @@ async function createIdMapping(mapping: IdMapping): Promise<void> {
     data: {
       entityType: mapping.entityType,
       waId: mapping.waId,
-      clubosId: mapping.clubosId,
+      murmurantId: mapping.murmurantId,
     },
   });
 }
@@ -240,7 +240,7 @@ async function loadExistingMappings(entityType: string): Promise<Map<number, str
   const mappings = await prisma.waIdMapping.findMany({
     where: { entityType },
   });
-  return new Map(mappings.map((m) => [m.waId, m.clubosId]));
+  return new Map(mappings.map((m) => [m.waId, m.murmurantId]));
 }
 
 // ============================================================================
@@ -292,7 +292,7 @@ async function loadMembershipStatusMap(): Promise<Map<string, string>> {
 export interface StaleRecord {
   entityType: string;
   waId: number;
-  clubosId: string;
+  murmurantId: string;
   lastSyncedAt: Date;
   staleDays: number;
 }
@@ -328,7 +328,7 @@ export async function detectStaleRecords(
   const toStaleRecord = (m: typeof staleMappings[0]): StaleRecord => ({
     entityType: m.entityType,
     waId: m.waId,
-    clubosId: m.clubosId,
+    murmurantId: m.murmurantId,
     lastSyncedAt: m.syncedAt,
     staleDays: Math.floor((now - m.syncedAt.getTime()) / (24 * 60 * 60 * 1000)),
   });
@@ -376,7 +376,7 @@ export async function getStaleRecordCounts(
 
 /**
  * Remove stale WaIdMapping records (cleanup orphaned mappings).
- * This removes the WA ID mapping but does NOT delete the ClubOS entity.
+ * This removes the WA ID mapping but does NOT delete the Murmurant entity.
  * Use this after confirming records are truly deleted in WA.
  *
  * @param staleDays - Minimum days since last sync
@@ -465,7 +465,7 @@ async function syncMembers(
 }
 
 async function syncMember(contact: WAContact, ctx: SyncContext): Promise<void> {
-  // Map WA status to ClubOS status code
+  // Map WA status to Murmurant status code
   const statusCode = mapContactStatusToCode(contact.Status);
   const membershipStatusId = ctx.membershipStatusMap.get(statusCode);
 
@@ -513,7 +513,7 @@ async function syncMember(contact: WAContact, ctx: SyncContext): Promise<void> {
       const member = await prisma.member.create({ data: result.data });
       await prisma.waIdMapping.update({
         where: { entityType_waId: { entityType: "Member", waId: contact.Id } },
-        data: { clubosId: member.id, syncedAt: new Date() },
+        data: { murmurantId: member.id, syncedAt: new Date() },
       });
       ctx.memberIdMap.set(contact.Id, member.id);
       ctx.stats.members.created++;
@@ -536,7 +536,7 @@ async function syncMember(contact: WAContact, ctx: SyncContext): Promise<void> {
       ctx.stats.members.skipped++;
     }
   } else {
-    // Check if email already exists (WA allows duplicates, ClubOS doesn't)
+    // Check if email already exists (WA allows duplicates, Murmurant doesn't)
     const existingByEmail = await prisma.member.findUnique({
       where: { email: result.data.email },
       select: { id: true },
@@ -548,7 +548,7 @@ async function syncMember(contact: WAContact, ctx: SyncContext): Promise<void> {
       await createIdMapping({
         entityType: "Member",
         waId: contact.Id,
-        clubosId: existingByEmail.id,
+        murmurantId: existingByEmail.id,
       });
       ctx.memberIdMap.set(contact.Id, existingByEmail.id);
       ctx.stats.members.skipped++;
@@ -560,7 +560,7 @@ async function syncMember(contact: WAContact, ctx: SyncContext): Promise<void> {
     await createIdMapping({
       entityType: "Member",
       waId: contact.Id,
-      clubosId: member.id,
+      murmurantId: member.id,
     });
     ctx.memberIdMap.set(contact.Id, member.id);
     ctx.stats.members.created++;
@@ -659,7 +659,7 @@ async function syncEvent(
       const newEvent = await prisma.event.create({ data: result.data });
       await prisma.waIdMapping.update({
         where: { entityType_waId: { entityType: "Event", waId: event.Id } },
-        data: { clubosId: newEvent.id, syncedAt: new Date() },
+        data: { murmurantId: newEvent.id, syncedAt: new Date() },
       });
       ctx.eventIdMap.set(event.Id, newEvent.id);
       ctx.stats.events.created++;
@@ -687,7 +687,7 @@ async function syncEvent(
     await createIdMapping({
       entityType: "Event",
       waId: event.Id,
-      clubosId: newEvent.id,
+      murmurantId: newEvent.id,
     });
     ctx.eventIdMap.set(event.Id, newEvent.id);
     ctx.stats.events.created++;
@@ -838,7 +838,7 @@ async function syncRegistration(
     await createIdMapping({
       entityType: "EventRegistration",
       waId: registration.Id,
-      clubosId: newReg.id,
+      murmurantId: newReg.id,
     });
 
     diag.registrationsUpserted++;
@@ -963,7 +963,7 @@ function generateWarnings(ctx: SyncContext): void {
 // ============================================================================
 
 /** Default report output directory */
-const REPORT_DIR = "/tmp/clubos";
+const REPORT_DIR = "/tmp/murmurant";
 
 /** Default report filename */
 const REPORT_FILENAME = "wa_full_sync_report.json";
@@ -1075,7 +1075,7 @@ function printWarnings(warnings: SyncWarning[]): void {
  * Full sync - imports all data from WA.
  *
  * Returns a SyncResult and writes a detailed JSON report to:
- *   /tmp/clubos/wa_full_sync_report.json
+ *   /tmp/murmurant/wa_full_sync_report.json
  */
 export async function fullSync(): Promise<SyncResult> {
   const _config = loadWAConfig();
@@ -1334,7 +1334,7 @@ export interface ProbeResult {
   eventId: number;
   eventFound: boolean;
   eventMapped: boolean;
-  clubosEventId: string | null;
+  murmurantEventId: string | null;
   registrationsFromWA: number;
   registrations: Array<{
     waRegistrationId: number;
@@ -1343,7 +1343,7 @@ export interface ProbeResult {
     contactEmail: string | null;
     status: string;
     memberMapped: boolean;
-    clubosMemberId: string | null;
+    murmurantMemberId: string | null;
     wouldSkip: boolean;
     skipReason: string | null;
   }>;
@@ -1370,7 +1370,7 @@ export async function probeEventRegistrations(waEventId: number): Promise<ProbeR
     eventId: waEventId,
     eventFound: false,
     eventMapped: eventIdMap.has(waEventId),
-    clubosEventId: eventIdMap.get(waEventId) ?? null,
+    murmurantEventId: eventIdMap.get(waEventId) ?? null,
     registrationsFromWA: 0,
     registrations: [],
     summary: {
@@ -1392,7 +1392,7 @@ export async function probeEventRegistrations(waEventId: number): Promise<ProbeR
     }
 
     console.log(`[PROBE] Event found: ${event.Name}`);
-    console.log(`[PROBE] Event mapped to ClubOS: ${result.eventMapped ? result.clubosEventId : 'NO'}`);
+    console.log(`[PROBE] Event mapped to Murmurant: ${result.eventMapped ? result.murmurantEventId : 'NO'}`);
 
     // Fetch registrations
     const registrations = await client.fetchEventRegistrations(waEventId);
@@ -1427,7 +1427,7 @@ export async function probeEventRegistrations(waEventId: number): Promise<ProbeR
         skipReason = `Event not mapped (WA event ${waEventId})`;
       } else {
         // Try transform
-        const transformResult = transformRegistration(reg, result.clubosEventId!, memberId!);
+        const transformResult = transformRegistration(reg, result.murmurantEventId!, memberId!);
         if (!transformResult.success) {
           wouldSkip = true;
           skipReason = `Transform error: ${transformResult.error}`;
@@ -1444,7 +1444,7 @@ export async function probeEventRegistrations(waEventId: number): Promise<ProbeR
         contactEmail: reg.Contact.Email,
         status: reg.Status,
         memberMapped,
-        clubosMemberId: memberId ?? null,
+        murmurantMemberId: memberId ?? null,
         wouldSkip,
         skipReason,
       });

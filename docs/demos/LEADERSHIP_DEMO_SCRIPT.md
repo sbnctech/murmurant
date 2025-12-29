@@ -1,4 +1,4 @@
-# ClubOS Leadership Demo Script
+# Murmurant Leadership Demo Script
 
 **Duration:** 7-10 minutes
 **Audience:** Board members, officers, decision-makers
@@ -188,9 +188,9 @@ This is not a recommendation to transition. These are options if the board decid
 ### Option A: Parallel Operation (Lowest Risk)
 
 **How it works:**
-- ClubOS runs alongside the current system
-- Member and event data synced periodically (one-way: WA → ClubOS)
-- Officers use ClubOS for read-only visibility, reporting, lifecycle tracking
+- Murmurant runs alongside the current system
+- Member and event data synced periodically (one-way: WA → Murmurant)
+- Officers use Murmurant for read-only visibility, reporting, lifecycle tracking
 - Current system remains authoritative for registrations, payments, communications
 
 **Risk:** Data sync can have delays; two systems to monitor
@@ -199,9 +199,9 @@ This is not a recommendation to transition. These are options if the board decid
 ### Option B: Phased Cutover (Moderate Risk)
 
 **How it works:**
-- Phase 1: Member directory and lifecycle tracking moves to ClubOS
-- Phase 2: Event registration moves to ClubOS (WA used for payment only)
-- Phase 3: Communications move to ClubOS
+- Phase 1: Member directory and lifecycle tracking moves to Murmurant
+- Phase 2: Event registration moves to Murmurant (WA used for payment only)
+- Phase 3: Communications move to Murmurant
 - Phase 4: Full cutover when all workflows validated
 
 **Risk:** Longer transition period; more complex to manage
@@ -211,7 +211,7 @@ This is not a recommendation to transition. These are options if the board decid
 
 **How it works:**
 - Full data migration at a specific date
-- All operations move to ClubOS simultaneously
+- All operations move to Murmurant simultaneously
 - Current system archived for reference
 
 **Risk:** Any issues affect all operations; harder to roll back
@@ -241,7 +241,7 @@ This is not criticism of the vendor platform. These are constraints inherent to 
 
 - **Unknown unknowns:** Production traffic may reveal issues not caught in testing
 - **Learning curve:** Officers must learn new interfaces
-- **Feature gaps:** Some current workflows may not have ClubOS equivalents yet
+- **Feature gaps:** Some current workflows may not have Murmurant equivalents yet
 - **Maintenance burden:** Self-hosted system requires ongoing care
 
 ### What We're Not Asking Today

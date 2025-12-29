@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# ClubOS Application Health Check
+# Murmurant Application Health Check
 # =============================================================================
 # Purpose: Verify application is running and responding to requests
 # Usage: ./app-health.sh [--verbose] [base_url]
@@ -157,7 +157,7 @@ check_response_time() {
 
 # Main health check
 main() {
-    log_info "=== ClubOS Application Health Check ==="
+    log_info "=== Murmurant Application Health Check ==="
     log_info "Timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
     log_info "Target: $BASE_URL"
 

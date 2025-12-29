@@ -37,7 +37,7 @@ function createValidMigrationReport(): MigrationReport {
     dryRun: false,
     config: {
       source: "wild-apricot",
-      target: "clubos",
+      target: "murmurant",
       version: "1.0",
     },
     summary: {

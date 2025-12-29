@@ -12,7 +12,7 @@ Copyright (c) Santa Barbara Newcomers Club. All rights reserved.
 
 ## Overview
 
-This guide helps operators diagnose and resolve issues with inline widgets embedded in Wild Apricot pages. It follows the **inline-only approach** where ClubOS widgets run entirely in the browser without a separate server.
+This guide helps operators diagnose and resolve issues with inline widgets embedded in Wild Apricot pages. It follows the **inline-only approach** where Murmurant widgets run entirely in the browser without a separate server.
 
 **Troubleshooting Philosophy:**
 1. **Observe** - What exactly is happening (or not happening)?
@@ -337,7 +337,7 @@ Step 3: Check CORS proxy setting
 | Scenario | Fix |
 |----------|-----|
 | ICS feed blocked | Use a CORS proxy or same-origin feed |
-| API request blocked | Ensure ClubOS backend allows the origin |
+| API request blocked | Ensure Murmurant backend allows the origin |
 | Mixed content | Ensure both page and requests use HTTPS |
 
 **CORS Proxy Configuration:**
@@ -689,7 +689,7 @@ Step 3: Test with default WA theme
 Escalate to Tech Chair or development team if:
 
 - [ ] Issue persists after trying all relevant troubleshooting steps
-- [ ] Error messages reference internal ClubOS code
+- [ ] Error messages reference internal Murmurant code
 - [ ] Problem affects multiple pages or widgets
 - [ ] Data appears corrupted or incorrect at source
 - [ ] Security-related error messages appear

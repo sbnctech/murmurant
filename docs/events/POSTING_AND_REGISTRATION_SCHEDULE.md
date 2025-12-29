@@ -4,7 +4,7 @@ Copyright (c) Santa Barbara Newcomers Club
 
 ## Overview
 
-This document describes the SBNC event publishing and registration scheduling policy implemented in ClubOS. The policy ensures members have time to learn about events before registration opens, preventing a "first-come-first-served rush" when events are announced.
+This document describes the SBNC event publishing and registration scheduling policy implemented in Murmurant. The policy ensures members have time to learn about events before registration opens, preventing a "first-come-first-served rush" when events are announced.
 
 ## SBNC Scheduling Policy
 

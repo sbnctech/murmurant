@@ -1,4 +1,4 @@
-# ClubOS - Runbook: Security Containment Event (Human Procedure)
+# Murmurant - Runbook: Security Containment Event (Human Procedure)
 
 Status: Canonical Runbook
 Applies to: Production incidents and readiness drills

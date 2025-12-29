@@ -2,7 +2,7 @@
 **Date:** 2025-12-24
 **Source:** ChatGPT (Design Studio)
 **Status:** NON-CANONICAL — ARCHIVAL REASONING
-**Purpose:** Preserve raw reasoning, exploration, and decision logic that led to the ClubOS business model, migration philosophy, and commercialization constraints.
+**Purpose:** Preserve raw reasoning, exploration, and decision logic that led to the Murmurant business model, migration philosophy, and commercialization constraints.
 
 ---
 
@@ -20,12 +20,12 @@ This archive exists to preserve **why decisions were made**, including rejected 
 
 ---
 
-## 1. Core Framing: What ClubOS Is (and Is Not)
+## 1. Core Framing: What Murmurant Is (and Is Not)
 
-Early framing established that ClubOS is **not** a Wild Apricot clone and **not** a CMS.
+Early framing established that Murmurant is **not** a Wild Apricot clone and **not** a CMS.
 
 Key assertions:
-- ClubOS is an **operational system**, not a website builder
+- Murmurant is an **operational system**, not a website builder
 - Governance, permissions, workflows, and auditability matter more than pixels
 - Presentation and content migration are explicitly secondary
 
@@ -49,7 +49,7 @@ Rejected idea:
 Adopted model:
 - **Wing-walking migration**
   - WA remains authoritative initially
-  - ClubOS ingests data and runs in shadow mode
+  - Murmurant ingests data and runs in shadow mode
   - Operators verify correctness before committing
   - Abort must be safe at every stage
 
@@ -68,7 +68,7 @@ Key principle:
 
 A major decision point:
 
-❌ Continuous bi-directional sync between WA and ClubOS was rejected.
+❌ Continuous bi-directional sync between WA and Murmurant was rejected.
 
 Reasons:
 - WA APIs are inconsistent and incomplete
@@ -117,7 +117,7 @@ This justified:
 Key constraints emerged during probing:
 
 - SBNC must not be encoded as a default authority
-- ClubOS must be sellable without inheriting SBNC governance
+- Murmurant must be sellable without inheriting SBNC governance
 - Monetization must not compromise safety or neutrality
 
 This drove:
@@ -190,7 +190,7 @@ Intent Journal properties:
 - Tamper-evident
 
 Purpose:
-- Allow ClubOS to "practice" being authoritative
+- Allow Murmurant to "practice" being authoritative
 - Without actually becoming authoritative
 
 Key phrase:

@@ -1,10 +1,10 @@
 # Clean-Room Development Declaration
 
-ClubOS is developed under a clean-room methodology.
+Murmurant is developed under a clean-room methodology.
 
 ## Scope
 
-The following sources have **not** been used in the design or implementation of ClubOS:
+The following sources have **not** been used in the design or implementation of Murmurant:
 - Proprietary source code from Wild Apricot or any other SaaS platform
 - Decompiled, reverse-engineered, or inferred internal logic
 - Non-public APIs, schemas, or administrative tooling
@@ -21,7 +21,7 @@ Design decisions may be informed by:
 
 ## Design Philosophy
 
-ClubOS architecture emphasizes:
+Murmurant architecture emphasizes:
 - Explicit guarantees over implicit behavior
 - Server-side enforcement of authority
 - Time-bounded and auditable privilege

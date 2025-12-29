@@ -1,8 +1,8 @@
-# ClubOS Development Team Briefing
+# Murmurant Development Team Briefing
 # Day 2 Kickoff - 3:00 PM Pacific
 # Copyright (c) Santa Barbara Newcomers Club
 
-This document defines how our four junior programmers operate on the ClubOS project. Each programmer has a name, a clear area of responsibility, and a specific reporting format. All documentation and code must use ASCII-only formatting, no AI tells, and simple, direct language that aligns with the ClubOS personas.
+This document defines how our four junior programmers operate on the Murmurant project. Each programmer has a name, a clear area of responsibility, and a specific reporting format. All documentation and code must use ASCII-only formatting, no AI tells, and simple, direct language that aligns with the Murmurant personas.
 
 ------------------------------------------------------------
 

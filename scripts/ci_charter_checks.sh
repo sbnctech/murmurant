@@ -2,7 +2,7 @@ set -euo pipefail
 
 fail=0
 
-echo "== ClubOS Charter CI Checks =="
+echo "== Murmurant Charter CI Checks =="
 echo
 
 req_files=(

@@ -2,7 +2,7 @@
 
 ```
 Audience: Board Members, Executive Directors, Non-Technical Decision-Makers
-Purpose: Document risks associated with Wild Apricot to ClubOS migration
+Purpose: Document risks associated with Wild Apricot to Murmurant migration
 Classification: Governance Document
 ```
 
@@ -10,7 +10,7 @@ Classification: Governance Document
 
 ## Overview
 
-This document identifies risks associated with migrating an organization from Wild Apricot to ClubOS. Each risk includes likelihood, impact, mitigation measures, and abort signals.
+This document identifies risks associated with migrating an organization from Wild Apricot to Murmurant. Each risk includes likelihood, impact, mitigation measures, and abort signals.
 
 All mitigations reference existing documented mechanisms. No speculative or unimplemented features are listed.
 
@@ -85,7 +85,7 @@ All mitigations reference existing documented mechanisms. No speculative or unim
 
 - Preview shows events on incorrect dates
 - Time zone conversions produce unexpected results
-- Event count mismatch between Wild Apricot and ClubOS preview
+- Event count mismatch between Wild Apricot and Murmurant preview
 
 ---
 
@@ -125,7 +125,7 @@ All mitigations reference existing documented mechanisms. No speculative or unim
 
 **Mitigation:**
 
-- Financial records are read from Wild Apricot; ClubOS does not modify Wild Apricot data
+- Financial records are read from Wild Apricot; Murmurant does not modify Wild Apricot data
 - Membership levels and tier assignments are explicit, not inferred
 - Dues status derived from auditable membership records
 - Policy capture process documents financial rules before migration (scripts/migration/capture-policies.ts)
@@ -209,7 +209,7 @@ All mitigations reference existing documented mechanisms. No speculative or unim
 
 - Technical issues prevent completing rehearsal
 - Cutover window conflicts with critical organization activities
-- Dependencies on Wild Apricot features not yet replicated in ClubOS
+- Dependencies on Wild Apricot features not yet replicated in Murmurant
 
 ---
 
@@ -276,7 +276,7 @@ All mitigations reference existing documented mechanisms. No speculative or unim
 - Reset tool requires explicit confirmation phrase (scripts/migration/reset-sandbox.ts)
 - Soft delete preferred over hard delete where possible
 - Audit trail maintained for recovery purposes
-- Wild Apricot data is never modified by ClubOS
+- Wild Apricot data is never modified by Murmurant
 
 **Abort Signal:**
 

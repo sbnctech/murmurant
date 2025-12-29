@@ -48,10 +48,10 @@ export function resetFlagLogging(): void {
 
 /**
  * Convert a flag key to its environment variable name
- * @example flagKeyToEnvVar("my_feature") => "CLUBOS_FLAG_MY_FEATURE"
+ * @example flagKeyToEnvVar("my_feature") => "MURMURANT_FLAG_MY_FEATURE"
  */
 export function flagKeyToEnvVar(key: string): string {
-  return `CLUBOS_FLAG_${key.toUpperCase()}`;
+  return `MURMURANT_FLAG_${key.toUpperCase()}`;
 }
 
 /**

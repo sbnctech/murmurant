@@ -17,7 +17,7 @@ import type { NextRequest } from "next/server";
  * Charter P9: Fail closed - missing this middleware in prod = secure.
  */
 
-const DEV_SESSION_COOKIE_NAME = "clubos_dev_session";
+const DEV_SESSION_COOKIE_NAME = "murmurant_dev_session";
 const DEV_SESSION_VALUE = "test-admin-token"; // Matches parseTestToken in auth.ts
 
 /**

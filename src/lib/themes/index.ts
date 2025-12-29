@@ -9,7 +9,7 @@ export {
   useTheme,
   useThemeColor,
   usePrimaryColor,
-  useIsClubOSContext,
+  useIsMurmurantContext,
   getThemeVar,
   getColorVar,
   ThemeContext,

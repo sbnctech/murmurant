@@ -1,4 +1,4 @@
-# ClubOS - Tabletop Scenario Template
+# Murmurant - Tabletop Scenario Template
 
 Status: Canonical Template
 Applies to: All tabletop exercises

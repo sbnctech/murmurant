@@ -1,7 +1,7 @@
 # SBNC Policy Visibility and Access Map
 
 **Generated:** 2025-12-20
-**Purpose:** Define who can SEE which policies in ClubOS
+**Purpose:** Define who can SEE which policies in Murmurant
 **Status:** Draft - Awaiting Board Confirmation
 
 ---
@@ -303,7 +303,7 @@ The SBNC_Policy_Registry.md defines these access levels:
 - This map does NOT resolve contradictions between sources
 - This map does NOT assume adoption status
 - Visibility assignments are based solely on explicit source language
-- "Unclear" items require Board decision before ClubOS implementation
+- "Unclear" items require Board decision before Murmurant implementation
 
 ---
 

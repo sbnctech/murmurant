@@ -117,7 +117,7 @@ For a 2-3 minute walkthrough:
 
 ### Opening (30 seconds)
 
-"Let me show you ClubOS's membership lifecycle explainer. Every member goes through a journey from application to either extended membership or lapse."
+"Let me show you Murmurant's membership lifecycle explainer. Every member goes through a journey from application to either extended membership or lapse."
 
 ### Walkthrough (2 minutes)
 

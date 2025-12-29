@@ -44,7 +44,7 @@ function createMockMigrationReport(overrides: Partial<MigrationReport> = {}): Mi
     dryRun: true,
     config: {
       source: "wild-apricot",
-      target: "clubos",
+      target: "murmurant",
       version: "1.0",
     },
     summary: {
@@ -57,9 +57,9 @@ function createMockMigrationReport(overrides: Partial<MigrationReport> = {}): Mi
     },
     members: createMockEntityReport({
       records: [
-        { _sourceRow: 2, _waId: "WA001", _clubosId: "member-1", _action: "create" },
-        { _sourceRow: 3, _waId: "WA002", _clubosId: "member-2", _action: "create" },
-        { _sourceRow: 4, _waId: "WA003", _clubosId: "member-3", _action: "update" },
+        { _sourceRow: 2, _waId: "WA001", _murmurantId: "member-1", _action: "create" },
+        { _sourceRow: 3, _waId: "WA002", _murmurantId: "member-2", _action: "create" },
+        { _sourceRow: 4, _waId: "WA003", _murmurantId: "member-3", _action: "update" },
       ],
     }),
     events: createMockEntityReport({
@@ -69,9 +69,9 @@ function createMockMigrationReport(overrides: Partial<MigrationReport> = {}): Mi
       updated: 0,
       skipped: 1,
       records: [
-        { _sourceRow: 2, _waId: "EVT001", _clubosId: "event-1", _action: "create" },
-        { _sourceRow: 3, _waId: "EVT002", _clubosId: "event-2", _action: "create" },
-        { _sourceRow: 4, _waId: "EVT003", _clubosId: "event-3", _action: "skip" },
+        { _sourceRow: 2, _waId: "EVT001", _murmurantId: "event-1", _action: "create" },
+        { _sourceRow: 3, _waId: "EVT002", _murmurantId: "event-2", _action: "create" },
+        { _sourceRow: 4, _waId: "EVT003", _murmurantId: "event-3", _action: "skip" },
       ],
     }),
     registrations: createMockEntityReport({
@@ -85,13 +85,13 @@ function createMockMigrationReport(overrides: Partial<MigrationReport> = {}): Mi
     errors: [],
     idMapping: {
       members: [
-        { waId: "WA001", clubosId: "member-1", email: "alice@example.com" },
-        { waId: "WA002", clubosId: "member-2", email: "bob@example.com" },
-        { waId: "WA003", clubosId: "member-3", email: "carol@example.com" },
+        { waId: "WA001", murmurantId: "member-1", email: "alice@example.com" },
+        { waId: "WA002", murmurantId: "member-2", email: "bob@example.com" },
+        { waId: "WA003", murmurantId: "member-3", email: "carol@example.com" },
       ],
       events: [
-        { waId: "EVT001", clubosId: "event-1", title: "Welcome Coffee" },
-        { waId: "EVT002", clubosId: "event-2", title: "Wine Tasting" },
+        { waId: "EVT001", murmurantId: "event-1", title: "Welcome Coffee" },
+        { waId: "EVT002", murmurantId: "event-2", title: "Wine Tasting" },
       ],
     },
     ...overrides,
@@ -131,7 +131,7 @@ describe("Migration Bundle Structure", () => {
 
       idMapReport.members.mappings.forEach((m) => {
         expect(m).toHaveProperty("waId");
-        expect(m).toHaveProperty("clubosId");
+        expect(m).toHaveProperty("murmurantId");
         expect(m).toHaveProperty("identifier");
       });
     });
@@ -142,7 +142,7 @@ describe("Migration Bundle Structure", () => {
 
       idMapReport.events.mappings.forEach((e) => {
         expect(e).toHaveProperty("waId");
-        expect(e).toHaveProperty("clubosId");
+        expect(e).toHaveProperty("murmurantId");
         expect(e).toHaveProperty("identifier");
       });
     });
@@ -161,7 +161,7 @@ describe("Migration Bundle Structure", () => {
       expect(idMapReport.events.counts).toEqual({
         total: 3,
         mapped: 2,
-        missing: 1, // EVT003 is skipped but has _waId, no clubosId in mapping
+        missing: 1, // EVT003 is skipped but has _waId, no murmurantId in mapping
         duplicates: 0,
       });
     });
@@ -322,9 +322,9 @@ describe("Bundle Content Validation", () => {
       const reportWithDupes = createMockMigrationReport({
         idMapping: {
           members: [
-            { waId: "WA001", clubosId: "m-1", email: "a@test.com" },
-            { waId: "WA001", clubosId: "m-2", email: "b@test.com" }, // duplicate
-            { waId: "WA002", clubosId: "m-3", email: "c@test.com" },
+            { waId: "WA001", murmurantId: "m-1", email: "a@test.com" },
+            { waId: "WA001", murmurantId: "m-2", email: "b@test.com" }, // duplicate
+            { waId: "WA002", murmurantId: "m-3", email: "c@test.com" },
           ],
           events: [],
         },
@@ -340,12 +340,12 @@ describe("Bundle Content Validation", () => {
       const reportWithMissing = createMockMigrationReport({
         members: createMockEntityReport({
           records: [
-            { _sourceRow: 2, _waId: "WA001", _clubosId: "m-1", _action: "create" },
-            { _sourceRow: 3, _waId: "WA002", _action: "skip" }, // missing clubosId
+            { _sourceRow: 2, _waId: "WA001", _murmurantId: "m-1", _action: "create" },
+            { _sourceRow: 3, _waId: "WA002", _action: "skip" }, // missing murmurantId
           ],
         }),
         idMapping: {
-          members: [{ waId: "WA001", clubosId: "m-1", email: "a@test.com" }],
+          members: [{ waId: "WA001", murmurantId: "m-1", email: "a@test.com" }],
           events: [],
         },
       });
@@ -410,7 +410,7 @@ describe("Bundle Error Scenarios", () => {
     it("handles mappings without email identifier", () => {
       const report = createMockMigrationReport({
         idMapping: {
-          members: [{ waId: "WA001", clubosId: "m-1" }], // no email
+          members: [{ waId: "WA001", murmurantId: "m-1" }], // no email
           events: [],
         },
       });
@@ -424,7 +424,7 @@ describe("Bundle Error Scenarios", () => {
       const report = createMockMigrationReport({
         idMapping: {
           members: [],
-          events: [{ waId: "EVT001", clubosId: "e-1" }], // no title
+          events: [{ waId: "EVT001", murmurantId: "e-1" }], // no title
         },
       });
 

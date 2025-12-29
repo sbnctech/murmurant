@@ -9,9 +9,9 @@
 ## Purpose
 
 This document defines how SBNC will import financial data from QuickBooks into
-ClubOS for budget tracking and reporting. The design prioritizes:
+Murmurant for budget tracking and reporting. The design prioritizes:
 
-1. **No hard dependency** - ClubOS works without QuickBooks connection
+1. **No hard dependency** - Murmurant works without QuickBooks connection
 2. **Configurable mapping** - Accounts and categories are user-defined
 3. **Future flexibility** - Can support other accounting systems later
 
@@ -23,7 +23,7 @@ ClubOS for budget tracking and reporting. The design prioritizes:
 
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   QuickBooks    │     │   Import Layer   │     │    ClubOS       │
+│   QuickBooks    │     │   Import Layer   │     │    Murmurant       │
 │   (Source)      │────▶│   (Mapping)      │────▶│   (Budget DB)   │
 └─────────────────┘     └──────────────────┘     └─────────────────┘
         │                       │                        │
@@ -36,13 +36,13 @@ ClubOS for budget tracking and reporting. The design prioritizes:
 
 | Phase | Method | Description | Status |
 |-------|--------|-------------|--------|
-| **v1** | CSV Upload | VP Finance exports from QB, uploads to ClubOS | Initial |
+| **v1** | CSV Upload | VP Finance exports from QB, uploads to Murmurant | Initial |
 | **v2** | Scheduled Pull | Automated monthly pull after close | Future |
 | **v3** | Real-time Sync | Live connection (if needed) | Future |
 
 ### 1.3 No Hard Dependency
 
-ClubOS must function without QuickBooks:
+Murmurant must function without QuickBooks:
 
 - Manual data entry always available
 - CSV import from any source (not just QB)
@@ -53,9 +53,9 @@ ClubOS must function without QuickBooks:
 
 ## 2. Data Mapping Concepts
 
-### 2.1 QuickBooks to ClubOS Mapping
+### 2.1 QuickBooks to Murmurant Mapping
 
-| QuickBooks Concept | ClubOS Concept | Notes |
+| QuickBooks Concept | Murmurant Concept | Notes |
 |-------------------|----------------|-------|
 | Account | Budget Category | Income/Expense classification |
 | Class | Committee | Optional; if QB uses classes |
@@ -73,7 +73,7 @@ The mapping is defined in a configuration file, not hard-coded.
 
 ```yaml
 # QuickBooks Integration Mapping Configuration
-# SBNC ClubOS - Finance Module
+# SBNC Murmurant - Finance Module
 
 version: "1.0"
 last_updated: "2025-07-01"
@@ -179,7 +179,7 @@ VP Finance reviews warnings and updates mapping as needed.
    - Date range: First to last day of month
         │
         ▼
-3. VP Finance uploads CSV to ClubOS
+3. VP Finance uploads CSV to Murmurant
    - System validates against mapping
    - Shows preview of what will be imported
         │

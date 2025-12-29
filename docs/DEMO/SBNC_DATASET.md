@@ -116,7 +116,7 @@ Use Patricia Paseo (VP Activities) to demonstrate:
 
 ### 2. Migration Dry-Run
 
-The dataset supports testing WA-to-ClubOS migration:
+The dataset supports testing WA-to-Murmurant migration:
 
 - Member import with various statuses
 - Event import with registrations

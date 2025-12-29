@@ -3,14 +3,14 @@
 Copyright (c) Santa Barbara Newcomers Club
 
 **Status:** Draft
-**Author:** ClubOS Development Team
+**Author:** Murmurant Development Team
 **Date:** December 20, 2025
 
 ---
 
 ## Purpose
 
-This document specifies how block-level visibility works in the ClubOS page editor. Block visibility determines which content blocks are rendered to which audiences at request time.
+This document specifies how block-level visibility works in the Murmurant page editor. Block visibility determines which content blocks are rendered to which audiences at request time.
 
 ---
 

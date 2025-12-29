@@ -1,6 +1,6 @@
 /**
- * ClubOS Migration Pipeline - Type Definitions
- * Wild Apricot → ClubOS data migration
+ * Murmurant Migration Pipeline - Type Definitions
+ * Wild Apricot → Murmurant data migration
  */
 
 export interface MigrationConfig {
@@ -50,7 +50,7 @@ export interface ImportOptions {
 export interface MigrationRecord {
   _sourceRow: number;
   _waId?: string;
-  _clubosId?: string;
+  _murmurantId?: string;
   _action?: 'create' | 'update' | 'skip';
   _errors?: string[];
   [key: string]: unknown;
@@ -65,7 +65,7 @@ export interface MemberImport extends MigrationRecord {
   membershipStatusCode: string;
   /** Raw WA membership level for tier mapping (Issue #276) */
   waMembershipLevel?: string;
-  /** Resolved ClubOS MembershipTier ID (Issue #276) */
+  /** Resolved Murmurant MembershipTier ID (Issue #276) */
   membershipTierId?: string;
 }
 
@@ -116,8 +116,8 @@ export interface MigrationReport {
     waId?: string;
   }[];
   idMapping: {
-    members: { waId: string; clubosId: string; email?: string }[];
-    events: { waId: string; clubosId: string; title?: string }[];
+    members: { waId: string; murmurantId: string; email?: string }[];
+    events: { waId: string; murmurantId: string; title?: string }[];
   };
 }
 

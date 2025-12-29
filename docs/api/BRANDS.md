@@ -12,7 +12,7 @@ The complete brand configuration for a club.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| id | string | Unique brand identifier (e.g., "sbnc", "clubos-default") |
+| id | string | Unique brand identifier (e.g., "sbnc", "murmurant-default") |
 | name | string | Full club name for display |
 | logo | LogoConfig | Full logo configuration |
 | bug | BugConfig | Small icon/bug configuration |
@@ -117,10 +117,10 @@ export default function Layout({ children }) {
 }
 ```
 
-For admin/system pages that should use ClubOS branding:
+For admin/system pages that should use Murmurant branding:
 
 ```tsx
-<ThemeProvider isClubOSContext>
+<ThemeProvider isMurmurantContext>
   {children}
 </ThemeProvider>
 ```
@@ -133,7 +133,7 @@ Access the current theme in any component:
 import { useTheme } from "@/lib/themes";
 
 function MyComponent() {
-  const { theme, setTheme, isClubOSContext } = useTheme();
+  const { theme, setTheme, isMurmurantContext } = useTheme();
 
   return (
     <div style={{ color: theme.colors.textPrimary }}>
@@ -149,7 +149,7 @@ function MyComponent() {
 import {
   useThemeColor,
   usePrimaryColor,
-  useIsClubOSContext,
+  useIsMurmurantContext,
   getThemeVar,
   getColorVar
 } from "@/lib/themes";
@@ -159,7 +159,7 @@ const primaryColor = usePrimaryColor();
 const borderColor = useThemeColor("border");
 
 // Check context
-const isAdmin = useIsClubOSContext();
+const isAdmin = useIsMurmurantContext();
 
 // Get CSS variable references for inline styles
 const primaryVar = getThemeVar("primary"); // "var(--theme-primary)"
@@ -286,7 +286,7 @@ const sbncTheme: ClubTheme = {
 
 2. **Terminology Consistency**: Use the voice.terminology values throughout the app instead of hardcoding "member", "event", etc.
 
-3. **Context Awareness**: Use `isClubOSContext` to determine whether to show club-specific or system branding.
+3. **Context Awareness**: Use `isMurmurantContext` to determine whether to show club-specific or system branding.
 
 4. **CSS Variables**: Prefer CSS variables over direct color values for dynamic theming.
 
@@ -296,4 +296,4 @@ const sbncTheme: ClubTheme = {
 
 - [Theme Types](/src/lib/themes/types.ts) - TypeScript type definitions
 - [Theme Provider](/src/lib/themes/ThemeProvider.tsx) - React context provider
-- [Default Theme](/src/lib/themes/defaults.ts) - ClubOS default theme values
+- [Default Theme](/src/lib/themes/defaults.ts) - Murmurant default theme values

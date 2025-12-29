@@ -1,4 +1,4 @@
-# ClubOS File Storage Security Model
+# Murmurant File Storage Security Model
 
 Copyright (c) Santa Barbara Newcomers Club
 

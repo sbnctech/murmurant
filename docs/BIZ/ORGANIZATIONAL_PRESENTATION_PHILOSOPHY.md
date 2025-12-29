@@ -2,20 +2,20 @@
 
 ```
 Audience: Customers, Board Members, Non-Technical Decision-Makers
-Purpose: Explain how ClubOS handles organizational identity during migration
+Purpose: Explain how Murmurant handles organizational identity during migration
 ```
 
 ---
 
 ## Our Core Promise
 
-> **ClubOS helps your organization arrive intact.**
+> **Murmurant helps your organization arrive intact.**
 
-When you migrate from Wild Apricot to ClubOS, we do not just move your data. We help you bring your organization's identity - how you present yourselves to your members.
+When you migrate from Wild Apricot to Murmurant, we do not just move your data. We help you bring your organization's identity - how you present yourselves to your members.
 
 Your member-facing content, your navigation structure, your event descriptions - these are not just files. They represent years of decisions about who you are and how you want to be seen. We treat that with care.
 
-**Note:** ClubOS is a membership management platform, not a general-purpose website builder. We migrate your member-facing content and data, not your entire public website.
+**Note:** Murmurant is a membership management platform, not a general-purpose website builder. We migrate your member-facing content and data, not your entire public website.
 
 ---
 
@@ -41,14 +41,14 @@ Your current website is the clearest signal of how you want your organization to
 
 ---
 
-## How ClubOS Approaches This
+## How Murmurant Approaches This
 
 ### Assisted Reconstruction
 
 We do not ask you to start from a blank page. Instead, we:
 
 1. **Discover** - We analyze your Wild Apricot site to understand your current member content and structure
-2. **Suggest** - We generate draft ClubOS content pages based on what we find (this is not a website clone)
+2. **Suggest** - We generate draft Murmurant content pages based on what we find (this is not a website clone)
 3. **Review** - You see exactly what we are proposing before anything happens
 4. **Approve** - Nothing changes until you say yes
 
@@ -71,8 +71,8 @@ We do not automate consequential decisions. We automate the tedious work so you 
 
 Before anything is published, you can:
 
-- See how your member-facing content will appear in ClubOS
-- Compare key elements with your Wild Apricot site (appearance will differ; ClubOS has its own design system)
+- See how your member-facing content will appear in Murmurant
+- Compare key elements with your Wild Apricot site (appearance will differ; Murmurant has its own design system)
 - Request changes before committing
 - Walk away if it does not feel right
 
@@ -92,11 +92,11 @@ We want to be clear about what we are not doing:
 
 ### Not Scraping HTML Verbatim
 
-Wild Apricot pages are built with their own technology. We cannot and do not simply copy the HTML. We extract the **intent** - what you are trying to communicate - and reconstruct it in ClubOS.
+Wild Apricot pages are built with their own technology. We cannot and do not simply copy the HTML. We extract the **intent** - what you are trying to communicate - and reconstruct it in Murmurant.
 
 ### Not Cloning Themes
 
-Wild Apricot themes are proprietary. We do not replicate them pixel-for-pixel. Instead, we approximate your visual intent - your general color choices, your content priorities - using ClubOS templates. The result will look different; our goal is recognizable, not identical.
+Wild Apricot themes are proprietary. We do not replicate them pixel-for-pixel. Instead, we approximate your visual intent - your general color choices, your content priorities - using Murmurant templates. The result will look different; our goal is recognizable, not identical.
 
 ### Not Locking You In
 
@@ -112,13 +112,13 @@ We take safety seriously:
 
 During the entire migration process, your Wild Apricot site is the truth. We read from it; we do not write to it. Nothing changes there.
 
-Only when you explicitly commit the migration does ClubOS become your new home. Until then, you can walk away at any time.
+Only when you explicitly commit the migration does Murmurant become your new home. Until then, you can walk away at any time.
 
 ### Abort Is Always Possible
 
 At any point before final commit, you can abort the migration:
 - Your Wild Apricot site is unchanged
-- Your ClubOS preview is discarded
+- Your Murmurant preview is discarded
 - No harm done
 
 ### Nothing Publishes Without Approval
@@ -138,7 +138,7 @@ The [Reversibility Contract](../ARCH/REVERSIBILITY_CONTRACT.md) formalizes this 
 This contract specifies:
 
 - **Abort is always safe**: Before commit, you can walk away and Wild Apricot remains exactly as it was
-- **Wild Apricot remains authoritative**: During cutover rehearsal, WA is the source of truth—ClubOS only records intentions
+- **Wild Apricot remains authoritative**: During cutover rehearsal, WA is the source of truth—Murmurant only records intentions
 - **Commit is explicit**: No passive timeouts, no automatic transitions—you must explicitly approve
 - **Preserved artifacts enable recovery**: Even after commit, we preserve snapshots and mapping tables
 
@@ -152,8 +152,8 @@ Presentation reconstruction is not a "later phase" or "nice to have."
 
 It is part of what we consider a successful migration. When we say your migration is complete, we mean:
 
-- Your data is in ClubOS
-- Your member-facing content is recognizable in ClubOS (though styled differently)
+- Your data is in Murmurant
+- Your member-facing content is recognizable in Murmurant (though styled differently)
 - Your members can find the information they expect (events, activities, member resources)
 
 If members cannot find the core content they relied on in Wild Apricot, the migration is not complete.
@@ -180,4 +180,4 @@ Your organization's identity matters to us because it matters to you.
 
 ---
 
-_This document reflects ClubOS's commitment to treating organizational presentation as a first-order migration concern._
+_This document reflects Murmurant's commitment to treating organizational presentation as a first-order migration concern._

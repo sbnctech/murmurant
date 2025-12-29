@@ -1,6 +1,6 @@
 # Reviewer Quickstart
 
-A 2-minute guide to reviewing ClubOS PRs safely.
+A 2-minute guide to reviewing Murmurant PRs safely.
 
 ---
 

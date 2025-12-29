@@ -1,8 +1,8 @@
 # Customer Narrative Map
 
-> How ClubOS explains itself across customer-facing documentation
+> How Murmurant explains itself across customer-facing documentation
 
-This document analyzes the narrative arc across ClubOS customer communications, identifies a unifying "story spine," and maps where each document reinforces or departs from that spine.
+This document analyzes the narrative arc across Murmurant customer communications, identifies a unifying "story spine," and maps where each document reinforces or departs from that spine.
 
 ---
 
@@ -12,7 +12,7 @@ This document analyzes the narrative arc across ClubOS customer communications, 
 |----------|--------|------------------|
 | MIGRATION_CUSTOMER_JOURNEY.md | Reviewed | Clubs considering migration |
 | ORGANIZATIONAL_PRESENTATION_PHILOSOPHY.md | Reviewed | Clubs concerned about identity preservation |
-| HOW_CLUBOS_IS_BUILT.md | Not found | (Would address technical trust) |
+| HOW_MURMURANT_IS_BUILT.md | Not found | (Would address technical trust) |
 | BRAND_AND_VOICE.md | Not found | (Would address tone/consistency) |
 
 **Note**: Analysis proceeds with available documents. Missing documents represent a gap in narrative coverage.
@@ -59,7 +59,7 @@ A coherent customer narrative follows this 7-step arc:
 
 | Spine Step | Coverage | How Addressed |
 |------------|----------|---------------|
-| 1. Your club matters | Strong | "ClubOS helps your organization arrive intact" |
+| 1. Your club matters | Strong | "Murmurant helps your organization arrive intact" |
 | 2. Change is scary | Moderate | Implicit in "identity preservation" framing |
 | 3. We guide, you decide | Strong | Assisted reconstruction: Discover → Suggest → Review → Approve |
 | 4. See before you leap | Strong | Preview as first-class concept |
@@ -79,7 +79,7 @@ A coherent customer narrative follows this 7-step arc:
 
 | Document | Expected Contribution | Impact of Absence |
 |----------|----------------------|-------------------|
-| HOW_CLUBOS_IS_BUILT.md | Technical trust (how we build safely) | Customers lack insight into engineering practices |
+| HOW_MURMURANT_IS_BUILT.md | Technical trust (how we build safely) | Customers lack insight into engineering practices |
 | BRAND_AND_VOICE.md | Tone consistency across all touchpoints | Risk of inconsistent messaging |
 
 ### Narrative Gaps in Existing Documents
@@ -88,7 +88,7 @@ A coherent customer narrative follows this 7-step arc:
 |-----|--------------|----------------|
 | "Your club matters" underemphasized | MIGRATION_CUSTOMER_JOURNEY.md opening | Add empathy paragraph before process description |
 | Post-migration relationship | ORGANIZATIONAL_PRESENTATION_PHILOSOPHY.md | Add brief note that philosophy extends beyond migration |
-| Technical trust foundation | Both documents | Create HOW_CLUBOS_IS_BUILT.md or equivalent |
+| Technical trust foundation | Both documents | Create HOW_MURMURANT_IS_BUILT.md or equivalent |
 
 ---
 
@@ -114,7 +114,7 @@ No contradictions were identified between reviewed documents. The terminology cl
 
 ### 1. Create Missing Documents
 
-- **HOW_CLUBOS_IS_BUILT.md**: Explain engineering practices that support customer guarantees (versioned manifests, preview gates, test coverage)
+- **HOW_MURMURANT_IS_BUILT.md**: Explain engineering practices that support customer guarantees (versioned manifests, preview gates, test coverage)
 - **BRAND_AND_VOICE.md**: Define tone guidelines ensuring consistent messaging
 
 ### 2. Strengthen Story Spine Step 1
@@ -122,7 +122,7 @@ No contradictions were identified between reviewed documents. The terminology cl
 Add an opening section to MIGRATION_CUSTOMER_JOURNEY.md that explicitly acknowledges:
 - Clubs have built something meaningful over years
 - That history and identity deserve respect
-- ClubOS exists to preserve, not replace
+- Murmurant exists to preserve, not replace
 
 ### 3. Extend Philosophy Document
 

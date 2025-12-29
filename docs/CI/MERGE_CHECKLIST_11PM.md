@@ -10,13 +10,13 @@ Run it every evening before signing off.
 ## Prerequisites
 
 - GitHub CLI installed and authenticated (`gh auth status`)
-- Local repo at `$HOME/clubos` or set `CLUBOS_DIR`
+- Local repo at `$HOME/murmurant` or set `MURMURANT_DIR`
 - Clean working tree on main
 
 ## Quick Start
 
 ```bash
-cd "$HOME/clubos"
+cd "$HOME/murmurant"
 DRY_RUN=1 zsh ./MERGE_CAPTAIN.zsh
 ```
 
@@ -25,7 +25,7 @@ DRY_RUN=1 zsh ./MERGE_CAPTAIN.zsh
 ### 1. Sync Main
 
 ```bash
-cd "$HOME/clubos"
+cd "$HOME/murmurant"
 git switch main
 git fetch origin
 git pull origin main

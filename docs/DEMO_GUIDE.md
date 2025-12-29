@@ -1,6 +1,6 @@
-# ClubOS Demo Guide
+# Murmurant Demo Guide
 
-This guide describes how to run a live demonstration of ClubOS features.
+This guide describes how to run a live demonstration of Murmurant features.
 
 ## Why This Matters
 
@@ -10,7 +10,7 @@ This guide describes how to run a live demonstration of ClubOS features.
 - Frames next steps as validation, not forced decisions
 - Includes "What we have NOT done yet" honesty section
 
-**For background context:** See [DEMO_NARRATIVE.md](demos/DEMO_NARRATIVE.md) for the "why ClubOS reduces cognitive load" framing.
+**For background context:** See [DEMO_NARRATIVE.md](demos/DEMO_NARRATIVE.md) for the "why Murmurant reduces cognitive load" framing.
 
 ---
 
@@ -18,11 +18,11 @@ This guide describes how to run a live demonstration of ClubOS features.
 
 This section is written for board and leadership conversations. It presents both paths honestly.
 
-### What ClubOS Already Does Better
+### What Murmurant Already Does Better
 
 These are observable, demonstrable improvements—not promises.
 
-| Capability | Current System | ClubOS |
+| Capability | Current System | Murmurant |
 |------------|----------------|--------|
 | **Lifecycle tracking** | Inferred from payment dates; requires spreadsheet reconciliation | Explicit states with automatic transitions and audit trail |
 | **"Why is this member X?"** | Requires investigation across systems | System explains its own logic (Lifecycle Explainer panel) |
@@ -41,13 +41,13 @@ The current system works because someone understands how the pieces fit together
 - Sync timing is learned through experience (when does data refresh?)
 - Edge cases are handled by memory ("oh, for that situation, you need to...")
 
-**ClubOS approach:**
+**Murmurant approach:**
 - Logic is in code, tested automatically (823 unit tests)
 - The system explains its own decisions (Lifecycle Explainer, audit logs)
 - Documentation is maintained alongside code (changes require doc updates)
 - AI-era maintainability: Claude Code can read, understand, and modify the codebase
 
-**Bus factor improvement:** If the current tech lead is unavailable for a month, ClubOS is more likely to continue functioning correctly than a system that depends on tribal knowledge.
+**Bus factor improvement:** If the current tech lead is unavailable for a month, Murmurant is more likely to continue functioning correctly than a system that depends on tribal knowledge.
 
 ### Risks of Staying (Vendor Platform Constraints)
 
@@ -63,7 +63,7 @@ These are not criticisms—they are structural constraints of hosted SaaS platfo
 
 **Trend:** These risks do not decrease over time. They accumulate as the club's needs diverge from the platform's capabilities.
 
-### Risks of Moving (ClubOS Adoption)
+### Risks of Moving (Murmurant Adoption)
 
 These are real concerns that require honest assessment.
 
@@ -87,7 +87,7 @@ These are real concerns that require honest assessment.
   (accumulates)          │                                    (constant or increasing)
                          │
                          │   ╲
-  ClubOS Risk            │    ╲
+  Murmurant Risk          │    ╲
   (decreases with work)  │     ╲
                          │      ╲━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━▶
                          │                                    (declining)
@@ -106,7 +106,7 @@ This is not a recommendation. It is a framework for discussion.
 - No migration effort required
 - Current volunteers are trained on it
 
-**Arguments for ClubOS investment:**
+**Arguments for Murmurant investment:**
 - Reduces long-term maintenance burden
 - Explicit logic reduces "how does this work?" questions
 - More sustainable for volunteer-capacity constraints
@@ -126,17 +126,17 @@ This is not a recommendation. It is a framework for discussion.
 
 ## One-Page Summary (PDF-Ready)
 
-### ClubOS Risk Assessment — Board Summary
+### Murmurant Risk Assessment — Board Summary
 
 **The problem:** Club operations depend on institutional knowledge. Workarounds accumulate. The current tech lead is a single point of failure.
 
-**What ClubOS provides:**
+**What Murmurant provides:**
 - Self-explaining system (lifecycle states, audit logs)
 - Tested codebase (823 automated tests)
 - Documented logic (AI can read and maintain it)
 - Reduced manual workarounds (automatic waitlist, real-time registration)
 
-**What ClubOS does NOT provide yet:**
+**What Murmurant does NOT provide yet:**
 - Payment processing
 - Production deployment
 - Complete data migration
@@ -144,7 +144,7 @@ This is not a recommendation. It is a framework for discussion.
 
 **Risk comparison:**
 
-| | Current System | ClubOS |
+| | Current System | Murmurant |
 |-|----------------|--------|
 | **Customization** | Limited by vendor | Unlimited (we control code) |
 | **Knowledge dependency** | High (tribal) | Low (documented, tested) |
@@ -182,11 +182,11 @@ The seed script creates demo users for each role. Use these accounts to demonstr
 
 | Role | Email | Capabilities |
 |------|-------|--------------|
-| President | president@demo.clubos.test | Full admin access |
-| Secretary | secretary@demo.clubos.test | Minutes management, member records |
-| Parliamentarian | parliamentarian@demo.clubos.test | Governance rules, procedures |
-| Event Chair | eventchair@demo.clubos.test | Event management |
-| Member | member@demo.clubos.test | Basic member access only |
+| President | president@demo.murmurant.test | Full admin access |
+| Secretary | secretary@demo.murmurant.test | Minutes management, member records |
+| Parliamentarian | parliamentarian@demo.murmurant.test | Governance rules, procedures |
+| Event Chair | eventchair@demo.murmurant.test | Event management |
+| Member | member@demo.murmurant.test | Basic member access only |
 
 ### Logging In as a Demo User
 
@@ -294,7 +294,7 @@ Demonstrate the authentication flows:
 
 **Magic Link Login:**
 1. Go to /login
-2. Enter a demo user's email (e.g., president@demo.clubos.test)
+2. Enter a demo user's email (e.g., president@demo.murmurant.test)
 3. Click "Send sign-in link"
 4. Show the magic link URL in the console
 5. Click the link to authenticate

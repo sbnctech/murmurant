@@ -1,8 +1,8 @@
 # Migration Customer Journey
 
-> How a club experiences the move from Wild Apricot to ClubOS
+> How a club experiences the move from Wild Apricot to Murmurant
 
-This document walks through the migration from the customer's perspective. It shows what they see, decisions they must make, where anxiety naturally occurs, and where ClubOS provides reassurance.
+This document walks through the migration from the customer's perspective. It shows what they see, decisions they must make, where anxiety naturally occurs, and where Murmurant provides reassurance.
 
 ---
 
@@ -31,7 +31,7 @@ This document walks through the migration from the customer's perspective. It sh
 
 **The migration philosophy:**
 
-ClubOS treats migration as a trust-building exercise. Every step is designed to give the customer visibility and control. The operator (ClubOS staff) works alongside the customer—never behind closed doors.
+Murmurant treats migration as a trust-building exercise. Every step is designed to give the customer visibility and control. The operator (Murmurant staff) works alongside the customer—never behind closed doors.
 
 ---
 
@@ -90,7 +90,7 @@ ClubOS treats migration as a trust-building exercise. Every step is designed to 
 The operator walks through each policy area:
 
 **Required Policies:**
-1. **Member levels → ClubOS tiers**: "Here's how we'll map your Wild Apricot levels..."
+1. **Member levels → Murmurant tiers**: "Here's how we'll map your Wild Apricot levels..."
 2. **Lifecycle dates**: "When does someone become 'Lapsed'? When are they 'Alumni'?"
 3. **Renewal periods**: "Rolling dates or fixed anniversary?"
 
@@ -164,7 +164,7 @@ No blocking errors found.
 - **Warnings are normal**: Every migration has some data quality findings
 - **Nothing happened yet**: Dry run made no changes—this is purely informational
 - **Same logic path**: Real sync uses identical decision logic as dry run
-- **Operator reviews too**: ClubOS staff review all warnings before recommending proceed
+- **Operator reviews too**: Murmurant staff review all warnings before recommending proceed
 - **Can repeat**: Run dry runs as many times as needed
 
 ---
@@ -176,7 +176,7 @@ No blocking errors found.
 - Notification that sync is beginning
 - Progress updates during sync
 - Completion notification with summary
-- Access to ClubOS system for verification
+- Access to Murmurant system for verification
 
 ### Decisions the Customer Makes
 
@@ -216,7 +216,7 @@ No blocking errors found.
 ### What the Customer Sees
 
 - Verification toolkit to check migration accuracy
-- Side-by-side comparisons (WA vs ClubOS)
+- Side-by-side comparisons (WA vs Murmurant)
 - Specific checks for member counts, event counts, registration links
 - Pass/fail report for each verification category
 
@@ -270,18 +270,18 @@ No blocking errors found.
 
 | Decision | Stakes | Time Pressure |
 |----------|--------|---------------|
-| Approve cutover to ClubOS | High | Customer-controlled |
+| Approve cutover to Murmurant | High | Customer-controlled |
 | Schedule member notification | Medium | Customer-controlled |
 | Decommission Wild Apricot access | Medium | Customer-controlled |
 
 ### What "Cutover" Means
 
-> **Cutover = Wild Apricot becomes read-only archive. ClubOS becomes the live system.**
+> **Cutover = Wild Apricot becomes read-only archive. Murmurant becomes the live system.**
 
 After cutover:
-- Members log into ClubOS, not Wild Apricot
-- Event registrations happen in ClubOS
-- Renewals process through ClubOS
+- Members log into Murmurant, not Wild Apricot
+- Event registrations happen in Murmurant
+- Renewals process through Murmurant
 - Wild Apricot data preserved for reference
 
 ### Anxiety Points
@@ -306,7 +306,7 @@ After cutover:
 
 ### What the Customer Sees
 
-- Normal ClubOS operations
+- Normal Murmurant operations
 - Access to migration logs if needed
 - Continued access to Wild Apricot (read-only) for reference
 - Support channels for questions
@@ -317,7 +317,7 @@ After cutover:
 |----------|--------|---------------|
 | When to fully retire Wild Apricot | Low | None |
 | Training for additional staff | Low | Customer-paced |
-| Configuration of ClubOS preferences | Low | Ongoing |
+| Configuration of Murmurant preferences | Low | Ongoing |
 
 ### Anxiety Points
 
@@ -348,7 +348,7 @@ After cutover:
 | Complexity overwhelm | Feeling out of control |
 | Incorrect decisions | Blame for problems |
 
-### How ClubOS Addresses Each Fear
+### How Murmurant Addresses Each Fear
 
 | Fear | Reassurance Mechanism |
 |------|----------------------|
@@ -360,7 +360,7 @@ After cutover:
 
 ### The Trust Architecture
 
-ClubOS migration builds trust through:
+Murmurant migration builds trust through:
 
 1. **Visibility**: Customer sees exactly what will happen before it happens
 2. **Control**: Every consequential step requires explicit human approval. The system proposes; humans decide.

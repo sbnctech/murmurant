@@ -7,7 +7,7 @@ Audience: Product, Sales, Onboarding
 Last updated: 2025-12-21
 
 This document analyzes all 50 Wild Apricot issues to understand how they
-affect different user personas and what this means for ClubOS positioning.
+affect different user personas and what this means for Murmurant positioning.
 
 ---
 
@@ -313,7 +313,7 @@ All 50 WA issues mapped to affected personas and failure type.
 
 **Solutions-First is Validated**
 
-The analysis confirms that ClubOS should NOT position as self-service SaaS:
+The analysis confirms that Murmurant should NOT position as self-service SaaS:
 
 | Finding | Implication |
 |---------|-------------|
@@ -323,7 +323,7 @@ The analysis confirms that ClubOS should NOT position as self-service SaaS:
 | Treasurer has 0 tolerance for ambiguity | Financial workflows must be guided |
 
 **Positioning Statement:**
-ClubOS is a managed membership platform where critical operations require
+Murmurant is a managed membership platform where critical operations require
 human oversight. Safe self-service for content; guided assistance for
 data, finance, and permissions.
 
@@ -461,7 +461,7 @@ Note: Some issues have multiple failure types.
 ## Related Documents
 
 - Wild Apricot Top 50 Issues (TODO: create competitive/WILD_APRICOT_TOP_50_ISSUES.md)
-- ClubOS vs WA Matrix (TODO: create competitive/CLUBOS_VS_WA_50_ISSUE_MATRIX.md)
-- WA Pain Points Prospect-Facing (TODO: create solutions/WA_PAIN_POINTS_AND_HOW_CLUBOS_ADDRESSES_THEM.md)
+- Murmurant vs WA Matrix (TODO: create competitive/MURMURANT_VS_WA_50_ISSUE_MATRIX.md)
+- WA Pain Points Prospect-Facing (TODO: create solutions/WA_PAIN_POINTS_AND_HOW_MURMURANT_ADDRESSES_THEM.md)
 - Delivery Model Strategy (TODO: create DELIVERY_MODEL_STRATEGY.md)
 - Pricing and Tiers (TODO: create DELIVERY_MODEL_PRICING_AND_TIERS.md)

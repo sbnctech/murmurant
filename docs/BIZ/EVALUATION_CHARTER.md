@@ -1,4 +1,4 @@
-# Exhibit A: ClubOS Neutral Evaluation Charter
+# Exhibit A: Murmurant Neutral Evaluation Charter
 
 **Document Classification:** Board Governance
 **Evaluation Period:** 30-45 Calendar Days
@@ -10,16 +10,16 @@
 ## 1. Purpose of Evaluation
 
 This charter establishes the terms and conditions for a structured, time-bound
-evaluation of the ClubOS platform. The purpose is to provide the Board of
+evaluation of the Murmurant platform. The purpose is to provide the Board of
 Directors and organizational leadership with sufficient information to make
-an informed decision regarding potential future consideration of ClubOS.
+an informed decision regarding potential future consideration of Murmurant.
 
 This evaluation is exploratory in nature. It does not constitute a commitment
 to adopt, implement, or endorse the platform. No organizational resources
 beyond those explicitly authorized in this charter shall be allocated to
-ClubOS-related activities during the evaluation period.
+Murmurant-related activities during the evaluation period.
 
-The evaluation seeks to answer one question: Does ClubOS warrant further
+The evaluation seeks to answer one question: Does Murmurant warrant further
 consideration as a potential operational platform for this organization?
 
 ---
@@ -61,7 +61,7 @@ The following activities are explicitly excluded from this evaluation:
 | **Vendor negotiations** | No pricing, licensing, or service-level discussions |
 
 This evaluation does not authorize any party to represent that the organization
-has adopted, endorsed, or committed to ClubOS. Any such representation is
+has adopted, endorsed, or committed to Murmurant. Any such representation is
 unauthorized and does not bind the organization.
 
 ---
@@ -75,7 +75,7 @@ are met by the conclusion of the evaluation period:
 
 | Deliverable | Acceptance Criteria |
 |-------------|---------------------|
-| Capabilities Assessment | Written comparison of ClubOS features against 10 prioritized organizational requirements |
+| Capabilities Assessment | Written comparison of Murmurant features against 10 prioritized organizational requirements |
 | Risk Assessment | Documented identification of material risks with proposed mitigations |
 | Migration Analysis | Written summary of data migration requirements, timeline estimates, and reversibility provisions |
 | Resource Estimate | Preliminary estimate of volunteer hours, training needs, and transition costs |

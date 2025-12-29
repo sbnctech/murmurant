@@ -25,7 +25,7 @@ async function main() {
   const isProduction = process.env.NODE_ENV === "production";
   const forceReset = process.env.FORCE_DEMO_RESET === "true";
 
-  console.log("=== ClubOS Demo Data Reset ===\n");
+  console.log("=== Murmurant Demo Data Reset ===\n");
 
   // Safety check
   if (isProduction && !forceReset) {

@@ -2,7 +2,7 @@
 
 ```
 Audience: Migration Operators, Tech Staff
-Purpose: Migrate WA custom HTML blocks safely to ClubOS
+Purpose: Migrate WA custom HTML blocks safely to Murmurant
 Companion: WILD_APRICOT_CUSTOM_HTML_BLOCKS_GUIDE.md (detailed reference)
 ```
 
@@ -10,7 +10,7 @@ Companion: WILD_APRICOT_CUSTOM_HTML_BLOCKS_GUIDE.md (detailed reference)
 
 ## TL;DR
 
-Wild Apricot lets organizations add raw HTML anywhere. ClubOS doesn't run arbitrary HTML—that's a feature, not a bug. This guide explains what's in those HTML blocks and how to migrate them.
+Wild Apricot lets organizations add raw HTML anywhere. Murmurant doesn't run arbitrary HTML—that's a feature, not a bug. This guide explains what's in those HTML blocks and how to migrate them.
 
 **The Automagic Rule:**
 - **Allowlisted iframes** (YouTube, Maps, Calendly) → AUTO migrate to SafeEmbed
@@ -55,7 +55,7 @@ Based on common WA usage patterns, custom HTML blocks typically fall into these 
 
 **Purpose:** Display Google Calendar instead of WA's calendar.
 
-**Migration:** MANUAL. Use ClubOS native calendar (syncs via ICS).
+**Migration:** MANUAL. Use Murmurant native calendar (syncs via ICS).
 
 ### 4. Booking/Scheduling Widgets
 
@@ -90,7 +90,7 @@ Based on common WA usage patterns, custom HTML blocks typically fall into these 
 
 **Purpose:** Marketing analytics, conversion tracking.
 
-**Migration:** UNSUPPORTED. Privacy compliance risk. Configure analytics through ClubOS admin if needed.
+**Migration:** UNSUPPORTED. Privacy compliance risk. Configure analytics through Murmurant admin if needed.
 
 ### 6. External Form Embeds
 
@@ -101,7 +101,7 @@ Based on common WA usage patterns, custom HTML blocks typically fall into these 
 
 **Purpose:** Surveys, signups, feedback forms.
 
-**Migration:** MANUAL. Consider ClubOS native forms or SafeEmbed if on allowlist.
+**Migration:** MANUAL. Consider Murmurant native forms or SafeEmbed if on allowlist.
 
 ### 7. Custom JavaScript
 
@@ -118,7 +118,7 @@ Based on common WA usage patterns, custom HTML blocks typically fall into these 
 
 **Purpose:** Interactive features (accordions, lightboxes, countdowns, etc.)
 
-**Migration:** UNSUPPORTED. XSS risk. Request ClubOS native component if essential.
+**Migration:** UNSUPPORTED. XSS risk. Request Murmurant native component if essential.
 
 ### 8. Social Media Widgets
 
@@ -144,7 +144,7 @@ Based on common WA usage patterns, custom HTML blocks typically fall into these 
 
 **Purpose:** PayPal donations, payment buttons.
 
-**Migration:** UNSUPPORTED. External payment processing bypasses ClubOS. Use native donation forms with Stripe.
+**Migration:** UNSUPPORTED. External payment processing bypasses Murmurant. Use native donation forms with Stripe.
 
 ---
 
@@ -159,21 +159,21 @@ Based on common WA usage patterns, custom HTML blocks typically fall into these 
 | `javascript:` URLs | Disguised scripts | Phishing, redirects |
 | Unsandboxed iframes | Can access parent page | Cookie theft, clickjacking |
 
-**ClubOS Policy:** All inline scripts are UNSUPPORTED. Period.
+**Murmurant Policy:** All inline scripts are UNSUPPORTED. Period.
 
 ### Mixed Content Issues
 
 | Problem | Why It Breaks | Effect |
 |---------|---------------|--------|
 | HTTP iframe in HTTPS page | Browser blocks it | Embed doesn't load |
-| External CSS includes | May conflict with ClubOS | Broken styling |
+| External CSS includes | May conflict with Murmurant | Broken styling |
 | External fonts | May not load (CORS) | Wrong typography |
 
 ### Auth Assumption Issues
 
 | Problem | Why It Breaks | Effect |
 |---------|---------------|--------|
-| WA session cookies | Not available in ClubOS | Widget shows logged-out state |
+| WA session cookies | Not available in Murmurant | Widget shows logged-out state |
 | WA member variables | `{ContactId}` etc. don't exist | Broken personalization |
 | WA-specific URLs | `/Sys/...` paths don't exist | 404 errors |
 
@@ -183,7 +183,7 @@ Based on common WA usage patterns, custom HTML blocks typically fall into these 
 |---------|---------------|--------|
 | Global CSS in HTML block | Affects entire page | Layout breaks |
 | Hardcoded widths | Not responsive | Mobile breaks |
-| `!important` overrides | Fights with ClubOS theme | Inconsistent styling |
+| `!important` overrides | Fights with Murmurant theme | Inconsistent styling |
 
 ---
 
@@ -217,7 +217,7 @@ The discovery crawler automatically classifies each custom HTML block:
 | Non-allowlisted iframe | Unknown source | Evaluate, request allowlist, or link |
 | External form | Data flows externally | Consider native form or link |
 | External images | May need re-upload | Download and re-upload |
-| Complex HTML layout | May not render correctly | Rebuild with ClubOS blocks |
+| Complex HTML layout | May not render correctly | Rebuild with Murmurant blocks |
 
 **Action:** Discovery report flags for operator review.
 
@@ -229,19 +229,19 @@ The discovery crawler automatically classifies each custom HTML block:
 |---------|--------|-------------|
 | `<script>` tags | XSS risk | Request native component |
 | Inline handlers | XSS risk | None |
-| Tracking pixels | Privacy risk | Configure ClubOS analytics |
+| Tracking pixels | Privacy risk | Configure Murmurant analytics |
 | Social widgets with JS | XSS risk | Social links block |
-| External payment forms | Bypasses ClubOS billing | Native donation form |
+| External payment forms | Bypasses Murmurant billing | Native donation form |
 
 **Action:** Logged but not migrated. Operator must find alternative.
 
 ---
 
-## ClubOS Primitive Replacements
+## Murmurant Primitive Replacements
 
 ### Quick Reference
 
-| WA Custom HTML | ClubOS Primitive | Migration |
+| WA Custom HTML | Murmurant Primitive | Migration |
 |----------------|------------------|-----------|
 | YouTube iframe | SafeEmbed (video) | AUTO |
 | Vimeo iframe | SafeEmbed (video) | AUTO |
@@ -255,7 +255,7 @@ The discovery crawler automatically classifies each custom HTML block:
 | PayPal button | Donation form (Stripe) | MANUAL |
 | Custom accordion | TextBlock or FAQ | MANUAL |
 | Image gallery script | ImageGallery | MANUAL |
-| Tracking pixels | ClubOS analytics | UNSUPPORTED |
+| Tracking pixels | Murmurant analytics | UNSUPPORTED |
 | Any `<script>` | None | UNSUPPORTED |
 
 ### SafeEmbed Details
@@ -367,8 +367,8 @@ Is it just static text/images (no iframes, no scripts)?
         +-- No --> Continue
             |
             Is it an external form?
-            |-- Yes --> Can ClubOS native forms handle it?
-            |   |-- Yes --> Rebuild in ClubOS. Mark MANUAL.
+            |-- Yes --> Can Murmurant native forms handle it?
+            |   |-- Yes --> Rebuild in Murmurant. Mark MANUAL.
             |   +-- No --> Suggest external link. Mark MANUAL.
             +-- No --> Continue
                 |
@@ -388,20 +388,20 @@ Is it just static text/images (no iframes, no scripts)?
 
 **Rationale:**
 
-1. **Security:** Inline scripts can do anything—steal sessions, redirect users, mine crypto, inject phishing forms. ClubOS cannot distinguish "safe" scripts from malicious ones without manual code review, which doesn't scale.
+1. **Security:** Inline scripts can do anything—steal sessions, redirect users, mine crypto, inject phishing forms. Murmurant cannot distinguish "safe" scripts from malicious ones without manual code review, which doesn't scale.
 
-2. **Liability:** If ClubOS executes customer-provided scripts, ClubOS becomes liable for any security incidents. Blocking scripts transfers responsibility back to the source.
+2. **Liability:** If Murmurant executes customer-provided scripts, Murmurant becomes liable for any security incidents. Blocking scripts transfers responsibility back to the source.
 
 3. **Maintainability:** Inline scripts often break when:
    - External APIs change
    - Browser security policies tighten
-   - ClubOS updates its framework
+   - Murmurant updates its framework
    Blocking them prevents silent failures.
 
 4. **Precedent:** The HTML_WIDGET_POLICY (escape hatch for Tech Chair only) explicitly rejects `<script>` tags by default. Migration should not be more permissive than the production policy.
 
 **Alternative for essential functionality:**
-- Request a native ClubOS component
+- Request a native Murmurant component
 - Use SafeEmbed with allowlisted iframe-based widgets
 - Link to external page
 
@@ -411,7 +411,7 @@ Is it just static text/images (no iframes, no scripts)?
 
 - [Custom HTML Blocks Guide](./WILD_APRICOT_CUSTOM_HTML_BLOCKS_GUIDE.md) - Detailed patterns and classification rules
 - [Gadget Tagging Matrix](./WILD_APRICOT_GADGET_TAGGING.md) - Full WA element classification
-- [Page Builder Primitives](../ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md) - SafeEmbed specification
+- [Page Builder Primitives](../ARCH/MURMURANT_PAGE_BUILDER_PRIMITIVES.md) - SafeEmbed specification
 - [HTML Widget Policy](../pages/HTML_WIDGET_POLICY.md) - Tech Chair escape hatch (not for migration)
 - [Migration Intake Checklist](./WILD_APRICOT_MIGRATION_INTAKE_CHECKLIST.md) - Full intake process
 

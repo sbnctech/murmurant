@@ -43,7 +43,7 @@ SafeEmbed is a page builder primitive that renders external content via locked-d
 ### Specification
 
 - docs/ARCH/SAFEEMBED_ALLOWLIST_POLICY.md (approval workflow, data model, UI spec)
-- docs/ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md (SafeEmbed component spec)
+- docs/ARCH/MURMURANT_PAGE_BUILDER_PRIMITIVES.md (SafeEmbed component spec)
 
 ### Implementation Milestones
 
@@ -151,7 +151,7 @@ Key scenarios:
 ### Related Docs
 
 - docs/ARCH/SAFEEMBED_ALLOWLIST_POLICY.md
-- docs/ARCH/CLUBOS_PAGE_BUILDER_PRIMITIVES.md
+- docs/ARCH/MURMURANT_PAGE_BUILDER_PRIMITIVES.md
 - docs/MIGRATION/WILD_APRICOT_GADGET_TAGGING.md
 - docs/MIGRATION/WILD_APRICOT_CUSTOM_HTML_BLOCKS_GUIDE.md
 

@@ -1,13 +1,13 @@
 # Authentication and Role-Based Access Control (RBAC)
 
 **Audience**: SBNC Tech Chair and club administrators
-**Purpose**: Explain how ClubOS controls who can access what
+**Purpose**: Explain how Murmurant controls who can access what
 
 ---
 
 ## Plain-English Summary
 
-ClubOS uses two layers of security to protect club data:
+Murmurant uses two layers of security to protect club data:
 
 1. **Authentication** - Proves who you are (like showing your ID at the door)
 2. **Authorization** - Decides what you can do (like checking if your badge opens certain rooms)
@@ -15,7 +15,7 @@ ClubOS uses two layers of security to protect club data:
 Think of it like entering a secure building:
 
 ```
-You arrive at ClubOS
+You arrive at Murmurant
         |
         v
    +----------+
@@ -46,11 +46,11 @@ Denied  | | ROLE     |  <-- Authorization: "What can you do?"
 
 ### Layer 1: Authentication (Who Are You?)
 
-Before you can do anything in ClubOS, you must prove your identity.
+Before you can do anything in Murmurant, you must prove your identity.
 
 **How it works today (development mode)**:
 - You send a special token in your request header
-- ClubOS checks if this token belongs to a real user
+- Murmurant checks if this token belongs to a real user
 - If valid, you're "logged in"
 
 **What happens if authentication fails**:
@@ -60,7 +60,7 @@ Before you can do anything in ClubOS, you must prove your identity.
 
 ### Layer 2: Authorization (What Can You Do?)
 
-Once ClubOS knows who you are, it checks what you're allowed to do.
+Once Murmurant knows who you are, it checks what you're allowed to do.
 
 **Two types of authorization**:
 
@@ -73,7 +73,7 @@ Once ClubOS knows who you are, it checks what you're allowed to do.
 
 ### The Four Global Roles
 
-ClubOS currently uses four global roles (defined in `src/lib/auth.ts`):
+Murmurant currently uses four global roles (defined in `src/lib/auth.ts`):
 
 | Role | Slug | What It Means | Example People |
 |------|------|---------------|----------------|
@@ -281,7 +281,7 @@ canDeleteEvents(role)   // admin only
 ## Summary
 
 ```
-                    ClubOS Security Model
+                    Murmurant Security Model
                     =====================
 
      AUTHENTICATION              AUTHORIZATION
@@ -311,4 +311,4 @@ The system is designed to be:
 
 ---
 
-*Document maintained by ClubOS development team. Last updated: December 2024*
+*Document maintained by Murmurant development team. Last updated: December 2024*

@@ -1,8 +1,8 @@
-# Volunteer Cognitive Load: Legacy Platforms vs ClubOS
+# Volunteer Cognitive Load: Legacy Platforms vs Murmurant
 
 ```
 Audience: Board Members, Leadership, Prospective Volunteers
-Purpose: Explain how ClubOS reduces volunteer workload and stress
+Purpose: Explain how Murmurant reduces volunteer workload and stress
 ```
 
 ---
@@ -11,7 +11,7 @@ Purpose: Explain how ClubOS reduces volunteer workload and stress
 
 Volunteers are the lifeblood of nonprofit organizations. But volunteer burnout is real, and much of it comes from preventable sources: unclear responsibilities, confusing tools, and systems that fail silently.
 
-This document compares the volunteer experience between legacy nonprofit platforms and ClubOS across five dimensions:
+This document compares the volunteer experience between legacy nonprofit platforms and Murmurant across five dimensions:
 
 1. Learning curve
 2. Error recovery
@@ -34,7 +34,7 @@ A new volunteer typically encounters:
 
 The result: new volunteers spend weeks or months becoming functional, often learning through painful mistakes.
 
-### ClubOS Approach
+### Murmurant Approach
 
 - **One system**: Members, events, communications, and content live in one place with consistent navigation
 - **Role-appropriate views**: Volunteers see only what they need to see for their role
@@ -60,7 +60,7 @@ Common failure modes:
 
 The pattern: mistakes are discovered after the fact, recovery requires significant effort, and the volunteer feels responsible for organizational harm.
 
-### ClubOS Approach
+### Murmurant Approach
 
 | Situation | System Response |
 |-----------|-----------------|
@@ -86,7 +86,7 @@ Common problems:
 
 The result: volunteers are either frustrated by lack of access or overwhelmed by too much responsibility.
 
-### ClubOS Approach
+### Murmurant Approach
 
 - **Capability-based access**: Volunteers have specific capabilities (e.g., "can edit events for their committee") rather than broad roles
 - **Explicit ownership**: Every workflow has a clear owner (e.g., "VP Activities approves events")
@@ -122,16 +122,16 @@ Each tool has its own:
 
 The cognitive load of switching between tools compounds volunteer stress.
 
-### ClubOS Approach
+### Murmurant Approach
 
 | Function | Location | Interface |
 |----------|----------|-----------|
-| Member data | ClubOS | Unified |
-| Communications | ClubOS | Unified |
-| Website/pages | ClubOS | Unified |
-| Events | ClubOS | Unified |
-| Registrations | ClubOS | Unified |
-| Payments | ClubOS (integrated) | Unified |
+| Member data | Murmurant | Unified |
+| Communications | Murmurant | Unified |
+| Website/pages | Murmurant | Unified |
+| Events | Murmurant | Unified |
+| Registrations | Murmurant | Unified |
+| Payments | Murmurant (integrated) | Unified |
 
 One login. One navigation structure. One set of terms. One place to look when something goes wrong.
 
@@ -150,7 +150,7 @@ When a volunteer leaves:
 
 The result: every leadership transition is a crisis.
 
-### ClubOS Approach
+### Murmurant Approach
 
 When a volunteer leaves:
 
@@ -187,7 +187,7 @@ Day 7:
 - You are afraid to touch anything else
 - You are already thinking about how to recruit your replacement
 
-### ClubOS Experience
+### Murmurant Experience
 
 Day 1:
 
@@ -235,7 +235,7 @@ Emotional cost: High
 
 Organizational learning: None
 
-### ClubOS Experience
+### Murmurant Experience
 
 The situation: Same problem - members cannot register for an event.
 
@@ -271,7 +271,7 @@ Risk lives with volunteers:
 
 This model treats volunteers as experts who should not need help.
 
-### ClubOS
+### Murmurant
 
 Risk is shared with the system:
 
@@ -286,7 +286,7 @@ This model treats volunteers as capable people who deserve support.
 
 ## What This Means for Organizations
 
-Organizations using ClubOS can expect:
+Organizations using Murmurant can expect:
 
 - **Shorter onboarding**: New volunteers become productive faster
 - **Lower burnout**: Volunteers are not constantly anxious about breaking things
@@ -294,7 +294,7 @@ Organizations using ClubOS can expect:
 - **More volunteers**: People are more willing to serve when the tools support them
 - **Better retention**: Volunteers who feel competent stay longer
 
-These are not guarantees - organizational culture matters too. But the tools either help or hinder, and ClubOS is designed to help.
+These are not guarantees - organizational culture matters too. But the tools either help or hinder, and Murmurant is designed to help.
 
 ---
 

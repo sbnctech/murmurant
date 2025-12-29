@@ -24,7 +24,7 @@ Key decision points
   - accepts + pays -> becomes Extended Member
   - declines or does not pay -> membership ceases
 
-Implications for ClubOS
+Implications for Murmurant
 - MembershipTier should be derived from join_date + current_date + extended_acceptance/payment state
 - Extended status is not automatic; it is an offer + acceptance + payment
 

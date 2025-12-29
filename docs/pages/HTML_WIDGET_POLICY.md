@@ -78,7 +78,7 @@ The system must enforce:
 - for HTML widget routes, use the strictest CSP compatible with the embed.
 
 3) Capability gating
-- HTML widget gets zero access to ClubOS APIs by default.
+- HTML widget gets zero access to Murmurant APIs by default.
 - Any API access must go through a narrowly scoped server endpoint with RBAC checks and explicit allowlisting.
 
 4) RBAC is not optional

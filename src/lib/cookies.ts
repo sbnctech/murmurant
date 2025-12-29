@@ -94,8 +94,8 @@ export function getClearCookieOptions(): CookieOptions {
  * Centralized for consistency and to avoid typos.
  */
 export const COOKIE_NAMES = {
-  SESSION: "clubos_session",
-  REFRESH: "clubos_refresh",
+  SESSION: "murmurant_session",
+  REFRESH: "murmurant_refresh",
 } as const;
 
 /**

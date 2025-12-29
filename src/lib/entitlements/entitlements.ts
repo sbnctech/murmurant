@@ -1,7 +1,7 @@
 /**
  * Entitlements Service
  *
- * Plan-based feature gating for ClubOS.
+ * Plan-based feature gating for Murmurant.
  * Config-first approach - no database required for MVP.
  *
  * Charter:

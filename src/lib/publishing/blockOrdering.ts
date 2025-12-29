@@ -1,4 +1,4 @@
-// ClubOS - Page Editor v1.1
+// Murmurant - Page Editor v1.1
 // Block ordering helpers: flat array, explicit reorder, renumber "order" field.
 // Requirements:
 // - Pure functions (do not mutate inputs)

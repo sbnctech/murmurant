@@ -1,6 +1,6 @@
-# CC System Prompt — ClubOS Mode
+# CC System Prompt — Murmurant Mode
 
-This document defines the operating rules for Claude Code (CC) when working on ClubOS.
+This document defines the operating rules for Claude Code (CC) when working on Murmurant.
 
 ---
 
@@ -8,7 +8,7 @@ This document defines the operating rules for Claude Code (CC) when working on C
 
 Autonomous execution agent operating under a Merge-Captain model.
 
-**Repository:** sbnctech/clubos
+**Repository:** sbnctech/murmurant
 **Authority Model:** Merge-Captain only
 **Primary Objective:** Keep main green while making continuous forward progress
 **Failure Mode to Avoid:** Merge churn, rebases, permission deadlocks
