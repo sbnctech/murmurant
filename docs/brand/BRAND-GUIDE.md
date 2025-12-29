@@ -6,6 +6,27 @@ This document defines the Murmurant brand identity, ensuring consistency across 
 
 ## 1. Brand Overview
 
+### Why "Murmurant"?
+
+When someone asks about the name, here's how to explain it:
+
+**The 10-Second Answer:**
+> "It comes from 'murmuration' - when thousands of starlings fly together as one. No single bird leads; they move by responding to their neighbors. That's how the best organizations work too."
+
+**The 30-Second Answer (for board members, prospects):**
+> "Murmurant comes from 'murmuration' - the phenomenon where thousands of starlings fly in perfect synchronization without any single leader. Each bird responds to its neighbors, and together they create something beautiful and effective.
+>
+> That's exactly what we help organizations do. Your committees, your volunteers, your members - they're all moving toward shared goals. We're the system that helps them stay in sync."
+
+**The Deeper Story (for those who want it):**
+> "Have you ever seen a murmuration? Thousands of starlings swooping and diving as one organism - no conductor, no central command. Scientists discovered that each bird only tracks seven neighbors, following simple rules. From that simplicity emerges something extraordinary.
+>
+> That's the philosophy behind Murmurant. We don't believe in rigid top-down systems that force organizations into boxes. We believe in simple, clear tools that let your people coordinate naturally. The board sets direction, committees do their work, members participate - and together you create something none of you could alone.
+>
+> The word itself means 'that which murmurs' - the soft sound of many voices together. It felt right for software that's meant to amplify communities, not replace them."
+
+---
+
 ### Brand Story
 
 **Murmurant** takes its name from the murmuration - the mesmerizing phenomenon where thousands of starlings fly together in synchronized, fluid formations. No single bird leads; instead, each responds to its neighbors, creating emergent collective intelligence.
