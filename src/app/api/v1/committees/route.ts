@@ -9,7 +9,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { requireCapability } from "@/lib/auth";
+import { requireCapabilitySafe } from "@/lib/auth";
 import { apiCreated, errors } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 
@@ -51,7 +51,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireCapability(request, "admin:full");
+  const auth = await requireCapabilitySafe(request, "admin:full");
   if (!auth.ok) {
     return auth.response;
   }

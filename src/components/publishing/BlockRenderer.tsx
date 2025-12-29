@@ -763,7 +763,7 @@ function StatsBlock({ block }: { block: Extract<Block, { type: "stats" }> }) {
         {block.data.stats.map((stat, idx) => (
           <div key={idx}>
             <div style={{ fontSize: "var(--font-size-4xl, 48px)", fontWeight: 700, marginBottom: "var(--spacing-sm, 8px)" }}>
-              {stat.prefix}{stat.value.toLocaleString()}{stat.suffix}
+              {stat.prefix}{new Intl.NumberFormat("en-US").format(stat.value)}{stat.suffix}
             </div>
             <div style={{ fontSize: "var(--font-size-lg, 18px)", opacity: 0.9 }}>
               {stat.label}
