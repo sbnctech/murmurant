@@ -157,11 +157,13 @@ F1. ✅ COMPLETE - Migration architecture spec
 - Failure handling: Retry, queue, graceful degradation
 - Cutover criteria: Technical, operational, stakeholder checklists
 
-F2. WA API proxy layer
-- Goal: Abstract WA API behind internal service interface.
-- Deliverables: src/lib/wa/ with typed client, error handling, retry logic.
-- Must include: Rate limit handling, audit logging of WA calls.
-- Must use: DEPENDENCY_ISOLATION wrapper from reliability module.
+F2. ✅ COMPLETE - WA API proxy layer
+- Implemented: src/lib/wa/ (types, config, security, audit, client, webhooks)
+- Features: Typed client with auto-pagination, rate limiting, input validation
+- Security: Credential protection, sensitive data redaction, webhook signatures
+- Audit: Full operation logging with PII protection
+- Tests: tests/unit/wa/ (60 tests)
+- Docs: docs/ARCH/WA_API_SECURITY.md
 
 F3. Member data read-through
 - Goal: MM reads member data from WA, caches locally for performance.
