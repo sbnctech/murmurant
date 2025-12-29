@@ -284,6 +284,9 @@ This document complements:
 - [MURMURANT_FAQ.md](../brand/MURMURANT_FAQ.md) - Quick answers for board and prospects
 - [VOICE_AND_MESSAGING.md](../brand/VOICE_AND_MESSAGING.md) - Public communication guidelines
 
+**AI & Chatbot Voice:**
+- [CHATBOT_GUARDRAILS.md](../internal/CHATBOT_GUARDRAILS.md) - How brand voice applies to AI-powered customer interactions, including response categories, deflection patterns, and system prompt templates
+
 ---
 
 ## Brand Review Checklist for Customer-Facing Documents
