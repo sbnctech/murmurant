@@ -226,6 +226,97 @@ export const flipCardDataSchema = z
   })
   .passthrough();
 
+/**
+ * Accordion block data schema
+ * Expandable/collapsible content sections
+ */
+export const accordionDataSchema = z
+  .object({
+    title: z.string().optional(),
+    allowMultiple: z.boolean().optional(),
+    items: z.array(
+      z.object({
+        title: z.string(),
+        content: z.string(),
+        defaultOpen: z.boolean().optional(),
+      })
+    ),
+  })
+  .passthrough();
+
+/**
+ * Tabs block data schema
+ * Tabbed content panels
+ */
+export const tabsDataSchema = z
+  .object({
+    tabs: z.array(
+      z.object({
+        label: z.string(),
+        content: z.string(),
+      })
+    ),
+    alignment: alignmentSchema,
+  })
+  .passthrough();
+
+/**
+ * Testimonial block data schema
+ * Rotating quotes and testimonials
+ */
+export const testimonialDataSchema = z
+  .object({
+    title: z.string().optional(),
+    autoRotate: z.boolean().optional(),
+    rotateIntervalMs: z.number().optional(),
+    testimonials: z.array(
+      z.object({
+        quote: z.string(),
+        author: z.string(),
+        role: z.string().optional(),
+        image: z.string().optional(),
+      })
+    ),
+  })
+  .passthrough();
+
+/**
+ * Stats block data schema
+ * Animated number counters
+ */
+export const statsDataSchema = z
+  .object({
+    title: z.string().optional(),
+    columns: z.union([z.literal(2), z.literal(3), z.literal(4)]).optional(),
+    stats: z.array(
+      z.object({
+        value: z.number(),
+        suffix: z.string().optional(),
+        prefix: z.string().optional(),
+        label: z.string(),
+      })
+    ),
+  })
+  .passthrough();
+
+/**
+ * Timeline block data schema
+ * Vertical chronological layout
+ */
+export const timelineDataSchema = z
+  .object({
+    title: z.string().optional(),
+    events: z.array(
+      z.object({
+        date: z.string(),
+        title: z.string(),
+        description: z.string(),
+        image: z.string().optional(),
+      })
+    ),
+  })
+  .passthrough();
+
 // ============================================================================
 // Schema Registry
 // ============================================================================
@@ -246,6 +337,11 @@ export const BLOCK_DATA_SCHEMAS: Record<BlockType, z.ZodType> = {
   faq: faqDataSchema,
   contact: contactDataSchema,
   "flip-card": flipCardDataSchema,
+  accordion: accordionDataSchema,
+  tabs: tabsDataSchema,
+  testimonial: testimonialDataSchema,
+  stats: statsDataSchema,
+  timeline: timelineDataSchema,
 };
 
 /**
@@ -270,6 +366,11 @@ export const READONLY_BLOCK_TYPES: BlockType[] = [
   "faq",
   "contact",
   "flip-card",
+  "accordion",
+  "tabs",
+  "testimonial",
+  "stats",
+  "timeline",
 ];
 
 // ============================================================================
@@ -364,6 +465,46 @@ export function getDefaultBlockData(type: BlockType): Record<string, unknown> {
             backGradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
             backTextColor: "#ffffff",
           },
+        ],
+      };
+    case "accordion":
+      return {
+        allowMultiple: false,
+        items: [
+          { title: "Section 1", content: "<p>Content for section 1</p>", defaultOpen: true },
+          { title: "Section 2", content: "<p>Content for section 2</p>" },
+        ],
+      };
+    case "tabs":
+      return {
+        alignment: "left",
+        tabs: [
+          { label: "Tab 1", content: "<p>Content for tab 1</p>" },
+          { label: "Tab 2", content: "<p>Content for tab 2</p>" },
+        ],
+      };
+    case "testimonial":
+      return {
+        autoRotate: true,
+        rotateIntervalMs: 5000,
+        testimonials: [
+          { quote: "This is a great organization!", author: "Jane Doe", role: "Member since 2020" },
+        ],
+      };
+    case "stats":
+      return {
+        columns: 3,
+        stats: [
+          { value: 500, suffix: "+", label: "Members" },
+          { value: 50, label: "Events per Year" },
+          { value: 30, label: "Interest Groups" },
+        ],
+      };
+    case "timeline":
+      return {
+        events: [
+          { date: "2020", title: "Founded", description: "Our organization was established" },
+          { date: "2022", title: "Milestone", description: "Reached 500 members" },
         ],
       };
     default:

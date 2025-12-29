@@ -14,7 +14,12 @@ export type BlockType =
   | "cta"
   | "divider"
   | "spacer"
-  | "flip-card";
+  | "flip-card"
+  | "accordion"
+  | "tabs"
+  | "testimonial"
+  | "stats"
+  | "timeline";
 
 // Base block structure
 export type BaseBlock = {
@@ -179,6 +184,77 @@ export type FlipCardBlock = BaseBlock & {
   };
 };
 
+// Accordion block - expandable/collapsible content sections
+export type AccordionBlock = BaseBlock & {
+  type: "accordion";
+  data: {
+    title?: string;
+    allowMultiple?: boolean; // Allow multiple panels open at once
+    items: Array<{
+      title: string;
+      content: string; // HTML content
+      defaultOpen?: boolean;
+    }>;
+  };
+};
+
+// Tabs block - tabbed content panels
+export type TabsBlock = BaseBlock & {
+  type: "tabs";
+  data: {
+    tabs: Array<{
+      label: string;
+      content: string; // HTML content
+    }>;
+    alignment?: "left" | "center" | "right";
+  };
+};
+
+// Testimonial block - rotating quotes/testimonials
+export type TestimonialBlock = BaseBlock & {
+  type: "testimonial";
+  data: {
+    title?: string;
+    autoRotate?: boolean;
+    rotateIntervalMs?: number;
+    testimonials: Array<{
+      quote: string;
+      author: string;
+      role?: string;
+      image?: string;
+    }>;
+  };
+};
+
+// Stats block - animated number counters
+export type StatsBlock = BaseBlock & {
+  type: "stats";
+  data: {
+    title?: string;
+    columns?: 2 | 3 | 4;
+    stats: Array<{
+      value: number;
+      suffix?: string; // e.g., "+", "%", "k"
+      prefix?: string; // e.g., "$"
+      label: string;
+    }>;
+  };
+};
+
+// Timeline block - vertical chronological layout
+export type TimelineBlock = BaseBlock & {
+  type: "timeline";
+  data: {
+    title?: string;
+    events: Array<{
+      date: string;
+      title: string;
+      description: string;
+      image?: string;
+    }>;
+  };
+};
+
 // Union type of all blocks
 export type Block =
   | HeroBlock
@@ -192,7 +268,12 @@ export type Block =
   | CtaBlock
   | DividerBlock
   | SpacerBlock
-  | FlipCardBlock;
+  | FlipCardBlock
+  | AccordionBlock
+  | TabsBlock
+  | TestimonialBlock
+  | StatsBlock
+  | TimelineBlock;
 
 // Page content structure
 export type PageContent = {
@@ -281,6 +362,36 @@ export const BLOCK_METADATA: Record<
     description: "Interactive cards that flip on hover",
     icon: "layers",
     category: "interactive",
+  },
+  accordion: {
+    label: "Accordion",
+    description: "Expandable/collapsible content sections",
+    icon: "chevrons-down",
+    category: "interactive",
+  },
+  tabs: {
+    label: "Tabs",
+    description: "Tabbed content panels",
+    icon: "folder",
+    category: "interactive",
+  },
+  testimonial: {
+    label: "Testimonials",
+    description: "Rotating quotes and testimonials",
+    icon: "quote",
+    category: "content",
+  },
+  stats: {
+    label: "Stats Counter",
+    description: "Animated number counters",
+    icon: "bar-chart",
+    category: "content",
+  },
+  timeline: {
+    label: "Timeline",
+    description: "Vertical chronological layout",
+    icon: "clock",
+    category: "content",
   },
 };
 
@@ -381,6 +492,66 @@ export function createEmptyBlock(type: BlockType, order: number): Block {
               backGradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
               backTextColor: "#ffffff",
             },
+          ],
+        },
+      };
+    case "accordion":
+      return {
+        ...base,
+        type: "accordion",
+        data: {
+          allowMultiple: false,
+          items: [
+            { title: "Section 1", content: "<p>Content for section 1</p>", defaultOpen: true },
+            { title: "Section 2", content: "<p>Content for section 2</p>" },
+          ],
+        },
+      };
+    case "tabs":
+      return {
+        ...base,
+        type: "tabs",
+        data: {
+          alignment: "left",
+          tabs: [
+            { label: "Tab 1", content: "<p>Content for tab 1</p>" },
+            { label: "Tab 2", content: "<p>Content for tab 2</p>" },
+          ],
+        },
+      };
+    case "testimonial":
+      return {
+        ...base,
+        type: "testimonial",
+        data: {
+          autoRotate: true,
+          rotateIntervalMs: 5000,
+          testimonials: [
+            { quote: "This is a great organization!", author: "Jane Doe", role: "Member since 2020" },
+          ],
+        },
+      };
+    case "stats":
+      return {
+        ...base,
+        type: "stats",
+        data: {
+          columns: 3,
+          stats: [
+            { value: 500, suffix: "+", label: "Members" },
+            { value: 50, label: "Events per Year" },
+            { value: 30, label: "Interest Groups" },
+          ],
+        },
+      };
+    case "timeline":
+      return {
+        ...base,
+        type: "timeline",
+        data: {
+          events: [
+            { date: "2020", title: "Founded", description: "Our organization was established" },
+            { date: "2022", title: "Milestone", description: "Reached 500 members" },
           ],
         },
       };

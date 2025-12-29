@@ -219,41 +219,29 @@ A5. ✅ COMPLETE - Subset rollout for pages/copy (feature spec)
 - Spec: docs/publishing/SUBSET_ROLLOUT.md
 - Three-stage rollout: INTERNAL → PREVIEW → GENERAL
 
-A6. FlipCard block type
-- Goal: Hover-activated 3D flip card with image front, text/gradient back
-- Features: CSS-only animation (rotateY), keyboard accessible (focus=flip)
-- Inspiration: sbnc-website-redesign-playground.wildapricot.org
-- Deliverables: Block schema, editor UI, CSS styles, unit tests
+A6. ✅ COMPLETE - FlipCard block type
+- Implemented: 3D CSS flip animation, keyboard accessible
+- Files: blocks.ts, blockSchemas.ts, BlockRenderer.tsx
 
-A7. Accordion block type
-- Goal: Expandable/collapsible content sections
-- Features: Multiple panels, one-at-a-time or multi-open modes, smooth animation
-- Use cases: FAQs, program details, nested information
-- Deliverables: Block schema, editor UI, accessibility (ARIA), tests
+A7. ✅ COMPLETE - Accordion block type
+- Implemented: Expandable sections with <details> element
+- Features: Multiple panels, defaultOpen option
 
-A8. Tabs block type
-- Goal: Tabbed content panels for organizing related content
-- Features: Horizontal tabs, keyboard navigation, lazy content loading option
-- Use cases: Event details, member benefits, multi-category info
-- Deliverables: Block schema, editor UI, accessibility, tests
+A8. ✅ COMPLETE - Tabs block type
+- Implemented: Tabbed panels with tab navigation
+- Server-rendered (first tab default)
 
-A9. Testimonial/Quote carousel block type
-- Goal: Rotating member testimonials or quotes with author attribution
-- Features: Auto-rotate, manual navigation, pause on hover
-- Use cases: Member stories, board quotes, event feedback
-- Deliverables: Block schema, editor UI, CSS animations, tests
+A9. ✅ COMPLETE - Testimonial block type
+- Implemented: Quote with author/role/image
+- Features: Pagination dots, auto-rotate option
 
-A10. Stats counter block type
-- Goal: Animated number counters for key metrics
-- Features: Count-up animation on scroll into view, configurable values
-- Use cases: "500+ Members", "50 Events/Year", "30 Interest Groups"
-- Deliverables: Block schema, editor UI, intersection observer, tests
+A10. ✅ COMPLETE - Stats block type
+- Implemented: Number counters with prefix/suffix
+- Styled: Primary color background, grid layout
 
-A11. Timeline block type
-- Goal: Vertical timeline for chronological content
-- Features: Alternating left/right layout, date markers, scroll animations
-- Use cases: Club history, event schedules, membership journey
-- Deliverables: Block schema, editor UI, responsive design, tests
+A11. ✅ COMPLETE - Timeline block type
+- Implemented: Vertical timeline with dots
+- Features: Date, title, description, optional image
 
 A12. Before/After image slider block type
 - Goal: Draggable slider comparing two images

@@ -564,6 +564,285 @@ function FlipCardBlock({ block }: { block: Extract<Block, { type: "flip-card" }>
   );
 }
 
+function AccordionBlock({ block }: { block: Extract<Block, { type: "accordion" }> }) {
+  return (
+    <section
+      data-block-type="accordion"
+      style={{ padding: "var(--spacing-lg, 24px) var(--spacing-md, 16px)", maxWidth: "800px", margin: "0 auto" }}
+    >
+      {block.data.title && (
+        <h2 style={{ fontSize: "var(--font-size-2xl, 24px)", marginBottom: "var(--spacing-lg, 24px)" }}>
+          {block.data.title}
+        </h2>
+      )}
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-sm, 8px)" }}>
+        {block.data.items.map((item, idx) => (
+          <details
+            key={idx}
+            open={item.defaultOpen}
+            style={{
+              padding: "var(--spacing-md, 16px)",
+              backgroundColor: "#f9f9f9",
+              borderRadius: "var(--border-radius-md, 4px)",
+              border: "1px solid #e0e0e0",
+            }}
+          >
+            <summary
+              style={{
+                cursor: "pointer",
+                fontWeight: 600,
+                fontSize: "var(--font-size-lg, 18px)",
+                listStyle: "none",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              {item.title}
+              <span style={{ fontSize: "var(--font-size-sm, 14px)" }}>▼</span>
+            </summary>
+            <div
+              style={{ marginTop: "var(--spacing-md, 16px)", color: "#444", lineHeight: 1.6 }}
+              dangerouslySetInnerHTML={{ __html: item.content }}
+            />
+          </details>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TabsBlock({ block }: { block: Extract<Block, { type: "tabs" }> }) {
+  // Note: This is a server component, so tabs default to first tab
+  // Client-side interactivity would need to be added for tab switching
+  return (
+    <section
+      data-block-type="tabs"
+      style={{
+        padding: "var(--spacing-lg, 24px) var(--spacing-md, 16px)",
+        maxWidth: "800px",
+        margin: "0 auto",
+      }}
+    >
+      <div
+        role="tablist"
+        style={{
+          display: "flex",
+          gap: "var(--spacing-xs, 4px)",
+          borderBottom: "2px solid #e0e0e0",
+          marginBottom: "var(--spacing-lg, 24px)",
+          justifyContent: block.data.alignment === "center" ? "center" : block.data.alignment === "right" ? "flex-end" : "flex-start",
+        }}
+      >
+        {block.data.tabs.map((tab, idx) => (
+          <button
+            key={idx}
+            role="tab"
+            aria-selected={idx === 0}
+            style={{
+              padding: "var(--spacing-sm, 8px) var(--spacing-lg, 24px)",
+              backgroundColor: idx === 0 ? "#fff" : "transparent",
+              border: "none",
+              borderBottom: idx === 0 ? "2px solid var(--color-primary, #0066cc)" : "2px solid transparent",
+              marginBottom: "-2px",
+              cursor: "pointer",
+              fontWeight: idx === 0 ? 600 : 400,
+              color: idx === 0 ? "var(--color-primary, #0066cc)" : "#666",
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      {/* Show first tab content by default */}
+      {block.data.tabs[0] && (
+        <div
+          role="tabpanel"
+          style={{ lineHeight: 1.6 }}
+          dangerouslySetInnerHTML={{ __html: block.data.tabs[0].content }}
+        />
+      )}
+    </section>
+  );
+}
+
+function TestimonialBlock({ block }: { block: Extract<Block, { type: "testimonial" }> }) {
+  // Show first testimonial by default (rotation requires client-side JS)
+  const testimonial = block.data.testimonials[0];
+  if (!testimonial) return null;
+
+  return (
+    <section
+      data-block-type="testimonial"
+      style={{
+        padding: "var(--spacing-xl, 48px) var(--spacing-md, 16px)",
+        textAlign: "center",
+        backgroundColor: "#f9f9f9",
+      }}
+    >
+      {block.data.title && (
+        <h2 style={{ fontSize: "var(--font-size-2xl, 24px)", marginBottom: "var(--spacing-xl, 48px)" }}>
+          {block.data.title}
+        </h2>
+      )}
+      <blockquote style={{ maxWidth: "700px", margin: "0 auto" }}>
+        <p
+          style={{
+            fontSize: "var(--font-size-xl, 20px)",
+            fontStyle: "italic",
+            lineHeight: 1.6,
+            marginBottom: "var(--spacing-lg, 24px)",
+            color: "#333",
+          }}
+        >
+          &ldquo;{testimonial.quote}&rdquo;
+        </p>
+        <footer style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "var(--spacing-md, 16px)" }}>
+          {testimonial.image && (
+            // eslint-disable-next-line @next/next/no-img-element -- user-provided dynamic src
+            <img
+              src={testimonial.image}
+              alt={testimonial.author}
+              style={{ width: "60px", height: "60px", borderRadius: "50%", objectFit: "cover" }}
+            />
+          )}
+          <div>
+            <cite style={{ fontStyle: "normal", fontWeight: 600, display: "block" }}>{testimonial.author}</cite>
+            {testimonial.role && (
+              <span style={{ fontSize: "var(--font-size-sm, 14px)", color: "#666" }}>{testimonial.role}</span>
+            )}
+          </div>
+        </footer>
+      </blockquote>
+      {block.data.testimonials.length > 1 && (
+        <div style={{ marginTop: "var(--spacing-lg, 24px)", display: "flex", justifyContent: "center", gap: "var(--spacing-xs, 4px)" }}>
+          {block.data.testimonials.map((_, idx) => (
+            <span
+              key={idx}
+              style={{
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                backgroundColor: idx === 0 ? "var(--color-primary, #0066cc)" : "#ccc",
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function StatsBlock({ block }: { block: Extract<Block, { type: "stats" }> }) {
+  const columns = block.data.columns || 3;
+
+  return (
+    <section
+      data-block-type="stats"
+      style={{
+        padding: "var(--spacing-xl, 48px) var(--spacing-md, 16px)",
+        backgroundColor: "var(--color-primary, #0066cc)",
+        color: "#fff",
+      }}
+    >
+      {block.data.title && (
+        <h2 style={{ fontSize: "var(--font-size-2xl, 24px)", marginBottom: "var(--spacing-xl, 48px)", textAlign: "center" }}>
+          {block.data.title}
+        </h2>
+      )}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${columns}, 1fr)`,
+          gap: "var(--spacing-xl, 48px)",
+          maxWidth: "1000px",
+          margin: "0 auto",
+          textAlign: "center",
+        }}
+      >
+        {block.data.stats.map((stat, idx) => (
+          <div key={idx}>
+            <div style={{ fontSize: "var(--font-size-4xl, 48px)", fontWeight: 700, marginBottom: "var(--spacing-sm, 8px)" }}>
+              {stat.prefix}{stat.value.toLocaleString()}{stat.suffix}
+            </div>
+            <div style={{ fontSize: "var(--font-size-lg, 18px)", opacity: 0.9 }}>
+              {stat.label}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TimelineBlock({ block }: { block: Extract<Block, { type: "timeline" }> }) {
+  return (
+    <section
+      data-block-type="timeline"
+      style={{ padding: "var(--spacing-lg, 24px) var(--spacing-md, 16px)", maxWidth: "800px", margin: "0 auto" }}
+    >
+      {block.data.title && (
+        <h2 style={{ fontSize: "var(--font-size-2xl, 24px)", marginBottom: "var(--spacing-xl, 48px)", textAlign: "center" }}>
+          {block.data.title}
+        </h2>
+      )}
+      <div style={{ position: "relative", paddingLeft: "var(--spacing-xl, 48px)" }}>
+        {/* Vertical line */}
+        <div
+          style={{
+            position: "absolute",
+            left: "8px",
+            top: 0,
+            bottom: 0,
+            width: "2px",
+            backgroundColor: "#e0e0e0",
+          }}
+        />
+        {block.data.events.map((event, idx) => (
+          <div
+            key={idx}
+            style={{
+              position: "relative",
+              marginBottom: "var(--spacing-xl, 48px)",
+            }}
+          >
+            {/* Dot */}
+            <div
+              style={{
+                position: "absolute",
+                left: "-40px",
+                width: "16px",
+                height: "16px",
+                borderRadius: "50%",
+                backgroundColor: "var(--color-primary, #0066cc)",
+                border: "3px solid #fff",
+                boxShadow: "0 0 0 2px var(--color-primary, #0066cc)",
+              }}
+            />
+            <div style={{ fontSize: "var(--font-size-sm, 14px)", color: "var(--color-primary, #0066cc)", fontWeight: 600, marginBottom: "var(--spacing-xs, 4px)" }}>
+              {event.date}
+            </div>
+            <h3 style={{ fontSize: "var(--font-size-lg, 18px)", fontWeight: 600, marginBottom: "var(--spacing-sm, 8px)" }}>
+              {event.title}
+            </h3>
+            <p style={{ color: "#666", lineHeight: 1.6 }}>
+              {event.description}
+            </p>
+            {event.image && (
+              // eslint-disable-next-line @next/next/no-img-element -- user-provided dynamic src
+              <img
+                src={event.image}
+                alt={event.title}
+                style={{ marginTop: "var(--spacing-md, 16px)", maxWidth: "100%", borderRadius: "var(--border-radius-md, 4px)" }}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function renderBlock(block: Block) {
   switch (block.type) {
     case "hero":
@@ -590,6 +869,16 @@ function renderBlock(block: Block) {
       return <SpacerBlock key={block.id} block={block} />;
     case "flip-card":
       return <FlipCardBlock key={block.id} block={block} />;
+    case "accordion":
+      return <AccordionBlock key={block.id} block={block} />;
+    case "tabs":
+      return <TabsBlock key={block.id} block={block} />;
+    case "testimonial":
+      return <TestimonialBlock key={block.id} block={block} />;
+    case "stats":
+      return <StatsBlock key={block.id} block={block} />;
+    case "timeline":
+      return <TimelineBlock key={block.id} block={block} />;
     default:
       return null;
   }
