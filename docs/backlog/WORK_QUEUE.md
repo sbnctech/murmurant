@@ -17,7 +17,7 @@
 # Murmurant - Work Queue (Backlog)
 
 Status: Canonical backlog
-Last updated: 2025-12-21
+Last updated: 2025-12-28
 
 This file is the system-of-record backlog for reliability, editor, and publishing work.
 Items are ordered. Do not reorder without explicit rationale.
@@ -106,6 +106,40 @@ E4. Disaster recovery exercise plan (restore drills with verification)
 
 -------------------------------------------------------------------------------
 
+## F. Migration Path (WA as Source of Truth)
+
+Strategy: Use Murmurant UI while Wild Apricot remains the system of record.
+This enables gradual user migration with minimal risk.
+
+F1. Migration architecture spec
+- Goal: Define read-through/write-through patterns for WA integration.
+- Deliverables: Architecture doc covering data flow, caching, conflict handling.
+- Must define: Which entities remain WA-authoritative vs MM-authoritative.
+- Must define: Sync frequency, failure modes, reconciliation strategy.
+
+F2. WA API proxy layer
+- Goal: Abstract WA API behind internal service interface.
+- Deliverables: src/lib/wa/ with typed client, error handling, retry logic.
+- Must include: Rate limit handling, audit logging of WA calls.
+- Must use: DEPENDENCY_ISOLATION wrapper from reliability module.
+
+F3. Member data read-through
+- Goal: MM reads member data from WA, caches locally for performance.
+- Deliverables: Member sync service, cache invalidation strategy.
+- Must include: Staleness indicators in UI, manual refresh option.
+
+F4. Event/registration write-through
+- Goal: Event registrations in MM UI write to WA as source of truth.
+- Deliverables: Registration API that proxies to WA, confirms success.
+- Must include: Rollback on WA failure, clear error messages.
+
+F5. Gradual cutover plan
+- Goal: Define criteria and process for migrating entity types to MM-authoritative.
+- Deliverables: Cutover checklist, rollback procedures, data validation suite.
+- Must include: Per-entity migration (members, events, pages separate).
+
+-------------------------------------------------------------------------------
+
 ## Parallelization Plan (Official)
 
 Safe parallel streams (now):
@@ -124,6 +158,7 @@ Safe parallel streams (now):
 Not parallelized yet / gated:
 - Editor drag-and-drop (A2) waits for A1 completion.
 - Reliability enablement (C*) requires explicit deployment posture decision.
+- Migration path (F*) requires F1 architecture spec approval before implementation.
 
 Coordination rules:
 - One PR per stream.
