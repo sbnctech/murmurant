@@ -1,9 +1,9 @@
 # Pricing and Entitlements Specification
 
 ```
-Status: DRAFT - Pricing model deferred pending market validation
-Version: 1.0
-Last Updated: 2025-12-24
+Status: PROPOSED - Pricing model ready for market validation
+Version: 1.1
+Last Updated: 2025-12-28
 Derived From: _ARCHIVE/CHATGPT_BUSINESS_MODEL_WORKING_NOTES.md
 Related: Epic #248, Issue #249
 ```
@@ -151,29 +151,79 @@ Every limit MUST have:
 
 ## 5. Pricing Model
 
-### 5.1 Current Status: DEFERRED
+### 5.1 Current Status: PROPOSED
 
-Pricing model is intentionally deferred pending:
-- Market validation with early adopters
-- Understanding of actual usage patterns
-- Competitive analysis
+This pricing model is proposed for market validation. Final pricing TBD.
 
-### 5.2 Pricing Options Under Consideration
+### 5.2 Base Package
 
-| Model | Description | Pros | Cons |
-|-------|-------------|------|------|
-| Per-member | Price per active member | Scales with value | Complex tracking |
-| Flat tier | Fixed price for tier | Simple | May not fit all orgs |
-| Usage-based | Pay for what you use | Fair | Unpredictable bills |
-| Hybrid | Base + per-member | Predictable + scalable | More complex |
+The base package includes all core functionality:
 
-### 5.3 Pricing Invariants (When Decided)
+| Feature Category | Included |
+|------------------|----------|
+| Membership management | Yes |
+| Event registration & payments | Yes |
+| Donation tracking & receipts | Yes |
+| Community guide / resource directory | Yes |
+| Member directory | Yes |
+| Governance (minutes, motions) | Yes |
+| Email communications | Yes |
+| Basic reporting | Yes |
+| Standard support | Yes |
+
+**Pricing Structure (Hybrid Model):**
+
+| Component | Rate | Notes |
+|-----------|------|-------|
+| Per engaged member | $0.50-1.00/month | Scales with org size |
+| Transaction fee | 0.5-1% | On top of Stripe fees |
+| Minimum monthly | $25-50 | Floor to ensure sustainability |
+
+### 5.3 Add-Ons
+
+| Add-On | Price | Description |
+|--------|-------|-------------|
+| Custom domain | $10/month | yourclub.org instead of *.murmurant.app |
+| Premium support | $50/month | Priority response, dedicated contact |
+| API access | $25/month | Full API access for integrations |
+| White-label PDFs | $15/month | Remove Murmurant branding from exports |
+| Multi-chapter | Custom | For organizations with branches |
+
+### 5.4 Professional Services
+
+**Philosophy:** Services should be self-service or automated. Human-time services are
+intentionally limited to avoid scaling constraints.
+
+| Service | Price | Scope |
+|---------|-------|-------|
+| Self-service migration | Included | Automated import wizard for Wild Apricot, CSV |
+| Video onboarding library | Included | On-demand tutorials, no human time required |
+| Community forum support | Included | Peer support from other operators |
+
+**Premium (Limited Availability):**
+
+| Service | Price | Notes |
+|---------|-------|-------|
+| Concierge migration | $500 one-time | For complex/large migrations only |
+| Priority support queue | Part of Premium Support add-on | Faster response, not dedicated staff |
+
+**Explicitly NOT Offered:**
+
+- Custom development (use API access instead)
+- Dedicated account managers
+- Hourly consulting
+
+This aligns with Charter Principle P10 (automation over human intervention) and ensures
+the platform scales without linear headcount growth.
+
+### 5.5 Pricing Invariants
 
 When pricing is implemented, these invariants apply:
-- Price changes require advance notice
+- Price changes require 30+ days advance notice
 - Downgrades are allowed (with feature loss)
 - No surprise charges
-- Clear invoicing
+- Clear invoicing with itemized breakdown
+- "Engaged member" definition: logged in within last 90 days
 
 See: [BILLING_INVARIANTS.md](./BILLING_INVARIANTS.md)
 
@@ -208,10 +258,12 @@ When migrating from WA:
 
 | Question | Status | Owner |
 |----------|--------|-------|
-| Per-member vs flat pricing? | DEFERRED | Business |
-| What features are premium? | DEFERRED | Product |
-| Annual vs monthly billing? | DEFERRED | Business |
-| Free trial duration? | DEFERRED | Business |
+| Per-member vs flat pricing? | PROPOSED: Hybrid (per-member + minimum) | Business |
+| What features are premium? | PROPOSED: See Add-Ons section | Product |
+| Annual vs monthly billing? | TBD: Consider annual discount | Business |
+| Free trial duration? | TBD | Business |
+| Exact per-member rate ($0.50 vs $1.00)? | TBD: Market testing | Business |
+| Transaction fee (0.5% vs 1%)? | TBD: Competitor analysis | Business |
 
 ---
 
