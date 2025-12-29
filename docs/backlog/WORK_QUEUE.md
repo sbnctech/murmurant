@@ -169,8 +169,20 @@ C8. Failure injection execution plan (staging first, then controlled prod)
 
 D1. Assign provisional owners for production-critical mechanisms (pre-deployment)
 D2. Run at least 2 table tops (TT1, TT2) with written outcomes
-D3. Create Go/No-Go declaration template for deployment decision
-D4. Define incident log storage location and retention (even if manual)
+
+D3. ✅ COMPLETE - Go/No-Go declaration template
+- Template: docs/OPS/GO_NOGO_TEMPLATE.md
+- Includes: Technical/operational/business readiness checklists
+- Features: Risk assessment, sign-offs, conditional GO criteria
+- Related: WA_CUTOVER_PLAN.md
+
+D4. ✅ COMPLETE - Incident log storage and retention policy
+- Policy: docs/OPS/INCIDENT_LOG_POLICY.md
+- Storage: docs/incidents/YYYY/ directory structure (Phase 1 manual)
+- Templates: Incident report template, PIR template
+- Retention: 3 years incidents, 5 years PIRs, 1 year audit logs
+- Classification: SEV-1 through SEV-4, type codes (OUT/PERF/SEC/DATA/INT/DEP)
+- Metrics: MTTR, MTTD, incident rate, recurrence rate
 
 -------------------------------------------------------------------------------
 
