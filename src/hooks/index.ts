@@ -22,3 +22,11 @@ export {
   PublicLayoutProvider,
   MemberLayoutProvider,
 } from "./useTheme";
+
+export {
+  useNewsPreferences,
+  buildNewsQueryString,
+  type NewsPreferences,
+  type NewsSource,
+  type UseNewsPreferencesReturn,
+} from "./useNewsPreferences";

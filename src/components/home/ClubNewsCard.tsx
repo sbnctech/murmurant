@@ -1,69 +1,198 @@
 /**
  * ClubNewsCard - Shows recent club announcements
  *
- * Displays club news and announcements.
+ * Displays club news and announcements from:
+ * - Published pages (news, announcements)
+ * - Activity group announcements
+ * - Upcoming events
+ *
+ * Content is filtered by RBAC based on the user's role and membership.
+ * Members can customize their feed via preferences.
+ *
  * Part of the "My SBNC" member home page curated column.
  *
- * Data Source: Currently uses static demo data.
- * To swap to real data later:
- *   1. Create /api/v1/news endpoint
- *   2. Replace CLUB_NEWS with fetch() in useEffect
- *   3. Keep NewsItem interface the same
- *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright (c) Murmurant, Inc.
  */
 
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import SectionCard from "@/components/layout/SectionCard";
+import { useNewsPreferences, buildNewsQueryString } from "@/hooks";
+import { formatClubMonthYear } from "@/lib/timezone";
 
 interface NewsItem {
   id: string;
+  source: "page" | "announcement" | "event";
+  sourceId: string;
   title: string;
-  excerpt: string;
-  date: string;
-  category?: string;
-  href?: string; // Link to full article (optional)
+  excerpt: string | null;
+  category: string | null;
+  publishedAt: string;
+  expiresAt: string | null;
+  href: string | null;
+  isPinned: boolean;
+  groupName: string | null;
+}
+
+interface NewsResponse {
+  items: NewsItem[];
+  meta: {
+    total: number;
+    returned: number;
+    sources: string[];
+    categories: string[] | null;
+  };
 }
 
 /**
- * Club News Data
- *
- * Static news items for demo. Replace with API call when ready.
- * Items should be ordered newest first.
+ * Format date for display
  */
-const CLUB_NEWS: NewsItem[] = [
-  {
-    id: "news-1",
-    title: "Welcome to ClubOS!",
-    excerpt: "We're excited to launch our new member portal. Explore events, connect with members, and manage your profile all in one place.",
-    date: "Dec 2024",
-    category: "Announcement",
-  },
-  {
-    id: "news-2",
-    title: "Spring Activity Schedule",
-    excerpt: "Registration opens soon for our spring lineup including hiking, wine tasting, and the annual luncheon.",
-    date: "Dec 2024",
-    category: "Activities",
-  },
-  {
-    id: "news-3",
-    title: "Volunteer Opportunities",
-    excerpt: "Looking to get more involved? We're seeking hosts for small group activities and committee members.",
-    date: "Dec 2024",
-    category: "Volunteer",
-  },
-];
+function formatDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) {
+    return "Today";
+  } else if (diffDays === 1) {
+    return "Yesterday";
+  } else if (diffDays < 7) {
+    return `${diffDays} days ago`;
+  } else {
+    return formatClubMonthYear(date);
+  }
+}
+
+/**
+ * Get category display label
+ */
+function getCategoryLabel(item: NewsItem): string {
+  if (item.groupName) {
+    return item.groupName;
+  }
+  if (item.source === "event") {
+    return "Upcoming Event";
+  }
+  if (item.category) {
+    // Capitalize first letter of each word
+    return item.category
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+  }
+  return item.source === "page" ? "Article" : "Announcement";
+}
 
 export default function ClubNewsCard() {
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { preferences, isLoading: prefsLoading } = useNewsPreferences();
+
+  const fetchNews = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const queryString = buildNewsQueryString(preferences);
+      const response = await fetch(`/api/v1/news${queryString}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch news");
+      }
+
+      const data: NewsResponse = await response.json();
+      setNews(data.items);
+    } catch (err) {
+      console.error("Error fetching news:", err);
+      setError("Unable to load news");
+    } finally {
+      setLoading(false);
+    }
+  }, [preferences]);
+
+  // Fetch news when preferences are loaded
+  useEffect(() => {
+    if (!prefsLoading) {
+      fetchNews();
+    }
+  }, [prefsLoading, fetchNews]);
+
+  // Render loading state
+  if (loading || prefsLoading) {
+    return (
+      <SectionCard title="News" testId="club-news-card">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--token-space-sm)",
+          }}
+        >
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              style={{
+                padding: "var(--token-space-sm) 0",
+                borderBottom:
+                  i < 3 ? "1px solid var(--token-color-border)" : "none",
+              }}
+            >
+              <div
+                style={{
+                  height: "12px",
+                  width: "60px",
+                  backgroundColor: "var(--token-color-bg-secondary)",
+                  borderRadius: "4px",
+                  marginBottom: "6px",
+                }}
+              />
+              <div
+                style={{
+                  height: "16px",
+                  width: "80%",
+                  backgroundColor: "var(--token-color-bg-secondary)",
+                  borderRadius: "4px",
+                  marginBottom: "6px",
+                }}
+              />
+              <div
+                style={{
+                  height: "32px",
+                  width: "100%",
+                  backgroundColor: "var(--token-color-bg-secondary)",
+                  borderRadius: "4px",
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </SectionCard>
+    );
+  }
+
+  // Render error state
+  if (error) {
+    return (
+      <SectionCard title="News" testId="club-news-card">
+        <p
+          style={{
+            color: "var(--token-color-text-muted)",
+            fontStyle: "italic",
+          }}
+        >
+          {error}
+        </p>
+      </SectionCard>
+    );
+  }
+
   return (
-    <SectionCard
-      title="News"
-      testId="club-news-card"
-    >
-      {CLUB_NEWS.length === 0 ? (
+    <SectionCard title="News" testId="club-news-card">
+      {news.length === 0 ? (
         <p
           style={{
             color: "var(--token-color-text-muted)",
@@ -80,15 +209,17 @@ export default function ClubNewsCard() {
             gap: "var(--token-space-sm)",
           }}
         >
-          {CLUB_NEWS.map((item, index) => {
-            const isLast = index === CLUB_NEWS.length - 1;
+          {news.map((item, index) => {
+            const isLast = index === news.length - 1;
             const content = (
               <article
                 key={item.id}
                 data-test-id={`news-item-${item.id}`}
                 style={{
                   paddingBottom: isLast ? 0 : "var(--token-space-sm)",
-                  borderBottom: isLast ? "none" : "1px solid var(--token-color-border)",
+                  borderBottom: isLast
+                    ? "none"
+                    : "1px solid var(--token-color-border)",
                 }}
               >
                 {/* Category + Date row */}
@@ -100,26 +231,27 @@ export default function ClubNewsCard() {
                     marginBottom: "2px",
                   }}
                 >
-                  {item.category && (
-                    <span
-                      style={{
-                        fontSize: "11px",
-                        textTransform: "uppercase",
-                        color: "var(--token-color-primary)",
-                        fontWeight: 600,
-                        letterSpacing: "0.02em",
-                      }}
-                    >
-                      {item.category}
-                    </span>
-                  )}
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      textTransform: "uppercase",
+                      color: item.isPinned
+                        ? "var(--token-color-success)"
+                        : "var(--token-color-primary)",
+                      fontWeight: 600,
+                      letterSpacing: "0.02em",
+                    }}
+                  >
+                    {item.isPinned ? "📌 " : ""}
+                    {getCategoryLabel(item)}
+                  </span>
                   <span
                     style={{
                       fontSize: "11px",
                       color: "var(--token-color-text-muted)",
                     }}
                   >
-                    {item.date}
+                    {formatDate(item.publishedAt)}
                   </span>
                 </div>
 
@@ -138,20 +270,22 @@ export default function ClubNewsCard() {
                 </h3>
 
                 {/* Excerpt - compact */}
-                <p
-                  style={{
-                    fontSize: "13px",
-                    color: "var(--token-color-text-muted)",
-                    margin: 0,
-                    lineHeight: 1.4,
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {item.excerpt}
-                </p>
+                {item.excerpt && (
+                  <p
+                    style={{
+                      fontSize: "13px",
+                      color: "var(--token-color-text-muted)",
+                      margin: 0,
+                      lineHeight: 1.4,
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {item.excerpt}
+                  </p>
+                )}
               </article>
             );
 
