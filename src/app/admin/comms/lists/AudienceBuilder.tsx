@@ -61,7 +61,7 @@ export default function AudienceBuilder({ initialConfig, onChange }: AudienceBui
   const [audienceCount, setAudienceCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [committees, setCommittees] = useState<Committee[]>([]);
-  const [events, setEvents] = useState<Event[]>([]);
+  const [_events, setEvents] = useState<Event[]>([]); // For future event-based audience
   const [manualEmails, setManualEmails] = useState("");
   const [excludeEmails, setExcludeEmails] = useState("");
 

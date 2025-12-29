@@ -17,6 +17,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import AudienceBuilder, { type AudienceRuleConfig } from "../../lists/AudienceBuilder";
 
 type Step = "basics" | "audience" | "preview" | "schedule";
@@ -388,7 +389,7 @@ export default function MessageComposer() {
               <p style={{ fontSize: "14px", color: "#6b7280", marginBottom: "12px" }}>
                 No active templates found. Create a template first.
               </p>
-              <a
+              <Link
                 href="/admin/comms/templates/new"
                 style={{
                   color: "#2563eb",
@@ -397,7 +398,7 @@ export default function MessageComposer() {
                 }}
               >
                 Create Template
-              </a>
+              </Link>
             </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>

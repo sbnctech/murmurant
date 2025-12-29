@@ -14,6 +14,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { formatClubDateLong } from "@/lib/timezone";
 
 // Available merge fields for templates
 const MERGE_FIELDS = [
@@ -45,7 +46,7 @@ const SAMPLE_DATA: Record<string, string> = {
   "{{club.name}}": "Santa Barbara Newcomers Club",
   "{{club.email}}": "info@sbnewcomers.org",
   "{{club.website}}": "https://sbnewcomers.org",
-  "{{today}}": new Date().toLocaleDateString(),
+  "{{today}}": formatClubDateLong(new Date()),
   "{{year}}": new Date().getFullYear().toString(),
 };
 
