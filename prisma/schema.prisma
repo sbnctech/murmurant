@@ -314,6 +314,9 @@ model Member {
   // Widget approval relations
   widgetTypesApproved  WidgetType[] @relation("WidgetTypeApprovedBy")
 
+  // Starling chatbot relations
+  starlingConversations StarlingConversation[]
+
   @@index([membershipStatusId])
   @@index([membershipTierId])
 }
@@ -2083,4 +2086,143 @@ model ActivityGroupAnnouncement {
 
   @@index([groupId, publishedAt(sort: Desc)])
   @@index([expiresAt])
+=======
+// STARLING CHATBOT
+// Conversational AI assistant (see docs/chatbot/STARLING_REQUIREMENTS.md)
+// Charter P1: Audit - full conversation logging
+// Charter P4: No hidden rules - transparent reasoning
+// ============================================================================
+
+// StarlingConversation - Chat session with a user
+model StarlingConversation {
+  id        String   @id
+  userId    String   @db.Uuid
+  user      Member   @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages  StarlingMessage[]
+  stagings  StarlingStaging[]
+
+  @@index([userId])
+  @@index([updatedAt])
 }
+
+// StarlingMessage - Individual message in a conversation
+model StarlingMessage {
+  id             String               @id
+  conversationId String
+  conversation   StarlingConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  role           String   // 'user' | 'assistant'
+  content        String
+
+  // For assistant messages
+  intent         String?  // Detected intent (e.g., 'event:register')
+  confidence     Float?   // Intent detection confidence
+  actionType     String?  // 'answer' | 'stage' | 'navigate' | etc.
+
+  // Context at time of message
+  pageContext    Json?
+
+  createdAt      DateTime @default(now())
+
+  @@index([conversationId])
+  @@index([createdAt])
+}
+
+// StarlingStaging - Staged form data for user confirmation
+model StarlingStaging {
+  id              String               @id
+  userId          String               @db.Uuid
+  conversationId  String
+  conversation    StarlingConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  targetRoute     String   // Route to navigate to
+  formData        Json     // Form data to pre-fill
+  stagedFields    String[] // Which fields were staged by Starling
+  highlightSelector String // CSS selector for submit button
+  toastMessage    String   // Message to show user
+  requiresPasskey Boolean  @default(false)
+
+  metadata        Json     // Intent, query, resolved entities
+
+  createdAt       DateTime @default(now())
+  expiresAt       DateTime
+
+  // Tracking
+  consumed        Boolean  @default(false)
+  consumedAt      DateTime?
+  confirmed       Boolean  @default(false)
+  confirmedAt     DateTime?
+
+  @@index([userId])
+  @@index([conversationId])
+  @@index([expiresAt])
+}
+
+// StarlingAudit - Audit log for all Starling interactions
+model StarlingAudit {
+  id              String   @id
+  userId          String   @db.Uuid
+  conversationId  String?
+
+  // What happened
+  action          String   // 'message' | 'staging_created' | 'staging_consumed' | 'action_confirmed' | 'permission_denied'
+
+  // Details
+  userMessage     String?
+  assistantResponse String?
+  intent          String?
+  confidence      Float?
+  stagingId       String?
+  targetRoute     String?
+
+  // Context
+  pageContext     Json?
+
+  createdAt       DateTime @default(now())
+
+  @@index([userId])
+  @@index([conversationId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+/// Starling knowledge base for RAG
+/// Uses pgvector for semantic search
+/// Supports multi-tenant knowledge: platform (org=null) + operator-specific
+model StarlingKnowledge {
+  id          String   @id
+  content     String   // The text chunk
+  source      String   // File path or URL
+  sourceType  String   @map("source_type") // 'runbook' | 'faq' | 'help' | 'policy'
+  title       String?
+  section     String?
+  metadata    Json     @default("{}")
+
+  // Multi-tenant support
+  // null = platform-wide (Murmurant docs, shared across all operators)
+  // set = operator-specific knowledge
+  organizationId String?  @map("organization_id") @db.Uuid
+
+  // RBAC visibility (strict hierarchy)
+  // - 'public': Anyone can see (FAQs, general info)
+  // - 'member': Authenticated members only (policies, member docs)
+  // - 'staff': Officers/admins only (runbooks, internal procedures)
+  visibility  String   @default("member") // 'public' | 'member' | 'staff'
+
+  // Vector embedding for semantic search
+  // Note: pgvector extension must be enabled in PostgreSQL
+  // Run: CREATE EXTENSION IF NOT EXISTS vector;
+  embedding   Unsupported("vector(1536)")?
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([source])
+  @@index([sourceType])
+  @@index([organizationId])
+  @@index([visibility])
+}
+>>>>>>> d50f0bf (feat(starling): Add conversational AI assistant)

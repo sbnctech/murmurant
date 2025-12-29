@@ -273,9 +273,16 @@ Changes to this document require:
 
 This document complements:
 
+**Business Model:**
+- [BUSINESS_MODEL_CANONICAL.md](./BUSINESS_MODEL_CANONICAL.md) - Core business model rules
 - [Organizational Presentation Philosophy](./ORGANIZATIONAL_PRESENTATION_PHILOSOPHY.md) - Customer-facing migration explanation
 - [Architectural Charter](../ARCHITECTURAL_CHARTER.md) - Technical design principles
 - [ChatGPT Design Transcript](./_ARCHIVE/CHATGPT_TRANSCRIPTS/CHATGPT_BUSINESS_MODEL_TRANSCRIPT_2025-12-24.md) - Design reasoning archive
+
+**Visual Brand & Public Messaging:**
+- [BRAND-GUIDE.md](../brand/BRAND-GUIDE.md) - Visual identity, logo, colors, typography
+- [MURMURANT_FAQ.md](../brand/MURMURANT_FAQ.md) - Quick answers for board and prospects
+- [VOICE_AND_MESSAGING.md](../brand/VOICE_AND_MESSAGING.md) - Public communication guidelines
 
 ---
 

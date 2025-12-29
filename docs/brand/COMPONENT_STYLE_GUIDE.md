@@ -1,5 +1,26 @@
 # Murmurant Component Style Guide
 
+This guide defines technical implementation of UI components. For brand identity (colors, typography, logo usage), see [BRAND-GUIDE.md](./BRAND-GUIDE.md).
+
+## Brand Components
+
+Ready-to-use React components for brand assets:
+
+```tsx
+import { MurmurantLogo, MurmurantBug, MurmurantWordmark } from "@/components/brand";
+
+// Full logo (icon + wordmark)
+<MurmurantLogo size="lg" variant="color" />
+
+// Icon only (favicons, small spaces)
+<MurmurantBug size={32} variant="color" />
+
+// Wordmark only
+<MurmurantWordmark size="md" variant="color" />
+```
+
+**Variants:** `color` (twilight blue), `white`, `black`
+
 ## Design Principles
 
 1. **Consistency** - Components should look and behave the same across all pages
@@ -310,9 +331,15 @@ For destructive actions:
 
 ## Typography
 
+See [BRAND-GUIDE.md](./BRAND-GUIDE.md#4-typography) for typography standards.
+
 ### Font Stack
 
 ```css
+/* Primary (when Inter is loaded) */
+font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+/* System fallback */
 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 ```
 
@@ -330,11 +357,19 @@ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica N
 
 ### Colors
 
-- **Primary text**: #1f2937
-- **Secondary text**: #6b7280
-- **Muted text**: #9ca3af
-- **Link text**: #2563eb
-- **Error text**: #dc2626
+See [BRAND-GUIDE.md](./BRAND-GUIDE.md#3-color-palette) for the complete brand color palette.
+
+**Text colors:**
+- **Primary text**: #1f2937 (Gray 900)
+- **Secondary text**: #6b7280 (Gray 700)
+- **Muted text**: #9ca3af (Gray 400)
+- **Link text**: #1e40af (Deep Blue)
+- **Error text**: #dc2626 (Alert Red)
+
+**Brand colors for UI:**
+- **Twilight Blue** (#1a365d): Primary brand, headings, navigation
+- **Deep Blue** (#1e40af): Hover states, emphasis, links
+- **Sunset Orange** (#ed8936): CTAs, highlights, accents
 
 ---
 

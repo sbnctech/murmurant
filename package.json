@@ -18,6 +18,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:check-migrations": "bash scripts/ci/check-migration-safety.sh",
     "db:seed": "npx tsx prisma/seed.ts",
+    "starling:reindex": "npx tsx scripts/starling-reindex.ts",
+    "starling:sync": "npx tsx scripts/starling-reindex.ts sync",
     "postinstall": "prisma generate",
     "test:unit": "vitest run",
     "test:unit:coverage": "vitest run --coverage",

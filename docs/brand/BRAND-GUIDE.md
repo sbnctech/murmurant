@@ -315,9 +315,15 @@ Ideal imagery includes:
 
 ## Related Documents
 
+**Brand & Messaging:**
 - [NAMING-DECISION.md](../company/NAMING-DECISION.md) - Why we chose the name Murmurant
 - [VOICE_AND_MESSAGING.md](./VOICE_AND_MESSAGING.md) - Detailed communication guidelines
+- [MURMURANT_FAQ.md](./MURMURANT_FAQ.md) - Quick answers for board and prospects
 - [COMPONENT_STYLE_GUIDE.md](./COMPONENT_STYLE_GUIDE.md) - UI component styling
+
+**Business Model (Product Behavior as Brand):**
+- [BRAND_AND_VOICE.md](../BIZ/BRAND_AND_VOICE.md) - How product behavior embodies brand values
+- [BUSINESS_MODEL_CANONICAL.md](../BIZ/BUSINESS_MODEL_CANONICAL.md) - Core business model rules
 
 ---
 

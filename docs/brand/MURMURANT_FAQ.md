@@ -48,7 +48,7 @@ Murmurant is membership and event management software for community organization
 
 ### Q: Who built it?
 
-Murmurant was developed by the Santa Barbara Newcomers Club as an independent, clean-room implementation. No code was copied from any existing platform. Development uses AI-assisted tools under human oversight, with full audit trails and IP hygiene documentation.
+Murmurant was developed by Murmurant, Inc. as an independent, clean-room implementation. The Santa Barbara Newcomers Club serves as "Tenant Zero" - the first customer and primary validation environment. No code was copied from any existing platform. Development uses AI-assisted tools under human oversight, with full audit trails and IP hygiene documentation.
 
 ---
 
@@ -87,13 +87,14 @@ Any competent developer can maintain and extend the system.
 
 ### Q: How much does it cost?
 
-Murmurant is developed in-house. Ongoing costs are:
-
+**For SBNC (Tenant Zero):**
+Murmurant is developed in-house. Ongoing infrastructure costs are approximately $50/month:
 - Hosting: ~$20/month (Netlify + Neon database)
 - Domain: ~$15/year
 - Email delivery: ~$20/month (Resend)
 
-Total: approximately $50/month for a full-featured platform.
+**For other organizations:**
+Pricing for commercial customers is not yet finalized. Contact Murmurant, Inc. for information about pilot programs.
 
 ---
 
@@ -101,13 +102,13 @@ Total: approximately $50/month for a full-featured platform.
 
 ### Q: Can we use Murmurant for our organization?
 
-Murmurant is currently in pilot deployment with the Santa Barbara Newcomers Club. We're evaluating options for broader availability, which could include:
+Murmurant is currently in pilot deployment with the Santa Barbara Newcomers Club (Tenant Zero). We're evaluating options for broader availability:
 
-- Open-source release
-- Hosted service for other organizations
-- Consulting for custom deployments
+- **Assisted migration**: We help you move from Wild Apricot or similar platforms
+- **Single-tenant deployment**: Your own instance, your own database
+- **Organization-specific policy**: Configure tiers, roles, and workflows for your bylaws
 
-Contact us if you're interested in learning more.
+Contact Murmurant, Inc. if you're interested in learning more about pilot programs.
 
 ### Q: What size organization is it designed for?
 
@@ -144,9 +145,14 @@ Future integrations are planned based on user needs.
 
 ## Related Documents
 
+**Brand & Messaging:**
 - [BRAND-GUIDE.md](./BRAND-GUIDE.md) - Full brand identity guidelines
 - [VOICE_AND_MESSAGING.md](./VOICE_AND_MESSAGING.md) - Communication guidelines
 - [NAMING-DECISION.md](../company/NAMING-DECISION.md) - Full naming rationale
+
+**Business Model:**
+- [BUSINESS_MODEL_CANONICAL.md](../BIZ/BUSINESS_MODEL_CANONICAL.md) - Core business model rules
+- [BRAND_AND_VOICE.md](../BIZ/BRAND_AND_VOICE.md) - Product behavior as brand (operator trust model)
 
 ---
 

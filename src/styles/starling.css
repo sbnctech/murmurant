@@ -1,0 +1,64 @@
+/* Starling chatbot styles */
+
+/* Pulsing highlight for submit button when staged */
+.starling-highlight {
+  animation: starling-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.4) !important;
+}
+
+@keyframes starling-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(30, 64, 175, 0.2);
+  }
+}
+
+/* Indicator for Starling-filled fields */
+.starling-staged {
+  border-color: #1e40af !important;
+  background-color: rgba(30, 64, 175, 0.05) !important;
+  position: relative;
+}
+
+.starling-staged::after {
+  content: '🐦';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+/* Field that user has modified after staging */
+.starling-modified {
+  border-color: inherit !important;
+  background-color: inherit !important;
+}
+
+.starling-modified::after {
+  display: none;
+}
+
+/* Murmuration dot animation */
+.starling-dots circle {
+  transform-origin: center;
+}
+
+/* Loading animation for dots */
+.starling-thinking .starling-dots circle {
+  animation: starling-flow 1.5s ease-in-out infinite;
+}
+
+@keyframes starling-flow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
