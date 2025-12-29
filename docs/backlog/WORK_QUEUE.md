@@ -106,6 +106,42 @@ E4. Disaster recovery exercise plan (restore drills with verification)
 
 -------------------------------------------------------------------------------
 
+## F. Outstanding Salvage Items (from archived SALVAGE_PLAN_* docs)
+
+Captured: 2025-12-28 during salvage plan reconciliation audit.
+See: docs/archive/SALVAGE_RECONCILIATION.md for full details.
+
+F1. Editor core components (blocks A1/A2)
+- RichTextEditor.tsx - WYSIWYG rich text component (tiptap-based)
+- BlockEditors.tsx - per-block-type editing UI
+- PageEditor.tsx - main editor orchestrator component
+- Note: These are prerequisites for A1/A2 to be fully functional
+
+F2. Breadcrumb system (blocks A3/A4)
+- Page.breadcrumb schema field (nullable JSON)
+- Breadcrumbs.tsx rendering component
+- Note: Currently referenced in PageHeader but not fully implemented
+
+F3. Rollback executor (blocks C1)
+- src/lib/governance/rollback/executor.ts - execute rollback policies
+- Note: policies.ts and validators.ts exist; executor is missing
+
+F4. Audit CI enforcement (blocks B2)
+- scripts/ci/check-audit-coverage.sh - CI gate for audit compliance
+- Note: audit.ts exists; CI enforcement not wired
+
+F5. Auth/RBAC documentation
+- docs/project/AUTH_AND_RBAC.md - document current auth patterns
+- Note: Capabilities exist in auth.ts but undocumented
+
+F6. Eligibility engine (future - not blocking)
+- Full schema: TicketType, TicketEligibilityOverride, CommitteeMembership, EventSponsorship
+- Service: evaluateEligibility logic
+- Admin UI: eligibility viewer and ticket types page
+- Note: Stub exists at src/server/eligibility/stub.ts; full implementation is a future epic
+
+-------------------------------------------------------------------------------
+
 ## Parallelization Plan (Official)
 
 Safe parallel streams (now):
