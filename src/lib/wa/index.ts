@@ -164,3 +164,32 @@ export type {
   CacheSource,
   MemberCacheConfig,
 } from "./memberSync";
+
+// Registration Sync (F4 - Write-Through)
+export {
+  // Write operations
+  createRegistration,
+  cancelRegistration,
+
+  // Pending write queue
+  queuePendingWrite,
+  getPendingWrites,
+  getPendingWritesByStatus,
+  updatePendingWrite,
+  removePendingWrite,
+  clearPendingWrites,
+
+  // Background processing
+  processPendingWrites,
+  startPendingWriteProcessor,
+  stopPendingWriteProcessor,
+  getPendingWriteStatus,
+} from "./registrationSync";
+export type {
+  WriteResult,
+  WriteError,
+  WriteErrorType,
+  PendingWrite,
+  CreateRegistrationRequest,
+  CancelRegistrationRequest,
+} from "./registrationSync";

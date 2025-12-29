@@ -212,10 +212,14 @@ F3. ✅ COMPLETE - Member data read-through
 - Hook: src/hooks/useMemberData.tsx (useMemberData, useMembersData)
 - Tests: tests/unit/wa/memberSync.spec.ts (35 tests)
 
-F4. Event/registration write-through
+F4. ✅ COMPLETE - Event/registration write-through
 - Goal: Event registrations in MM UI write to WA as source of truth.
-- Deliverables: Registration API that proxies to WA, confirms success.
-- Must include: Rollback on WA failure, clear error messages.
+- Implemented: src/lib/wa/registrationSync.ts (write-through, retry, queue)
+- Features: createRegistration, cancelRegistration with confirmation
+- Error handling: Retry with backoff, pending write queue, conflict detection
+- User messages: Clear error messages for each failure type
+- Tests: tests/unit/wa/registrationSync.spec.ts (21 tests)
+- Total WA tests: 116
 
 F5. Gradual cutover plan
 - Goal: Define criteria and process for migrating entity types to MM-authoritative.
