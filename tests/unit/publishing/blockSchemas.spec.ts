@@ -315,29 +315,32 @@ describe("blockSchemas", () => {
       expect(isEditableBlockType("cta")).toBe(true);
       expect(isEditableBlockType("divider")).toBe(true);
       expect(isEditableBlockType("spacer")).toBe(true);
+      // A18-A21: Block editors implemented, now editable
+      expect(isEditableBlockType("cards")).toBe(true);
+      expect(isEditableBlockType("gallery")).toBe(true);
+      expect(isEditableBlockType("faq")).toBe(true);
+      expect(isEditableBlockType("contact")).toBe(true);
     });
 
     it("returns false for read-only block types", () => {
-      expect(isEditableBlockType("cards")).toBe(false);
+      // Only event-list remains read-only
       expect(isEditableBlockType("event-list")).toBe(false);
-      expect(isEditableBlockType("gallery")).toBe(false);
-      expect(isEditableBlockType("faq")).toBe(false);
-      expect(isEditableBlockType("contact")).toBe(false);
     });
   });
 
   describe("isReadonlyBlockType", () => {
     it("returns true for read-only block types", () => {
-      expect(isReadonlyBlockType("cards")).toBe(true);
+      // Only event-list remains read-only (requires external data source)
       expect(isReadonlyBlockType("event-list")).toBe(true);
-      expect(isReadonlyBlockType("gallery")).toBe(true);
-      expect(isReadonlyBlockType("faq")).toBe(true);
-      expect(isReadonlyBlockType("contact")).toBe(true);
     });
 
     it("returns false for editable block types", () => {
       expect(isReadonlyBlockType("hero")).toBe(false);
       expect(isReadonlyBlockType("text")).toBe(false);
+      expect(isReadonlyBlockType("cards")).toBe(false);
+      expect(isReadonlyBlockType("gallery")).toBe(false);
+      expect(isReadonlyBlockType("faq")).toBe(false);
+      expect(isReadonlyBlockType("contact")).toBe(false);
     });
   });
 
@@ -380,18 +383,21 @@ describe("blockSchemas", () => {
       expect(EDITABLE_BLOCK_TYPES).toContain("cta");
       expect(EDITABLE_BLOCK_TYPES).toContain("divider");
       expect(EDITABLE_BLOCK_TYPES).toContain("spacer");
-      expect(EDITABLE_BLOCK_TYPES).not.toContain("cards");
+      // A18-A21: Block editors implemented, now editable
+      expect(EDITABLE_BLOCK_TYPES).toContain("cards");
+      expect(EDITABLE_BLOCK_TYPES).toContain("gallery");
+      expect(EDITABLE_BLOCK_TYPES).toContain("faq");
+      expect(EDITABLE_BLOCK_TYPES).toContain("contact");
     });
   });
 
   describe("READONLY_BLOCK_TYPES", () => {
     it("contains expected block types", () => {
-      expect(READONLY_BLOCK_TYPES).toContain("cards");
+      // Only event-list remains read-only (requires external data source)
       expect(READONLY_BLOCK_TYPES).toContain("event-list");
-      expect(READONLY_BLOCK_TYPES).toContain("gallery");
-      expect(READONLY_BLOCK_TYPES).toContain("faq");
-      expect(READONLY_BLOCK_TYPES).toContain("contact");
       expect(READONLY_BLOCK_TYPES).not.toContain("hero");
+      expect(READONLY_BLOCK_TYPES).not.toContain("cards");
+      expect(READONLY_BLOCK_TYPES).not.toContain("gallery");
     });
   });
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAuth, requireCapability } from "@/lib/auth";
+import { requireAuth, requireCapabilitySafe } from "@/lib/auth";
 import { apiSuccess, apiCreated, errors } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
   const { id: committeeId } = await params;
-  const auth = await requireCapability(request, "admin:full");
+  const auth = await requireCapabilitySafe(request, "admin:full");
   if (!auth.ok) return auth.response;
 
   try {
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   const { id: committeeId } = await params;
-  const auth = await requireCapability(request, "admin:full");
+  const auth = await requireCapabilitySafe(request, "admin:full");
   if (!auth.ok) return auth.response;
 
   try {
