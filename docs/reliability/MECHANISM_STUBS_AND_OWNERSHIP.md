@@ -2,7 +2,7 @@
 
 Status: Canonical Planning Specification
 Applies to: Pre-deployment readiness
-Last updated: 2025-12-20
+Last updated: 2025-12-28
 
 This document maps reliability guarantees to concrete mechanism stubs, their
 intended system locations, explicit human ownership, and implementation status.
@@ -64,21 +64,21 @@ Columns:
 
 | Guarantee | Mechanism stub | Location | Owner | Status | Notes |
 |---|---|---|---|---|---|
-| No silent data loss of authoritative data | Backup execution job | Infra | TBD | Defined | Must be isolated from app runtime |
+| No silent data loss of authoritative data | Backup execution job | Infra | TBD | Stubbed | src/lib/reliability/backup.ts (dry-run) |
 | Point-in-time recovery (PITR) | PITR/WAL configuration | DB/Infra | TBD | Defined | Provider-dependent capability |
 | No partial writes | Single-transaction write wrapper | App | TBD | Implemented | Use for every domain write |
-| Read-only degraded mode | WRITE_GUARD global gate | App | TBD | Defined | Global "writes disabled" switch |
-| Publishing freeze | PUBLISH_GUARD global gate | App | TBD | Defined | Separate from WRITE_GUARD |
+| Read-only degraded mode | WRITE_GUARD global gate | App | TBD | Stubbed | src/lib/reliability/guards.ts (always allow) |
+| Publishing freeze | PUBLISH_GUARD global gate | App | TBD | Stubbed | src/lib/reliability/guards.ts (always allow) |
 | Preview isolation | Preview route authorization gate | App | TBD | Implemented | No public preview access |
 | Audience enforcement | Server-side audience filter | App | TBD | Enabled | Must remain server-side only |
-| Audit log | Append-only audit table + writer | DB/App | TBD | Defined | Must be attributable and immutable |
+| Audit log | Append-only audit table + writer | DB/App | TBD | Implemented | src/lib/audit.ts (DB table + writer) |
 | Admin attribution | requireActor middleware | App | TBD | Enabled | Actor required for admin actions |
-| Kill switches | Server-side feature flags | App | TBD | Defined | Must not rely on client state |
-| Dependency isolation | Timeout + circuit policy | App | TBD | Defined | No external dep may block core writes |
-| Backpressure | Rate limit + reject policy | App/Infra | TBD | Defined | Unbounded queues forbidden |
+| Kill switches | Server-side feature flags | App | TBD | Stubbed | src/lib/reliability/killSwitch.ts (all OFF) |
+| Dependency isolation | Timeout + circuit policy | App | TBD | Stubbed | src/lib/reliability/isolation.ts (pass-through) |
+| Backpressure | Rate limit + reject policy | App/Infra | TBD | Stubbed | src/lib/reliability/backpressure.ts (no-op) |
 | Incident logging | Incident record template | Process/Human | System Owner | Defined | Manual until tooling exists |
-| Restore verification | Invariant verification suite | App/DB | TBD | Defined | Must run before resuming writes |
-| Failure injection | Test-only injectors + scenarios | Test/Process | TBD | Defined | Explicit, logged, reversible |
+| Restore verification | Invariant verification suite | App/DB | TBD | Stubbed | src/lib/reliability/backup.ts (fixture-only) |
+| Failure injection | Test-only injectors + scenarios | Test/Process | TBD | Stubbed | src/lib/reliability/failureInjection.ts (disabled) |
 
 ---
 

@@ -1,6 +1,7 @@
 // Copyright (c) Santa Barbara Newcomers Club
 // Public page rendering route - shows publishedContent only
 // Enforces VisibilityRule and RoleGate at render time (Charter P2)
+// P2: Emits JSON-LD structured data for SEO
 
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -14,6 +15,21 @@ import { VisibilityUserContext } from "@/lib/publishing/visibility";
 import { selectContent } from "@/lib/publishing/contentSelection";
 import BlockRenderer from "@/components/publishing/BlockRenderer";
 import { getCurrentSession } from "@/lib/auth/session";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  buildWebPageJsonLd,
+  buildWebSiteJsonLd,
+  combineJsonLd,
+  SiteConfig,
+} from "@/lib/seo/jsonld";
+import { CLUB_WEBSITE_URL } from "@/lib/config/externalLinks";
+
+// Site configuration for JSON-LD
+const SITE_CONFIG: SiteConfig = {
+  name: "Santa Barbara Newcomers Club",
+  url: CLUB_WEBSITE_URL,
+  description: "Welcoming newcomers to Santa Barbara since 1970",
+};
 
 type RouteParams = {
   params: Promise<{ slug: string }>;
@@ -151,13 +167,31 @@ export default async function PublicPage({ params }: RouteParams) {
     }
   }
 
+  // P2: Build JSON-LD for public pages
+  const jsonLdData = combineJsonLd([
+    buildWebSiteJsonLd(SITE_CONFIG),
+    buildWebPageJsonLd(
+      {
+        slug,
+        title: page.title,
+        description: page.description,
+        publishedAt: page.publishedAt,
+        updatedAt: page.updatedAt,
+      },
+      SITE_CONFIG
+    ),
+  ]);
+
   return (
-    <main data-test-id="public-page" data-page-slug={slug}>
-      <BlockRenderer
-        content={selection.content}
-        themeCss={themeCss}
-        user={userContext}
-      />
-    </main>
+    <>
+      <JsonLd data={jsonLdData} />
+      <main data-test-id="public-page" data-page-slug={slug}>
+        <BlockRenderer
+          content={selection.content}
+          themeCss={themeCss}
+          user={userContext}
+        />
+      </main>
+    </>
   );
 }

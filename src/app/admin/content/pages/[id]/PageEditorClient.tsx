@@ -16,6 +16,11 @@ import {
 } from "@/lib/publishing/blockSchemas";
 import { PageLifecycleState, LifecycleAction } from "@/lib/publishing/pageLifecycle";
 import { formatDateLocale, formatClubDate } from "@/lib/timezone";
+import {
+  SortableBlockList,
+  DragHandle,
+  DragHandleProps,
+} from "@/components/publishing/SortableBlockList";
 
 // A7: Revision state for undo/redo
 type RevisionState = {
@@ -250,6 +255,15 @@ export default function PageEditorClient({ pageId, initialBlocks, lifecycle: ini
 
     setBlocks(reordered);
     saveBlockOrder(reordered, previousBlocks);
+  }
+
+  // A2: Handle drag-and-drop reorder
+  function handleDragReorder(newBlocks: Block[]) {
+    if (saving) return;
+
+    const previousBlocks = blocks;
+    setBlocks(newBlocks);
+    saveBlockOrder(newBlocks, previousBlocks);
   }
 
   // Start editing a block
@@ -661,225 +675,30 @@ export default function PageEditorClient({ pageId, initialBlocks, lifecycle: ini
         </div>
       )}
 
-      {blocks.length === 0 ? (
-        <p data-test-id="page-editor-empty" style={{ color: "#666", fontStyle: "italic" }}>
-          No blocks yet. Add a block to get started.
-        </p>
-      ) : (
-        <ul
-          data-test-id="page-editor-block-list"
-          style={{ listStyle: "none", margin: 0, padding: 0 }}
-        >
-          {blocks.map((block, index) => {
-            const meta = BLOCK_METADATA[block.type];
-            const isFirst = index === 0;
-            const isLast = index === blocks.length - 1;
-            const isEditing = editingBlockId === block.id;
-            const isEditable = EDITABLE_BLOCK_TYPES.includes(block.type);
-            const isReadonly = READONLY_BLOCK_TYPES.includes(block.type);
-
-            return (
-              <li
-                key={block.id}
-                data-test-id="page-editor-block-item"
-                data-block-id={block.id}
-                data-block-type={block.type}
-                style={{
-                  marginBottom: "8px",
-                  backgroundColor: "#f9f9f9",
-                  border: isEditing ? "2px solid #0066cc" : "1px solid #e0e0e0",
-                  borderRadius: "4px",
-                }}
-              >
-                {/* Block header row */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "12px",
-                    padding: "12px",
-                  }}
-                >
-                  {/* Order controls */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                    <button
-                      type="button"
-                      data-test-id="block-move-up"
-                      onClick={() => handleMoveUp(index)}
-                      disabled={isFirst || saving}
-                      aria-label={`Move ${meta?.label || block.type} up`}
-                      style={{
-                        padding: "4px 8px",
-                        fontSize: "12px",
-                        cursor: isFirst || saving ? "not-allowed" : "pointer",
-                        opacity: isFirst || saving ? 0.4 : 1,
-                        border: "1px solid #ccc",
-                        borderRadius: "3px",
-                        backgroundColor: "#fff",
-                      }}
-                    >
-                      ▲
-                    </button>
-                    <button
-                      type="button"
-                      data-test-id="block-move-down"
-                      onClick={() => handleMoveDown(index)}
-                      disabled={isLast || saving}
-                      aria-label={`Move ${meta?.label || block.type} down`}
-                      style={{
-                        padding: "4px 8px",
-                        fontSize: "12px",
-                        cursor: isLast || saving ? "not-allowed" : "pointer",
-                        opacity: isLast || saving ? 0.4 : 1,
-                        border: "1px solid #ccc",
-                        borderRadius: "3px",
-                        backgroundColor: "#fff",
-                      }}
-                    >
-                      ▼
-                    </button>
-                  </div>
-
-                  {/* Block info */}
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 500, fontSize: "14px" }}>
-                      {meta?.label || block.type}
-                      {isReadonly && (
-                        <span
-                          style={{
-                            marginLeft: "8px",
-                            fontSize: "11px",
-                            padding: "2px 6px",
-                            backgroundColor: "#e0e0e0",
-                            borderRadius: "3px",
-                            color: "#666",
-                          }}
-                        >
-                          Read-only
-                        </span>
-                      )}
-                    </div>
-                    <div style={{ fontSize: "12px", color: "#666" }}>
-                      {meta?.description || `Block type: ${block.type}`}
-                    </div>
-                  </div>
-
-                  {/* Edit button */}
-                  <button
-                    type="button"
-                    data-test-id="block-edit"
-                    onClick={() => (isEditing ? handleCancelEdit() : handleEdit(block))}
-                    disabled={saving}
-                    style={{
-                      padding: "6px 12px",
-                      fontSize: "13px",
-                      cursor: saving ? "not-allowed" : "pointer",
-                      opacity: saving ? 0.6 : 1,
-                      border: "1px solid #0066cc",
-                      borderRadius: "4px",
-                      backgroundColor: isEditing ? "#0066cc" : "#fff",
-                      color: isEditing ? "#fff" : "#0066cc",
-                    }}
-                  >
-                    {isEditing ? "Cancel" : isReadonly ? "View" : "Edit"}
-                  </button>
-
-                  {/* Order indicator */}
-                  <div
-                    data-test-id="block-order-indicator"
-                    style={{ fontSize: "12px", color: "#999", minWidth: "40px", textAlign: "right" }}
-                  >
-                    #{index + 1}
-                  </div>
-                </div>
-
-                {/* Editor panel */}
-                {isEditing && (
-                  <div
-                    data-test-id="block-editor-panel"
-                    style={{
-                      padding: "16px",
-                      borderTop: "1px solid #e0e0e0",
-                      backgroundColor: "#fff",
-                    }}
-                  >
-                    {/* Validation error */}
-                    {validationError && (
-                      <div
-                        data-test-id="block-editor-validation-error"
-                        style={{
-                          padding: "8px 12px",
-                          marginBottom: "12px",
-                          backgroundColor: "#fff3cd",
-                          border: "1px solid #ffc107",
-                          borderRadius: "4px",
-                          color: "#856404",
-                          fontSize: "13px",
-                        }}
-                      >
-                        {validationError}
-                      </div>
-                    )}
-
-                    {isReadonly ? (
-                      <ReadOnlyBlockViewer data={block.data} blockType={block.type} />
-                    ) : (
-                      <SchemaBlockEditor
-                        blockType={block.type}
-                        data={editingData || {}}
-                        onChange={updateField}
-                        disabled={saving}
-                      />
-                    )}
-
-                    {/* Save/Cancel buttons for editable blocks */}
-                    {isEditable && (
-                      <div style={{ marginTop: "16px", display: "flex", gap: "8px" }}>
-                        <button
-                          type="button"
-                          data-test-id="block-editor-save"
-                          onClick={handleSaveEdit}
-                          disabled={saving}
-                          style={{
-                            padding: "8px 16px",
-                            fontSize: "14px",
-                            cursor: saving ? "not-allowed" : "pointer",
-                            opacity: saving ? 0.6 : 1,
-                            border: "none",
-                            borderRadius: "4px",
-                            backgroundColor: "#0066cc",
-                            color: "#fff",
-                          }}
-                        >
-                          {saving ? "Saving..." : "Save"}
-                        </button>
-                        <button
-                          type="button"
-                          data-test-id="block-editor-cancel"
-                          onClick={handleCancelEdit}
-                          disabled={saving}
-                          style={{
-                            padding: "8px 16px",
-                            fontSize: "14px",
-                            cursor: saving ? "not-allowed" : "pointer",
-                            opacity: saving ? 0.6 : 1,
-                            border: "1px solid #ccc",
-                            borderRadius: "4px",
-                            backgroundColor: "#fff",
-                            color: "#333",
-                          }}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      <SortableBlockList
+        blocks={blocks}
+        onReorder={handleDragReorder}
+        disabled={saving}
+        renderBlock={(block, index, dragHandleProps) => (
+          <BlockItem
+            block={block}
+            index={index}
+            isFirst={index === 0}
+            isLast={index === blocks.length - 1}
+            isEditing={editingBlockId === block.id}
+            saving={saving}
+            dragHandleProps={dragHandleProps}
+            editingData={editingData}
+            validationError={validationError}
+            onMoveUp={() => handleMoveUp(index)}
+            onMoveDown={() => handleMoveDown(index)}
+            onEdit={() => handleEdit(block)}
+            onCancelEdit={handleCancelEdit}
+            onSaveEdit={handleSaveEdit}
+            updateField={updateField}
+          />
+        )}
+      />
 
       {/* Audit Log Panel */}
       <AuditLogPanel pageId={pageId} />
@@ -1237,6 +1056,255 @@ function SchemaBlockEditor({ blockType, data, onChange, disabled }: SchemaBlockE
           )}
         </label>
       ))}
+    </div>
+  );
+}
+
+// ============================================================================
+// A2: Block Item with drag handle support
+// ============================================================================
+
+type BlockItemProps = {
+  block: Block;
+  index: number;
+  isFirst: boolean;
+  isLast: boolean;
+  isEditing: boolean;
+  saving: boolean;
+  dragHandleProps: DragHandleProps;
+  editingData: Record<string, unknown> | null;
+  validationError: string | null;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  onEdit: () => void;
+  onCancelEdit: () => void;
+  onSaveEdit: () => void;
+  updateField: (field: string, value: unknown) => void;
+};
+
+function BlockItem({
+  block,
+  index,
+  isFirst,
+  isLast,
+  isEditing,
+  saving,
+  dragHandleProps,
+  editingData,
+  validationError,
+  onMoveUp,
+  onMoveDown,
+  onEdit,
+  onCancelEdit,
+  onSaveEdit,
+  updateField,
+}: BlockItemProps) {
+  const meta = BLOCK_METADATA[block.type];
+  const isEditable = EDITABLE_BLOCK_TYPES.includes(block.type);
+  const isReadonly = READONLY_BLOCK_TYPES.includes(block.type);
+
+  return (
+    <div
+      style={{
+        marginBottom: "8px",
+        backgroundColor: "#f9f9f9",
+        border: isEditing ? "2px solid #0066cc" : "1px solid #e0e0e0",
+        borderRadius: "4px",
+      }}
+    >
+      {/* Block header row */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          padding: "12px",
+        }}
+      >
+        {/* A2: Drag handle */}
+        <DragHandle
+          attributes={dragHandleProps.attributes}
+          listeners={dragHandleProps.listeners}
+          disabled={saving}
+        />
+
+        {/* Order controls (keyboard fallback) */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          <button
+            type="button"
+            data-test-id="block-move-up"
+            onClick={onMoveUp}
+            disabled={isFirst || saving}
+            aria-label={`Move ${meta?.label || block.type} up`}
+            title="Move up (keyboard shortcut)"
+            style={{
+              padding: "4px 8px",
+              fontSize: "12px",
+              cursor: isFirst || saving ? "not-allowed" : "pointer",
+              opacity: isFirst || saving ? 0.4 : 1,
+              border: "1px solid #ccc",
+              borderRadius: "3px",
+              backgroundColor: "#fff",
+            }}
+          >
+            ▲
+          </button>
+          <button
+            type="button"
+            data-test-id="block-move-down"
+            onClick={onMoveDown}
+            disabled={isLast || saving}
+            aria-label={`Move ${meta?.label || block.type} down`}
+            title="Move down (keyboard shortcut)"
+            style={{
+              padding: "4px 8px",
+              fontSize: "12px",
+              cursor: isLast || saving ? "not-allowed" : "pointer",
+              opacity: isLast || saving ? 0.4 : 1,
+              border: "1px solid #ccc",
+              borderRadius: "3px",
+              backgroundColor: "#fff",
+            }}
+          >
+            ▼
+          </button>
+        </div>
+
+        {/* Block info */}
+        <div style={{ flex: 1 }}>
+          <div style={{ fontWeight: 500, fontSize: "14px" }}>
+            {meta?.label || block.type}
+            {isReadonly && (
+              <span
+                style={{
+                  marginLeft: "8px",
+                  fontSize: "11px",
+                  padding: "2px 6px",
+                  backgroundColor: "#e0e0e0",
+                  borderRadius: "3px",
+                  color: "#666",
+                }}
+              >
+                Read-only
+              </span>
+            )}
+          </div>
+          <div style={{ fontSize: "12px", color: "#666" }}>
+            {meta?.description || `Block type: ${block.type}`}
+          </div>
+        </div>
+
+        {/* Edit button */}
+        <button
+          type="button"
+          data-test-id="block-edit"
+          onClick={isEditing ? onCancelEdit : onEdit}
+          disabled={saving}
+          style={{
+            padding: "6px 12px",
+            fontSize: "13px",
+            cursor: saving ? "not-allowed" : "pointer",
+            opacity: saving ? 0.6 : 1,
+            border: "1px solid #0066cc",
+            borderRadius: "4px",
+            backgroundColor: isEditing ? "#0066cc" : "#fff",
+            color: isEditing ? "#fff" : "#0066cc",
+          }}
+        >
+          {isEditing ? "Cancel" : isReadonly ? "View" : "Edit"}
+        </button>
+
+        {/* Order indicator */}
+        <div
+          data-test-id="block-order-indicator"
+          style={{ fontSize: "12px", color: "#999", minWidth: "40px", textAlign: "right" }}
+        >
+          #{index + 1}
+        </div>
+      </div>
+
+      {/* Editor panel */}
+      {isEditing && (
+        <div
+          data-test-id="block-editor-panel"
+          style={{
+            padding: "16px",
+            borderTop: "1px solid #e0e0e0",
+            backgroundColor: "#fff",
+          }}
+        >
+          {/* Validation error */}
+          {validationError && (
+            <div
+              data-test-id="block-editor-validation-error"
+              style={{
+                padding: "8px 12px",
+                marginBottom: "12px",
+                backgroundColor: "#fff3cd",
+                border: "1px solid #ffc107",
+                borderRadius: "4px",
+                color: "#856404",
+                fontSize: "13px",
+              }}
+            >
+              {validationError}
+            </div>
+          )}
+
+          {isReadonly ? (
+            <ReadOnlyBlockViewer data={block.data} blockType={block.type} />
+          ) : (
+            <SchemaBlockEditor
+              blockType={block.type}
+              data={editingData || {}}
+              onChange={updateField}
+              disabled={saving}
+            />
+          )}
+
+          {/* Save/Cancel buttons for editable blocks */}
+          {isEditable && (
+            <div style={{ marginTop: "16px", display: "flex", gap: "8px" }}>
+              <button
+                type="button"
+                data-test-id="block-editor-save"
+                onClick={onSaveEdit}
+                disabled={saving}
+                style={{
+                  padding: "8px 16px",
+                  fontSize: "14px",
+                  cursor: saving ? "not-allowed" : "pointer",
+                  opacity: saving ? 0.6 : 1,
+                  border: "none",
+                  borderRadius: "4px",
+                  backgroundColor: "#0066cc",
+                  color: "#fff",
+                }}
+              >
+                {saving ? "Saving..." : "Save"}
+              </button>
+              <button
+                type="button"
+                data-test-id="block-editor-cancel"
+                onClick={onCancelEdit}
+                disabled={saving}
+                style={{
+                  padding: "8px 16px",
+                  fontSize: "14px",
+                  cursor: saving ? "not-allowed" : "pointer",
+                  opacity: saving ? 0.6 : 1,
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  backgroundColor: "#fff",
+                  color: "#333",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
