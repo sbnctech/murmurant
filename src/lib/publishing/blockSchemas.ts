@@ -317,6 +317,24 @@ export const timelineDataSchema = z
   })
   .passthrough();
 
+/**
+ * Before/After block data schema
+ * Draggable slider comparing two images
+ */
+export const beforeAfterDataSchema = z
+  .object({
+    title: z.string().optional(),
+    beforeImage: z.string().min(1, "Before image URL is required"),
+    beforeAlt: z.string().min(1, "Before image alt text is required"),
+    beforeLabel: z.string().optional(),
+    afterImage: z.string().min(1, "After image URL is required"),
+    afterAlt: z.string().min(1, "After image alt text is required"),
+    afterLabel: z.string().optional(),
+    initialPosition: z.number().min(0).max(100).optional(),
+    aspectRatio: z.enum(["16:9", "4:3", "1:1", "3:2"]).optional(),
+  })
+  .passthrough();
+
 // ============================================================================
 // Schema Registry
 // ============================================================================
@@ -342,6 +360,7 @@ export const BLOCK_DATA_SCHEMAS: Record<BlockType, z.ZodType> = {
   testimonial: testimonialDataSchema,
   stats: statsDataSchema,
   timeline: timelineDataSchema,
+  "before-after": beforeAfterDataSchema,
 };
 
 /**
@@ -371,6 +390,7 @@ export const READONLY_BLOCK_TYPES: BlockType[] = [
   "testimonial",
   "stats",
   "timeline",
+  "before-after",
 ];
 
 // ============================================================================
@@ -506,6 +526,17 @@ export function getDefaultBlockData(type: BlockType): Record<string, unknown> {
           { date: "2020", title: "Founded", description: "Our organization was established" },
           { date: "2022", title: "Milestone", description: "Reached 500 members" },
         ],
+      };
+    case "before-after":
+      return {
+        beforeImage: "",
+        beforeAlt: "Before image",
+        beforeLabel: "Before",
+        afterImage: "",
+        afterAlt: "After image",
+        afterLabel: "After",
+        initialPosition: 50,
+        aspectRatio: "16:9",
       };
     default:
       return {};

@@ -19,7 +19,8 @@ export type BlockType =
   | "tabs"
   | "testimonial"
   | "stats"
-  | "timeline";
+  | "timeline"
+  | "before-after";
 
 // Base block structure
 export type BaseBlock = {
@@ -255,6 +256,22 @@ export type TimelineBlock = BaseBlock & {
   };
 };
 
+// BeforeAfter block - draggable slider comparing two images
+export type BeforeAfterBlock = BaseBlock & {
+  type: "before-after";
+  data: {
+    title?: string;
+    beforeImage: string;
+    beforeAlt: string;
+    beforeLabel?: string; // e.g., "Before"
+    afterImage: string;
+    afterAlt: string;
+    afterLabel?: string; // e.g., "After"
+    initialPosition?: number; // 0-100, default 50
+    aspectRatio?: "16:9" | "4:3" | "1:1" | "3:2";
+  };
+};
+
 // Union type of all blocks
 export type Block =
   | HeroBlock
@@ -273,7 +290,8 @@ export type Block =
   | TabsBlock
   | TestimonialBlock
   | StatsBlock
-  | TimelineBlock;
+  | TimelineBlock
+  | BeforeAfterBlock;
 
 // Page content structure
 export type PageContent = {
@@ -392,6 +410,12 @@ export const BLOCK_METADATA: Record<
     description: "Vertical chronological layout",
     icon: "clock",
     category: "content",
+  },
+  "before-after": {
+    label: "Before/After",
+    description: "Draggable slider comparing two images",
+    icon: "columns",
+    category: "interactive",
   },
 };
 
@@ -553,6 +577,21 @@ export function createEmptyBlock(type: BlockType, order: number): Block {
             { date: "2020", title: "Founded", description: "Our organization was established" },
             { date: "2022", title: "Milestone", description: "Reached 500 members" },
           ],
+        },
+      };
+    case "before-after":
+      return {
+        ...base,
+        type: "before-after",
+        data: {
+          beforeImage: "",
+          beforeAlt: "Before image",
+          beforeLabel: "Before",
+          afterImage: "",
+          afterAlt: "After image",
+          afterLabel: "After",
+          initialPosition: 50,
+          aspectRatio: "16:9",
         },
       };
   }

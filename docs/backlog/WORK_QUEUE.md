@@ -243,11 +243,11 @@ A11. ✅ COMPLETE - Timeline block type
 - Implemented: Vertical timeline with dots
 - Features: Date, title, description, optional image
 
-A12. Before/After image slider block type
-- Goal: Draggable slider comparing two images
-- Features: Horizontal drag handle, touch support, labels
-- Use cases: Venue transformations, event setups, community impact
-- Deliverables: Block schema, editor UI, touch events, tests
+A12. ✅ COMPLETE - Before/After image slider block type
+- Implemented: Draggable slider comparing two images
+- Features: Horizontal drag handle, mouse/touch support, Before/After labels
+- Options: aspectRatio (16:9, 4:3, 1:1, 3:2), initialPosition (0-100)
+- Files: blocks.ts, blockSchemas.ts, BlockRenderer.tsx
 
 -------------------------------------------------------------------------------
 

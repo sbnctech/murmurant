@@ -843,6 +843,191 @@ function TimelineBlock({ block }: { block: Extract<Block, { type: "timeline" }> 
   );
 }
 
+function BeforeAfterBlock({ block }: { block: Extract<Block, { type: "before-after" }> }) {
+  const aspectRatios: Record<string, string> = {
+    "16:9": "56.25%",
+    "4:3": "75%",
+    "1:1": "100%",
+    "3:2": "66.67%",
+  };
+  const paddingBottom = aspectRatios[block.data.aspectRatio || "16:9"];
+  const initialPos = block.data.initialPosition ?? 50;
+  const uniqueId = `before-after-${block.id.replace(/-/g, "")}`;
+
+  return (
+    <section
+      data-block-type="before-after"
+      style={{ padding: "var(--spacing-lg, 24px) var(--spacing-md, 16px)", maxWidth: "900px", margin: "0 auto" }}
+    >
+      {block.data.title && (
+        <h2 style={{ fontSize: "var(--font-size-2xl, 24px)", marginBottom: "var(--spacing-lg, 24px)", textAlign: "center" }}>
+          {block.data.title}
+        </h2>
+      )}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            .${uniqueId} {
+              position: relative;
+              width: 100%;
+              overflow: hidden;
+              border-radius: var(--border-radius-md, 4px);
+              cursor: ew-resize;
+              user-select: none;
+              -webkit-user-select: none;
+            }
+            .${uniqueId} .ba-after {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+            }
+            .${uniqueId} .ba-after img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+            .${uniqueId} .ba-before {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: ${initialPos}%;
+              height: 100%;
+              overflow: hidden;
+            }
+            .${uniqueId} .ba-before img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              /* Make image width match parent container, not clipped width */
+              min-width: calc(100vw * 0.9);
+              max-width: 900px;
+            }
+            .${uniqueId} .ba-slider {
+              position: absolute;
+              top: 0;
+              left: ${initialPos}%;
+              width: 4px;
+              height: 100%;
+              background: #fff;
+              cursor: ew-resize;
+              transform: translateX(-50%);
+              box-shadow: 0 0 8px rgba(0,0,0,0.3);
+            }
+            .${uniqueId} .ba-slider::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 40px;
+              height: 40px;
+              background: #fff;
+              border-radius: 50%;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            }
+            .${uniqueId} .ba-slider::after {
+              content: '◀ ▶';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              font-size: 12px;
+              color: #333;
+              white-space: nowrap;
+            }
+            .${uniqueId} .ba-label {
+              position: absolute;
+              top: var(--spacing-md, 16px);
+              padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
+              background: rgba(0,0,0,0.6);
+              color: #fff;
+              font-size: var(--font-size-sm, 14px);
+              border-radius: var(--border-radius-sm, 2px);
+              pointer-events: none;
+            }
+            .${uniqueId} .ba-label-before {
+              left: var(--spacing-md, 16px);
+            }
+            .${uniqueId} .ba-label-after {
+              right: var(--spacing-md, 16px);
+            }
+          `,
+        }}
+      />
+      <div
+        className={uniqueId}
+        style={{ paddingBottom }}
+        onMouseDown={(e) => {
+          const container = e.currentTarget;
+          const rect = container.getBoundingClientRect();
+          const updatePosition = (clientX: number) => {
+            const x = clientX - rect.left;
+            const percent = Math.min(100, Math.max(0, (x / rect.width) * 100));
+            const before = container.querySelector(".ba-before") as HTMLElement;
+            const slider = container.querySelector(".ba-slider") as HTMLElement;
+            if (before) before.style.width = `${percent}%`;
+            if (slider) slider.style.left = `${percent}%`;
+          };
+          updatePosition(e.clientX);
+          const handleMouseMove = (ev: MouseEvent) => updatePosition(ev.clientX);
+          const handleMouseUp = () => {
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", handleMouseUp);
+          };
+          document.addEventListener("mousemove", handleMouseMove);
+          document.addEventListener("mouseup", handleMouseUp);
+        }}
+        onTouchStart={(e) => {
+          const container = e.currentTarget;
+          const rect = container.getBoundingClientRect();
+          const updatePosition = (clientX: number) => {
+            const x = clientX - rect.left;
+            const percent = Math.min(100, Math.max(0, (x / rect.width) * 100));
+            const before = container.querySelector(".ba-before") as HTMLElement;
+            const slider = container.querySelector(".ba-slider") as HTMLElement;
+            if (before) before.style.width = `${percent}%`;
+            if (slider) slider.style.left = `${percent}%`;
+          };
+          const touch = e.touches[0];
+          if (touch) updatePosition(touch.clientX);
+          const handleTouchMove = (ev: TouchEvent) => {
+            const t = ev.touches[0];
+            if (t) updatePosition(t.clientX);
+          };
+          const handleTouchEnd = () => {
+            document.removeEventListener("touchmove", handleTouchMove);
+            document.removeEventListener("touchend", handleTouchEnd);
+          };
+          document.addEventListener("touchmove", handleTouchMove, { passive: true });
+          document.addEventListener("touchend", handleTouchEnd);
+        }}
+      >
+        {/* After image (background) */}
+        <div className="ba-after">
+          {/* eslint-disable-next-line @next/next/no-img-element -- user-provided dynamic src */}
+          <img src={block.data.afterImage || "/placeholder-image.svg"} alt={block.data.afterAlt} />
+        </div>
+        {/* Before image (foreground, clipped) */}
+        <div className="ba-before">
+          {/* eslint-disable-next-line @next/next/no-img-element -- user-provided dynamic src */}
+          <img src={block.data.beforeImage || "/placeholder-image.svg"} alt={block.data.beforeAlt} />
+        </div>
+        {/* Slider handle */}
+        <div className="ba-slider" />
+        {/* Labels */}
+        {block.data.beforeLabel && (
+          <span className="ba-label ba-label-before">{block.data.beforeLabel}</span>
+        )}
+        {block.data.afterLabel && (
+          <span className="ba-label ba-label-after">{block.data.afterLabel}</span>
+        )}
+      </div>
+    </section>
+  );
+}
+
 function renderBlock(block: Block) {
   switch (block.type) {
     case "hero":
@@ -879,6 +1064,8 @@ function renderBlock(block: Block) {
       return <StatsBlock key={block.id} block={block} />;
     case "timeline":
       return <TimelineBlock key={block.id} block={block} />;
+    case "before-after":
+      return <BeforeAfterBlock key={block.id} block={block} />;
     default:
       return null;
   }
