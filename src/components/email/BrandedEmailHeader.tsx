@@ -4,7 +4,7 @@
  * Renders an email header using brand identity configuration.
  * Uses inline styles for email client compatibility.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import type { ClubBrand } from "@/lib/brands/types";

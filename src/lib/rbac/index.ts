@@ -19,7 +19,7 @@
  * if (!decision.allowed) return forbidden(decision.reason);
  * ```
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 // Event row-level security policies

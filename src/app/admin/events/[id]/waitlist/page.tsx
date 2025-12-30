@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Event waitlist management page for event chairs
 
 "use client";

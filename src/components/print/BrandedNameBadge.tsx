@@ -4,7 +4,7 @@
  * Renders a printable name badge for events.
  * Standard badge size (4" x 3" or 3" x 4" portrait).
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import type { ClubBrand } from "@/lib/brands/types";

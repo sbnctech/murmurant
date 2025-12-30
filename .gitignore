@@ -17,6 +17,7 @@ playwright/.cache/
 
 # Misc
 tmp/mock-email-log.json
+storage/
 tsconfig.tsbuildinfo
 .vercel/
 *.log

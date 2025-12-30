@@ -6,7 +6,7 @@
  * Public-facing privacy policy for the Santa Barbara Newcomers Club.
  * Covers data collection, usage, sharing, and member rights.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import Link from "next/link";

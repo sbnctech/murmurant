@@ -6,7 +6,7 @@
  * Client component for event detail page.
  * Includes ICS download and registration stub.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { useState } from "react";

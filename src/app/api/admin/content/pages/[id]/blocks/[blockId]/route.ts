@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Individual block management API - Update block, Delete block
 
 import { NextRequest, NextResponse } from "next/server";

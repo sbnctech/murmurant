@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Theme system - CSS variable generation and management
 
 import { prisma } from "@/lib/prisma";

@@ -1,7 +1,7 @@
 /**
  * Event components
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 export { ClonedDraftBanner } from "./ClonedDraftBanner";

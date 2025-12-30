@@ -4,7 +4,7 @@
  * Used in admin tools to start impersonating a specific member.
  * Searches by name or email.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

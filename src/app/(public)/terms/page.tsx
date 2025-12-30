@@ -6,7 +6,7 @@
  * Public-facing terms of service for the Santa Barbara Newcomers Club.
  * Covers membership terms, event policies, code of conduct, and liability.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import Link from "next/link";

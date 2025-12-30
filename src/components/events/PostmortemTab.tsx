@@ -10,7 +10,7 @@
  * - SUBMITTED: Read-only with pending badge
  * - APPROVED: Read-only with approval info
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

@@ -18,7 +18,7 @@
  * Charter P5: Approval chain enforced (event workflow)
  * Charter P7: Audit trail via standard API logging
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest, NextResponse } from "next/server";

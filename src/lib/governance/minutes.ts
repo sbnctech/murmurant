@@ -1,7 +1,7 @@
 /**
  * Minutes Library - Meeting minutes CRUD with status machine
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * Charter Principles:
  * - P1: Identity provable (all actions tracked by actor)

@@ -8,7 +8,7 @@
  * - API clients (code generation)
  * - Documentation viewers (Swagger UI, Redoc)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextResponse } from "next/server";

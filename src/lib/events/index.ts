@@ -5,7 +5,7 @@
  * See docs/events/EVENT_FIELD_INTELLIGENCE.md for documentation.
  * See docs/events/EVENT_DERIVATION_MODEL.md for capacity/ticket tier model.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 export {

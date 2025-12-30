@@ -5,7 +5,7 @@
  *
  * Displays club announcements with filtering and read tracking.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import React, { useState } from "react";

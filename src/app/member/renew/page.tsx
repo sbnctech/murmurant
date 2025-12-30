@@ -6,7 +6,7 @@
  * Placeholder page for membership renewal.
  * Will eventually integrate with payment processing.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import Link from "next/link";

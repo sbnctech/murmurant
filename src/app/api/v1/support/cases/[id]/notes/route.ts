@@ -10,7 +10,7 @@
  * - internal: Internal team note
  * - ai_analysis: AI-generated analysis
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest, NextResponse } from "next/server";

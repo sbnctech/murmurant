@@ -8,7 +8,7 @@
  *
  * Charter: P1 (explicit state), N4 (no hidden rules)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

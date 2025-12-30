@@ -1,7 +1,7 @@
 /**
  * File Authorization Functions
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * Charter Principles:
  * - P2: Default deny, least privilege

@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Email role identity banner component
 
 import type { EmailContext } from "@/lib/email/roleIdentity";

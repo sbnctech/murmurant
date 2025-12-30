@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Email components barrel export
 
 export { RoleBanner, RoleBannerPresets } from "./RoleBanner";

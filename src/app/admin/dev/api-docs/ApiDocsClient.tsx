@@ -4,7 +4,7 @@
  * Loads Swagger UI from CDN and renders the OpenAPI specification.
  * Includes authentication notes and development guidance.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

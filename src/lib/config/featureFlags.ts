@@ -4,7 +4,7 @@
  * Centralized feature flag management for Murmurant.
  * All flags default to OFF for safety.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 /**

@@ -4,7 +4,7 @@
  * Allows tech lead/webmaster to simulate different user roles for testing and support.
  * This is a UI-only simulation - actual authorization remains server-side.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import type { GlobalRole } from "@/lib/auth";

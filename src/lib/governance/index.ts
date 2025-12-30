@@ -1,7 +1,7 @@
 /**
  * Governance System Library
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * This module provides CRUD operations and workflow management for:
  * - Board meetings

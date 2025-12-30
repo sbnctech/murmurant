@@ -78,7 +78,7 @@ type VPActivitiesDashboardData = {
  * Authentication is handled via HttpOnly session cookies - no tokens are
  * passed from parent components (Charter P1, P7).
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 export default function VPActivitiesDashboard() {
   const [data, setData] = useState<VPActivitiesDashboardData | null>(null);

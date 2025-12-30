@@ -19,7 +19,7 @@
  * - P8: Schema and APIs are stable contracts (key strings are versioned)
  * - P4: No hidden rules (policy keys are documented)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import type { SchedulingPolicyKey } from "@/lib/policy/types";

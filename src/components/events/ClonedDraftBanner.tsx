@@ -14,7 +14,7 @@ import { formatDateLocale } from "@/lib/timezone";
  *
  * Charter P6: Cloned events start as drafts requiring explicit approval
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 interface ClonedDraftBannerProps {

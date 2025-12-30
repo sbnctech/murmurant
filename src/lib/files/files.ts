@@ -1,7 +1,7 @@
 /**
  * File Object Library - CRUD operations for file metadata
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * Charter Principles:
  * - P1: Identity provable (uploadedBy tracked)

@@ -10,7 +10,7 @@
  *
  * Charter: P3 (state machine), P7 (observability)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

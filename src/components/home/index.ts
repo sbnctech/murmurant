@@ -1,7 +1,7 @@
 /**
  * Home Components - Export all home page components
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 export { default as MyNextThingsCard } from "./MyNextThingsCard";

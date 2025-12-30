@@ -10,7 +10,7 @@
  * - Responsive card layout
  * - Clear registration status indicators
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

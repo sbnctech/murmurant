@@ -16,7 +16,7 @@
  * - P1: Uses authenticated API for payment methods
  * - P2: Member-scoped data only
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

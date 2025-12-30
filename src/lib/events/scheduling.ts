@@ -14,7 +14,7 @@
  * - P3: Explicit state derivation (visible vs open)
  * - P5: Policy-based defaults with override capability
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { EventStatus } from "@prisma/client";

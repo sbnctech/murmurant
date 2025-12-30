@@ -4,7 +4,7 @@
  * Defines the structure for customer-specific theming including
  * branding, colors, typography, voice, and chatbot personality.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 // ============================================================================

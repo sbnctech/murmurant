@@ -3,7 +3,7 @@
  *
  * Components for the event registration checkout flow.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 export { PaymentMethodSelector } from "./PaymentMethodSelector";

@@ -13,7 +13,7 @@
  *
  * Charter: P1 (identity), P2 (default deny)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

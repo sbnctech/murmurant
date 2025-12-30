@@ -11,7 +11,7 @@
  * NOTE: Requires Announcement model in Prisma schema.
  * Until the model is added, these endpoints return 501 Not Implemented.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest, NextResponse } from "next/server";

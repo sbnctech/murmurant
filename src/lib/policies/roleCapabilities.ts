@@ -10,7 +10,7 @@
  * - This module extracts SBNC-specific role-to-capability mapping
  *   into a policy layer for future configurability.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import type { GlobalRole, Capability } from "@/lib/auth";

@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { waitForAdminFrame } from "../helpers/waitForAdminFrame";
 
 test.describe("Admin Events Table (iframe)", () => {
-  test("renders events from seed", async ({ page }) => {
+  test("renders events from PFOS seed", async ({ page }) => {
     await page.goto("/admin-frame");
 
     const frame = await waitForAdminFrame(page);
@@ -13,12 +13,12 @@ test.describe("Admin Events Table (iframe)", () => {
     const count = await rows.count();
     expect(count).toBeGreaterThanOrEqual(1);
 
-    // Verify some events from seed are present
+    // Verify PFOS events are present
     const rowTexts = await rows.allTextContents();
     const allText = rowTexts.join(" ");
-    // Check for known events from seed
-    expect(allText).toContain("Coffee"); // Welcome Coffee
-    expect(allText).toContain("Hike"); // Morning Hike at Rattlesnake Canyon
+    // Check for known events from PFOS seed
+    expect(allText).toContain("Sparrow"); // Annual House Sparrow Count
+    expect(allText).toContain("Bird Walk"); // The Completely Ordinary Bird Walk
   });
 
   test("shows event categories", async ({ page }) => {
@@ -32,8 +32,9 @@ test.describe("Admin Events Table (iframe)", () => {
     const rowTexts = await rows.allTextContents();
     const allText = rowTexts.join(" ");
 
-    // Seed has Social and Outdoors categories
+    // PFOS seed has Census, Social, Outing categories
+    expect(allText).toContain("Census");
     expect(allText).toContain("Social");
-    expect(allText).toContain("Outdoors");
+    expect(allText).toContain("Outing");
   });
 });

@@ -5,7 +5,7 @@
  *
  * Charter: P2 (public access for public data), P1 (audit for mutations)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest, NextResponse } from "next/server";

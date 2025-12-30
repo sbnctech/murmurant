@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Murmurant Logo - Full horizontal logo with symbol and wordmark
 
 "use client";

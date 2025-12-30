@@ -6,7 +6,7 @@
  * Shows the lifecycle of a sample SBNC member from joining
  * through their various milestones and current status.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import React from "react";

@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Visibility control primitives for Page Builder
 // Enables block/section-level access control (Charter P2)
 

@@ -17,7 +17,7 @@
  * - All mutating actions blocked server-side
  * - Audit logged for compliance
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

@@ -9,7 +9,7 @@
  * - Audit logging of all sessions
  * - Server-side capability blocking
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

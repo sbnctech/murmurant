@@ -4,7 +4,7 @@
  * Displays a grid of recent photos from club events.
  * Part of the "My SBNC" member home page curated column.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

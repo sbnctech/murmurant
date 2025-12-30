@@ -19,6 +19,10 @@ import { GadgetProps } from "./types";
 type GadgetHostProps = {
   gadgetId: string;
   slot?: string;
+  /** Optional title override (defaults to registry title) */
+  title?: string;
+  /** Whether to show the title (defaults to true) */
+  showTitle?: boolean;
 };
 
 /**
@@ -59,10 +63,16 @@ const GADGET_TITLES: Record<string, string> = {
   "quick-actions": "Quick Actions",
 };
 
-export default function GadgetHost({ gadgetId, slot }: GadgetHostProps) {
+export default function GadgetHost({
+  gadgetId,
+  slot,
+  title: titleOverride,
+  showTitle = true,
+}: GadgetHostProps) {
   // Look up the gadget component and title
   const GadgetComponent = GADGET_REGISTRY[gadgetId];
-  const title = GADGET_TITLES[gadgetId] || "Unknown Gadget";
+  const defaultTitle = GADGET_TITLES[gadgetId] || "Unknown Gadget";
+  const title = titleOverride || defaultTitle;
   const isUnknown = !(gadgetId in GADGET_REGISTRY);
 
   return (
@@ -79,31 +89,33 @@ export default function GadgetHost({ gadgetId, slot }: GadgetHostProps) {
         transition: "box-shadow 0.2s, transform 0.2s",
       }}
     >
-      {/* Gadget title */}
-      <h3
-        data-test-id={`gadget-title-${gadgetId}`}
-        style={{
-          fontSize: "17px",
-          fontWeight: 600,
-          marginTop: 0,
-          marginBottom: "16px",
-          color: isUnknown ? "#ef4444" : "#1e293b",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-        }}
-      >
-        <span
+      {/* Gadget title - conditionally rendered */}
+      {showTitle && (
+        <h3
+          data-test-id={`gadget-title-${gadgetId}`}
           style={{
-            display: "inline-block",
-            width: "4px",
-            height: "20px",
-            background: isUnknown ? "#ef4444" : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            borderRadius: "2px",
+            fontSize: "17px",
+            fontWeight: 600,
+            marginTop: 0,
+            marginBottom: "16px",
+            color: isUnknown ? "#ef4444" : "#1e293b",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
           }}
-        />
-        {title}
-      </h3>
+        >
+          <span
+            style={{
+              display: "inline-block",
+              width: "4px",
+              height: "20px",
+              background: isUnknown ? "#ef4444" : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              borderRadius: "2px",
+            }}
+          />
+          {title}
+        </h3>
+      )}
 
       {/* Gadget content area */}
       <div data-test-id={`gadget-content-${gadgetId}`}>

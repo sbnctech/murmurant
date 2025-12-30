@@ -18,7 +18,7 @@
  * - P1: Identity via session (API enforces)
  * - P2: Only allowed fields editable (API allowlist)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

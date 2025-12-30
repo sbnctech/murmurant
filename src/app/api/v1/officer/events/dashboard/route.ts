@@ -13,7 +13,7 @@
  *
  * Charter: P1 (identity required), P2 (VP Activities or admin only)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest } from "next/server";

@@ -6,7 +6,7 @@
  * Lists all active committees and interest groups.
  * Members can browse and express interest in joining.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

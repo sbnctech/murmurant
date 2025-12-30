@@ -12,7 +12,7 @@
  * - Committee memberships
  * - Privacy-respecting (no email, phone, exact join date)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

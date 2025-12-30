@@ -4,7 +4,7 @@
  * NOTE: Sections are NOT first-class product units. They are page layout wrappers
  * used to group Blocks and control full-width backgrounds + consistent padding.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 import React, { ReactNode } from "react";
 

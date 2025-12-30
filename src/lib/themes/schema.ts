@@ -3,7 +3,7 @@
  *
  * Zod schemas for validating theme configurations.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { z } from "zod";

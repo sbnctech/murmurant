@@ -6,7 +6,7 @@
  *
  * Charter: P2 (capability-scoped actions), P6 (human-first UI)
  *
- * Copyright (c) Murmurant, Inc.
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

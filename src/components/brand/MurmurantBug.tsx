@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Murmurant Bug - The "Gathering" symbol only
 
 import React from "react";

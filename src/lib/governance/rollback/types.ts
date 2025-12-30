@@ -6,7 +6,7 @@
  * - P5: Every important action must be undoable
  * - P9: Security must fail closed
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { AuditAction } from "@prisma/client";

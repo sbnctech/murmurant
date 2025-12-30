@@ -11,7 +11,7 @@
  * - Photo highlights
  * - About/Join CTA
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import Link from "next/link";

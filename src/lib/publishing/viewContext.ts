@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // View context utilities for determining public vs member rendering
 
 import type { ViewContext } from "./pageTemplates";

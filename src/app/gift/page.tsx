@@ -6,7 +6,7 @@
  * Allows visitors to purchase membership gift certificates.
  * This is a placeholder for demo purposes.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import Link from "next/link";

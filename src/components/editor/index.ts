@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Page editor component exports
 
 export { default as BlockPalette } from "./BlockPalette";

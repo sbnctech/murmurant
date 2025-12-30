@@ -10,7 +10,7 @@
  * - P1: Identity provable - requires authentication
  * - N5: No hidden rules - policies are visible and documented
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest, NextResponse } from "next/server";

@@ -3,7 +3,7 @@
  *
  * Zod schemas for validating rollback API requests.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { z } from "zod";

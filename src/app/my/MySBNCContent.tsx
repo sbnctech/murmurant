@@ -10,7 +10,7 @@
  *
  * Layout: Fast, scannable, no hero images blocking content.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

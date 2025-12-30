@@ -4,7 +4,7 @@
  * Renders a printable membership card with club branding.
  * Standard credit card dimensions (3.375" x 2.125").
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import type { ClubBrand } from "@/lib/brands/types";

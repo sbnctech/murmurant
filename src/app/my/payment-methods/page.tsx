@@ -11,7 +11,7 @@
  * - P2: Member-scoped, no enumeration
  * - P7: All actions audit logged
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

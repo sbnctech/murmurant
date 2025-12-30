@@ -22,7 +22,7 @@
  * - createdAt: DateTime @default(now())
  * - updatedAt: DateTime @updatedAt
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest, NextResponse } from "next/server";

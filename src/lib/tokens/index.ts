@@ -1,6 +1,6 @@
 /**
  * Murmurant Design Tokens - TypeScript Exports
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 export const colors = {

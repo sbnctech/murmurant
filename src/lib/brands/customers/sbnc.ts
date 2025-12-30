@@ -4,7 +4,7 @@
  * Custom brand configuration for SBNC reflecting the coastal,
  * welcoming character of Santa Barbara.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import type { ClubBrand } from "../types";

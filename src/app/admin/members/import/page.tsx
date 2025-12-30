@@ -11,7 +11,7 @@
  * - Duplicate detection
  * - Import progress and results
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import React, { useState, useCallback, useRef, useMemo } from "react";

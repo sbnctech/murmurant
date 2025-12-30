@@ -1,7 +1,7 @@
 /**
  * View As Components - Export all view-as related components
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 export { ViewAsProvider, useViewAs } from "./ViewAsContext";

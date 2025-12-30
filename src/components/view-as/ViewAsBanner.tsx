@@ -4,7 +4,7 @@
  * Displayed at the top of the page when viewing as a different role.
  * Makes it obvious that the current view is simulated, not the actual user.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

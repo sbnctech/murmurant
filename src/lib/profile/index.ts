@@ -10,7 +10,7 @@
  * - P2: Only allowed fields can be updated (allowlist, not blocklist)
  * - P7: All profile changes should be auditable
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { z } from "zod";

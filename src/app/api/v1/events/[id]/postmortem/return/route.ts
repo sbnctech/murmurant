@@ -8,7 +8,7 @@
  * - P3 (State machine): SUBMITTED -> DRAFT
  * - P7 (Audit logging): Status change logged
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest } from "next/server";

@@ -4,7 +4,7 @@
  * Custom theme configuration for SBNC reflecting the coastal,
  * welcoming character of Santa Barbara.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { ClubTheme } from "../types";

@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Email template token replacement and provider abstraction
 
 import { prisma } from "@/lib/prisma";

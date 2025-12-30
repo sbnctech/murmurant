@@ -7,7 +7,7 @@
  *
  * This is a client component because ViewAsProvider uses React state.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

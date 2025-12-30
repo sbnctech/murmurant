@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Page revision management for undo/redo functionality (A7)
 // Charter P7: Full audit trail for privileged actions
 

@@ -4,7 +4,7 @@
  * Displays a compact profile summary and link to edit profile.
  * Part of the "My SBNC" member home page utility column.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

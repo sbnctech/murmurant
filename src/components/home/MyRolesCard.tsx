@@ -4,7 +4,7 @@
  * Displayed only for members with officer or committee roles.
  * Part of the "My SBNC" member home page utility column.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

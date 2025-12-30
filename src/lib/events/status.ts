@@ -33,7 +33,7 @@
  * - P7: Audit logging for all transitions
  * - N2: Capability-based authorization
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { EventStatus, Prisma } from "@prisma/client";

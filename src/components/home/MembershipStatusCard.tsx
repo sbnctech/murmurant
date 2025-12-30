@@ -6,7 +6,7 @@
  *
  * Fetches real data from /api/v1/me/profile.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

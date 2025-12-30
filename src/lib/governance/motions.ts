@@ -1,7 +1,7 @@
 /**
  * Motions Library - Meeting motion CRUD operations
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * Motions are linked to meetings and track:
  * - Motion text

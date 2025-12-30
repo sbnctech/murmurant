@@ -11,7 +11,13 @@
  *
  * Part of the "My SBNC" member home page curated column.
  *
- * Copyright (c) Murmurant, Inc.
+ * Data Source: Currently uses static demo data.
+ * To swap to real data later:
+ *   1. Create /api/v1/news endpoint
+ *   2. Replace CLUB_NEWS with fetch() in useEffect
+ *   3. Keep NewsItem interface the same
+ *
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

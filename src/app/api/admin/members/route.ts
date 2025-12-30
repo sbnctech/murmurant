@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Admin members list API - requires members:view capability
 // Charter: P1 (identity provable), P2 (default deny), P9 (fail closed)
 

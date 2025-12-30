@@ -1,7 +1,7 @@
 /**
  * Annotations Library - Governance document annotations
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * Annotations can be attached to:
  * - Motions (procedural notes from Parliamentarian)

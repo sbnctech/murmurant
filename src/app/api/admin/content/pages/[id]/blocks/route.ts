@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Block management API - Add block, Reorder blocks
 
 import { NextRequest, NextResponse } from "next/server";

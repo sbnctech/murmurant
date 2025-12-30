@@ -4,7 +4,7 @@
  * Provides the "Viewing as" functionality throughout the app.
  * This is UI-only - actual authorization remains server-side.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

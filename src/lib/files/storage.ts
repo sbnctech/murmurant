@@ -1,7 +1,7 @@
 /**
  * Storage Adapter Interface
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * Provides an abstraction layer for file storage backends.
  * Supports local filesystem (dev) and S3-compatible storage (production).

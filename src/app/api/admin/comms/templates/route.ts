@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Message template management API
 
 import { NextRequest, NextResponse } from "next/server";

@@ -9,7 +9,7 @@
  * - Monitor member participation stats
  * - Quick actions for adding members
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import React, { useState } from "react";

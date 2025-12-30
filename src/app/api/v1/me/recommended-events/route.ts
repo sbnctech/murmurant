@@ -9,7 +9,7 @@
  *
  * Charter: P1 (identity required), P2 (member can see own recommendations)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest } from "next/server";

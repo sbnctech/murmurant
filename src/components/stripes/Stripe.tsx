@@ -4,7 +4,7 @@
  * Stripe was a legacy name for a layout wrapper. "Section" matches intent:
  * a layout-only wrapper that groups Blocks and provides consistent spacing.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 import React from "react";
 import { Section, SectionProps } from "../sections/Section";

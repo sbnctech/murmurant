@@ -7,7 +7,7 @@
  * All functions are pure and deterministic - given the same inputs,
  * they always produce the same outputs.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 /** Default event duration in milliseconds (2 hours) */

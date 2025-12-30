@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Member-only page rendering route
 
 import { notFound, redirect } from "next/navigation";

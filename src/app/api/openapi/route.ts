@@ -13,7 +13,7 @@
  * - P1 (Identity provable): Requires admin authentication
  * - P2 (Default deny): Only admin can access
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest, NextResponse } from "next/server";

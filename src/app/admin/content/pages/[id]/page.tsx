@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Page editor route - renders page title and block list
 // A4: Lifecycle state passed to client for Draft/Published controls
 

@@ -7,7 +7,7 @@
  * Charter P7: Observability - every support request tracked to closure.
  * Charter P3: Explicit state machine - no silent drops.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import {

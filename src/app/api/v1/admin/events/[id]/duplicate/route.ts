@@ -17,7 +17,7 @@
  *
  * Charter: P2 (events:edit required), P3 (explicit state - DRAFT), P7 (audit logged)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest } from "next/server";

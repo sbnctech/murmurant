@@ -7,7 +7,7 @@
  * This page uses Swagger UI via CDN for simplicity.
  * It fetches the spec from /api/openapi.json (also admin-protected).
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { Metadata } from "next";

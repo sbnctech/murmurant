@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Page template types and utilities for member/public view contexts
 
 import type { BlockType } from "./blocks";

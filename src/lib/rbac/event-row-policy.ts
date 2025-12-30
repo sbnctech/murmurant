@@ -20,7 +20,7 @@
  * - N1: No UI-only security
  * - N2: Capability-based, not role strings
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { EventStatus } from "@prisma/client";

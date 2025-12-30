@@ -6,7 +6,7 @@
  * - Event Chair: My Events summary
  * - President: Governance summary
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

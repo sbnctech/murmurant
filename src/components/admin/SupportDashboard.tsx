@@ -4,7 +4,7 @@
  * Displays support case statistics and recent open cases.
  * Access is restricted to admin-level users via API.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

@@ -9,7 +9,7 @@
  * - Day click to show events for that date
  * - Responsive layout
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { useState, useEffect, useCallback, useMemo } from "react";

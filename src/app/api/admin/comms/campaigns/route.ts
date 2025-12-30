@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Message campaign management API - List and Create
 // Charter: N2 compliance - capability checks, not role checks
 

@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Public page rendering route - shows publishedContent only
 // Enforces VisibilityRule and RoleGate at render time (Charter P2)
 // P2: Emits JSON-LD structured data for SEO

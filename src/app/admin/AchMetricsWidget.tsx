@@ -6,7 +6,7 @@
  *
  * Charter: P1 (finance:view capability required), P7 (admin audit context)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

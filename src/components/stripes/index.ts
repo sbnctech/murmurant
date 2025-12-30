@@ -1,7 +1,7 @@
 /**
  * Stripes Components - Export all stripe-related components
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 export { default as Stripe } from "./Stripe";

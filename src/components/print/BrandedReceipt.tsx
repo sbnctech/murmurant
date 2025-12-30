@@ -4,7 +4,7 @@
  * Renders a printable payment receipt with club branding.
  * Uses @media print styles for proper printing.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import type { ClubBrand } from "@/lib/brands/types";

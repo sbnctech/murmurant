@@ -1,7 +1,7 @@
 /**
  * Zod schemas for Governance system validation
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * Charter Principles:
  * - P3: Explicit state machine for minutes workflow

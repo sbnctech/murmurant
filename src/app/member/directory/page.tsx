@@ -11,7 +11,7 @@
  * - Pagination
  * - Links to individual member profiles
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

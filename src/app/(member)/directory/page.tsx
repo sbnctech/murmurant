@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Member directory page - searchable grid of club members
 
 import { redirect } from "next/navigation";

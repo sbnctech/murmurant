@@ -11,7 +11,7 @@
  *
  * Charter: P3 (explicit state machines), P4 (no hidden rules)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 // ============================================================================

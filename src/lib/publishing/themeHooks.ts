@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Theme hook utilities for public and member view contexts
 // Note: React hooks are in src/hooks/useTheme.ts; this file contains utilities
 

@@ -3,7 +3,7 @@
  *
  * Handles search, filtering, and display of the policy registry.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

@@ -1,7 +1,7 @@
 /**
  * Meetings Library - Board meeting CRUD operations
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * Charter Principles:
  * - P1: Identity provable (createdBy tracked)

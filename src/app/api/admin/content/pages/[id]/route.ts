@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Page management API - Get, Update, Delete, Publish
 // A4: Lifecycle state machine for Draft/Published management
 

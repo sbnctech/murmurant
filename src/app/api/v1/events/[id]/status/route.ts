@@ -17,7 +17,7 @@
  * - P5: Approval chain enforced
  * - P7: Audit logging for all transitions
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest, NextResponse } from "next/server";

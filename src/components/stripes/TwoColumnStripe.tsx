@@ -4,7 +4,7 @@
  * Displays content in two columns on desktop, stacks on mobile.
  * Used for the member home page "My SBNC" layout.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { ReactNode } from "react";

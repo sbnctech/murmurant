@@ -4,7 +4,7 @@
  * Public documentation page explaining the "View As" feature.
  * Linked from the impersonation banner's "Why am I seeing this?" link.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import Link from "next/link";

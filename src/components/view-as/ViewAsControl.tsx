@@ -4,7 +4,7 @@
  * Displays a dropdown in the top-right corner to switch between
  * simulated viewer contexts. Only visible when view-as is enabled.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

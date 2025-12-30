@@ -10,7 +10,7 @@
  *     <p>Thanks for joining...</p>
  *   </BrandedEmailWrapper>
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import type { ReactNode } from "react";

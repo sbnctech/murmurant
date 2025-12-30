@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Block schema definitions and rendering utilities
 
 // Block types available in the page editor
@@ -20,7 +20,8 @@ export type BlockType =
   | "testimonial"
   | "stats"
   | "timeline"
-  | "before-after";
+  | "before-after"
+  | "gadget";
 
 // Base block structure
 export type BaseBlock = {
@@ -272,6 +273,21 @@ export type BeforeAfterBlock = BaseBlock & {
   };
 };
 
+// Gadget block - interactive dashboard widget
+export type GadgetBlock = BaseBlock & {
+  type: "gadget";
+  data: {
+    gadgetId: string; // "upcoming-events", "my-registrations", etc.
+    title?: string; // Override default title
+    showTitle?: boolean; // Show/hide title (default: true)
+    layout?: "card" | "inline"; // Card with border or inline
+    maxItems?: number; // For list gadgets
+    // RBAC visibility settings
+    visibility?: "public" | "members" | "officers" | "roles"; // Who can see this gadget
+    allowedRoles?: string[]; // Specific roles when visibility="roles"
+  };
+};
+
 // Union type of all blocks
 export type Block =
   | HeroBlock
@@ -291,7 +307,8 @@ export type Block =
   | TestimonialBlock
   | StatsBlock
   | TimelineBlock
-  | BeforeAfterBlock;
+  | BeforeAfterBlock
+  | GadgetBlock;
 
 // Page content structure
 export type PageContent = {
@@ -415,6 +432,12 @@ export const BLOCK_METADATA: Record<
     label: "Before/After",
     description: "Draggable slider comparing two images",
     icon: "columns",
+    category: "interactive",
+  },
+  gadget: {
+    label: "Gadget",
+    description: "Interactive widget (events, registrations, etc.)",
+    icon: "zap",
     category: "interactive",
   },
 };
@@ -592,6 +615,17 @@ export function createEmptyBlock(type: BlockType, order: number): Block {
           afterLabel: "After",
           initialPosition: 50,
           aspectRatio: "16:9",
+        },
+      };
+    case "gadget":
+      return {
+        ...base,
+        type: "gadget",
+        data: {
+          gadgetId: "upcoming-events",
+          showTitle: true,
+          layout: "card",
+          visibility: "members", // Default to members-only
         },
       };
   }

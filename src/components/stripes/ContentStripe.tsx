@@ -4,7 +4,7 @@
  * A simple stripe for displaying content with an optional heading.
  * Used for various sections on both public and member pages.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { ReactNode } from "react";

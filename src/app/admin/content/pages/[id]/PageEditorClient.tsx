@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Page editor client component - block list with ordering and editing controls
 // A3: Schema-driven validation and improved editors
 // A4: Lifecycle controls for Draft/Published state management
@@ -21,6 +21,12 @@ import {
   DragHandle,
   DragHandleProps,
 } from "@/components/publishing/SortableBlockList";
+import {
+  getAllGadgetIds,
+  getGadgetTitle,
+  isGadgetImplemented,
+  isRoleRestrictedGadget,
+} from "@/components/gadgets/gadget-registry";
 
 // A7: Revision state for undo/redo
 type RevisionState = {
@@ -2522,6 +2528,150 @@ function ContactBlockEditor({
   );
 }
 
+// Gadget block editor
+function GadgetBlockEditor({
+  data,
+  onChange,
+  disabled,
+}: {
+  data: Record<string, unknown>;
+  onChange: (field: string, value: unknown) => void;
+  disabled: boolean;
+}) {
+  const gadgetOptions = getAllGadgetIds();
+
+  const inputStyle = {
+    width: "100%",
+    padding: "8px",
+    fontSize: "14px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    marginTop: "4px",
+  };
+
+  const selectedGadgetId = (data.gadgetId as string) || "upcoming-events";
+  const isOfficerGadget = isRoleRestrictedGadget(selectedGadgetId);
+
+  return (
+    <div data-test-id="block-editor-gadget">
+      {/* Gadget selector */}
+      <label style={{ display: "block", marginBottom: "16px" }}>
+        <span style={{ fontSize: "13px", fontWeight: 500, color: "#333" }}>Select Gadget</span>
+        <select
+          value={selectedGadgetId}
+          onChange={(e) => onChange("gadgetId", e.target.value)}
+          disabled={disabled}
+          style={inputStyle}
+        >
+          {gadgetOptions.map((id) => {
+            const isImplemented = isGadgetImplemented(id);
+            const isRestricted = isRoleRestrictedGadget(id);
+            return (
+              <option key={id} value={id} disabled={!isImplemented}>
+                {getGadgetTitle(id)}
+                {isRestricted && " 🔒"}
+                {!isImplemented && " (Coming Soon)"}
+              </option>
+            );
+          })}
+        </select>
+      </label>
+
+      {/* Officer gadget warning */}
+      {isOfficerGadget && (
+        <div
+          style={{
+            padding: "12px",
+            marginBottom: "16px",
+            backgroundColor: "#fef3c7",
+            border: "1px solid #f59e0b",
+            borderRadius: "4px",
+            color: "#92400e",
+            fontSize: "13px",
+          }}
+        >
+          🔒 <strong>Officer Only:</strong> This gadget will only be visible to users with the required role.
+        </div>
+      )}
+
+      {/* Title override */}
+      <label style={{ display: "block", marginBottom: "16px" }}>
+        <span style={{ fontSize: "13px", fontWeight: 500, color: "#333" }}>Custom Title</span>
+        <input
+          type="text"
+          value={(data.title as string) || ""}
+          onChange={(e) => onChange("title", e.target.value)}
+          disabled={disabled}
+          placeholder={getGadgetTitle(selectedGadgetId)}
+          style={inputStyle}
+        />
+        <span style={{ fontSize: "12px", color: "#666", marginTop: "4px", display: "block" }}>
+          Leave blank to use default title
+        </span>
+      </label>
+
+      {/* Show title checkbox */}
+      <label style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
+        <input
+          type="checkbox"
+          checked={data.showTitle !== false}
+          onChange={(e) => onChange("showTitle", e.target.checked)}
+          disabled={disabled}
+        />
+        <span style={{ fontSize: "13px", color: "#333" }}>Show title</span>
+      </label>
+
+      {/* Layout selector */}
+      <label style={{ display: "block", marginBottom: "16px" }}>
+        <span style={{ fontSize: "13px", fontWeight: 500, color: "#333" }}>Layout</span>
+        <select
+          value={(data.layout as string) || "card"}
+          onChange={(e) => onChange("layout", e.target.value)}
+          disabled={disabled}
+          style={inputStyle}
+        >
+          <option value="card">Card (with border)</option>
+          <option value="inline">Inline (no border)</option>
+        </select>
+      </label>
+
+      {/* Visibility selector */}
+      <label style={{ display: "block", marginBottom: "16px" }}>
+        <span style={{ fontSize: "13px", fontWeight: 500, color: "#333" }}>Visibility</span>
+        <select
+          value={(data.visibility as string) || "members"}
+          onChange={(e) => onChange("visibility", e.target.value)}
+          disabled={disabled}
+          style={inputStyle}
+        >
+          <option value="public">Public (everyone)</option>
+          <option value="members">Members only</option>
+          <option value="officers">Officers only</option>
+          <option value="roles">Specific roles</option>
+        </select>
+      </label>
+
+      {/* Role selector (when visibility is "roles") */}
+      {data.visibility === "roles" && (
+        <label style={{ display: "block", marginBottom: "16px" }}>
+          <span style={{ fontSize: "13px", fontWeight: 500, color: "#333" }}>Allowed Roles</span>
+          <input
+            type="text"
+            value={((data.allowedRoles as string[]) || []).join(", ")}
+            onChange={(e) => onChange("allowedRoles", e.target.value.split(",").map((r) => r.trim()).filter(Boolean))}
+            disabled={disabled}
+            placeholder="admin, president, vp-activities"
+            style={inputStyle}
+          />
+          <span style={{ fontSize: "12px", color: "#666", marginTop: "4px", display: "block" }}>
+            Comma-separated list of role names
+          </span>
+        </label>
+      )}
+    </div>
+  );
+}
+
 // ============================================================================
 // A2: Block Item with drag handle support
 // ============================================================================
@@ -2771,6 +2921,12 @@ function BlockItem({
             />
           ) : block.type === "contact" ? (
             <ContactBlockEditor
+              data={editingData || {}}
+              onChange={updateField}
+              disabled={saving}
+            />
+          ) : block.type === "gadget" ? (
+            <GadgetBlockEditor
               data={editingData || {}}
               onChange={updateField}
               disabled={saving}

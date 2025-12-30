@@ -1,7 +1,7 @@
 /**
  * File Storage Library
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * Secure file storage with access control.
  */

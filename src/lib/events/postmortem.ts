@@ -6,7 +6,7 @@
  *
  * Charter: P3 (explicit derived state), P7 (audit trail via postmortem records)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { EventPostmortem } from "@prisma/client";

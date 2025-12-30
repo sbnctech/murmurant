@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Page redo API - Apply redo to restore next content state
 // A7: Undo/Redo functionality
 

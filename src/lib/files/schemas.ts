@@ -1,7 +1,7 @@
 /**
  * Zod schemas for File Storage system validation
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * Charter P9: Validation before execution (fail closed)
  */

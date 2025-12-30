@@ -6,7 +6,7 @@
  * Interactive demo showing how event fields are derived from user inputs.
  * Demonstrates the intelligence in the event creation system.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { useState } from "react";

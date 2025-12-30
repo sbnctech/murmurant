@@ -9,7 +9,7 @@
  * - N5: No hidden rules - policies are visible and documented
  * - P5: Visible state - enforcement is queryable
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { policyExists, getPolicyById, type Policy } from "./loader";

@@ -12,7 +12,7 @@
  * 5. Members Completing Membership This Month
  * 6. eNews Draft Assist (Read-Only)
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 "use client";

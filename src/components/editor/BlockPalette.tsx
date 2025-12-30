@@ -1,6 +1,6 @@
 "use client";
 
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Block palette for adding new blocks to the page
 
 import { BLOCK_METADATA, type BlockType } from "@/lib/publishing/blocks";
@@ -13,6 +13,7 @@ const V1_BLOCK_TYPES: BlockType[] = [
   "cta",
   "divider",
   "spacer",
+  "gadget",
 ];
 
 type BlockPaletteProps = {
@@ -50,6 +51,11 @@ const icons: Record<string, React.ReactNode> = {
       <polyline points="8 18 12 22 16 18" />
       <polyline points="8 6 12 2 16 6" />
       <line x1="12" y1="2" x2="12" y2="22" />
+    </svg>
+  ),
+  zap: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
     </svg>
   ),
 };

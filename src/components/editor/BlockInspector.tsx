@@ -1,6 +1,6 @@
 "use client";
 
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Block inspector panel for editing block properties
 
 import { useState, useEffect, useCallback, useRef } from "react";

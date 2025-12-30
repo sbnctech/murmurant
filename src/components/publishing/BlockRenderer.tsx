@@ -1,7 +1,8 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Block renderer component for public pages
 // Supports Page → Sections → Blocks hierarchy with visibility filtering
 
+import dynamic from "next/dynamic";
 import { Block, PageContent } from "@/lib/publishing/blocks";
 import {
   Section,
@@ -9,6 +10,25 @@ import {
   normalizeToSections,
   filterVisibleSections,
 } from "@/lib/publishing/visibility";
+
+// Dynamic import for client-side gadget rendering
+const GadgetBlock = dynamic(() => import("./blocks/GadgetBlock"), {
+  ssr: false,
+  loading: () => (
+    <div
+      style={{
+        padding: "24px",
+        backgroundColor: "#f9fafb",
+        border: "1px solid #e5e7eb",
+        borderRadius: "8px",
+        textAlign: "center",
+        color: "#9ca3af",
+      }}
+    >
+      Loading gadget...
+    </div>
+  ),
+});
 
 type BlockRendererProps = {
   content: PageContent;
@@ -1028,7 +1048,7 @@ function BeforeAfterBlock({ block }: { block: Extract<Block, { type: "before-aft
   );
 }
 
-function renderBlock(block: Block) {
+function renderBlock(block: Block, userRole?: string | null) {
   switch (block.type) {
     case "hero":
       return <HeroBlock key={block.id} block={block} />;
@@ -1066,6 +1086,15 @@ function renderBlock(block: Block) {
       return <TimelineBlock key={block.id} block={block} />;
     case "before-after":
       return <BeforeAfterBlock key={block.id} block={block} />;
+    case "gadget":
+      // Gadget blocks are client-side rendered with RBAC
+      return (
+        <GadgetBlock
+          key={block.id}
+          block={block}
+          userRole={userRole as import("@/lib/auth").GlobalRole | null | undefined}
+        />
+      );
     default:
       return null;
   }
@@ -1074,7 +1103,13 @@ function renderBlock(block: Block) {
 /**
  * Render a section with its blocks
  */
-function SectionRenderer({ section }: { section: Section }) {
+function SectionRenderer({
+  section,
+  userRole,
+}: {
+  section: Section;
+  userRole?: string | null;
+}) {
   const sortedBlocks = [...section.blocks].sort((a, b) => a.order - b.order);
 
   // Layout styles based on section layout hint
@@ -1100,7 +1135,7 @@ function SectionRenderer({ section }: { section: Section }) {
       data-section-name={section.name}
       style={layoutStyles}
     >
-      {sortedBlocks.map(renderBlock)}
+      {sortedBlocks.map((block) => renderBlock(block, userRole))}
     </div>
   );
 }
@@ -1124,11 +1159,15 @@ export default function BlockRenderer({
   // Sort sections by order
   const sortedSections = [...visibleSections].sort((a, b) => a.order - b.order);
 
+  // Extract user role for gadget RBAC
+  // VisibilityUserContext uses roles[] array; we take the first role for gadget RBAC
+  const userRole = user?.roles?.[0] ?? null;
+
   return (
     <div data-test-id="page-content">
       {themeCss && <style dangerouslySetInnerHTML={{ __html: themeCss }} />}
       {sortedSections.map((section) => (
-        <SectionRenderer key={section.id} section={section} />
+        <SectionRenderer key={section.id} section={section} userRole={userRole} />
       ))}
     </div>
   );

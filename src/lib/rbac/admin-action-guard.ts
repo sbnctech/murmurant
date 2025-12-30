@@ -7,7 +7,7 @@
  * - AG-3: Actor identity is always captured
  * - AG-4: Before/after state captured for mutations
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest } from "next/server";

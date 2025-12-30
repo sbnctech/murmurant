@@ -32,7 +32,7 @@
  * - P7: Audit logging for mutations
  * - P9: Fail closed on invalid auth
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest, NextResponse } from "next/server";

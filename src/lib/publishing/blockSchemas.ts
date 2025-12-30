@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Block data validation schemas using Zod
 //
 // Migration Safety Strategy:
@@ -335,6 +335,23 @@ export const beforeAfterDataSchema = z
   })
   .passthrough();
 
+/**
+ * Gadget block data schema
+ * Interactive dashboard widget with RBAC visibility
+ */
+export const gadgetDataSchema = z
+  .object({
+    gadgetId: z.string().min(1, "Gadget ID is required"),
+    title: z.string().optional(),
+    showTitle: z.boolean().optional(),
+    layout: z.enum(["card", "inline"]).optional(),
+    maxItems: z.number().min(1).max(20).optional(),
+    // RBAC visibility settings
+    visibility: z.enum(["public", "members", "officers", "roles"]).optional(),
+    allowedRoles: z.array(z.string()).optional(),
+  })
+  .strip();
+
 // ============================================================================
 // Schema Registry
 // ============================================================================
@@ -361,6 +378,7 @@ export const BLOCK_DATA_SCHEMAS: Record<BlockType, z.ZodType> = {
   stats: statsDataSchema,
   timeline: timelineDataSchema,
   "before-after": beforeAfterDataSchema,
+  gadget: gadgetDataSchema,
 };
 
 /**
@@ -384,6 +402,7 @@ export const EDITABLE_BLOCK_TYPES: BlockType[] = [
   "gallery",
   "faq",
   "contact",
+  "gadget",
 ];
 
 /**
@@ -537,6 +556,13 @@ export function getDefaultBlockData(type: BlockType): Record<string, unknown> {
         afterLabel: "After",
         initialPosition: 50,
         aspectRatio: "16:9",
+      };
+    case "gadget":
+      return {
+        gadgetId: "upcoming-events",
+        showTitle: true,
+        layout: "card",
+        visibility: "members",
       };
     default:
       return {};

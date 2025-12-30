@@ -4,7 +4,7 @@
  * Configurable URLs for external services and features.
  * These can be overridden via environment variables.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 /**

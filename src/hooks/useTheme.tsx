@@ -1,6 +1,6 @@
 "use client";
 
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // React hooks for theme context in public and member views
 
 import { createContext, useContext, useMemo } from "react";

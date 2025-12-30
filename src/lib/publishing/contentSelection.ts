@@ -1,4 +1,4 @@
-// Copyright (c) Santa Barbara Newcomers Club
+// Copyright © 2025 Murmurant, Inc.
 // Content selection logic for page rendering
 // A5: Select appropriate content based on context (published vs draft)
 

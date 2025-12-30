@@ -7,7 +7,7 @@
  * - P5: Every important action must be undoable
  * - N3: No hidden rules - behavior must be explainable
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { AuditAction } from "@prisma/client";

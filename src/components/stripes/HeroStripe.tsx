@@ -4,7 +4,7 @@
  * A prominent hero section for marketing pages.
  * Supports title, subtitle, description, and CTA buttons.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { ReactNode } from "react";

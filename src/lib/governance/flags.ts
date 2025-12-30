@@ -1,7 +1,7 @@
 /**
  * Review Flags Library - Governance review flags
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  *
  * Review flags can be attached to:
  * - Pages

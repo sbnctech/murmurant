@@ -9,7 +9,7 @@
  * - Cloned events with placeholder dates (epoch) cannot be submitted or published
  * - Cloned events must have explicit startTime set before workflow actions
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { NextRequest, NextResponse } from "next/server";

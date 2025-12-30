@@ -6,7 +6,7 @@
  * Public page showing full event details.
  * Includes ICS calendar download and registration stub.
  *
- * Copyright (c) Santa Barbara Newcomers Club
+ * Copyright © 2025 Murmurant, Inc.
  */
 
 import { notFound } from "next/navigation";
