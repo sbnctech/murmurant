@@ -19,6 +19,8 @@ describe("Audience Rule System", () => {
     membershipStatusId: "ms1",
     membershipTierId: null,
     waMembershipLevelRaw: null,
+    profilePhotoId: null,
+    waRawData: null,
     membershipStatus: {
       id: "ms1",
       code: "active",

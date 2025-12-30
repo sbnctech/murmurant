@@ -202,6 +202,8 @@ export interface TransformResult<T> {
 /**
  * Transform WA Contact to Murmurant Member create input.
  * Requires membershipStatusId lookup to be done separately.
+ *
+ * Charter P5: Preserves all WA FieldValues in waRawData for reversibility.
  */
 export function transformContact(
   contact: WAContact,
@@ -252,6 +254,12 @@ export function transformContact(
   // Extract phone from custom fields
   const phone = extractPhone(contact.FieldValues);
 
+  // Preserve raw WA membership level
+  const waMembershipLevelRaw = contact.MembershipLevel?.Name ?? null;
+
+  // Preserve all WA field values for future reference (Charter P5: Reversibility)
+  const waRawData = buildWaRawData(contact);
+
   return {
     success: true,
     data: {
@@ -260,11 +268,50 @@ export function transformContact(
       email,
       phone,
       joinedAt,
+      waMembershipLevelRaw,
+      waRawData: waRawData as Prisma.InputJsonValue,
       membershipStatus: {
         connect: { id: membershipStatusId },
       },
     },
     warnings,
+  };
+}
+
+/**
+ * Build the waRawData object from a WA contact.
+ * Includes all FieldValues and key contact metadata.
+ */
+export function buildWaRawData(contact: WAContact): Record<string, unknown> {
+  const fieldValues: Record<string, unknown> = {};
+
+  for (const field of contact.FieldValues) {
+    // Use FieldName as primary key, append SystemCode for disambiguation
+    const key = field.SystemCode
+      ? `${field.FieldName} (${field.SystemCode})`
+      : field.FieldName;
+    fieldValues[key] = field.Value;
+  }
+
+  return {
+    waContactId: contact.Id,
+    displayName: contact.DisplayName,
+    organization: contact.Organization,
+    membershipLevel: contact.MembershipLevel
+      ? {
+          id: contact.MembershipLevel.Id,
+          name: contact.MembershipLevel.Name,
+        }
+      : null,
+    status: contact.Status,
+    memberSince: contact.MemberSince,
+    profileLastUpdated: contact.ProfileLastUpdated,
+    isAccountAdministrator: contact.IsAccountAdministrator,
+    isSuspendedMember: contact.IsSuspendedMember,
+    balance: contact.Balance,
+    renewalDue: contact.RenewalDue,
+    fieldValues,
+    _importedAt: new Date().toISOString(),
   };
 }
 

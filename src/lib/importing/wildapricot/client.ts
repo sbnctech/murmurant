@@ -12,6 +12,7 @@ import {
 import {
   WATokenResponse,
   WAContact,
+  WAContactField,
   WAEvent,
   WAEventRegistration,
   WAMembershipLevel,
@@ -429,6 +430,17 @@ export class WildApricotClient {
     const endpoint = `/accounts/${this.config.accountId}/membershiplevels`;
 
     return this.fetchPaginated<WAMembershipLevel>(endpoint);
+  }
+
+  /**
+   * Fetch all contact field definitions.
+   * Returns the schema of all fields available in contact profiles.
+   */
+  async fetchContactFields(): Promise<WAContactField[]> {
+    const endpoint = `/accounts/${this.config.accountId}/contactfields`;
+
+    // ContactFields API returns a direct array, not paginated
+    return this.request<WAContactField[]>("GET", endpoint);
   }
 
   // --------------------------------------------------------------------------

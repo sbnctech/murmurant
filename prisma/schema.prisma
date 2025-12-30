@@ -285,6 +285,15 @@ model Member {
   storeOrders          StoreOrder[]
   shippingAddresses    ShippingAddress[]
 
+  // Profile photo and WA data preservation
+  profilePhotoId       String?  @unique @db.Uuid
+  waRawData            Json?    // Preserve all WA FieldValues during migration
+
+  profilePhoto         FileObject? @relation("MemberProfilePhoto", fields: [profilePhotoId], references: [id])
+
+  // Widget approval relations
+  widgetTypesApproved  WidgetType[] @relation("WidgetTypeApprovedBy")
+
   @@index([membershipStatusId])
   @@index([membershipTierId])
 }
@@ -1434,13 +1443,19 @@ model FileObject {
   storageKey  String   @unique // Key/path in storage backend
   description String? // Optional description
   isPublic    Boolean  @default(false) // If true, accessible without auth
-  uploadedById String  @db.Uuid
+  uploadedById String?  @db.Uuid // Nullable for system-imported files (WA migration)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  uploadedBy Member       @relation("FileUploadedBy", fields: [uploadedById], references: [id])
+  uploadedBy Member?       @relation("FileUploadedBy", fields: [uploadedById], references: [id])
   accessList FileAccess[]
   tags       FileTag[]
+
+  // WA migration relation
+  waResourceMapping WaResourceMapping?
+
+  // Member profile photo relation
+  profilePhotoFor   Member?  @relation("MemberProfilePhoto")
 
   @@index([uploadedById])
   @@index([mimeType])
@@ -1677,6 +1692,170 @@ model WaSyncState {
   metadata        Json?     // Additional sync state
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+}
+
+// WaResourceMapping - Tracks WA-hosted resources (images, documents) during migration
+// Maps WA URLs to our FileObject IDs for URL rewriting after download
+model WaResourceMapping {
+  id              String    @id @default(uuid()) @db.Uuid
+  waResourceUrl   String    @unique // Original WA URL (e.g., cdn.wildapricot.org/...)
+  waResourceId    String?            // WA resource ID if extractable from URL
+  fileObjectId    String?   @unique @db.Uuid // Our FileObject ID after download
+  status          String    @default("pending") // pending, downloaded, failed, skipped
+  mimeType        String?            // Detected MIME type
+  originalName    String?            // Original filename from URL/headers
+  discoveredIn    String?            // Where found: "event_description", "member_profile", "page_content"
+  failureReason   String?            // Error message if download failed
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  fileObject      FileObject? @relation(fields: [fileObjectId], references: [id])
+
+  @@index([status])
+  @@index([fileObjectId])
+}
+
+// WaContactFieldDef - Stores WA contact field schema for reference
+// Fetched from WA ContactFields API during migration setup
+model WaContactFieldDef {
+  id              String    @id @default(uuid()) @db.Uuid
+  waFieldId       Int       @unique  // WA field ID
+  fieldName       String             // Human-readable field name
+  systemCode      String?            // WA system code (e.g., "custom-8097667")
+  fieldType       String             // Text, Number, Date, Choice, MultipleChoice, etc.
+  isSystem        Boolean   @default(false) // True for WA system fields (Email, Phone, etc.)
+  description     String?            // Field description from WA
+  allowedValues   Json?              // For choice fields: array of allowed values
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  fieldMappings   WaFieldMapping[]
+
+  @@index([fieldName])
+  @@index([systemCode])
+}
+
+// WaFieldMapping - Defines how WA fields map to Murmurant
+// Supports mapping to native fields, custom fields, or ignoring
+model WaFieldMapping {
+  id               String    @id @default(uuid()) @db.Uuid
+  waFieldDefId     String    @db.Uuid
+  mappingType      String             // "murmurant_field", "custom_field", "ignore"
+  targetField      String?            // For murmurant_field: e.g., "phone", "email"
+  customFieldDefId String?   @db.Uuid // For custom_field: links to CustomFieldDef
+  transformerName  String?            // Optional transformer function name
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  waFieldDef       WaContactFieldDef @relation(fields: [waFieldDefId], references: [id])
+  customFieldDef   CustomFieldDef?   @relation(fields: [customFieldDefId], references: [id])
+
+  @@unique([waFieldDefId])
+}
+
+// ============================================================================
+// WIDGET DATA STORAGE
+// Extensible data storage for widgets and custom fields
+// Charter P3: WidgetTypeStatus enum with explicit state transitions
+// ============================================================================
+
+enum WidgetTypeStatus {
+  DRAFT              // Initial state
+  PENDING_VALIDATION // Submitted for validation
+  VALIDATION_FAILED  // Validation found errors
+  PENDING_APPROVAL   // Passed validation, awaiting approval
+  APPROVED           // Approved for use
+  DEPRECATED         // No longer recommended
+  REJECTED           // Rejected by admin
+}
+
+// WidgetType - Registry of approved widget types with JSON Schema validation
+model WidgetType {
+  id               String           @id @default(uuid()) @db.Uuid
+  slug             String           @unique // e.g., "poll", "skills-tracker"
+  name             String                    // Human-readable name
+  description      String?                   // Widget description
+  schemaVersion    Int              @default(1) // Data schema version
+  dataSchema       Json                      // JSON Schema for data validation
+  entityScopes     String[]                  // ["global", "page", "member", "event"]
+  status           WidgetTypeStatus @default(DRAFT)
+
+  // Validation results
+  validatedAt      DateTime?
+  validationReport Json?                     // Errors, warnings from validation tool
+
+  // Approval workflow
+  approvedAt       DateTime?
+  approvedById     String?          @db.Uuid
+  rejectionReason  String?
+
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  approvedBy       Member?          @relation("WidgetTypeApprovedBy", fields: [approvedById], references: [id])
+  widgetData       WidgetData[]
+
+  @@index([slug])
+  @@index([status])
+}
+
+// WidgetData - Runtime data storage for widgets
+// Scoped by entity type and ID for flexible attachment
+model WidgetData {
+  id              String    @id @default(uuid()) @db.Uuid
+  widgetTypeId    String    @db.Uuid
+  scopeType       String             // "global", "page", "member", "event"
+  scopeId         String?   @db.Uuid // Entity ID (null for global scope)
+  data            Json               // Widget data, validated against WidgetType.dataSchema
+  schemaVersion   Int       @default(1) // Version of schema this data was validated against
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  widgetType      WidgetType @relation(fields: [widgetTypeId], references: [id])
+
+  @@unique([widgetTypeId, scopeType, scopeId])
+  @@index([widgetTypeId])
+  @@index([scopeType, scopeId])
+}
+
+// CustomFieldDef - Defines custom fields for entities
+// Used both for WA migration and native custom fields
+model CustomFieldDef {
+  id              String    @id @default(uuid()) @db.Uuid
+  entityType      String             // "member", "event", etc.
+  slug            String             // URL-safe identifier
+  name            String             // Human-readable name
+  fieldType       String             // "text", "number", "date", "choice", "boolean", "multiselect"
+  description     String?            // Field description
+  isRequired      Boolean   @default(false)
+  allowedValues   Json?              // For choice/multiselect: array of allowed values
+  validationRules Json?              // Optional validation rules (min, max, pattern, etc.)
+  sortOrder       Int       @default(0) // Display order
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  fieldMappings   WaFieldMapping[]
+  fieldValues     CustomFieldValue[]
+
+  @@unique([entityType, slug])
+  @@index([entityType, isActive])
+}
+
+// CustomFieldValue - Stores custom field values for entities
+model CustomFieldValue {
+  id               String    @id @default(uuid()) @db.Uuid
+  customFieldDefId String    @db.Uuid
+  entityId         String    @db.Uuid // Member ID, Event ID, etc.
+  value            Json               // Field value (type depends on CustomFieldDef.fieldType)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  customFieldDef   CustomFieldDef @relation(fields: [customFieldDefId], references: [id])
+
+  @@unique([customFieldDefId, entityId])
+  @@index([customFieldDefId])
+  @@index([entityId])
 }
 
 // ============================================================================

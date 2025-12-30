@@ -71,7 +71,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
                           auth.context.globalRole === "webmaster";
 
     if (!hasFullAccess && !document.isPublic) {
-      const isOwner = document.uploadedBy.id === memberId;
+      const isOwner = document.uploadedBy?.id === memberId;
       const hasAccess = document.accessList.some(
         (access: Pick<FileAccess, "principalType" | "principalId">) =>
           access.principalType === "USER" && access.principalId === memberId

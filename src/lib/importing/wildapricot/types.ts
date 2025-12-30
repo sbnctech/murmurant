@@ -69,6 +69,55 @@ export interface WAFieldValue {
 }
 
 // ============================================================================
+// Contact Fields (Field Schema)
+// ============================================================================
+
+/**
+ * Contact field definition from WA ContactFields API.
+ * Describes the schema of a field in the contact/member profile.
+ */
+export interface WAContactField {
+  Id: number;
+  FieldName: string;
+  SystemCode: string | null;
+  Access: WAFieldAccess;
+  FieldType: WAFieldType;
+  Description: string | null;
+  SortOrder: number;
+  IsSystem: boolean;
+  // For Choice fields
+  AllowedValues?: string[];
+  // For MultipleChoice fields (returns array of selected values)
+  IsMultipleChoice?: boolean;
+  // Validation constraints
+  IsRequired?: boolean;
+  MaxLength?: number;
+  MinValue?: number;
+  MaxValue?: number;
+}
+
+export type WAFieldAccess =
+  | "Everyone"
+  | "Members"
+  | "Admin"
+  | "Nobody";
+
+export type WAFieldType =
+  | "Text"
+  | "Number"
+  | "Date"
+  | "DateTime"
+  | "Choice"
+  | "MultipleChoice"
+  | "Boolean"
+  | "Email"
+  | "Phone"
+  | "Url"
+  | "Picture"
+  | "File"
+  | "RichText";
+
+// ============================================================================
 // Membership Levels
 // ============================================================================
 
