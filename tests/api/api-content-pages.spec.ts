@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
-// TODO: Routes not implemented yet - quarantined until content management feature is built
-test.describe("@quarantine API - Content Pages", () => {
+// Content management API - pages CRUD and listing
+test.describe("API - Content Pages", () => {
   test("GET /api/admin/content/pages returns paginated list", async ({ request }) => {
     const response = await request.get("/api/admin/content/pages");
 

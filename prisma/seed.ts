@@ -12,7 +12,13 @@
  *   npm run db:seed
  */
 
-import { PrismaClient, RegistrationStatus } from "@prisma/client";
+import {
+  PrismaClient,
+  RegistrationStatus,
+  ProductType,
+  StoreOrderStatus,
+  FulfillmentType,
+} from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
@@ -707,12 +713,573 @@ async function seedTerms(): Promise<Map<string, string>> {
   return termMap;
 }
 
+// ============================================================================
+// Store Seeding
+// ============================================================================
+
+async function seedProducts(): Promise<Map<string, string>> {
+  console.log("Seeding store products...");
+
+  const products = [
+    // Physical products
+    {
+      name: "Club Logo T-Shirt",
+      slug: "club-logo-tshirt",
+      description: "Premium cotton t-shirt with embroidered club logo. Available in multiple sizes.",
+      type: ProductType.PHYSICAL,
+      priceCents: 2500, // $25.00
+      memberPriceCents: 2000, // $20.00 for members
+      comparePriceCents: 3000, // "Was $30"
+      imageUrl: "/images/store/tshirt-navy.jpg",
+      allowsShipping: true,
+      allowsPickup: true,
+      trackInventory: true,
+      quantity: 0, // Will be on variants
+      lowStockThreshold: 5,
+      sortOrder: 1,
+    },
+    {
+      name: "Club Baseball Cap",
+      slug: "club-baseball-cap",
+      description: "Adjustable baseball cap with embroidered club logo.",
+      type: ProductType.PHYSICAL,
+      priceCents: 1800, // $18.00
+      memberPriceCents: 1500, // $15.00 for members
+      imageUrl: "/images/store/cap-navy.jpg",
+      allowsShipping: true,
+      allowsPickup: true,
+      trackInventory: true,
+      quantity: 45,
+      lowStockThreshold: 10,
+      sortOrder: 2,
+    },
+    {
+      name: "Ceramic Coffee Mug",
+      slug: "ceramic-coffee-mug",
+      description: "12oz ceramic mug with club logo. Dishwasher and microwave safe.",
+      type: ProductType.PHYSICAL,
+      priceCents: 1200, // $12.00
+      memberPriceCents: 1000, // $10.00 for members
+      imageUrl: "/images/store/mug-white.jpg",
+      allowsShipping: true,
+      allowsPickup: true,
+      trackInventory: true,
+      quantity: 75,
+      lowStockThreshold: 15,
+      sortOrder: 3,
+    },
+    {
+      name: "Club Tote Bag",
+      slug: "club-tote-bag",
+      description: "Sturdy canvas tote bag with club logo. Perfect for events and shopping.",
+      type: ProductType.PHYSICAL,
+      priceCents: 1500, // $15.00
+      memberPriceCents: 1200, // $12.00 for members
+      imageUrl: "/images/store/tote-natural.jpg",
+      allowsShipping: true,
+      allowsPickup: true,
+      trackInventory: true,
+      quantity: 60,
+      lowStockThreshold: 10,
+      sortOrder: 4,
+    },
+    // Digital products
+    {
+      name: "2024 Event Photo Collection",
+      slug: "2024-event-photos",
+      description: "High-resolution digital photo collection from all 2024 club events. Includes over 500 photos.",
+      type: ProductType.DIGITAL,
+      priceCents: 1500, // $15.00
+      memberPriceCents: 0, // Free for members
+      imageUrl: "/images/store/photo-collection.jpg",
+      allowsShipping: false,
+      allowsPickup: false,
+      trackInventory: false,
+      digitalAssetUrl: "s3://murmurant-assets/digital/2024-photos.zip",
+      downloadLimit: 3,
+      sortOrder: 5,
+    },
+    {
+      name: "New Member Welcome Guide",
+      slug: "welcome-guide-pdf",
+      description: "Comprehensive PDF guide for new members. Includes club history, upcoming events, and how to get involved.",
+      type: ProductType.DIGITAL,
+      priceCents: 0, // Free
+      imageUrl: "/images/store/welcome-guide.jpg",
+      allowsShipping: false,
+      allowsPickup: false,
+      trackInventory: false,
+      digitalAssetUrl: "s3://murmurant-assets/digital/welcome-guide.pdf",
+      downloadLimit: null, // Unlimited
+      sortOrder: 6,
+    },
+    // Members-only product
+    {
+      name: "Annual Gala Tickets",
+      slug: "annual-gala-tickets",
+      description: "Tickets for the annual gala dinner. Members only.",
+      type: ProductType.PHYSICAL,
+      priceCents: 7500, // $75.00
+      memberPriceCents: 6500, // $65.00 for members
+      imageUrl: "/images/store/gala-ticket.jpg",
+      isPublic: false, // Members only
+      allowsShipping: false,
+      allowsPickup: true,
+      trackInventory: true,
+      quantity: 100,
+      lowStockThreshold: 20,
+      sortOrder: 7,
+    },
+  ];
+
+  const productMap = new Map<string, string>();
+
+  for (const product of products) {
+    const created = await prisma.product.upsert({
+      where: { slug: product.slug },
+      update: product,
+      create: product,
+    });
+    productMap.set(product.slug, created.id);
+  }
+
+  console.log(`  Created ${products.length} products`);
+  return productMap;
+}
+
+async function seedProductVariants(productMap: Map<string, string>): Promise<Map<string, string>> {
+  console.log("Seeding product variants...");
+
+  const tshirtId = productMap.get("club-logo-tshirt")!;
+
+  const variants = [
+    // T-shirt size variants
+    { productId: tshirtId, name: "Small", sku: "TSHIRT-S", quantity: 25, sortOrder: 1, attributes: { size: "S" } },
+    { productId: tshirtId, name: "Medium", sku: "TSHIRT-M", quantity: 40, sortOrder: 2, attributes: { size: "M" } },
+    { productId: tshirtId, name: "Large", sku: "TSHIRT-L", quantity: 35, sortOrder: 3, attributes: { size: "L" } },
+    { productId: tshirtId, name: "X-Large", sku: "TSHIRT-XL", quantity: 20, sortOrder: 4, attributes: { size: "XL" } },
+    { productId: tshirtId, name: "2X-Large", sku: "TSHIRT-2XL", quantity: 10, priceCents: 2800, memberPriceCents: 2300, sortOrder: 5, attributes: { size: "2XL" } },
+  ];
+
+  const variantMap = new Map<string, string>();
+
+  for (const variant of variants) {
+    const created = await prisma.productVariant.upsert({
+      where: { sku: variant.sku },
+      update: variant,
+      create: variant,
+    });
+    variantMap.set(variant.sku!, created.id);
+  }
+
+  console.log(`  Created ${variants.length} product variants`);
+  return variantMap;
+}
+
+async function seedShippingAddresses(memberMap: Map<string, string>): Promise<Map<string, string>> {
+  console.log("Seeding shipping addresses...");
+
+  const aliceId = memberMap.get("alice@example.com");
+  const carolId = memberMap.get("carol@example.com");
+
+  const addresses = [
+    // Member addresses
+    {
+      customerId: aliceId,
+      firstName: "Alice",
+      lastName: "Chen",
+      addressLine1: "123 Oak Street",
+      addressLine2: "Apt 4B",
+      city: "Santa Barbara",
+      state: "CA",
+      postalCode: "93101",
+      country: "US",
+      phone: "+1-555-0101",
+      isDefault: true,
+    },
+    {
+      customerId: carolId,
+      firstName: "Carol",
+      lastName: "Johnson",
+      addressLine1: "456 Palm Avenue",
+      city: "Santa Barbara",
+      state: "CA",
+      postalCode: "93103",
+      country: "US",
+      phone: "+1-555-0102",
+      isDefault: true,
+    },
+    // Guest address (no customerId)
+    {
+      customerId: null,
+      firstName: "Guest",
+      lastName: "Buyer",
+      addressLine1: "789 Beach Road",
+      city: "Ventura",
+      state: "CA",
+      postalCode: "93001",
+      country: "US",
+      phone: "+1-555-0999",
+      isDefault: false,
+    },
+  ];
+
+  const addressMap = new Map<string, string>();
+
+  for (const address of addresses) {
+    const created = await prisma.shippingAddress.create({
+      data: address,
+    });
+    const key = address.customerId ? `member-${address.customerId}` : "guest";
+    addressMap.set(key, created.id);
+  }
+
+  console.log(`  Created ${addresses.length} shipping addresses`);
+  return addressMap;
+}
+
+async function seedStoreOrders(
+  memberMap: Map<string, string>,
+  productMap: Map<string, string>,
+  variantMap: Map<string, string>,
+  addressMap: Map<string, string>
+): Promise<void> {
+  console.log("Seeding store orders...");
+
+  const aliceId = memberMap.get("alice@example.com");
+  const carolId = memberMap.get("carol@example.com");
+
+  const tshirtId = productMap.get("club-logo-tshirt")!;
+  const capId = productMap.get("club-baseball-cap")!;
+  const mugId = productMap.get("ceramic-coffee-mug")!;
+  const toteId = productMap.get("club-tote-bag")!;
+  const photosId = productMap.get("2024-event-photos")!;
+  const guideId = productMap.get("welcome-guide-pdf")!;
+  const galaId = productMap.get("annual-gala-tickets")!;
+
+  const variantM = variantMap.get("TSHIRT-M");
+  const variantL = variantMap.get("TSHIRT-L");
+
+  // Order 1: Completed member order with shipping
+  await prisma.storeOrder.create({
+    data: {
+      status: StoreOrderStatus.COMPLETED,
+      fulfillmentType: FulfillmentType.SHIPPING,
+      customerId: aliceId,
+      subtotalCents: 4300, // $25 shirt + $18 cap = $43
+      shippingCents: 599, // $5.99
+      taxCents: 387, // ~9% tax
+      totalCents: 5286,
+      paidAt: new Date("2024-11-15T10:30:00Z"),
+      shippedAt: new Date("2024-11-16T14:00:00Z"),
+      deliveredAt: new Date("2024-11-19T11:00:00Z"),
+      completedAt: new Date("2024-11-19T11:00:00Z"),
+      shippingAddressId: addressMap.get(`member-${aliceId}`),
+      trackingNumber: "1Z999AA10123456784",
+      carrier: "UPS",
+      items: {
+        create: [
+          {
+            productId: tshirtId,
+            variantId: variantM,
+            productName: "Club Logo T-Shirt",
+            variantName: "Medium",
+            sku: "TSHIRT-M",
+            quantity: 1,
+            unitPriceCents: 2000, // Member price
+            totalPriceCents: 2000,
+          },
+          {
+            productId: capId,
+            productName: "Club Baseball Cap",
+            quantity: 1,
+            unitPriceCents: 1500, // Member price
+            totalPriceCents: 1500,
+          },
+        ],
+      },
+    },
+  });
+
+  // Order 2: Completed member order with pickup
+  await prisma.storeOrder.create({
+    data: {
+      status: StoreOrderStatus.PICKED_UP,
+      fulfillmentType: FulfillmentType.PICKUP,
+      customerId: carolId,
+      subtotalCents: 2200, // $10 mug + $12 tote = $22 (member prices)
+      shippingCents: 0,
+      taxCents: 198,
+      totalCents: 2398,
+      paidAt: new Date("2024-12-01T09:00:00Z"),
+      pickedUpAt: new Date("2024-12-05T15:30:00Z"),
+      completedAt: new Date("2024-12-05T15:30:00Z"),
+      pickupLocation: "Club Office - 100 Main Street",
+      pickupCode: "CAROL-1205",
+      items: {
+        create: [
+          {
+            productId: mugId,
+            productName: "Ceramic Coffee Mug",
+            quantity: 1,
+            unitPriceCents: 1000,
+            totalPriceCents: 1000,
+          },
+          {
+            productId: toteId,
+            productName: "Club Tote Bag",
+            quantity: 1,
+            unitPriceCents: 1200,
+            totalPriceCents: 1200,
+          },
+        ],
+      },
+    },
+  });
+
+  // Order 3: Member order for digital product
+  const digitalOrder = await prisma.storeOrder.create({
+    data: {
+      status: StoreOrderStatus.COMPLETED,
+      fulfillmentType: FulfillmentType.DIGITAL_DELIVERY,
+      customerId: aliceId,
+      subtotalCents: 0, // Free for members
+      shippingCents: 0,
+      taxCents: 0,
+      totalCents: 0,
+      paidAt: new Date("2024-12-10T08:00:00Z"),
+      completedAt: new Date("2024-12-10T08:00:00Z"),
+      items: {
+        create: [
+          {
+            productId: photosId,
+            productName: "2024 Event Photo Collection",
+            quantity: 1,
+            unitPriceCents: 0,
+            totalPriceCents: 0,
+          },
+        ],
+      },
+    },
+  });
+
+  // Create digital delivery for the digital order
+  await prisma.digitalDelivery.create({
+    data: {
+      orderId: digitalOrder.id,
+      productId: photosId,
+      downloadCount: 1,
+      maxDownloads: 3,
+      firstDownloadAt: new Date("2024-12-10T08:05:00Z"),
+      lastDownloadAt: new Date("2024-12-10T08:05:00Z"),
+    },
+  });
+
+  // Order 4: Guest checkout order - shipped
+  await prisma.storeOrder.create({
+    data: {
+      status: StoreOrderStatus.SHIPPED,
+      fulfillmentType: FulfillmentType.SHIPPING,
+      guestEmail: "guest.shopper@example.com",
+      guestFirstName: "Guest",
+      guestLastName: "Shopper",
+      guestPhone: "+1-555-0999",
+      subtotalCents: 5000, // 2x $25 shirts (non-member price)
+      shippingCents: 799,
+      taxCents: 450,
+      totalCents: 6249,
+      paidAt: new Date("2024-12-20T14:00:00Z"),
+      shippedAt: new Date("2024-12-21T09:00:00Z"),
+      shippingAddressId: addressMap.get("guest"),
+      trackingNumber: "9400111899223033005436",
+      carrier: "USPS",
+      items: {
+        create: [
+          {
+            productId: tshirtId,
+            variantId: variantL,
+            productName: "Club Logo T-Shirt",
+            variantName: "Large",
+            sku: "TSHIRT-L",
+            quantity: 2,
+            unitPriceCents: 2500, // Non-member price
+            totalPriceCents: 5000,
+          },
+        ],
+      },
+    },
+  });
+
+  // Order 5: Guest checkout - pending payment (abandoned cart conversion)
+  await prisma.storeOrder.create({
+    data: {
+      status: StoreOrderStatus.PENDING_PAYMENT,
+      guestEmail: "almost.buyer@example.com",
+      guestFirstName: "Almost",
+      guestLastName: "Buyer",
+      subtotalCents: 1800,
+      shippingCents: 599,
+      taxCents: 162,
+      totalCents: 2561,
+      checkoutStartedAt: new Date("2024-12-22T16:30:00Z"),
+      items: {
+        create: [
+          {
+            productId: capId,
+            productName: "Club Baseball Cap",
+            quantity: 1,
+            unitPriceCents: 1800,
+            totalPriceCents: 1800,
+          },
+        ],
+      },
+    },
+  });
+
+  // Order 6: Member order - processing (paid, being prepared)
+  await prisma.storeOrder.create({
+    data: {
+      status: StoreOrderStatus.PROCESSING,
+      fulfillmentType: FulfillmentType.SHIPPING,
+      customerId: carolId,
+      subtotalCents: 6500, // Gala tickets at member price
+      shippingCents: 0, // Pickup only for gala
+      taxCents: 0, // No tax on tickets
+      totalCents: 6500,
+      paidAt: new Date("2024-12-23T10:00:00Z"),
+      items: {
+        create: [
+          {
+            productId: galaId,
+            productName: "Annual Gala Tickets",
+            quantity: 1,
+            unitPriceCents: 6500,
+            totalPriceCents: 6500,
+          },
+        ],
+      },
+    },
+  });
+
+  // Order 7: Cart (not checked out yet)
+  await prisma.storeOrder.create({
+    data: {
+      status: StoreOrderStatus.CART,
+      sessionId: "session_abc123xyz",
+      subtotalCents: 3700, // $25 shirt + $12 mug
+      shippingCents: 0,
+      taxCents: 0,
+      totalCents: 3700,
+      items: {
+        create: [
+          {
+            productId: tshirtId,
+            variantId: variantM,
+            productName: "Club Logo T-Shirt",
+            variantName: "Medium",
+            sku: "TSHIRT-M",
+            quantity: 1,
+            unitPriceCents: 2500,
+            totalPriceCents: 2500,
+          },
+          {
+            productId: mugId,
+            productName: "Ceramic Coffee Mug",
+            quantity: 1,
+            unitPriceCents: 1200,
+            totalPriceCents: 1200,
+          },
+        ],
+      },
+    },
+  });
+
+  // Order 8: Cancelled order
+  await prisma.storeOrder.create({
+    data: {
+      status: StoreOrderStatus.CANCELLED,
+      customerId: aliceId,
+      subtotalCents: 1500,
+      shippingCents: 0,
+      taxCents: 0,
+      totalCents: 1500,
+      checkoutStartedAt: new Date("2024-12-01T12:00:00Z"),
+      cancelledAt: new Date("2024-12-01T12:15:00Z"),
+      adminNotes: "Customer requested cancellation before payment",
+      items: {
+        create: [
+          {
+            productId: toteId,
+            productName: "Club Tote Bag",
+            quantity: 1,
+            unitPriceCents: 1500,
+            totalPriceCents: 1500,
+          },
+        ],
+      },
+    },
+  });
+
+  // Order 9: Refunded order
+  await prisma.storeOrder.create({
+    data: {
+      status: StoreOrderStatus.REFUNDED,
+      fulfillmentType: FulfillmentType.SHIPPING,
+      customerId: carolId,
+      subtotalCents: 2500,
+      shippingCents: 599,
+      taxCents: 225,
+      totalCents: 3324,
+      paidAt: new Date("2024-10-15T09:00:00Z"),
+      shippedAt: new Date("2024-10-16T10:00:00Z"),
+      deliveredAt: new Date("2024-10-19T14:00:00Z"),
+      refundedAt: new Date("2024-10-25T11:00:00Z"),
+      adminNotes: "Product was defective, full refund issued",
+      items: {
+        create: [
+          {
+            productId: tshirtId,
+            variantId: variantL,
+            productName: "Club Logo T-Shirt",
+            variantName: "Large",
+            sku: "TSHIRT-L",
+            quantity: 1,
+            unitPriceCents: 2000,
+            totalPriceCents: 2000,
+          },
+        ],
+      },
+    },
+  });
+
+  console.log("  Created 9 store orders with various statuses");
+  console.log("    - 3 completed orders (2 member, 1 digital)");
+  console.log("    - 1 shipped order (guest)");
+  console.log("    - 1 processing order");
+  console.log("    - 1 pending payment (abandoned)");
+  console.log("    - 1 cart (not checked out)");
+  console.log("    - 1 cancelled order");
+  console.log("    - 1 refunded order");
+}
+
+async function clearStoreData(): Promise<void> {
+  console.log("Clearing store data...");
+  await prisma.digitalDelivery.deleteMany();
+  await prisma.storeOrderItem.deleteMany();
+  await prisma.storeOrder.deleteMany();
+  await prisma.shippingAddress.deleteMany();
+  await prisma.productVariant.deleteMany();
+  await prisma.product.deleteMany();
+}
+
 async function main(): Promise<void> {
   console.log("=== Murmurant Seed Script ===\n");
 
   checkEnvironment();
 
   try {
+    // Clear store data first (new)
+    await clearStoreData();
     await clearData();
 
     const statusMap = await seedMembershipStatuses();
@@ -726,6 +1293,12 @@ async function main(): Promise<void> {
 
     const eventMap = await seedEvents(memberMap);
     await seedEventRegistrations(eventMap, memberMap);
+
+    // Seed store data
+    const productMap = await seedProducts();
+    const variantMap = await seedProductVariants(productMap);
+    const addressMap = await seedShippingAddresses(memberMap);
+    await seedStoreOrders(memberMap, productMap, variantMap, addressMap);
 
     console.log("\n=== Seed Complete ===");
     console.log("Summary:");
@@ -742,6 +1315,13 @@ async function main(): Promise<void> {
     console.log("    - parliamentarian@demo.murmurant.test (Parliamentarian)");
     console.log("    - eventchair@demo.murmurant.test (Event Chair)");
     console.log("    - member@demo.murmurant.test (Member)");
+    console.log("  - 7 store products (4 physical, 2 digital, 1 members-only)");
+    console.log("  - 5 t-shirt size variants");
+    console.log("  - 3 shipping addresses (2 member, 1 guest)");
+    console.log("  - 9 store orders covering all statuses:");
+    console.log("    - Completed, Picked Up, Shipped, Processing");
+    console.log("    - Pending Payment, Cart, Cancelled, Refunded");
+    console.log("    - Includes guest checkout and digital delivery");
     console.log("\nDemo Login Instructions:");
     console.log("  1. Go to /login");
     console.log("  2. Enter demo email (e.g., president@demo.murmurant.test)");
