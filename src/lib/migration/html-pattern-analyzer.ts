@@ -662,7 +662,7 @@ function detectLegacyStyling(html: string): LegacyStyleResult | null {
   if (!hasLegacy && !isGadgetContent) return null;
 
   // Extract clean text first to see if there's actual content
-  let text = html
+  const text = html
     // Remove script and style tags
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
