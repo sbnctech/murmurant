@@ -22,6 +22,8 @@ import {
   MinutesStatus,
   MotionResult,
   EmailStatus,
+  ActivityGroupStatus,
+  ActivityGroupRole,
 } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
@@ -66,6 +68,10 @@ async function clearData(): Promise<void> {
   console.log("Clearing existing data...");
 
   // Delete in reverse dependency order
+  // Activity Groups
+  await prisma.activityGroupAnnouncement.deleteMany();
+  await prisma.activityGroupMember.deleteMany();
+  await prisma.activityGroup.deleteMany();
   // Governance
   await prisma.governanceAnnotation.deleteMany();
   await prisma.governanceMotion.deleteMany();
@@ -2124,6 +2130,226 @@ async function seedEmailLogs(memberMap: Map<string, string>): Promise<void> {
   console.log("    - 1 QUEUED");
 }
 
+// ============================================================================
+// Activity Groups
+// ============================================================================
+
+async function seedActivityGroups(
+  memberMap: Map<string, string>
+): Promise<void> {
+  console.log("Seeding activity groups...");
+
+  const aliceId = memberMap.get("alice@example.com")!;
+  const carolId = memberMap.get("carol@example.com")!;
+  const karenId = memberMap.get("karen@example.com")!;
+
+  // Create activity groups in various states
+  const groups = [
+    // Approved and active group: Book Club
+    {
+      name: "Book Club",
+      slug: "book-club",
+      description: "Monthly book discussions with members. We read a variety of genres from fiction to biography.",
+      category: "Arts & Culture",
+      schedule: "First Thursday, 7:00 PM",
+      imageEmoji: "📚",
+      status: ActivityGroupStatus.APPROVED,
+      isPublic: true,
+      proposedById: aliceId,
+      proposedAt: new Date("2024-06-01"),
+      approvedById: aliceId,
+      approvedAt: new Date("2024-06-05"),
+    },
+    // Approved and active group: Hiking Club
+    {
+      name: "Hiking Club",
+      slug: "hiking-club",
+      description: "Weekly hikes through local trails. All skill levels welcome!",
+      category: "Outdoor",
+      schedule: "Every Saturday, 8:00 AM",
+      imageEmoji: "🥾",
+      status: ActivityGroupStatus.APPROVED,
+      isPublic: true,
+      proposedById: carolId,
+      proposedAt: new Date("2024-07-15"),
+      approvedById: aliceId,
+      approvedAt: new Date("2024-07-20"),
+    },
+    // Approved private group: Wine Tasting
+    {
+      name: "Wine Tasting Society",
+      slug: "wine-tasting",
+      description: "Exclusive wine tasting events. Members only.",
+      category: "Social",
+      schedule: "Third Friday, 6:00 PM",
+      imageEmoji: "🍷",
+      status: ActivityGroupStatus.APPROVED,
+      isPublic: false, // Private group
+      proposedById: aliceId,
+      proposedAt: new Date("2024-08-01"),
+      approvedById: aliceId,
+      approvedAt: new Date("2024-08-05"),
+    },
+    // Proposed group: Board Games
+    {
+      name: "Board Games Night",
+      slug: "board-games",
+      description: "Weekly board game nights. Modern and classic games!",
+      category: "Games",
+      schedule: "Tuesdays, 7:00 PM",
+      imageEmoji: "🎲",
+      status: ActivityGroupStatus.PROPOSED,
+      isPublic: true,
+      proposedById: carolId,
+      proposedAt: new Date("2025-01-10"),
+      approvedById: null,
+      approvedAt: null,
+    },
+    // Rejected group
+    {
+      name: "Duplicate Book Group",
+      slug: "duplicate-book-group",
+      description: "Another book reading group (rejected as duplicate).",
+      category: "Arts & Culture",
+      schedule: "Mondays, 7:00 PM",
+      imageEmoji: "📖",
+      status: ActivityGroupStatus.REJECTED,
+      isPublic: true,
+      proposedById: karenId,
+      proposedAt: new Date("2025-01-05"),
+      approvedById: null,
+      approvedAt: null,
+      rejectedById: aliceId,
+      rejectedAt: new Date("2025-01-08"),
+      rejectionNotes: "We already have a Book Club. Consider joining that instead!",
+    },
+    // Deactivated group
+    {
+      name: "Photography Walk",
+      slug: "photography-walk",
+      description: "Monthly photography walks (discontinued due to low attendance).",
+      category: "Outdoor",
+      schedule: "Second Sunday, 10:00 AM",
+      imageEmoji: "📷",
+      status: ActivityGroupStatus.DEACTIVATED,
+      isPublic: true,
+      proposedById: aliceId,
+      proposedAt: new Date("2023-06-01"),
+      approvedById: aliceId,
+      approvedAt: new Date("2023-06-05"),
+      deactivatedById: aliceId,
+      deactivatedAt: new Date("2024-12-01"),
+      deactivationReason: "Low attendance over past 6 months.",
+    },
+  ];
+
+  const groupMap = new Map<string, string>();
+
+  for (const group of groups) {
+    const created = await prisma.activityGroup.create({
+      data: group as Parameters<typeof prisma.activityGroup.create>[0]["data"],
+    });
+    groupMap.set(group.slug, created.id);
+  }
+
+  // Add members to approved groups
+  const bookClubId = groupMap.get("book-club")!;
+  const hikingClubId = groupMap.get("hiking-club")!;
+  const wineId = groupMap.get("wine-tasting")!;
+
+  // Book Club members
+  await prisma.activityGroupMember.createMany({
+    data: [
+      {
+        groupId: bookClubId,
+        memberId: aliceId,
+        role: ActivityGroupRole.COORDINATOR,
+        joinedAt: new Date("2024-06-05"),
+      },
+      {
+        groupId: bookClubId,
+        memberId: carolId,
+        role: ActivityGroupRole.MEMBER,
+        joinedAt: new Date("2024-06-10"),
+      },
+    ],
+  });
+
+  // Hiking Club members
+  await prisma.activityGroupMember.createMany({
+    data: [
+      {
+        groupId: hikingClubId,
+        memberId: carolId,
+        role: ActivityGroupRole.COORDINATOR,
+        joinedAt: new Date("2024-07-20"),
+      },
+      {
+        groupId: hikingClubId,
+        memberId: aliceId,
+        role: ActivityGroupRole.MEMBER,
+        joinedAt: new Date("2024-07-25"),
+      },
+    ],
+  });
+
+  // Wine Tasting members
+  await prisma.activityGroupMember.createMany({
+    data: [
+      {
+        groupId: wineId,
+        memberId: aliceId,
+        role: ActivityGroupRole.COORDINATOR,
+        joinedAt: new Date("2024-08-05"),
+      },
+    ],
+  });
+
+  // Add announcements to Book Club
+  await prisma.activityGroupAnnouncement.createMany({
+    data: [
+      {
+        groupId: bookClubId,
+        title: "January Book Selection: The Midnight Library",
+        content: "Our January pick is 'The Midnight Library' by Matt Haig. Get your copy and join us for discussion!",
+        isPinned: true,
+        publishedAt: new Date("2025-01-02"),
+        expiresAt: new Date("2025-02-01"),
+        createdById: aliceId,
+      },
+      {
+        groupId: bookClubId,
+        title: "Meeting Location Change",
+        content: "This month we'll meet at the Santa Barbara Library, Room 201 instead of the usual location.",
+        isPinned: false,
+        publishedAt: new Date("2025-01-10"),
+        createdById: aliceId,
+      },
+    ],
+  });
+
+  // Add announcement to Hiking Club
+  await prisma.activityGroupAnnouncement.create({
+    data: {
+      groupId: hikingClubId,
+      title: "This Saturday: Cold Spring Trail",
+      content: "We're hiking Cold Spring Trail this Saturday. Meet at the trailhead at 8 AM. Bring water!",
+      isPinned: true,
+      publishedAt: new Date("2025-01-08"),
+      expiresAt: new Date("2025-01-12"),
+      createdById: carolId,
+    },
+  });
+
+  console.log(`  Created ${groups.length} activity groups:`);
+  console.log("    - 3 APPROVED (2 public, 1 private)");
+  console.log("    - 1 PROPOSED (pending approval)");
+  console.log("    - 1 REJECTED");
+  console.log("    - 1 DEACTIVATED");
+  console.log("  Created 5 group memberships (coordinators + members)");
+  console.log("  Created 3 group announcements");
+}
+
 async function main(): Promise<void> {
   console.log("=== Murmurant Seed Script ===\n");
 
@@ -2161,6 +2387,9 @@ async function main(): Promise<void> {
     // Seed email logs (after members created)
     await seedEmailLogs(memberMap);
 
+    // Seed activity groups (after members created)
+    await seedActivityGroups(memberMap);
+
     console.log("\n=== Seed Complete ===");
     console.log("Summary:");
     console.log("  - 5 membership statuses (PROSPECT, NEWCOMER, EXTENDED, ALUMNI, LAPSED)");
@@ -2186,6 +2415,8 @@ async function main(): Promise<void> {
     console.log("  - 7 motions (PASSED, TABLED)");
     console.log("  - 4 photo albums with 11 photos");
     console.log("  - 11 email logs (DELIVERED, SENT, BOUNCED, FAILED, QUEUED)");
+    console.log("  - 6 activity groups (3 approved, 1 proposed, 1 rejected, 1 deactivated)");
+    console.log("  - 5 group memberships and 3 announcements");
     console.log("\nDemo Login Instructions:");
     console.log("  1. Go to /login");
     console.log("  2. Enter demo email (e.g., president@demo.murmurant.test)");
