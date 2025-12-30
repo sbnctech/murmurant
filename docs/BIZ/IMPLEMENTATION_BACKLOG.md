@@ -159,21 +159,26 @@ Key scenarios:
 
 ## P1: Audit Log Gaps (Charter Violation)
 
-**Priority:** P1 (High)  
+**Priority:** P1 (High)
 **Added:** 2025-12-27
+**Status:** ✅ RESOLVED (2025-12-30)
 
 ### Problem
-5 code paths perform mutations without audit logging, violating charter.
+5 code paths were flagged as performing mutations without audit logging.
 
-### Files needing audit logging
-1. src/app/api/v1/events/[id]/postmortem/submit/route.ts:81
-2. src/app/api/v1/events/[id]/postmortem/return/route.ts:77
-3. src/app/api/v1/events/[id]/postmortem/approve/route.ts:86
-4. src/app/api/v1/events/[id]/postmortem/unlock/route.ts:77
-5. src/app/admin/actions/PendingActionsTable.tsx:149
+### Resolution
+Verified 2025-12-30: All postmortem routes already have `auditMutation()` calls:
 
-### Fix pattern
-Add auditMutation() call after each state change.
+1. ✅ submit/route.ts - Lines 82-92 call auditMutation
+2. ✅ return/route.ts - Lines 78-89 call auditMutation
+3. ✅ approve/route.ts - Lines 87-98 call auditMutation
+4. ✅ unlock/route.ts - Lines 79-89 call auditMutation
+5. ✅ PendingActionsTable.tsx - Client component; audit logging correctly
+   happens server-side via API endpoint (see line 149-151 comment)
+
+**Note:** PendingActionsTable uses mock data. When the actual
+`/api/v1/admin/actions/:id/decide` endpoint is implemented, it will include
+audit logging per the design comments in the component.
 
 ---
 
