@@ -281,6 +281,10 @@ model Member {
   // Starling chatbot relations
   starlingConversations StarlingConversation[]
 
+  // Merch store relations
+  storeOrders          StoreOrder[]
+  shippingAddresses    ShippingAddress[]
+
   @@index([membershipStatusId])
   @@index([membershipTierId])
 }
@@ -1902,4 +1906,264 @@ model StarlingKnowledge {
   @@index([organizationId])
   @@index([visibility])
   @@map("StarlingKnowledge")
+}
+
+// ============================================================================
+// MERCH STORE SYSTEM
+// E-commerce for organization-branded merchandise
+// Copyright (c) Santa Barbara Newcomers Club
+//
+// Charter Principles:
+// - P1: Identity provable (customerId on orders, audit logs)
+// - P2: Default deny (admin APIs require auth)
+// - P3: Explicit state machine for order lifecycle
+// - P7: Full audit trail for payments and inventory
+// - N5: Idempotency for payment processing
+// ============================================================================
+
+// Order lifecycle state machine (Charter P3)
+// CART -> PENDING_PAYMENT -> PAID -> (PROCESSING | SHIPPED | READY_FOR_PICKUP)
+//      -> (DELIVERED | PICKED_UP) -> COMPLETED
+// CANCELLED, REFUNDED can be reached from certain states
+enum StoreOrderStatus {
+  CART              // Items in cart, not yet checked out
+  PENDING_PAYMENT   // Checkout initiated, awaiting payment
+  PAID              // Payment succeeded, awaiting fulfillment
+  PROCESSING        // Order being prepared
+  SHIPPED           // Physical items shipped
+  READY_FOR_PICKUP  // Ready for pickup
+  DELIVERED         // Shipped items delivered
+  PICKED_UP         // Picked up by customer
+  COMPLETED         // Order fully fulfilled
+  CANCELLED         // Order cancelled
+  REFUND_PENDING    // Refund requested
+  REFUNDED          // Refund completed
+}
+
+enum ProductType {
+  PHYSICAL  // Requires shipping or pickup
+  DIGITAL   // Download link delivery
+}
+
+enum FulfillmentType {
+  SHIPPING
+  PICKUP
+  DIGITAL_DELIVERY
+}
+
+// Product - Main product catalog
+model Product {
+  id                String      @id @default(uuid()) @db.Uuid
+  name              String
+  slug              String      @unique
+  description       String?
+  type              ProductType @default(PHYSICAL)
+  isActive          Boolean     @default(true)
+  isPublic          Boolean     @default(true) // Public store vs members-only
+  priceCents        Int         // Base price in cents (variants can override)
+  comparePriceCents Int?        // Original price for "sale" display
+  imageUrl          String?
+  images            Json?       // Array of additional image URLs
+  sortOrder         Int         @default(0)
+
+  // Digital product fields
+  digitalAssetUrl String? // S3/storage URL for digital downloads
+  downloadLimit   Int?    // Max downloads per purchase (null = unlimited)
+
+  // Fulfillment options for physical products
+  allowsShipping Boolean @default(true)
+  allowsPickup   Boolean @default(false)
+
+  // Inventory (aggregated from variants, or direct if no variants)
+  trackInventory    Boolean @default(true)
+  quantity          Int     @default(0) // Used if no variants
+  lowStockThreshold Int?    // Alert when stock drops below this
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  variants   ProductVariant[]
+  orderItems StoreOrderItem[]
+
+  @@index([isActive, isPublic])
+  @@index([slug])
+  @@index([type])
+  @@index([sortOrder])
+}
+
+// ProductVariant - Size, color, etc. variations
+model ProductVariant {
+  id         String  @id @default(uuid()) @db.Uuid
+  productId  String  @db.Uuid
+  name       String  // e.g., "Large / Blue"
+  sku        String? @unique
+  priceCents Int?    // Override product price (null = use product price)
+  isActive   Boolean @default(true)
+  sortOrder  Int     @default(0)
+
+  // Variant-specific inventory
+  quantity          Int  @default(0)
+  lowStockThreshold Int?
+
+  // Variant attributes (JSON for flexibility)
+  attributes Json?   // { "size": "L", "color": "Blue" }
+  imageUrl   String? // Variant-specific image
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product    Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems StoreOrderItem[]
+
+  @@index([productId])
+  @@index([productId, isActive])
+  @@index([sku])
+}
+
+// StoreOrder - Customer order with state machine lifecycle (Charter P3)
+model StoreOrder {
+  id              String           @id @default(uuid()) @db.Uuid
+  orderNumber     Int              @unique @default(autoincrement())
+  status          StoreOrderStatus @default(CART)
+  fulfillmentType FulfillmentType?
+
+  // Customer info (supports guest checkout)
+  customerId     String? @db.Uuid // Link to Member if logged in
+  guestEmail     String? // Email for guest checkout
+  guestFirstName String?
+  guestLastName  String?
+  guestPhone     String?
+
+  // Totals (all in cents)
+  subtotalCents Int @default(0)
+  shippingCents Int @default(0)
+  taxCents      Int @default(0)
+  totalCents    Int @default(0)
+
+  // Session tracking for cart recovery
+  sessionId String? // Browser session ID for cart
+
+  // Timestamps for state machine transitions
+  checkoutStartedAt DateTime?
+  paidAt            DateTime?
+  shippedAt         DateTime?
+  deliveredAt       DateTime?
+  pickedUpAt        DateTime?
+  completedAt       DateTime?
+  cancelledAt       DateTime?
+  refundedAt        DateTime?
+
+  // Shipping info (when fulfillmentType = SHIPPING)
+  shippingAddressId String? @db.Uuid
+  trackingNumber    String?
+  trackingUrl       String?
+  carrier           String? // "USPS", "FedEx", etc.
+
+  // Pickup info (when fulfillmentType = PICKUP)
+  pickupLocation     String? // Location name/address
+  pickupInstructions String?
+  pickupCode         String? // Code for pickup verification
+
+  // Payment (Charter N5: Idempotency)
+  idempotencyKey        String? @unique
+  stripePaymentIntentId String?
+  paymentMethod         String? // "card", "ach"
+
+  // Notes
+  customerNotes String? // Notes from customer
+  adminNotes    String? // Internal notes
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  customer          Member?            @relation(fields: [customerId], references: [id])
+  shippingAddress   ShippingAddress?   @relation(fields: [shippingAddressId], references: [id])
+  items             StoreOrderItem[]
+  digitalDeliveries DigitalDelivery[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([sessionId])
+  @@index([guestEmail])
+  @@index([orderNumber])
+  @@index([createdAt])
+}
+
+// StoreOrderItem - Line items in an order
+model StoreOrderItem {
+  id        String  @id @default(uuid()) @db.Uuid
+  orderId   String  @db.Uuid
+  productId String  @db.Uuid
+  variantId String? @db.Uuid
+
+  // Denormalized product info (for historical accuracy)
+  productName String
+  variantName String?
+  sku         String?
+
+  quantity        Int
+  unitPriceCents  Int
+  totalPriceCents Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order   StoreOrder      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product         @relation(fields: [productId], references: [id])
+  variant ProductVariant? @relation(fields: [variantId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+// ShippingAddress - Reusable shipping addresses
+model ShippingAddress {
+  id         String  @id @default(uuid()) @db.Uuid
+  customerId String? @db.Uuid // Null for guest orders
+
+  firstName    String
+  lastName     String
+  company      String?
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String
+  postalCode   String
+  country      String  @default("US")
+  phone        String?
+
+  isDefault Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  customer Member?      @relation(fields: [customerId], references: [id])
+  orders   StoreOrder[]
+
+  @@index([customerId])
+}
+
+// DigitalDelivery - Track digital product deliveries
+model DigitalDelivery {
+  id        String @id @default(uuid()) @db.Uuid
+  orderId   String @db.Uuid
+  productId String @db.Uuid
+
+  // Secure download token
+  downloadToken String    @unique @default(uuid())
+  downloadCount Int       @default(0)
+  maxDownloads  Int?      // From product.downloadLimit
+  expiresAt     DateTime? // Optional expiration
+
+  // Tracking
+  firstDownloadAt DateTime?
+  lastDownloadAt  DateTime?
+
+  createdAt DateTime @default(now())
+
+  order StoreOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([downloadToken])
+  @@index([expiresAt])
 }
