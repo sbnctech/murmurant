@@ -244,10 +244,7 @@ export default async function PublicGroupsPage() {
         </section>
 
         {/* Join CTA */}
-        <div
-          data-test-id="groups-join-cta"
-          className="mt-12 bg-blue-50 rounded-lg p-8 text-center"
-        >
+        <div className="mt-12 bg-blue-50 rounded-lg p-8 text-center">
           <h2 className="text-2xl font-semibold text-gray-900">
             Want to Join an Activity Group?
           </h2>
@@ -257,6 +254,7 @@ export default async function PublicGroupsPage() {
           </p>
           <Link
             href="/join"
+            data-test-id="groups-join-cta"
             className="mt-4 inline-flex items-center px-6 py-3 text-base font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
           >
             Become a Member

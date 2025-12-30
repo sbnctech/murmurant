@@ -1136,10 +1136,16 @@ export function canDeleteEvents(role: GlobalRole): boolean {
  *
  * In production, this would be replaced with JWT validation.
  */
+// Helper to extract UUID or use fallback
+function extractUuidOrFallback(extracted: string, fallbackUuid: string): string {
+  return extracted && extracted.includes("-") ? extracted : fallbackUuid;
+}
+
 function parseTestToken(token: string): AuthContext | null {
-  // Test admin token
+  // Test admin token - supports test-admin-<uuid>
   if (token.startsWith("test-admin-")) {
-    const memberId = token.slice(11) || "test-admin-id";
+    const extracted = token.slice(11);
+    const memberId = extractUuidOrFallback(extracted, "00000000-0000-0000-0000-000000000001");
     return {
       memberId,
       email: "admin@test.com",
@@ -1147,9 +1153,10 @@ function parseTestToken(token: string): AuthContext | null {
     };
   }
 
-  // Test webmaster token
+  // Test webmaster token - supports test-webmaster-<uuid>
   if (token.startsWith("test-webmaster-")) {
-    const memberId = token.slice(15) || "test-webmaster-id";
+    const extracted = token.slice(15);
+    const memberId = extractUuidOrFallback(extracted, "00000000-0000-0000-0000-000000000002");
     return {
       memberId,
       email: "webmaster@test.com",
@@ -1157,9 +1164,10 @@ function parseTestToken(token: string): AuthContext | null {
     };
   }
 
-  // Test VP of Activities token
+  // Test VP of Activities token - supports test-vp-<uuid>
   if (token.startsWith("test-vp-")) {
-    const memberId = token.slice(8) || "test-vp-id";
+    const extracted = token.slice(8);
+    const memberId = extractUuidOrFallback(extracted, "00000000-0000-0000-0000-000000000003");
     return {
       memberId,
       email: "vp@test.com",
@@ -1167,9 +1175,10 @@ function parseTestToken(token: string): AuthContext | null {
     };
   }
 
-  // Test Event Chair token
+  // Test Event Chair token - supports test-chair-<uuid>
   if (token.startsWith("test-chair-")) {
-    const memberId = token.slice(11) || "test-chair-id";
+    const extracted = token.slice(11);
+    const memberId = extractUuidOrFallback(extracted, "00000000-0000-0000-0000-000000000004");
     return {
       memberId,
       email: "chair@test.com",
@@ -1177,9 +1186,10 @@ function parseTestToken(token: string): AuthContext | null {
     };
   }
 
-  // Test President token
+  // Test President token - supports test-president-<uuid>
   if (token.startsWith("test-president-")) {
-    const memberId = token.slice(15) || "test-president-id";
+    const extracted = token.slice(15);
+    const memberId = extractUuidOrFallback(extracted, "00000000-0000-0000-0000-000000000006");
     return {
       memberId,
       email: "president@test.com",
@@ -1187,9 +1197,10 @@ function parseTestToken(token: string): AuthContext | null {
     };
   }
 
-  // Test Past President token
+  // Test Past President token - supports test-past-president-<uuid>
   if (token.startsWith("test-past-president-")) {
-    const memberId = token.slice(20) || "test-past-president-id";
+    const extracted = token.slice(20);
+    const memberId = extractUuidOrFallback(extracted, "00000000-0000-0000-0000-000000000007");
     return {
       memberId,
       email: "past-president@test.com",
@@ -1197,9 +1208,10 @@ function parseTestToken(token: string): AuthContext | null {
     };
   }
 
-  // Test Secretary token
+  // Test Secretary token - supports test-secretary-<uuid>
   if (token.startsWith("test-secretary-")) {
-    const memberId = token.slice(15) || "test-secretary-id";
+    const extracted = token.slice(15);
+    const memberId = extractUuidOrFallback(extracted, "00000000-0000-0000-0000-000000000008");
     return {
       memberId,
       email: "secretary@test.com",
@@ -1207,9 +1219,11 @@ function parseTestToken(token: string): AuthContext | null {
     };
   }
 
-  // Test Parliamentarian token
+  // Test Parliamentarian token - supports test-parliamentarian-<uuid>
   if (token.startsWith("test-parliamentarian-")) {
-    const memberId = token.slice(21) || "test-parliamentarian-id";
+    const extracted = token.slice(21);
+    // Use valid UUID format if extraction doesn't look like a UUID
+    const memberId = extracted && extracted.includes("-") ? extracted : "00000000-0000-0000-0000-000000000009";
     return {
       memberId,
       email: "parliamentarian@test.com",
@@ -1217,9 +1231,11 @@ function parseTestToken(token: string): AuthContext | null {
     };
   }
 
-  // Test member token
+  // Test member token - supports test-member-<uuid>
   if (token.startsWith("test-member-")) {
-    const memberId = token.slice(12) || "test-member-id";
+    const extracted = token.slice(12);
+    // Use valid UUID format if extraction doesn't look like a UUID
+    const memberId = extracted && extracted.includes("-") ? extracted : "00000000-0000-0000-0000-000000000005";
     return {
       memberId,
       email: "member@test.com",
@@ -1228,9 +1244,11 @@ function parseTestToken(token: string): AuthContext | null {
   }
 
   // Legacy simple tokens for backward compatibility with existing tests
+  // Using valid UUID format to avoid Prisma parsing errors
+  // These UUIDs don't exist in DB, so FK constraints may still fail
   if (token === "admin-token" || token === "test-admin" || token === "test-admin-token") {
     return {
-      memberId: "test-admin-id",
+      memberId: "00000000-0000-0000-0000-000000000001",
       email: "admin@test.com",
       globalRole: "admin",
     };
@@ -1238,7 +1256,7 @@ function parseTestToken(token: string): AuthContext | null {
 
   if (token === "webmaster-token" || token === "test-webmaster") {
     return {
-      memberId: "test-webmaster-id",
+      memberId: "00000000-0000-0000-0000-000000000002",
       email: "webmaster@test.com",
       globalRole: "webmaster",
     };
@@ -1246,7 +1264,7 @@ function parseTestToken(token: string): AuthContext | null {
 
   if (token === "vp-token" || token === "test-vp") {
     return {
-      memberId: "test-vp-id",
+      memberId: "00000000-0000-0000-0000-000000000003",
       email: "vp@test.com",
       globalRole: "vp-activities",
     };
@@ -1254,7 +1272,7 @@ function parseTestToken(token: string): AuthContext | null {
 
   if (token === "chair-token" || token === "test-chair") {
     return {
-      memberId: "test-chair-id",
+      memberId: "00000000-0000-0000-0000-000000000004",
       email: "chair@test.com",
       globalRole: "event-chair",
     };
@@ -1262,7 +1280,7 @@ function parseTestToken(token: string): AuthContext | null {
 
   if (token === "member-token" || token === "test-member") {
     return {
-      memberId: "test-member-id",
+      memberId: "00000000-0000-0000-0000-000000000005",
       email: "member@test.com",
       globalRole: "member",
     };
@@ -1270,7 +1288,7 @@ function parseTestToken(token: string): AuthContext | null {
 
   if (token === "president-token" || token === "test-president") {
     return {
-      memberId: "test-president-id",
+      memberId: "00000000-0000-0000-0000-000000000006",
       email: "president@test.com",
       globalRole: "president",
     };
@@ -1278,7 +1296,7 @@ function parseTestToken(token: string): AuthContext | null {
 
   if (token === "past-president-token" || token === "test-past-president") {
     return {
-      memberId: "test-past-president-id",
+      memberId: "00000000-0000-0000-0000-000000000007",
       email: "past-president@test.com",
       globalRole: "past-president",
     };
@@ -1286,7 +1304,7 @@ function parseTestToken(token: string): AuthContext | null {
 
   if (token === "secretary-token" || token === "test-secretary") {
     return {
-      memberId: "test-secretary-id",
+      memberId: "00000000-0000-0000-0000-000000000008",
       email: "secretary@test.com",
       globalRole: "secretary",
     };
@@ -1294,7 +1312,7 @@ function parseTestToken(token: string): AuthContext | null {
 
   if (token === "parliamentarian-token" || token === "test-parliamentarian") {
     return {
-      memberId: "test-parliamentarian-id",
+      memberId: "00000000-0000-0000-0000-000000000009",
       email: "parliamentarian@test.com",
       globalRole: "parliamentarian",
     };
