@@ -38,7 +38,7 @@ import {
 interface IdMapping {
   entityType: string;
   waId: number;
-  murmurantId: string;
+  clubosId: string;
 }
 
 interface SyncContext {
@@ -216,7 +216,7 @@ async function _getIdMapping(entityType: string, waId: number): Promise<string |
   const mapping = await prisma.waIdMapping.findUnique({
     where: { entityType_waId: { entityType, waId } },
   });
-  return mapping?.murmurantId ?? null;
+  return mapping?.clubosId ?? null;
 }
 
 async function createIdMapping(mapping: IdMapping): Promise<void> {
@@ -224,7 +224,7 @@ async function createIdMapping(mapping: IdMapping): Promise<void> {
     data: {
       entityType: mapping.entityType,
       waId: mapping.waId,
-      murmurantId: mapping.murmurantId,
+      clubosId: mapping.clubosId,
     },
   });
 }
@@ -240,7 +240,7 @@ async function loadExistingMappings(entityType: string): Promise<Map<number, str
   const mappings = await prisma.waIdMapping.findMany({
     where: { entityType },
   });
-  return new Map(mappings.map((m) => [m.waId, m.murmurantId]));
+  return new Map(mappings.map((m) => [m.waId, m.clubosId]));
 }
 
 // ============================================================================
@@ -292,7 +292,7 @@ async function loadMembershipStatusMap(): Promise<Map<string, string>> {
 export interface StaleRecord {
   entityType: string;
   waId: number;
-  murmurantId: string;
+  clubosId: string;
   lastSyncedAt: Date;
   staleDays: number;
 }
@@ -328,7 +328,7 @@ export async function detectStaleRecords(
   const toStaleRecord = (m: typeof staleMappings[0]): StaleRecord => ({
     entityType: m.entityType,
     waId: m.waId,
-    murmurantId: m.murmurantId,
+    clubosId: m.clubosId,
     lastSyncedAt: m.syncedAt,
     staleDays: Math.floor((now - m.syncedAt.getTime()) / (24 * 60 * 60 * 1000)),
   });
@@ -513,7 +513,7 @@ async function syncMember(contact: WAContact, ctx: SyncContext): Promise<void> {
       const member = await prisma.member.create({ data: result.data });
       await prisma.waIdMapping.update({
         where: { entityType_waId: { entityType: "Member", waId: contact.Id } },
-        data: { murmurantId: member.id, syncedAt: new Date() },
+        data: { clubosId: member.id, syncedAt: new Date() },
       });
       ctx.memberIdMap.set(contact.Id, member.id);
       ctx.stats.members.created++;
@@ -548,7 +548,7 @@ async function syncMember(contact: WAContact, ctx: SyncContext): Promise<void> {
       await createIdMapping({
         entityType: "Member",
         waId: contact.Id,
-        murmurantId: existingByEmail.id,
+        clubosId: existingByEmail.id,
       });
       ctx.memberIdMap.set(contact.Id, existingByEmail.id);
       ctx.stats.members.skipped++;
@@ -560,7 +560,7 @@ async function syncMember(contact: WAContact, ctx: SyncContext): Promise<void> {
     await createIdMapping({
       entityType: "Member",
       waId: contact.Id,
-      murmurantId: member.id,
+      clubosId: member.id,
     });
     ctx.memberIdMap.set(contact.Id, member.id);
     ctx.stats.members.created++;
@@ -659,7 +659,7 @@ async function syncEvent(
       const newEvent = await prisma.event.create({ data: result.data });
       await prisma.waIdMapping.update({
         where: { entityType_waId: { entityType: "Event", waId: event.Id } },
-        data: { murmurantId: newEvent.id, syncedAt: new Date() },
+        data: { clubosId: newEvent.id, syncedAt: new Date() },
       });
       ctx.eventIdMap.set(event.Id, newEvent.id);
       ctx.stats.events.created++;
@@ -687,7 +687,7 @@ async function syncEvent(
     await createIdMapping({
       entityType: "Event",
       waId: event.Id,
-      murmurantId: newEvent.id,
+      clubosId: newEvent.id,
     });
     ctx.eventIdMap.set(event.Id, newEvent.id);
     ctx.stats.events.created++;
@@ -838,7 +838,7 @@ async function syncRegistration(
     await createIdMapping({
       entityType: "EventRegistration",
       waId: registration.Id,
-      murmurantId: newReg.id,
+      clubosId: newReg.id,
     });
 
     diag.registrationsUpserted++;
