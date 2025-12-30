@@ -52,6 +52,11 @@ This is the main entry point for all Murmurant developer documentation.
 - [Billing Invariants](BIZ/BILLING_INVARIANTS.md) - Billing safety requirements
 - [ChatGPT Working Notes](BIZ/_ARCHIVE/CHATGPT_BUSINESS_MODEL_WORKING_NOTES.md) - Archived design rationale
 
+## Governance
+- [Conflict of Interest Safeguards](governance/CONFLICT_OF_INTEREST.md) - COI procedures for SBNC ↔ Murmurant transactions
+- [Ownership & IP Statement](governance/OWNERSHIP_AND_IP.md) - Intellectual property ownership
+- [Open Source vs Private](governance/OPEN_SOURCE_VS_PRIVATE.md) - Distribution decision framework
+
 ## Operator Guides
 - [Calendar Trust and Reliability](BIZ/CALENDAR_TRUST_AND_RELIABILITY.md) - How Murmurant handles dates and times (non-technical)
 - [Core Trust Surface for Operators](BIZ/TRUST_SURFACE_FOR_OPERATORS.md) - The five guarantees that protect your organization
