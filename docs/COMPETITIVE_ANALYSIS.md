@@ -218,6 +218,69 @@ Standalone organizations with no national affiliation:
 
 ---
 
+---
+
+## Wild Apricot Ecosystem: Consultants and Theme Vendors
+
+### Nicasio Design (Market Leader)
+
+**Profile:**
+- #1 partner in Wild Apricot partner directory
+- 17+ years in business, 1,000+ WA customers served
+- Based in Savannah, GA (fully remote team)
+- Contact: Felix@NicasioDesign.com, 912-441-7011
+
+**Services:**
+- 8 custom Wild Apricot themes
+- Theme setup and configuration
+- Data migration
+- Custom development (scripts, API integrations)
+- Ongoing administration and support
+
+**Pricing (2025):**
+- Not publicly listed (contact required for quotes)
+- Customer testimonials mention "affordable" and "incredible pricing solutions"
+- Free consultation available (Calendly booking)
+
+**Theme Setup Package Includes:**
+- Integration of pre-designed theme
+- Site design consultation
+- Basic hyperlink and heading styles
+- H1-H4 heading styles
+- List styles (bulleted/numbered)
+- One round of revisions
+
+**Package Limitations:**
+- No layout modifications included
+- No custom form/button styling
+- Additional customization requires separate quote
+
+### Wild Apricot "Stripes" Layout System
+
+**Architecture Constraint:**
+Wild Apricot sites use a **stripe-based layout system** where pages are composed of horizontal full-width sections stacked vertically. This creates:
+
+- Uniform horizontal bands across the page
+- Limited grid flexibility within stripes
+- Predictable but rigid page structures
+- All consultant themes work within this constraint
+
+**ClubOS Advantage:**
+Our block-based CMS is NOT restricted to stripes. We can offer:
+
+| Capability | Wild Apricot | ClubOS |
+|------------|--------------|--------|
+| Multi-column layouts | Limited within stripes | Full grid flexibility |
+| Asymmetric grids | No | Yes |
+| Sidebar + content | Theme-level only | Page-level choice |
+| Magazine layouts | No | Yes |
+| Card arrangements | Fixed patterns | Flexible placement |
+| Nested blocks | No | Yes |
+
+This architectural difference enables layouts that Wild Apricot simply cannot achieve regardless of consultant customization.
+
+---
+
 ## References
 
 - Capterra membership management software category
@@ -225,3 +288,5 @@ Standalone organizations with no national affiliation:
 - G2 membership management reviews
 - LinkedIn company profiles
 - Customer testimonials and case studies
+- Nicasio Design website (nicasiodesign.com)
+- Wild Apricot Custom Themes (wildapricotcustomthemes.com)
