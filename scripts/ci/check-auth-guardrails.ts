@@ -78,8 +78,8 @@ const KNOWN_GAPS: Set<string> = new Set([
   "v1/support/cases/[id]/route.ts:53",
   "v1/support/cases/[id]/route.ts:160",
   "v1/support/dashboard/route.ts:49",
-  "v1/officer/governance/minutes/[id]/route.ts:256",
-  "v1/officer/governance/meetings/[id]/route.ts:99",
+  // GAP-021 fixed: v1/officer/governance/minutes/[id]/route.ts:256 (Issue #231)
+  // GAP-022 fixed: v1/officer/governance/meetings/[id]/route.ts:99 (Issue #231)
   // Demo endpoints - test/dev only
   "admin/demo/lifecycle-members/route.ts:81",
   "admin/demo/member-list/route.ts:98",

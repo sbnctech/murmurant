@@ -19,7 +19,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { requireCapability } from "@/lib/auth";
+import { requireCapability, requireCapabilitySafe } from "@/lib/auth";
 import { auditMutation } from "@/lib/audit";
 import {
   getMinutesById,
@@ -253,7 +253,8 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       }
 
       case "archive": {
-        const auth = await requireCapability(req, "admin:full");
+        // Uses requireCapabilitySafe to block during impersonation (Issue #231)
+        const auth = await requireCapabilitySafe(req, "admin:full");
         if (!auth.ok) return auth.response;
 
         const minutes = await archiveMinutes(id);

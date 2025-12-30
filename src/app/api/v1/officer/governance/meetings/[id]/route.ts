@@ -7,7 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { requireCapability } from "@/lib/auth";
+import { requireCapability, requireCapabilitySafe } from "@/lib/auth";
 import { auditMutation } from "@/lib/audit";
 import {
   getMeetingById,
@@ -96,7 +96,8 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
  * DELETE /api/v1/officer/governance/meetings/:id
  */
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
-  const auth = await requireCapability(req, "admin:full");
+  // Uses requireCapabilitySafe to block during impersonation (Issue #231)
+  const auth = await requireCapabilitySafe(req, "admin:full");
   if (!auth.ok) return auth.response;
 
   const { id } = await params;
