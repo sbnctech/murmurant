@@ -2,18 +2,17 @@
  * Demo Migration Project API
  *
  * Loads the Bedford crawl report as a demo project.
- *
- * Authorization: Admin only (Charter P2)
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import * as fs from "fs";
 import * as path from "path";
 import { createProjectFromCrawlReport } from "@/lib/migration/project";
-import { requireAdminOnly } from "@/lib/eventAuth";
+import { requireAdmin } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
-  const auth = await requireAdminOnly(req);
+  // Auth guard - admin only
+  const auth = await requireAdmin(req);
   if (!auth.ok) return auth.response;
 
   try {
